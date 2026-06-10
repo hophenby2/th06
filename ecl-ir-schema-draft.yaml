@@ -1,0 +1,103 @@
+# Draft canonical IR for cross-game Touhou ECL lifting/lowering.
+# Empty/null means "not used"; backend decides whether to ignore, approximate, expand or error.
+version: 0.1
+program:
+  source_game: th15
+  target_game: null
+  resources:
+    anim: []
+    ecli: []
+    maps:
+      bullet_style: null
+      color: null
+      anm_script: null
+  functions:
+    - name: Example
+      locals: []
+      body: []
+
+statements:
+  wait: { frames: int_or_expr }
+  set_var: { name: string, value: expr }
+  call: { function: string, async: false, args: [] }
+  loop: { count: int_or_expr, interval: int_or_expr, body: [] }
+  difficulty_switch: { easy: null, normal: null, hard: null, lunatic: null, extra: null }
+  raw_ins: { opcode: int, args: [], source_game: string }
+
+objects:
+  enemy:
+    id: 0
+    name: null
+    life: null
+    bonus: null
+    item: null
+    position: { x: 0, y: 0, mode: relative }
+    animation: null
+    movement: null
+    collision: null
+    drops: null
+    flags: []
+  animation:
+    file: null
+    slots: []
+    play: null
+    mirror_policy: auto
+  collision:
+    hurtbox: { w: null, h: null }
+    hitbox: { w: null, h: null }
+    shape: ellipse
+  movement:
+    position: { mode: null, x: null, y: null, z: null, duration: null, interp: null }
+    velocity: { angle: null, speed: null, duration: null, interp: null }
+    circle: { angle: null, angular_speed: null, radius: null, radius_speed: null, axis_angle: null, ratio: null }
+    bounds: { rect: null, clear: false }
+  bullet_emitter:
+    id: 0
+    origin: { mode: enemy, x: 0, y: 0, polar_angle: null, polar_radius: null }
+    appearance: { style: null, color: null, hitbox_style: null, sprite_source: game_default }
+    aim: { mode: fan, target: none, base_angle: 0, angle_step: 0, aim_offset: 0 }
+    count: { ways: 1, layers: 1, bullets_per_layer: null, layer_angle_step: null }
+    speed: { first: 1, last: null, step: null, random_min: null, random_max: null }
+    timing: { fire_delay: 0, repeat: 1, interval: 0, auto_fire: false, life: null, offscreen_time: null }
+    sound: { id: null, mode: null }
+    flags: { raw: 0, transform_flags: 0, clearable: null, grazeable: null }
+    transforms: []
+    raw: { before: [], after: [] }
+  bullet_transform:
+    index: 0
+    channel: 0
+    trigger: { after_frames: null, condition: none }
+    action: { type: customRaw, angle: null, speed: null, accel: null, style: null, color: null, duration: null, repeat: null }
+    raw: { th08_type: null, th10_type: null, th13_ex_type: null, args: [] }
+  laser_emitter:
+    id: 0
+    kind: straight
+    origin: { x: 0, y: 0 }
+    timing: { startup: 0, expand: 0, active: 0, shrink: 0, delay: 0 }
+    geometry: { length: null, width: null, angle: 0, angular_velocity: 0, speed: 0, end_length: null }
+    appearance: { laser_id: null, color: null, sprite: null }
+    flags: { raw: 0 }
+    curve: { points: [], node_count: null, mode: null }
+    transforms: []
+  boss_pattern:
+    boss_id: 0
+    hp: null
+    timeout: null
+    type: nonspell
+    spell_id: null
+    spell_name: null
+    score: null
+    on_timeout: null
+    on_death: null
+    on_escape: null
+    chapters: []
+
+lowering_policy:
+  unsupported: warn # warn | error | ignore
+  unsupported_transform: approximate
+  unsupported_laser: error
+  missing_resource: error
+  game_specific: stub
+  sentinel:
+    int: -999999
+    float: -999999.0
