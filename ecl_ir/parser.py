@@ -5,7 +5,7 @@ from pathlib import Path
 
 from .model import Function, Instruction, Program, Statement
 
-FUNC_RE = re.compile(r"^\s*(?:void|sub)\s+(\w+)\s*\([^)]*\)\s*(?:\{|$)")
+FUNC_RE = re.compile(r"^\s*(?:void|sub)\s+(\w+)\s*\(([^)]*)\)\s*(?:\{|$)")
 INS_RE = re.compile(r"\bins_(\d+)\s*\((.*)\)\s*;")
 DIFF_RE = re.compile(r"^\s*!(LO|HL|EN|E|N|H|L|\*)\s*(.*)$")
 
@@ -19,7 +19,7 @@ VAR_RE = re.compile(r"^\s*var\s+(.+?)\s*;")
 ASSIGN_RE = re.compile(r"^\s*([%$][A-Za-z0-9_]+)\s*=\s*(.+?)\s*;")
 RESOURCE_RE = re.compile(r"^\s*(anim|ecli)\s*\{\s*$")
 RESOURCE_INLINE_RE = re.compile(r"^\s*(anim|ecli)\s*\{(.*)\}\s*$")
-PROTOTYPE_RE = re.compile(r"^\s*(?:void|sub)\s+(\w+)\s*\([^)]*\)\s*;")
+PROTOTYPE_RE = re.compile(r"^\s*(?:void|sub)\s+(\w+)\s*\(([^)]*)\)\s*;")
 
 
 
@@ -72,7 +72,7 @@ def classify_statement(raw_line: str, line_no: int, difficulty: str | None = Non
     if not text:
         return Statement("comment", raw_line.rstrip(), line_no, line, difficulty)
     if m := PROTOTYPE_RE.match(raw_line):
-        return Statement("function_decl", raw_line.rstrip(), line_no, text, difficulty, {"function": m.group(1)})
+        return Statement("function_decl", raw_line.rstrip(), line_no, text, difficulty, {"function": m.group(1), "params": m.group(2).strip()})
     if m := TIME_RE.match(raw_line):
         return Statement("time", raw_line.rstrip(), line_no, text, difficulty, {"time": m.group(1), "comment": (m.group(2) or "").strip()})
     if m := LABEL_RE.match(raw_line):
@@ -152,7 +152,7 @@ def parse_decl(path: str | Path) -> Program:
 
         func_match = FUNC_RE.match(raw_line)
         if func_match:
-            current = Function(func_match.group(1))
+            current = Function(func_match.group(1), func_match.group(2).strip())
             program.functions.append(current)
             pending_diff = None
             continue
@@ -186,6 +186,8 @@ def parse_decl(path: str | Path) -> Program:
                 difficulty_literals=pending_literals,
             )
             current.body.append(ins)
+            if current.statements and current.statements[-1].kind == "instruction" and current.statements[-1].line_no == line_no:
+                current.statements[-1].attrs["difficulty_literals"] = dict(pending_literals)
             pending_diff = None
             pending_literals = {}
         elif line and not line.startswith("!"):

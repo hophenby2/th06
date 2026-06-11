@@ -1,0 +1,386 @@
+// source: th062/th15/default.decl
+// source game: th15
+// target: th12
+// whole-file lowering is a structured draft; verify target-game scheduling and resources
+anim { "enemy.anm"; }
+
+void BossItemCard()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    return;
+}
+
+void BossItemPhase()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    unless ([-9986] == 0) goto BossItemPhase_240 @ 0;
+    // raw opcode fallback th15->th12: ins_506 -> ins_406; verify semantics
+    ins_406();
+    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    ins_410(0);
+    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    ins_407(1, $A);
+    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    ins_407(2, $B);
+    // raw opcode fallback th15->th12: ins_508 -> ins_408; verify semantics
+    ins_408(%C, %C);
+    // raw opcode fallback th15->th12: ins_509 -> ins_409; verify semantics
+    ins_409();
+    BossItemPhase_240:
+    return;
+}
+
+void BossItemPhase2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D;
+    unless ([-9986] == 0) goto BossItemPhase2_264 @ 0;
+    // raw opcode fallback th15->th12: ins_506 -> ins_406; verify semantics
+    ins_406();
+    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    ins_410(0);
+    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    ins_407(3, $A);
+    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    ins_407(1, $B);
+    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    ins_407(2, $C);
+    // raw opcode fallback th15->th12: ins_508 -> ins_408; verify semantics
+    ins_408(%D, %D);
+    // raw opcode fallback th15->th12: ins_509 -> ins_409; verify semantics
+    ins_409();
+    BossItemPhase2_264:
+    return;
+}
+
+void BossItemPhase3()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    unless ([-9986] == 0) goto BossItemPhase3_240 @ 0;
+    // raw opcode fallback th15->th12: ins_506 -> ins_406; verify semantics
+    ins_406();
+    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    ins_410(6);
+    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    ins_407(1, $A);
+    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    ins_407(2, $B);
+    // raw opcode fallback th15->th12: ins_508 -> ins_408; verify semantics
+    ins_408(%C, %C);
+    // raw opcode fallback th15->th12: ins_509 -> ins_409; verify semantics
+    ins_409();
+    BossItemPhase3_240:
+    return;
+}
+
+void DeadAttack1()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // raw: [-9981.0f] = 3.0f;
+    // raw: [-9985] = 3;
+    // raw: [-9984] = 5;
+    // object Movement source_line=56 family=th13plus
+    // no safe lowering implemented for Movement family=th13plus to th12
+    // ins_424(0);
+    // unsupported movement semantic: moveSetMirror
+    // object Enemy source_line=57 family=th13plus
+    // Enemy lowering th13plus -> th12: enmCreate; semantic verification required
+    ins_256("DeadAttackEt1", 0.0f, 0.0f, 10, 10, 0);
+    return;
+}
+
+void DeadAttack2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // raw: [-9981.0f] = 3.0f;
+    // raw: [-9985] = 5;
+    // raw: [-9984] = 4;
+    // object Movement source_line=66 family=th13plus
+    // no safe lowering implemented for Movement family=th13plus to th12
+    // ins_424(0);
+    // unsupported movement semantic: moveSetMirror
+    // object Enemy source_line=67 family=th13plus
+    // Enemy lowering th13plus -> th12: enmCreate; semantic verification required
+    ins_256("DeadAttackEt1", 0.0f, 0.0f, 10, 10, 0);
+    return;
+}
+
+void DeadAttackEt1()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    ins_402(32);
+    // object BulletEmitter source_line=75 family=th13plus
+    ins_500(0);
+    ins_507(0, 0);
+    ins_502(0, 7, 2);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.05235988f);
+    ins_505(0, [-9981.0f], 1.0f);
+    // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_501(0);
+    $A = [-9985];
+    goto DeadAttackEt1_364 @ 0;
+    DeadAttackEt1_324:
+    // dynamic wait from source opcode 23; TH12 timer labels need a literal
+    // original source: src_ins_23([-9984]);
+    DeadAttackEt1_364:
+    if ($A--) goto DeadAttackEt1_324 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - counter_loop DeadAttackEt1_324 lines 84..88 condition=$A--
+}
+
+void Ecl_EtBreak()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    %A = 16.0f;
+    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    ins_402(32);
+    goto Ecl_EtBreak_216 @ 1;
+    Ecl_EtBreak_120:
+    // unlifted instruction: ins_615(%A);
+    // raw: %A;
+    +1:
+    // raw: 10;
+    // unlifted instruction: ins_51();
+    // unlifted instruction: ins_45(%A);
+    Ecl_EtBreak_216:
+    if (%A < 640.0f) goto Ecl_EtBreak_120 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - counter_loop Ecl_EtBreak_120 lines 98..106 condition=%A < 640.0f
+}
+
+void Ecl_EtBreak2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    %A = 16.0f;
+    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    ins_402(32);
+    goto Ecl_EtBreak2_216 @ 1;
+    Ecl_EtBreak2_120:
+    // unlifted instruction: ins_615(%A);
+    // raw: %A;
+    +1:
+    // raw: 6;
+    // unlifted instruction: ins_51();
+    // unlifted instruction: ins_45(%A);
+    Ecl_EtBreak2_216:
+    if (%A < 640.0f) goto Ecl_EtBreak2_120 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - counter_loop Ecl_EtBreak2_120 lines 116..124 condition=%A < 640.0f
+}
+
+void Ecl_EtBreak2_ni()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    %A = 16.0f;
+    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    ins_402(32);
+    goto Ecl_EtBreak2_ni_216 @ 1;
+    Ecl_EtBreak2_ni_120:
+    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // original: ins_616(%A);
+    // raw: %A;
+    +1:
+    // raw: 6;
+    // unlifted instruction: ins_51();
+    // unlifted instruction: ins_45(%A);
+    Ecl_EtBreak2_ni_216:
+    if (%A < 640.0f) goto Ecl_EtBreak2_ni_120 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - counter_loop Ecl_EtBreak2_ni_120 lines 134..142 condition=%A < 640.0f
+}
+
+void Ecl_EtBreak_ni()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    %A = 16.0f;
+    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    ins_402(32);
+    goto Ecl_EtBreak_ni_216 @ 1;
+    Ecl_EtBreak_ni_120:
+    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // original: ins_616(%A);
+    // raw: %A;
+    +1:
+    // raw: 10;
+    // unlifted instruction: ins_51();
+    // unlifted instruction: ins_45(%A);
+    Ecl_EtBreak_ni_216:
+    if (%A < 640.0f) goto Ecl_EtBreak_ni_120 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - counter_loop Ecl_EtBreak_ni_120 lines 152..160 condition=%A < 640.0f
+}
+
+void EffChargePoint()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // object Animation source_line=167 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=168 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    ins_259($B, 154 + $C);
+    // unlifted instruction: ins_319($B, %A);
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(54);
+    return;
+}
+
+void EffChargePoint2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    // object Animation source_line=177 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=178 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    ins_259($C, 154 + $D);
+    // unlifted instruction: ins_319($C, %A);
+    // object Animation source_line=180 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    ins_259($C + 1, 154 + $E);
+    // unlifted instruction: ins_319($C + 1, %A + %B);
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(54);
+    return;
+}
+
+void EffChargePoint3()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    // object Animation source_line=189 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=190 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    ins_259($C, 154 + $D);
+    // unlifted instruction: ins_319($C, %A + %B);
+    // object Animation source_line=192 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    ins_259($C + 1, 154 + $E);
+    // unlifted instruction: ins_319($C + 1, %A);
+    // object Animation source_line=194 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    ins_259($C + 2, 154 + $F);
+    // unlifted instruction: ins_319($C + 2, %A - %B);
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(54);
+    return;
+}
+
+void MainBossSpell()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BossPattern source_line=202 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_424(43);
+    ins_424(81);
+    +10:
+    // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
+    ins_418(-1);
+    +1:
+    // object Enemy source_line=206 family=th13plus
+    // Enemy lowering th13plus -> th12: enmCreateA; semantic verification required
+    ins_257("Boss", 144.0f, -16.0f, 40, 1000, 1);
+    // raw opcode fallback th15->th12: ins_520 -> ins_420; verify semantics
+    ins_420();
+    ins_83(170);
+    // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
+    ins_418(-2);
+    // raw opcode fallback th15->th12: ins_519 -> ins_419; verify semantics
+    ins_419();
+    return;
+}
+
+void MainMBossSpell()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BossPattern source_line=217 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_424(22);
+    ins_424(81);
+    +10:
+    // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
+    ins_418(-3);
+    +1:
+    // object Enemy source_line=221 family=th13plus
+    // Enemy lowering th13plus -> th12: enmCreateA; semantic verification required
+    ins_257("MBoss", 144.0f, -16.0f, 40, 1000, 1);
+    // raw opcode fallback th15->th12: ins_520 -> ins_420; verify semantics
+    ins_420();
+    ins_83(100);
+    // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
+    ins_418(-2);
+    // raw opcode fallback th15->th12: ins_519 -> ins_419; verify semantics
+    ins_419();
+    return;
+}
+
+void et_ofs_r()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D;
+    // unlifted instruction: ins_81(%C, %D, [-9998.0f], %B * [-9999.0f]);
+    // unlifted instruction: ins_603($A, %C, %D);
+    return;
+}
+
+void test()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // raw: HL
+    // object Movement source_line=241 family=th13plus
+    // movement lowering th13plus -> th12: moveVel
+    ins_304([-9989.0f], 0.0f);
+    // object Movement source_line=242 family=th13plus
+    // movement lowering th13plus -> th12: moveVelTime
+    ins_305(60, 0, [-9989.0f] + ([-9987.0f] * 0.5235988f), 2.0f);
+    // object Movement source_line=244 family=th13plus
+    // movement lowering th13plus -> th12: moveVel
+    ins_304([-9981.0f] + ([-9987.0f] * 0.5235988f), 0.0f);
+    // object Movement source_line=245 family=th13plus
+    // movement lowering th13plus -> th12: moveVelTime
+    ins_305(60, 0, -999999.0f, 2.0f);
+}
+
+void test2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    return;
+}

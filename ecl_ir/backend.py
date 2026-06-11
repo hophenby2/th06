@@ -61,7 +61,7 @@ ENEMY_OPS = {
 }
 
 BOSS_OPS = {
-    "th12": {"lifeSet": 411, "setBoss": 412, "timerReset": 413, "setInterrupt": 414, "setTimeout": 421, "spellEnd": 423, "setChapter": 424, "spell": 526},
+    "th12": {"lifeSet": 411, "setBoss": 412, "timerReset": 413, "setInterrupt": 414, "setTimeout": 421, "spellEnd": 423, "setChapter": 424, "spell": 437, "spell2": 438, "spell3": 439},
     "th13plus": {"lifeSet": 511, "setBoss": 512, "timerReset": 513, "setInterrupt": 514, "setTimeout": 521, "spellEnd": 523, "setChapter": 524, "spell": 537, "spell2": 538, "spell3": 539},
 }
 
@@ -214,15 +214,18 @@ def compile_th12(e: BulletEmitter) -> str:
         if comment:
             lines.insert(0, comment)
     for transform in e.transforms:
-        if transform.raw_opcode in {509, 510, 511, 512} and transform.raw_args:
-            lines.append(f"ins_{transform.raw_opcode}({', '.join(transform.raw_args)});")
+        if transform.raw_opcode == 509 and len(transform.raw_args) == 8:
+            lines.append(f"ins_509({', '.join(transform.raw_args)});")
+        elif transform.raw_opcode == 510 and len(transform.raw_args) == 0:
+            lines.append("ins_510();")
+        elif transform.raw_opcode == 511 and len(transform.raw_args) == 2:
+            lines.append(f"ins_511({', '.join(transform.raw_args)});")
+        elif transform.raw_opcode == 512 and len(transform.raw_args) == 1:
+            lines.append(f"ins_512({', '.join(transform.raw_args)});")
         elif transform.raw_opcode in {609, 610, 611, 612}:
-            converted = convert_th13_transform_to_th12(transform.raw_opcode, transform.raw_args)
-            if converted:
-                opcode, args = converted
-                lines.append(f"ins_{opcode}({', '.join(args)});")
-            else:
-                lines.append(f"// unsupported th13+ transform for th12: ins_{transform.raw_opcode}({', '.join(transform.raw_args)})")
+            lines.append(f"// unsupported th13+ transform for th12; preserved source ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
+        elif transform.raw_opcode in {510, 511, 512}:
+            lines.append(f"// unsupported th12 transform opcode/arity in generated context; preserved source ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
         else:
             lines.append(f"// unsupported transform from ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
     lines.append(f"ins_501({emitter_id});")

@@ -1,0 +1,832 @@
+// source: th062/th15/st01bs.decl
+// source game: th15
+// target: th12
+// whole-file lowering is a structured draft; verify target-game scheduling and resources
+// top-level declarations
+void BossItemCard();
+void BossItemPhase(var A, var B, var C);
+void EffChargePoint2(var A, var B, var C, var D, var E);
+
+void Boss()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BossPattern source_line=10 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_412(0);
+    ins_411(11500);
+    ins_424(43);
+    ins_411(1700);
+    ins_411(1900);
+    // raw opcode fallback th15->th12: ins_515 -> ins_415; verify semantics
+    ins_415(120);
+    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    ins_402(3);
+    // raw: [-9947] = 1;
+    // object Movement source_line=14 family=th13plus
+    // movement lowering th13plus -> th12: movePos
+    ins_300(0.0f, 128.0f);
+    @EffChargePoint2(1.5707964f, -1.0471976f, 8, 2, 6);
+    @EffChargePoint2(1.5707964f, 1.0471976f, 10, 7, 3);
+    ins_83(101);
+    // object Animation source_line=18 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(3);
+    // object Animation source_line=19 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
+    ins_262(0, 0);
+    // raw opcode fallback th15->th12: ins_503 -> ins_403; verify semantics
+    ins_403(3);
+    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    ins_402(64);
+    // object Animation source_line=23 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    ins_259(0, 0);
+    // raw opcode fallback th15->th12: ins_519 -> ins_419; verify semantics
+    ins_419();
+    +1:
+    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    ins_400(40.0f, 40.0f);
+    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    ins_401(48.0f, 48.0f);
+    // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
+    ins_404(0.0f, 128.0f, 280.0f, 64.0f);
+    // object Animation source_line=30 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=31 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    ins_259(1, 107);
+    // object Animation source_line=32 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    ins_259(2, 116);
+    // object Animation source_line=33 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(3);
+    // unlifted instruction: ins_629(160.0f, 15732608);
+    unless ([-9907] >= 0) goto Boss_1200 @ 1;
+    unless (([-9907] >= 2) && ([-9907] <= 5)) goto Boss_996 @ 1;
+    @BossCard1();
+    goto Boss_1200 @ 1;
+    Boss_996:
+    unless (([-9907] >= 6) && ([-9907] <= 9)) goto Boss_1200 @ 1;
+    @BossCard2();
+    Boss_1200:
+    @Boss1();
+    // unlifted instruction: ins_1();
+}
+
+void Boss1()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    ins_435($A, 90, 90, 40, 40);
+    // object BossPattern source_line=53 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_413();
+    // object BossPattern source_line=54 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_414(0, 1700, 2280, "BossCard1");
+    // raw opcode fallback th15->th12: ins_527 -> ins_427; verify semantics
+    ins_427(0, 1700.0f, -24448);
+    // raw opcode fallback th15->th12: ins_540 -> ins_440; verify semantics
+    ins_440(1);
+    // object Animation source_line=57 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(3);
+    // object Animation source_line=58 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
+    ins_262(0, 0);
+    // object Animation source_line=59 family=th13plus
+    // Animation lowering th13plus -> th12: anmPlay; semantic verification required
+    ins_263(1, 75);
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(54);
+    ins_83(60);
+    // object Animation source_line=62 family=th13plus
+    // Animation lowering th13plus -> th12: anmPlay; semantic verification required
+    ins_263(1, 86);
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(6);
+    @Boss1_at2() async;
+    goto Boss1_636 @ 0;
+    Boss1_388:
+    @Boss1_at(0.0f, 0.034906585f, -0.17453292f) async;
+    ins_83(120);
+    // unlifted instruction: ins_412(60, 4, 1.0f);
+    ins_83(80);
+    @Boss1_at(0.0f, -0.034906585f, 0.17453292f) async;
+    ins_83(120);
+    // unlifted instruction: ins_412(60, 4, 1.0f);
+    ins_83(80);
+    Boss1_636:
+    if (1) goto Boss1_388 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop Boss1_388 lines 66..76 condition=1
+}
+
+void Boss1_at(var A, var B, var C)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var D, E, F, G, H;
+    // object BulletEmitter source_line=83 family=th13plus
+    // difficulty speed.first: E=1.5f, N=2.5f, H=3.5f, LO=4.1f; lowered using 4.1f
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 13, 8);
+    ins_506(0, $F, 1);
+    ins_504(0, [-9989.0f], 0.034906585f);
+    ins_505(0, 4.1f, 1.0f);
+    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    ins_501(0);
+    // object Animation source_line=100 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(3);
+    // unlifted instruction: ins_313(0);
+    $F = 1;
+    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    ins_435($G, 4, 8, 8, 12);
+    goto Boss1_at_724 @ 0;
+    Boss1_at_500:
+    $F = $F + 1;
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(4);
+    Boss1_at_724:
+    if ($G--) goto Boss1_at_500 @ 0;
+    // object BulletEmitter source_line=121 family=th13plus
+    // difficulty speed.first: E=2.0f, N=3.0f, H=3.5f, LO=4.1f; lowered using 4.1f
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 18, 4);
+    ins_506(0, $F, 1);
+    ins_504(0, [-9989.0f], [-1.0f]);
+    ins_505(0, 4.1f, 1.0f);
+    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 1048576, 0, -999999, -999999.0f, -999999.0f
+    ins_501(0);
+    // object Animation source_line=149 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(3);
+    // unlifted instruction: ins_313(0);
+    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    ins_435($H, 4, 8, 8, 12);
+    goto Boss1_at_1660 @ 0;
+    Boss1_at_1360:
+    %A = %A + %C;
+    $F = $F + 1;
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(4);
+    Boss1_at_1660:
+    if ($H--) goto Boss1_at_1360 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Boss1_at_500 lines 105..120 condition=$G--
+    // - counter_loop Boss1_at_1360 lines 153..169 condition=$H--
+}
+
+void Boss1_at2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(150);
+    // object BulletEmitter source_line=186 family=th13plus
+    // difficulty speed.first: E=1.0f, N=1.0f, H=3.0f, LO=5.0f; lowered using 5.0f
+    ins_500(1);
+    ins_507(1, 3);
+    ins_502(1, 20, 3);
+    ins_506(1, 1, [-1]);
+    ins_504(1, [-9989.0f] + ([-9998.0f] / 32.0f), 0.0f);
+    ins_505(1, 5.0f, 0.8f);
+    // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_501(1);
+    $C = 600;
+    goto Boss1_at2_800 @ 0;
+    Boss1_at2_560:
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(80);
+    Boss1_at2_800:
+    if ($C--) goto Boss1_at2_560 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Boss1_at2_560 lines 213..227 condition=$C--
+}
+
+void Boss2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // raw opcode fallback th15->th12: ins_515 -> ins_415; verify semantics
+    ins_415(120);
+    // object BossPattern source_line=234 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_411(11400);
+    ins_424(44);
+    ins_413();
+    ins_423();
+    unless ([-9986] == 0) goto Boss2_200 @ 0;
+    // unlifted instruction: ins_615(640.0f);
+    goto Boss2_220 @ 0;
+    Boss2_200:
+    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // original: ins_616(640.0f);
+    Boss2_220:
+    +2:
+    +2:
+    // unsupported th15->th12 opcode ins_569: TH15 pointdevice/LoLK-specific unit flag, no TH12 equivalent
+    // original: ins_569(1);
+    // raw opcode fallback th15->th12: ins_540 -> ins_440; verify semantics
+    ins_440(0);
+    // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
+    ins_404(0.0f, 128.0f, 280.0f, 96.0f);
+    @BossItemPhase(40, 10, 64.0f);
+    // unlifted instruction: ins_21();
+    // raw opcode fallback th15->th12: ins_525 -> ins_425; verify semantics
+    ins_425();
+    unless ([-9986] == 0) goto Boss2_544 @ 4;
+    // unlifted instruction: ins_615(640.0f);
+    goto Boss2_564 @ 4;
+    Boss2_544:
+    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // original: ins_616(640.0f);
+    Boss2_564:
+    // unlifted instruction: ins_632(0);
+    // raw opcode fallback th15->th12: ins_545 -> ins_445; verify semantics
+    ins_445();
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(27);
+    // object Movement source_line=261 family=th13plus
+    // movement lowering th13plus -> th12: moveVel
+    ins_304(0.0f, 0.0f);
+    // object Movement source_line=262 family=th13plus
+    // movement lowering th13plus -> th12: moveVelTime
+    ins_305(0, 0, 0.0f, 0.0f);
+    // object Movement source_line=263 family=th13plus
+    // movement lowering th13plus -> th12: movePosTime
+    ins_301(0, 0, 0.0f, 0.0f);
+    // raw: [-9949] = 0;
+    // raw: [-9948] = 0;
+    // raw: [-9947] = 1;
+    // object Animation source_line=267 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(3);
+    // object Animation source_line=268 family=th13plus
+    // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
+    ins_262(0, 0);
+    // object BossPattern source_line=269 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_414(0, 1900, 2100, "BossCard2");
+    // raw opcode fallback th15->th12: ins_527 -> ins_427; verify semantics
+    ins_427(0, 1900.0f, -24448);
+    // object Animation source_line=271 family=th13plus
+    // Animation lowering th13plus -> th12: anmPlay; semantic verification required
+    ins_263(1, 75);
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(54);
+    ins_83(90);
+    // object Animation source_line=274 family=th13plus
+    // Animation lowering th13plus -> th12: anmPlay; semantic verification required
+    ins_263(1, 86);
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(6);
+    @Boss2_at2() async;
+    goto Boss2_1328 @ 4;
+    Boss2_1124:
+    @Boss2_at(0.0f, 0.034906585f, -0.17453292f) async;
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(60);
+    // unlifted instruction: ins_412(60, 4, 1.0f);
+    ins_83(80);
+    Boss2_1328:
+    if (1) goto Boss2_1124 @ 4;
+    return;
+    // detected loops:
+    // - backedge_loop Boss2_1124 lines 278..293 condition=1
+}
+
+void Boss2_at(var A, var B, var C)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var D, E, F, G;
+    // object BulletEmitter source_line=300 family=th13plus
+    // difficulty speed.first: E=1.5f, N=2.5f, H=3.5f, LO=3.5f; lowered using 3.5f
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 13, 8);
+    ins_506(0, $F, 1);
+    ins_504(0, [-9989.0f], 0.034906585f);
+    ins_505(0, 3.5f, 1.0f);
+    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    ins_501(0);
+    // object Animation source_line=317 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(3);
+    // unlifted instruction: ins_313(0);
+    $F = 1;
+    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    ins_435($G, 6, 10, 14, 14);
+    goto Boss2_at_724 @ 0;
+    Boss2_at_500:
+    $F = $F + 1;
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(6);
+    Boss2_at_724:
+    if ($G--) goto Boss2_at_500 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Boss2_at_500 lines 322..337 condition=$G--
+}
+
+void Boss2_at2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(100);
+    // object BulletEmitter source_line=354 family=th13plus
+    // difficulty count.ways: E=10, N=10, H=16, LO=25; lowered using 25
+    // difficulty speed.first: E=1.0f, N=1.0f, H=3.0f, LO=4.0f; lowered using 4.0f
+    ins_500(1);
+    ins_507(1, 3);
+    ins_502(1, 13, 6);
+    ins_506(1, 25, [-2]);
+    ins_504(1, [-9998.0f], 0.0f);
+    ins_505(1, 4.0f, 0.8f);
+    // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_501(1);
+    // unlifted instruction: ins_627(1, 64.0f);
+    $C = 600;
+    goto Boss2_at2_812 @ 0;
+    Boss2_at2_664:
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(90);
+    Boss2_at2_812:
+    if ($C--) goto Boss2_at2_664 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Boss2_at2_664 lines 390..404 condition=$C--
+}
+
+void BossCard1()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    unless ([-9986] == 0) goto BossCard1_160 @ 0;
+    // unlifted instruction: ins_615(640.0f);
+    goto BossCard1_180 @ 0;
+    BossCard1_160:
+    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // original: ins_616(640.0f);
+    BossCard1_180:
+    +2:
+    // object BossPattern source_line=418 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_424(62);
+    ins_413();
+    ins_423();
+    +2:
+    // unsupported th15->th12 opcode ins_569: TH15 pointdevice/LoLK-specific unit flag, no TH12 equivalent
+    // original: ins_569(1);
+    // raw opcode fallback th15->th12: ins_540 -> ins_440; verify semantics
+    ins_440(1);
+    @BossItemCard();
+    // unlifted instruction: ins_21();
+    // raw opcode fallback th15->th12: ins_525 -> ins_425; verify semantics
+    ins_425();
+    unless ([-9986] == 0) goto BossCard1_448 @ 4;
+    // unlifted instruction: ins_615(640.0f);
+    goto BossCard1_468 @ 4;
+    BossCard1_448:
+    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // original: ins_616(640.0f);
+    BossCard1_468:
+    // unlifted instruction: ins_632(0);
+    // raw opcode fallback th15->th12: ins_545 -> ins_445; verify semantics
+    ins_445();
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(27);
+    // object Movement source_line=436 family=th13plus
+    // movement lowering th13plus -> th12: moveVel
+    ins_304(0.0f, 0.0f);
+    // object Movement source_line=437 family=th13plus
+    // movement lowering th13plus -> th12: moveVelTime
+    ins_305(0, 0, 0.0f, 0.0f);
+    // object Movement source_line=438 family=th13plus
+    // movement lowering th13plus -> th12: movePosTime
+    ins_301(0, 0, 0.0f, 0.0f);
+    // raw: [-9949] = 0;
+    // raw: [-9948] = 0;
+    // raw: [-9947] = 1;
+    // object BossPattern source_line=442 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_414(0, 0, 2400, "Boss2");
+    // raw: H
+    // object BossPattern source_line=444 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_437(2, 2400, 500000, "�e���u�C�[�O���V���[�e�B���O�v");
+    // object BossPattern source_line=446 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_437(2, 2400, 500000, "�e���u��͌����������v");
+    // object Movement source_line=448 family=th13plus
+    // movement lowering th13plus -> th12: movePosTime
+    ins_301(60, 4, 0.0f, 128.0f);
+    // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
+    ins_404(0.0f, 128.0f, 240.0f, 64.0f);
+    // unlifted instruction: ins_316(0, 0);
+    // object Animation source_line=451 family=th13plus
+    // Animation lowering th13plus -> th12: anmPlay; semantic verification required
+    ins_263(1, 73);
+    +90:
+    // unlifted instruction: ins_0();
+    @BossCard1_at2(1, 1.5707964f) async;
+    @BossCard1_at2(2, -1.5707964f) async;
+    $A = 1000;
+    goto BossCard1_1420 @ 94;
+    BossCard1_1204:
+    // unlifted instruction: ins_316(0, 0);
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(50);
+    // unlifted instruction: ins_412(60, 4, 1.0f);
+    ins_83(80);
+    @BossCard1_at([-9989.0f]) async;
+    BossCard1_1420:
+    if ($A--) goto BossCard1_1204 @ 94;
+    goto BossCard1_1508 @ 94;
+    BossCard1_1488:
+    ins_83(1000);
+    BossCard1_1508:
+    if (1) goto BossCard1_1488 @ 94;
+    return;
+    // detected loops:
+    // - counter_loop BossCard1_1204 lines 458..474 condition=$A--
+    // - backedge_loop BossCard1_1488 lines 476..479 condition=1
+}
+
+void BossCard1_at(var A)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var B, C;
+    // object BulletEmitter source_line=486 family=th13plus
+    // difficulty speed.first: E=1.5f, N=2.0f, H=3.0f, LO=4.0f; lowered using 4.0f
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 13, 6);
+    ins_506(0, $B, 1);
+    ins_504(0, [-9989.0f], 0.034906585f);
+    ins_505(0, 4.0f, 1.0f);
+    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    ins_501(0);
+    // object Animation source_line=503 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(3);
+    // unlifted instruction: ins_313(0);
+    $B = 1;
+    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    ins_435($C, 6, 8, 8, 8);
+    goto BossCard1_at_752 @ 0;
+    BossCard1_at_528:
+    $B = $B + 1;
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(4);
+    BossCard1_at_752:
+    if ($C--) goto BossCard1_at_528 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard1_at_528 lines 509..524 condition=$C--
+}
+
+void BossCard1_at2(var A, var B)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var C, D, E, F, G;
+    // raw opcode fallback th15->th12: ins_536 -> ins_436; verify semantics
+    ins_436(%C, 0.5235988f, 0.5235988f, 0.5235988f, 3.883222f);
+    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    ins_435($D, 16, 16, 16, 16);
+    $E = 1000;
+    goto BossCard1_at2_1404 @ 0;
+    BossCard1_at2_172:
+    // object BulletEmitter source_line=536 family=th13plus
+    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=2.0f; lowered using 2.0f
+    ins_500($A);
+    ins_507($A, [-1]);
+    ins_502($A, 18, 3);
+    ins_506($A, $F, 1);
+    ins_504($A, 1.5707964f + ([-9987.0f] * 0.17453292f), %C);
+    ins_505($A, 2.0f, 1.0f);
+    // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_611: $A, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_612: $A, 0, 16, 60, 1, 0, 0, %B, -999999.0f, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 512, 12, 2, -999999.0f, -999999.0f
+    ins_501($A);
+    $F = 1;
+    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    ins_435($G, 6, 20, 40, 60);
+    goto BossCard1_at2_1264 @ 0;
+    BossCard1_at2_960:
+    unless ($F < $D) goto BossCard1_at2_1144 @ 0;
+    $F = $F + 1;
+    BossCard1_at2_1144:
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(5);
+    BossCard1_at2_1264:
+    if ($G--) goto BossCard1_at2_960 @ 0;
+    ins_83(130);
+    // raw: H
+    %C = %C - 0.034907f;
+    BossCard1_at2_1404:
+    return;
+    // detected loops:
+    // - counter_loop BossCard1_at2_960 lines 569..586 condition=$G--
+}
+
+void BossCard2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    unless ([-9986] == 0) goto BossCard2_160 @ 0;
+    // unlifted instruction: ins_615(640.0f);
+    goto BossCard2_180 @ 0;
+    BossCard2_160:
+    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // original: ins_616(640.0f);
+    BossCard2_180:
+    +2:
+    // object BossPattern source_line=606 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_424(63);
+    ins_413();
+    ins_423();
+    +2:
+    // unsupported th15->th12 opcode ins_569: TH15 pointdevice/LoLK-specific unit flag, no TH12 equivalent
+    // original: ins_569(1);
+    // raw opcode fallback th15->th12: ins_540 -> ins_440; verify semantics
+    ins_440(0);
+    @BossItemCard();
+    // unlifted instruction: ins_21();
+    // raw opcode fallback th15->th12: ins_525 -> ins_425; verify semantics
+    ins_425();
+    unless ([-9986] == 0) goto BossCard2_448 @ 4;
+    // unlifted instruction: ins_615(640.0f);
+    goto BossCard2_468 @ 4;
+    BossCard2_448:
+    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // original: ins_616(640.0f);
+    BossCard2_468:
+    // unlifted instruction: ins_632(0);
+    // raw opcode fallback th15->th12: ins_545 -> ins_445; verify semantics
+    ins_445();
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(27);
+    // object Movement source_line=624 family=th13plus
+    // movement lowering th13plus -> th12: moveVel
+    ins_304(0.0f, 0.0f);
+    // object Movement source_line=625 family=th13plus
+    // movement lowering th13plus -> th12: moveVelTime
+    ins_305(0, 0, 0.0f, 0.0f);
+    // object Movement source_line=626 family=th13plus
+    // movement lowering th13plus -> th12: movePosTime
+    ins_301(0, 0, 0.0f, 0.0f);
+    // raw: [-9949] = 0;
+    // raw: [-9948] = 0;
+    // raw: [-9947] = 1;
+    // object BossPattern source_line=630 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_414(0, 0, 2400, "BossDead");
+    // raw: H
+    // object BossPattern source_line=632 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_437(6, 2400, 500000, "�e���u���i�e�B�b�N�K���v");
+    // object BossPattern source_line=634 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_437(6, 2400, 500000, "�e���u���i�e�B�b�N�K���v");
+    // object Movement source_line=636 family=th13plus
+    // movement lowering th13plus -> th12: movePosTime
+    ins_301(60, 4, 0.0f, 128.0f);
+    // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
+    ins_404(0.0f, 128.0f, 240.0f, 64.0f);
+    // unlifted instruction: ins_316(0, 0);
+    // object Animation source_line=639 family=th13plus
+    // Animation lowering th13plus -> th12: anmPlay; semantic verification required
+    ins_263(1, 73);
+    +90:
+    // unlifted instruction: ins_0();
+    @BossCard2_at2(5, 1.5707964f) async;
+    +40:
+    @BossCard2_at2(6, -1.5707964f) async;
+    %A = [-9989.0f];
+    $B = 1000;
+    goto BossCard2_2884 @ 134;
+    BossCard2_1248:
+    // object Animation source_line=649 family=th13plus
+    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    ins_258(3);
+    // unlifted instruction: ins_313(0);
+    %A = [-9989.0f];
+    @BossCard2_at(0, %A) async;
+    ins_83(10);
+    %A = %A + 1.047198f;
+    @BossCard2_at(1, %A) async;
+    ins_83(10);
+    %A = %A - 2.094395f;
+    @BossCard2_at(2, %A) async;
+    ins_83(10);
+    %A = %A + 0.523599f;
+    @BossCard2_at(3, %A) async;
+    ins_83(10);
+    %A = %A + 1.047198f;
+    @BossCard2_at(4, %A) async;
+    ins_83(10);
+    unless ([-9959] >= 2) goto BossCard2_2792 @ 134;
+    %A = [-9989.0f] - 0.5235988f;
+    @BossCard2_at(0, %A) async;
+    ins_83(10);
+    %A = %A + 0.785398f;
+    @BossCard2_at(1, %A) async;
+    ins_83(10);
+    %A = %A - 0.523599f;
+    @BossCard2_at(2, %A) async;
+    ins_83(10);
+    %A = %A + 0.785398f;
+    @BossCard2_at(3, %A) async;
+    ins_83(10);
+    %A = %A - 0.523599f;
+    @BossCard2_at(4, %A) async;
+    BossCard2_2792:
+    // unlifted instruction: ins_316(0, 0);
+    ins_83(60);
+    // unlifted instruction: ins_412(30, 4, 1.0f);
+    ins_83(40);
+    BossCard2_2884:
+    if ($B--) goto BossCard2_1248 @ 134;
+    goto BossCard2_2972 @ 134;
+    BossCard2_2952:
+    ins_83(1000);
+    BossCard2_2972:
+    if (1) goto BossCard2_2952 @ 134;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2_1248 lines 648..687 condition=$B--
+    // - backedge_loop BossCard2_2952 lines 689..692 condition=1
+}
+
+void BossCard2_at(var A, var B)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var C, D;
+    // object BulletEmitter source_line=699 family=th13plus
+    // difficulty speed.first: E=1.5f, N=2.0f, H=3.5f, LO=3.5f; lowered using 3.5f
+    ins_500($A);
+    ins_507($A, 1);
+    ins_502($A, 13, 4);
+    ins_506($A, $C, 1);
+    ins_504($A, %B, 0.034906585f);
+    ins_505($A, 3.5f, 1.0f);
+    // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    // unsupported th13+ transform for th12; preserved source ins_611: $A, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    ins_501($A);
+    $C = 1;
+    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    ins_435($D, 6, 8, 8, 8);
+    goto BossCard2_at_712 @ 0;
+    BossCard2_at_488:
+    $C = $C + 1;
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(4);
+    BossCard2_at_712:
+    if ($D--) goto BossCard2_at_488 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2_at_488 lines 720..735 condition=$D--
+}
+
+void BossCard2_at2(var A, var B)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var C, D, E, F, G;
+    %E = %B;
+    $F = 1;
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(100);
+    // object BulletEmitter source_line=754 family=th13plus
+    // difficulty speed.first: E=1.0f, N=1.0f, H=1.0f, LO=1.8f; lowered using 1.8f
+    ins_500($A);
+    ins_507($A, 3);
+    ins_502($A, 13, 6);
+    ins_506($A, 5, 1);
+    ins_504($A, %E, 0.0f);
+    ins_505($A, 1.8f, 0.8f);
+    // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_501($A);
+    // unlifted instruction: ins_627($A, 64.0f);
+    $G = 60000;
+    goto BossCard2_at2_1180 @ 0;
+    BossCard2_at2_744:
+    // raw: H
+    unless ($F < 1000) goto BossCard2_at2_1080 @ 0;
+    $F = $F + 1;
+    BossCard2_at2_1080:
+    // dynamic wait collapsed from difficulty literals using LO
+    ins_83(4);
+    BossCard2_at2_1180:
+    if ($G--) goto BossCard2_at2_744 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2_at2_744 lines 790..814 condition=$G--
+}
+
+void BossDead()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    ins_402(156);
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(5);
+    // object Movement source_line=822 family=th13plus
+    // movement lowering th13plus -> th12: moveVel
+    ins_304([-9998.0f], 0.4f);
+    unless ([-9986] == 0) goto BossDead_260 @ 0;
+    // object Enemy source_line=824 family=th13plus
+    // Enemy lowering th13plus -> th12: enmCreate; semantic verification required
+    ins_256("Ecl_EtBreak2", 0.0f, 0.0f, 9999, 0, 0);
+    goto BossDead_316 @ 0;
+    BossDead_260:
+    // object Enemy source_line=827 family=th13plus
+    // Enemy lowering th13plus -> th12: enmCreate; semantic verification required
+    ins_256("Ecl_EtBreak2_ni", 0.0f, 0.0f, 9999, 0, 0);
+    BossDead_316:
+    // raw opcode fallback th15->th12: ins_525 -> ins_425; verify semantics
+    ins_425();
+    +60:
+    // unsupported th15->th12 opcode ins_613: TH15 bullet/effect opcode is not TH12 opcode 513; parameter formats differ
+    // original: ins_613();
+    // object BossPattern source_line=832 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_423();
+    ins_412(-1);
+    @BossItemPhase(40, 15, 64.0f);
+    // raw opcode fallback th15->th12: ins_517 -> ins_417; verify semantics
+    ins_417(30, 12, 0);
+    // object Animation source_line=835 family=th13plus
+    // Animation lowering th13plus -> th12: anmPlay; semantic verification required
+    ins_263(1, 32);
+    // object Animation source_line=836 family=th13plus
+    // Animation lowering th13plus -> th12: anmPlay; semantic verification required
+    ins_263(1, 64);
+    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    ins_416(5);
+    // unlifted instruction: ins_1();
+    // unlifted instruction: ins_1();
+}
+
+void BossEscape()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BossPattern source_line=845 family=th13plus
+    // BossPattern lowering th13plus -> th12; semantic verification required
+    ins_423();
+    ins_411(100000);
+    ins_424(43);
+    ins_412(-1);
+    // raw opcode fallback th15->th12: ins_505 -> ins_405; verify semantics
+    ins_405();
+    // raw opcode fallback th15->th12: ins_525 -> ins_425; verify semantics
+    ins_425();
+    unless ([-9986] == 0) goto BossEscape_208 @ 0;
+    // unlifted instruction: ins_615(640.0f);
+    goto BossEscape_228 @ 0;
+    BossEscape_208:
+    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // original: ins_616(640.0f);
+    BossEscape_228:
+    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    ins_402(16);
+    // object Movement source_line=858 family=th13plus
+    // movement lowering th13plus -> th12: movePosTime
+    ins_301(60, 4, -224.0f, -16.0f);
+    ins_83(60);
+    // unlifted instruction: ins_1();
+    // unlifted instruction: ins_1();
+}

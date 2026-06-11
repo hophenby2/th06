@@ -47,6 +47,7 @@ class Statement:
 @dataclass
 class Function:
     name: str
+    params: str = ""
     body: list[Instruction] = field(default_factory=list)
     statements: list[Statement] = field(default_factory=list)
 
