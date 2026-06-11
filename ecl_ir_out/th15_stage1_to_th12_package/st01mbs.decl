@@ -2,6 +2,7 @@
 // source game: th15
 // target: th12
 // whole-file lowering is a structured draft; verify target-game scheduling and resources
+anim { "enemy.anm"; "stgenm01.anm"; }
 // top-level declarations
 void BossItemPhase(var A, var B, var C);
 void BossItemCard();
@@ -32,7 +33,7 @@ void MBoss()
     ins_259(1, 107);
     // object Animation source_line=19 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // object Animation source_line=20 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
@@ -118,7 +119,7 @@ void MBoss1_at(var A, var B, var C)
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     // object Animation source_line=88 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // unlifted instruction: ins_313(0);
     $F = 1;
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
@@ -164,7 +165,7 @@ void MBoss1_at(var A, var B, var C)
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 1048576, 0, -999999, -999999.0f, -999999.0f
     // object Animation source_line=138 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // unlifted instruction: ins_313(0);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($H, 4, 8, 16, 24);
@@ -468,6 +469,8 @@ void MBossDead()
     ins_263(1, 65);
     // raw opcode fallback th15->th12: ins_505 -> ins_405; verify semantics
     ins_405();
+    !*
+    @BossItemPhase([-1], 10, 48.0f);
     // unlifted instruction: ins_570();
     // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
     ins_402(3);

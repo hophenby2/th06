@@ -379,6 +379,8 @@ void test()
     // object Movement source_line=245 family=th13plus
     // movement lowering th13plus -> th12: moveVelTime
     ins_305(60, 0, -999999.0f, 2.0f);
+    !*
+    return;
 }
 
 void test2()

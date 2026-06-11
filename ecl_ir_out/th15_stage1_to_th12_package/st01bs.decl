@@ -2,6 +2,7 @@
 // source game: th15
 // target: th12
 // whole-file lowering is a structured draft; verify target-game scheduling and resources
+anim { "enemy.anm"; "stgenm01.anm"; }
 // top-level declarations
 void BossItemCard();
 void BossItemPhase(var A, var B, var C);
@@ -31,7 +32,7 @@ void Boss()
     ins_83(101);
     // object Animation source_line=18 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // object Animation source_line=19 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
@@ -62,7 +63,7 @@ void Boss()
     ins_259(2, 116);
     // object Animation source_line=33 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // unlifted instruction: ins_629(160.0f, 15732608);
     unless ([-9907] >= 0) goto Boss_1200 @ 1;
     unless (([-9907] >= 2) && ([-9907] <= 5)) goto Boss_996 @ 1;
@@ -95,7 +96,7 @@ void Boss1()
     ins_440(1);
     // object Animation source_line=57 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // object Animation source_line=58 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
@@ -146,7 +147,7 @@ void Boss1_at(var A, var B, var C)
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     // object Animation source_line=100 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // unlifted instruction: ins_313(0);
     $F = 1;
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
@@ -191,7 +192,7 @@ void Boss1_at(var A, var B, var C)
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 1048576, 0, -999999, -999999.0f, -999999.0f
     // object Animation source_line=149 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // unlifted instruction: ins_313(0);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($H, 4, 8, 8, 12);
@@ -325,7 +326,7 @@ void Boss2()
     // raw: [-9947] = 1;
     // object Animation source_line=267 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // object Animation source_line=268 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
@@ -386,7 +387,7 @@ void Boss2_at(var A, var B, var C)
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     // object Animation source_line=317 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // unlifted instruction: ins_313(0);
     $F = 1;
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
@@ -592,7 +593,7 @@ void BossCard1_at(var A)
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     // object Animation source_line=503 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // unlifted instruction: ins_313(0);
     $B = 1;
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
@@ -677,10 +678,16 @@ void BossCard1_at2(var A, var B)
     BossCard1_at2_1264:
     if ($G--) goto BossCard1_at2_960 @ 0;
     ins_83(130);
+    !NH
+    %C = %C - 0.034907f;
+    !*
     BossCard1_at2_1404:
+    !*
+    if ($E--) goto BossCard1_at2_172 @ 0;
     return;
     // detected loops:
     // - counter_loop BossCard1_at2_960 lines 569..586 condition=$G--
+    // - counter_loop BossCard1_at2_172 lines 535..592 condition=$E--
 }
 
 void BossCard2()
@@ -771,7 +778,7 @@ void BossCard2()
     BossCard2_1248:
     // object Animation source_line=649 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(3);
+    ins_258(2);
     // unlifted instruction: ins_313(0);
     %A = [-9989.0f];
     @BossCard2_at(0, %A) async;
@@ -902,6 +909,8 @@ void BossCard2_at2(var A, var B)
     $G = 60000;
     goto BossCard2_at2_1180 @ 0;
     BossCard2_at2_744:
+    !*
+    %E = %E + 3.883222f;
     // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
     ins_501($A);
     unless ($F < 1000) goto BossCard2_at2_1080 @ 0;

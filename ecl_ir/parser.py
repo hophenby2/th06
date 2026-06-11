@@ -94,6 +94,15 @@ def classify_statement(raw_line: str, line_no: int, difficulty: str | None = Non
     return Statement("raw", raw_line.rstrip(), line_no, text, difficulty)
 
 
+def is_difficulty_literal_statement(line: str, line_no: int = 0) -> bool:
+    text = line.strip()
+    if not text.endswith(";") or INS_RE.search(text):
+        return False
+    # Numeric/expression rank tables are raw expression statements like `90;` or `1.5f;`.
+    # Real statements such as `@Foo() async;`, `goto`, assignments, returns, etc. must keep the rank marker.
+    return classify_statement(text, line_no).kind == "raw"
+
+
 def infer_game(path: str | Path) -> str:
     for part in Path(path).parts:
         if re.fullmatch(r"th(?:0[6-9]|1[0-8])", part):
@@ -142,14 +151,14 @@ def parse_decl(path: str | Path) -> Program:
             statement_line = line
             if not line:
                 continue
-            if not INS_RE.search(line) and line.endswith(";"):
+            if is_difficulty_literal_statement(line, line_no):
                 if pending_diff in current_literals and current_literals:
                     pending_literal_groups.append(current_literals)
                     current_literals = {}
                 current_literals[pending_diff] = line[:-1].strip()
                 pending_diff = None
                 continue
-        elif pending_diff and not INS_RE.search(line) and line.endswith(";"):
+        elif pending_diff and is_difficulty_literal_statement(line, line_no):
             if pending_diff in current_literals and current_literals:
                 pending_literal_groups.append(current_literals)
                 current_literals = {}

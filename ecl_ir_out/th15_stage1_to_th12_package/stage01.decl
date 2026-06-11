@@ -129,36 +129,6 @@ void YGirl10()
     @MainSub05();
     return;
 }
-void Boss()
-{
-    @MainBoss();
-    return;
-}
-void Boss1()
-{
-    @MainBoss();
-    return;
-}
-void Boss2()
-{
-    @MainBoss();
-    return;
-}
-void MBoss()
-{
-    @MainMBossDebug();
-    return;
-}
-void MBoss1()
-{
-    @MainMBossDebug();
-    return;
-}
-void MBoss2()
-{
-    @MainMBossDebug();
-    return;
-}
 void MainSub02b()
 {
     @MainSub02();
@@ -711,6 +681,11 @@ void GirlBlueA01e()
     ins_262(0, 0);
     // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
     ins_410(2);
+    !NHL
+    @GirlA01_at() async;
+    !*
+    !*
+    @GirlA01();
     // unlifted instruction: ins_1();
 }
 
@@ -1191,6 +1166,11 @@ void GirlRedA01e()
     ins_262(0, 5);
     // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
     ins_410(1);
+    !NHL
+    @GirlA01_at() async;
+    !*
+    !*
+    @GirlA01();
     // unlifted instruction: ins_1();
 }
 
@@ -1862,6 +1842,9 @@ void Phantom01()
     ins_305(120, 3, 1.5707964f, 1.5f);
     // unsupported th15->th12 opcode ins_422: TH13+ movement opcode not represented in current TH12 movement subset
     // original: ins_422([-9981.0f], 0.034906585f, 10.0f, 0.0f, [-9971.0f], 0.0f);
+    !HL
+    @Phantom01_at() async;
+    !*
     !*
     ins_83(60);
     // raw opcode fallback th15->th12: ins_503 -> ins_403; verify semantics
@@ -1998,6 +1981,9 @@ void Phantom02b()
     ins_410(2);
     // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
     ins_407(1, 1);
+    !L
+    @Phantom02_at() async;
+    !*
     // object Movement source_line=1273 family=th13plus
     !*
     // movement lowering th13plus -> th12: moveVel

@@ -52,7 +52,10 @@ def emit_transpile(program, objects, target: str) -> str:
     lines.append(f"// source game: {program.game}")
     lines.append(f"// target: {target}")
     lines.append("// whole-file lowering is a structured draft; verify target-game scheduling and resources")
-    for resource, entries in program.resources.items():
+    resources = dict(program.resources)
+    for resource, entries in synthetic_resource_entries(program, target).items():
+        resources.setdefault(resource, entries)
+    for resource, entries in resources.items():
         entries = target_resource_entries(program, target, resource, entries)
         quoted = "; ".join(f'"{entry}"' for entry in entries)
         lines.append(f"{resource} {{ {quoted}; }}")
@@ -86,6 +89,13 @@ def emit_transpile(program, objects, target: str) -> str:
 
 
 
+def synthetic_resource_entries(program, target: str) -> dict[str, list[str]]:
+    name = Path(program.source).name
+    if program.game == "th15" and target == "th12" and name in {"st01bs.decl", "st01mbs.decl", "st01mbs2.decl"}:
+        return {"anim": ["enemy.anm", "stgenm01.anm"]}
+    return {}
+
+
 def target_resource_entries(program, target: str, resource: str, entries: list[str]) -> list[str]:
     if program.game == "th15" and target == "th12" and resource == "anim" and Path(program.source).name == "st01.decl":
         return ["enemy.anm", "stgenm01.anm"]
@@ -97,8 +107,8 @@ def th12_stage01_compat_wrappers(function_names: set[str]) -> list[str]:
         "GGirl00": "MainSub00", "GGirl02": "MainSub01", "GGirl04": "MainSub02", "GGirl05": "MainSub03", "GGirl07": "MainSub04", "GGirl10": "MainSub05",
         "RGirl00": "MainSub00", "RGirl02": "MainSub01", "RGirl04": "MainSub02", "RGirl05": "MainSub03", "RGirl07": "MainSub04", "RGirl10": "MainSub05",
         "YGirl00": "MainSub00", "YGirl02": "MainSub01", "YGirl04": "MainSub02", "YGirl05": "MainSub03", "YGirl07": "MainSub04", "YGirl10": "MainSub05",
-        "Boss": "MainBoss", "Boss1": "MainBoss", "Boss2": "MainBoss",
-        "MBoss": "MainMBossDebug", "MBoss1": "MainMBossDebug", "MBoss2": "MainMBossDebug",
+        # Do not wrap Boss/MBoss names: TH15 stage01 loads them from external ECLI files.
+        # A local wrapper with the same name shadows the external entry and can recurse/crash.
         "MainSub02b": "MainSub02", "MainSub07b": "MainSub07", "MainSub08": "MainLatter", "MainSub08b": "MainLatter",
         "MainSub09": "MainLatter", "MainSub10": "MainLatter2", "MainSub10b": "MainLatter2", "MainSub11": "MainLatter2",
         "MainSub12": "MainLatter2", "MainSub13": "MainLatter2",

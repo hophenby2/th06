@@ -88,7 +88,7 @@ def wrap_ranked_lines(lines: list[str], difficulty: str | None, target: str = ""
     if not marker:
         return lines
     if marker == "*":
-        return ["!*", *lines]
+        return lines if lines and lines[0] == "!*" else ["!*", *lines]
     return [f"!{marker}", *lines, "!*"]
 
 
@@ -241,6 +241,10 @@ def remap_named_args(obj, target: str, semantic: str, args: list[str]) -> list[s
         # TH15 st01 enemy sprites live in st01enm.anm at ANM index 2.
         # TH12 stage01 has no st01enm.anm; index 2 points at stage/boss ANM, so use enemy.anm.
         return ["1"]
+    if target == "th12" and getattr(obj, "family", "") == "th13plus" and semantic == "anmSelect" and args == ["3"]:
+        # TH13+ stage boss/midboss scripts commonly select stage boss ANM at index 3.
+        # TH12 stage01's boss ANM is selected with index 2; leaving 3 can crash at runtime.
+        return ["2"]
     if target == "th12" and getattr(obj, "family", "") == "th13plus" and semantic in {"anmSetMain", "anmSetSprite"}:
         # Keep script IDs for now; the important crash/visual fix is the ANM file index.
         # A later sprite table can map TH15 st01enm script IDs to closer TH12 enemy.anm scripts.
