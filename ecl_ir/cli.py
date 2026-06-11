@@ -5,7 +5,7 @@ import json
 import re
 from pathlib import Path
 
-from .backend import compile_bullet_emitter, compile_object
+from .backend import choose_difficulty, compile_bullet_emitter, compile_object
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
 
@@ -244,12 +244,11 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
             if wait.startswith("["):
                 literals = event.get("difficulty_literals", {})
                 if isinstance(literals, dict) and literals:
-                    for rank in ("LO", "L", "H", "N", "E"):
-                        if rank in literals:
-                            wait_value = str(literals[rank])
-                            if target == "th12":
-                                return [f"    // dynamic wait collapsed from difficulty literals using {rank}", f"    ins_83({wait_value});"]
-                            return [f"    // dynamic wait collapsed from difficulty literals using {rank}", f"    +{literal_time_value(wait_value)}:"]
+                    wait_value, rank = choose_difficulty(literals, "1")
+                    wait_value = str(wait_value)
+                    if target == "th12":
+                        return [f"    // dynamic wait collapsed from difficulty literals using {rank}", f"    ins_83({wait_value});"]
+                    return [f"    // dynamic wait collapsed from difficulty literals using {rank}", f"    +{literal_time_value(wait_value)}:"]
                 safe_text = text.replace("ins_", "src_ins_")
                 return [f"    // dynamic wait from source opcode {opcode}; TH12 timer labels need a literal", f"    // original source: {safe_text}"]
             if target == "th12":

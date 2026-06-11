@@ -6,13 +6,22 @@ INT_SENTINEL = "-999999"
 FLOAT_SENTINEL = "-999999.0f"
 
 
+TARGET_DIFFICULTY = "N"
+DIFFICULTY_FALLBACK_ORDER = ("N", "H", "E", "LO", "L")
+
+
+def choose_difficulty(difficulty: dict[str, str], default: str = "") -> tuple[str, str]:
+    for key in DIFFICULTY_FALLBACK_ORDER:
+        if key in difficulty:
+            return difficulty[key], key
+    return default, "placeholder"
+
+
 def v(value, default):
     if isinstance(value, dict):
         difficulty = value.get("difficulty", {})
-        for key in ("LO", "L", "H", "N", "E"):
-            if key in difficulty:
-                return difficulty[key]
-        return value.get("placeholder", default)
+        chosen, _ = choose_difficulty(difficulty, value.get("placeholder", default))
+        return chosen
     return value if value not in (None, "") else default
 
 
@@ -20,7 +29,8 @@ def difficulty_comment(field: str, value) -> str | None:
     if not isinstance(value, dict) or "difficulty" not in value:
         return None
     parts = ", ".join(f"{key}={val}" for key, val in value["difficulty"].items())
-    return f"// difficulty {field}: {parts}; lowered using {v(value, '')}"
+    _, rank = choose_difficulty(value["difficulty"], value.get("placeholder", ""))
+    return f"// difficulty {field}: {parts}; lowered using {rank}={v(value, '')}"
 
 
 def compile_bullet_emitter(emitter: BulletEmitter, target: str) -> str:
@@ -76,8 +86,21 @@ def compile_named_op(obj, target: str, table_by_family: dict[str, dict[str, int]
     opcode = table_by_family.get(family, {}).get(semantic)
     if opcode is None:
         return compile_raw_comment(obj, target) + f"\n// unsupported semantic op for {target}: {semantic}"
-    args = obj.fields.get("args", [])
+    args = remap_named_args(obj, target, semantic, obj.fields.get("args", []))
     return f"// {obj.kind} lowering {obj.family} -> {target}: {semantic}; semantic verification required\nins_{opcode}({', '.join(args)});"
+
+
+def remap_named_args(obj, target: str, semantic: str, args: list[str]) -> list[str]:
+    args = list(args)
+    if target == "th12" and getattr(obj, "family", "") == "th13plus" and semantic == "anmSelect" and args == ["2"]:
+        # TH15 st01 enemy sprites live in st01enm.anm at ANM index 2.
+        # TH12 stage01 has no st01enm.anm; index 2 points at stage/boss ANM, so use enemy.anm.
+        return ["1"]
+    if target == "th12" and getattr(obj, "family", "") == "th13plus" and semantic in {"anmSetMain", "anmSetSprite"}:
+        # Keep script IDs for now; the important crash/visual fix is the ANM file index.
+        # A later sprite table can map TH15 st01enm script IDs to closer TH12 enemy.anm scripts.
+        return args
+    return args
 
 
 def compile_boss_pattern(obj, target: str) -> str:

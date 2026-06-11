@@ -247,16 +247,16 @@ void GirlA01_at()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(30);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(90);
     // object BulletEmitter source_line=39 family=th13plus
-    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; lowered using 3.0f
+    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; lowered using N=1.5f
     ins_500(0);
     ins_507(0, 0);
     ins_502(0, 4, 6);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
-    ins_505(0, 3.0f, 1.0f);
+    ins_505(0, 1.5f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 7.0f, -999999.0f
     ins_501(0);
@@ -266,8 +266,8 @@ void GirlA01_at()
     ins_435($A, 1, 1, 4, 20);
     goto GirlA01_at_720 @ 0;
     GirlA01_at_600:
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(5);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(30);
     GirlA01_at_720:
     if ($A--) goto GirlA01_at_600 @ 0;
     return;
@@ -335,16 +335,16 @@ void GirlA02_at()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(30);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(90);
     // object BulletEmitter source_line=128 family=th13plus
-    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; lowered using 3.0f
+    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; lowered using N=1.5f
     ins_500(0);
     ins_507(0, 0);
     ins_502(0, 4, 6);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
-    ins_505(0, 3.0f, 1.0f);
+    ins_505(0, 1.5f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 7.0f, -999999.0f
     ins_501(0);
@@ -354,8 +354,8 @@ void GirlA02_at()
     ins_435($A, 1, 1, 4, 20);
     goto GirlA02_at_720 @ 0;
     GirlA02_at_600:
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(5);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(30);
     GirlA02_at_720:
     if ($A--) goto GirlA02_at_600 @ 0;
     return;
@@ -420,24 +420,24 @@ void GirlA03_at()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(30);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(90);
     // object BulletEmitter source_line=217 family=th13plus
-    // difficulty speed.first: E=1.5f, N=1.5f, H=3.0f, LO=4.0f; lowered using 4.0f
+    // difficulty speed.first: E=1.5f, N=1.5f, H=3.0f, LO=4.0f; lowered using N=1.5f
     ins_500(0);
     ins_507(0, 0);
     ins_502(0, 4, 6);
     ins_506(0, 3, 1);
     ins_504(0, 0.0f, 1.0471976f);
-    ins_505(0, 4.0f, 1.0f);
+    ins_505(0, 1.5f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_501(0);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 1, 1, 7, 16);
     goto GirlA03_at_600 @ 0;
     GirlA03_at_480:
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(20);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(60);
     GirlA03_at_600:
     if ($A--) goto GirlA03_at_480 @ 0;
     return;
@@ -451,7 +451,7 @@ void GirlB01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=254 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=255 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 20);
@@ -517,8 +517,8 @@ void GirlB01_at()
     goto GirlB01_at_628 @ 0;
     GirlB01_at_488:
     // unlifted instruction: ins_601(1);
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(10);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(20);
     GirlB01_at_628:
     if ($A--) goto GirlB01_at_488 @ 0;
     return;
@@ -532,7 +532,7 @@ void GirlB02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=314 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=315 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 35);
@@ -612,7 +612,7 @@ void GirlBlueA01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=368 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=369 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
@@ -628,7 +628,7 @@ void GirlBlueA01e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=377 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=378 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
@@ -645,7 +645,7 @@ void GirlBlueA02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=389 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=390 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
@@ -661,7 +661,7 @@ void GirlBlueA02e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=398 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=399 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
@@ -678,7 +678,7 @@ void GirlBlueA03()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=408 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=409 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
@@ -694,7 +694,7 @@ void GirlC01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=417 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=418 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 35);
@@ -742,11 +742,11 @@ void GirlC01_at()
     var A, B, C;
     ins_83(60);
     // object BulletEmitter source_line=444 family=th13plus
-    // difficulty count.ways: E=1, N=1, H=2, LO=5; lowered using 5
+    // difficulty count.ways: E=1, N=1, H=2, LO=5; lowered using N=1
     ins_500(0);
     ins_507(0, 1);
     ins_502(0, 8, 6);
-    ins_506(0, 5, 1);
+    ins_506(0, 1, 1);
     ins_504(0, 1.5707964f, 0.12217305f);
     ins_505(0, %A, 0.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
@@ -762,12 +762,12 @@ void GirlC01_at()
     goto GirlC01_at_716 @ 0;
     GirlC01_at_492:
     %A = %A + 0.15f;
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(1);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(4);
     GirlC01_at_716:
     if ($C--) goto GirlC01_at_492 @ 0;
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(20);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(60);
     GirlC01_at_860:
     if ($B--) goto GirlC01_at_396 @ 0;
     return;
@@ -784,7 +784,7 @@ void GirlD01()
     // original: ins_569(6);
     // object Animation source_line=500 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=501 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 40);
@@ -844,8 +844,8 @@ void GirlD01_at()
     ins_435($A, 2, 3, 6, 10);
     goto GirlD01_at_640 @ 0;
     GirlD01_at_520:
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(30);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(120);
     GirlD01_at_640:
     if ($A--) goto GirlD01_at_520 @ 0;
     return;
@@ -893,8 +893,8 @@ void GirlD01_at2()
     if ($F--) goto GirlD01_at2_812 @ 0;
     GirlD01_at2_952:
     if ($E--) goto GirlD01_at2_604 @ 0;
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(90);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(180);
     GirlD01_at2_1096:
     if ($D--) goto GirlD01_at2_360 @ 0;
     return;
@@ -912,7 +912,7 @@ void GirlD02()
     // original: ins_569(6);
     // object Animation source_line=618 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=619 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 40);
@@ -957,21 +957,21 @@ void GirlD02_at()
     var A;
     ins_83(60);
     // object BulletEmitter source_line=644 family=th13plus
-    // difficulty speed.first: E=1.6f, N=1.6f, H=3.0f, LO=4.0f; lowered using 4.0f
+    // difficulty speed.first: E=1.6f, N=1.6f, H=3.0f, LO=4.0f; lowered using N=1.6f
     ins_500(0);
     ins_507(0, 9);
     ins_502(0, 7, 2);
     ins_506(0, 8, [-1]);
     ins_504(0, 0.0f, 0.05235988f);
-    ins_505(0, 4.0f, 1.6f);
+    ins_505(0, 1.6f, 1.6f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_501(0);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 2, 5, 8, 4);
     goto GirlD02_at_596 @ 0;
     GirlD02_at_476:
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(30);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(120);
     GirlD02_at_596:
     if ($A--) goto GirlD02_at_476 @ 0;
     return;
@@ -1019,8 +1019,8 @@ void GirlD02_at2()
     if ($F--) goto GirlD02_at2_812 @ 0;
     GirlD02_at2_952:
     if ($E--) goto GirlD02_at2_604 @ 0;
-    // dynamic wait collapsed from difficulty literals using LO
-    ins_83(90);
+    // dynamic wait collapsed from difficulty literals using N
+    ins_83(180);
     GirlD02_at2_1096:
     if ($D--) goto GirlD02_at2_360 @ 0;
     return;
@@ -1036,7 +1036,7 @@ void GirlRedA01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=741 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=742 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 5);
@@ -1052,7 +1052,7 @@ void GirlRedA01e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=750 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=751 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 5);
@@ -1069,7 +1069,7 @@ void GirlRedA02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=762 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=763 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 5);
@@ -1085,7 +1085,7 @@ void GirlRedA02e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=771 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=772 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 5);
@@ -1102,7 +1102,7 @@ void GirlRedA03()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=781 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=782 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 5);
@@ -1707,7 +1707,7 @@ void Phantom01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=1175 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=1176 family=th13plus
     // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
     ins_259(0, 87);
@@ -1772,7 +1772,7 @@ void Phantom02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=1220 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=1221 family=th13plus
     // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
     ins_259(0, 87);
@@ -1836,7 +1836,7 @@ void Phantom02b()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=1260 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=1261 family=th13plus
     // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
     ins_259(0, 79);
