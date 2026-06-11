@@ -247,16 +247,25 @@ void GirlA01_at()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(90);
+    !N
+    ins_83(90);
+    !H
+    ins_83(30);
+    !L
+    ins_83(30);
+    !*
     // object BulletEmitter source_line=39 family=th13plus
-    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; lowered using N=1.5f
+    !*
+    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; preserved as TH12 difficulty table; default preview N=1.5f
     ins_500(0);
     ins_507(0, 0);
     ins_502(0, 4, 6);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
-    ins_505(0, 1.5f, 1.0f);
+    ins_521(0, 1.5f, 1.5f, 2.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 7.0f, -999999.0f
     ins_501(0);
@@ -266,8 +275,16 @@ void GirlA01_at()
     ins_435($A, 1, 1, 4, 20);
     goto GirlA01_at_720 @ 0;
     GirlA01_at_600:
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(30);
+    !N
+    ins_83(30);
+    !H
+    ins_83(20);
+    !L
+    ins_83(5);
+    !*
     GirlA01_at_720:
     if ($A--) goto GirlA01_at_600 @ 0;
     return;
@@ -288,6 +305,8 @@ void GirlA01_at_l()
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
     ins_505(0, 1.0f, 0.0f);
+    ins_522(0, 3, 3, 3, 6, 1, 1, 1, 1);
+    ins_521(0, 2.2f, 2.2f, 2.2f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_501(0);
     $A = 1;
@@ -335,16 +354,25 @@ void GirlA02_at()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(90);
+    !N
+    ins_83(90);
+    !H
+    ins_83(30);
+    !L
+    ins_83(30);
+    !*
     // object BulletEmitter source_line=128 family=th13plus
-    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; lowered using N=1.5f
+    !*
+    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; preserved as TH12 difficulty table; default preview N=1.5f
     ins_500(0);
     ins_507(0, 0);
     ins_502(0, 4, 6);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
-    ins_505(0, 1.5f, 1.0f);
+    ins_521(0, 1.5f, 1.5f, 2.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 7.0f, -999999.0f
     ins_501(0);
@@ -354,8 +382,16 @@ void GirlA02_at()
     ins_435($A, 1, 1, 4, 20);
     goto GirlA02_at_720 @ 0;
     GirlA02_at_600:
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(30);
+    !N
+    ins_83(30);
+    !H
+    ins_83(20);
+    !L
+    ins_83(5);
+    !*
     GirlA02_at_720:
     if ($A--) goto GirlA02_at_600 @ 0;
     return;
@@ -376,6 +412,8 @@ void GirlA02_at_l()
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
     ins_505(0, 1.0f, 0.0f);
+    ins_522(0, 3, 3, 3, 6, 1, 1, 1, 1);
+    ins_521(0, 2.2f, 2.2f, 2.2f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_501(0);
     $A = 1;
@@ -420,24 +458,41 @@ void GirlA03_at()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_83(180);
+    !N
     ins_83(90);
+    !H
+    ins_83(30);
+    !L
+    ins_83(30);
+    !*
     // object BulletEmitter source_line=217 family=th13plus
-    // difficulty speed.first: E=1.5f, N=1.5f, H=3.0f, LO=4.0f; lowered using N=1.5f
+    !*
+    // difficulty speed.first: E=1.5f, N=1.5f, H=3.0f, LO=4.0f; preserved as TH12 difficulty table; default preview N=1.5f
     ins_500(0);
     ins_507(0, 0);
     ins_502(0, 4, 6);
     ins_506(0, 3, 1);
     ins_504(0, 0.0f, 1.0471976f);
-    ins_505(0, 1.5f, 1.0f);
+    ins_521(0, 1.5f, 1.5f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_501(0);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 1, 1, 7, 16);
     goto GirlA03_at_600 @ 0;
     GirlA03_at_480:
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(60);
+    !N
+    ins_83(60);
+    !H
+    ins_83(60);
+    !L
+    ins_83(20);
+    !*
     GirlA03_at_600:
     if ($A--) goto GirlA03_at_480 @ 0;
     return;
@@ -506,6 +561,8 @@ void GirlB01_at()
     ins_506(0, 1, 1);
     ins_504(0, 1.5707964f, 0.34906584f);
     ins_505(0, 1.0f, 0.0f);
+    ins_522(0, 1, 1, 1, 2, 1, 1, 1, 1);
+    ins_521(0, 1.2f, 1.6f, 2.2f, 4.2f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     ins_501(0);
@@ -517,8 +574,16 @@ void GirlB01_at()
     goto GirlB01_at_628 @ 0;
     GirlB01_at_488:
     // unlifted instruction: ins_601(1);
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(20);
+    !N
+    ins_83(20);
+    !H
+    ins_83(10);
+    !L
+    ins_83(10);
+    !*
     GirlB01_at_628:
     if ($A--) goto GirlB01_at_488 @ 0;
     return;
@@ -588,6 +653,8 @@ void GirlB02_at()
     ins_506(0, 1, 1);
     ins_504(0, [-9998.0f], 0.0f);
     ins_505(0, 1.0f, 0.0f);
+    ins_522(0, 3, 5, 20, 13, 1, 1, 1, 2);
+    ins_521(0, 0.5f, 0.5f, 1.5f, 2.5f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, -2147483648, 60, -999999, -999999.0f, -999999.0f
@@ -634,8 +701,6 @@ void GirlBlueA01e()
     ins_262(0, 0);
     // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
     ins_410(2);
-    // raw: HL
-    @GirlA01_at() async;
     // unlifted instruction: ins_1();
 }
 
@@ -742,11 +807,12 @@ void GirlC01_at()
     var A, B, C;
     ins_83(60);
     // object BulletEmitter source_line=444 family=th13plus
-    // difficulty count.ways: E=1, N=1, H=2, LO=5; lowered using N=1
+    !*
+    // difficulty count.ways: E=1, N=1, H=2, LO=5; preserved as TH12 difficulty table; default preview N=1
     ins_500(0);
     ins_507(0, 1);
     ins_502(0, 8, 6);
-    ins_506(0, 1, 1);
+    ins_522(0, 1, 1, 2, 5, 1, 1, 1, 1);
     ins_504(0, 1.5707964f, 0.12217305f);
     ins_505(0, %A, 0.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
@@ -762,12 +828,28 @@ void GirlC01_at()
     goto GirlC01_at_716 @ 0;
     GirlC01_at_492:
     %A = %A + 0.15f;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(4);
+    !N
+    ins_83(4);
+    !H
+    ins_83(2);
+    !L
+    ins_83(1);
+    !*
     GirlC01_at_716:
     if ($C--) goto GirlC01_at_492 @ 0;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(60);
+    !N
+    ins_83(60);
+    !H
+    ins_83(30);
+    !L
+    ins_83(20);
+    !*
     GirlC01_at_860:
     if ($B--) goto GirlC01_at_396 @ 0;
     return;
@@ -829,10 +911,12 @@ void GirlD01_at()
     var A;
     ins_83(60);
     // object BulletEmitter source_line=526 family=th13plus
+    !*
+    // difficulty count.layers: E=2, N=6, H=6, LO=6; preserved as TH12 difficulty table; default preview N=6
     ins_500(0);
     ins_507(0, 9);
     ins_502(0, 7, 4);
-    ins_506(0, 10, [-1]);
+    ins_522(0, 10, 10, 10, 10, 2, 6, 6, 6);
     ins_504(0, 0.0f, 0.05235988f);
     ins_505(0, 1.6f, 1.6f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
@@ -844,8 +928,16 @@ void GirlD01_at()
     ins_435($A, 2, 3, 6, 10);
     goto GirlD01_at_640 @ 0;
     GirlD01_at_520:
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(120);
+    !N
+    ins_83(120);
+    !H
+    ins_83(60);
+    !L
+    ins_83(30);
+    !*
     GirlD01_at_640:
     if ($A--) goto GirlD01_at_520 @ 0;
     return;
@@ -893,8 +985,16 @@ void GirlD01_at2()
     if ($F--) goto GirlD01_at2_812 @ 0;
     GirlD01_at2_952:
     if ($E--) goto GirlD01_at2_604 @ 0;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(180);
+    !N
+    ins_83(180);
+    !H
+    ins_83(130);
+    !L
+    ins_83(90);
+    !*
     GirlD01_at2_1096:
     if ($D--) goto GirlD01_at2_360 @ 0;
     return;
@@ -957,21 +1057,31 @@ void GirlD02_at()
     var A;
     ins_83(60);
     // object BulletEmitter source_line=644 family=th13plus
-    // difficulty speed.first: E=1.6f, N=1.6f, H=3.0f, LO=4.0f; lowered using N=1.6f
+    !*
+    // difficulty count.layers: E=2, N=6, H=8, LO=6; preserved as TH12 difficulty table; default preview N=6
+    // difficulty speed.first: E=1.6f, N=1.6f, H=3.0f, LO=4.0f; preserved as TH12 difficulty table; default preview N=1.6f
     ins_500(0);
     ins_507(0, 9);
     ins_502(0, 7, 2);
-    ins_506(0, 8, [-1]);
+    ins_522(0, 8, 8, 8, 8, 2, 6, 8, 6);
     ins_504(0, 0.0f, 0.05235988f);
-    ins_505(0, 1.6f, 1.6f);
+    ins_521(0, 1.6f, 1.6f, 3.0f, 4.0f, 1.6f, 1.6f, 1.6f, 1.6f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_501(0);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 2, 5, 8, 4);
     goto GirlD02_at_596 @ 0;
     GirlD02_at_476:
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(120);
+    !N
+    ins_83(120);
+    !H
+    ins_83(60);
+    !L
+    ins_83(30);
+    !*
     GirlD02_at_596:
     if ($A--) goto GirlD02_at_476 @ 0;
     return;
@@ -1019,8 +1129,16 @@ void GirlD02_at2()
     if ($F--) goto GirlD02_at2_812 @ 0;
     GirlD02_at2_952:
     if ($E--) goto GirlD02_at2_604 @ 0;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(180);
+    !N
+    ins_83(180);
+    !H
+    ins_83(130);
+    !L
+    ins_83(90);
+    !*
     GirlD02_at2_1096:
     if ($D--) goto GirlD02_at2_360 @ 0;
     return;
@@ -1058,8 +1176,6 @@ void GirlRedA01e()
     ins_262(0, 5);
     // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
     ins_410(1);
-    // raw: HL
-    @GirlA01_at() async;
     // unlifted instruction: ins_1();
 }
 
@@ -1342,14 +1458,18 @@ void MainSub00()
     // object Enemy source_line=941 family=th13plus
     // Enemy lowering th13plus -> th12: enmCreateM; semantic verification required
     ins_260("GirlBlueA02", %A - _f(32), -40.0f, 100, 1000, 1);
-    // raw: HL
     // object Enemy source_line=943 family=th13plus
+    !NHL
     // Enemy lowering th13plus -> th12: enmCreateM; semantic verification required
     ins_260("GirlRedA02e", %A, -28.0f, 100, 1000, 1);
+    !*
     // object Enemy source_line=945 family=th13plus
+    !E
     // Enemy lowering th13plus -> th12: enmCreateM; semantic verification required
     ins_260("GirlRedA02", %A, -28.0f, 100, 1000, 1);
+    !*
     // object Enemy source_line=947 family=th13plus
+    !*
     // Enemy lowering th13plus -> th12: enmCreateM; semantic verification required
     ins_260("GirlBlueA02", %A + _f(32), -16.0f, 100, 1000, 1);
     ins_83(30);
@@ -1727,6 +1847,7 @@ void Phantom01()
     ins_305(120, 3, 1.5707964f, 1.5f);
     // unsupported th15->th12 opcode ins_422: TH13+ movement opcode not represented in current TH12 movement subset
     // original: ins_422([-9981.0f], 0.034906585f, 10.0f, 0.0f, [-9971.0f], 0.0f);
+    !*
     ins_83(60);
     // raw opcode fallback th15->th12: ins_503 -> ins_403; verify semantics
     ins_403(12);
@@ -1752,6 +1873,8 @@ void Phantom01_at()
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.0f);
     ins_505(0, 1.0f, 0.0f);
+    ins_522(0, 1, 1, 1, 1, 1, 1, 1, 8);
+    ins_521(0, 1.0f, 1.0f, 3.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_501(0);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
@@ -1824,6 +1947,8 @@ void Phantom02_at()
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.017453292f);
     ins_505(0, 1.0f, 0.0f);
+    ins_522(0, 1, 3, 3, 3, 1, 1, 4, 8);
+    ins_521(0, 1.0f, 2.0f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_501(0);
     ins_83(120 + ([-10000] % 100));
@@ -1857,6 +1982,7 @@ void Phantom02b()
     // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
     ins_407(1, 1);
     // object Movement source_line=1273 family=th13plus
+    !*
     // movement lowering th13plus -> th12: moveVel
     ins_304(1.5707964f, 0.0f);
     // object Movement source_line=1274 family=th13plus

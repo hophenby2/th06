@@ -5,7 +5,7 @@ import json
 import re
 from pathlib import Path
 
-from .backend import choose_difficulty, compile_bullet_emitter, compile_object
+from .backend import choose_difficulty, compile_bullet_emitter, compile_object, first_difficulty_group, normalize_difficulty, wrap_ranked_lines
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
 
@@ -226,6 +226,16 @@ def lower_raw_instruction_event(opcode: int, args: list[object], text: str, sour
 
 
 
+def wrap_event_rank(lines: list[str], event: dict[str, object], target: str) -> list[str]:
+    difficulty = event.get("difficulty")
+    if not difficulty:
+        return lines
+    stripped: list[str] = []
+    for line in lines:
+        stripped.append(line[4:] if line.startswith("    ") else line)
+    return [f"    {line}" for line in wrap_ranked_lines(stripped, str(difficulty), target)]
+
+
 def is_th15_stage1_debug_selector_event(event: dict[str, object], source_game: str, target: str, function_name: str) -> bool:
     if source_game != "th15" or target != "th12" or function_name != "main":
         return False
@@ -242,34 +252,43 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         if opcode in {23, 24}:
             wait = str(event.get("args", [""])[0]) if event.get("args") else ""
             if wait.startswith("["):
-                literals = event.get("difficulty_literals", {})
-                if isinstance(literals, dict) and literals:
-                    wait_value, rank = choose_difficulty(literals, "1")
-                    wait_value = str(wait_value)
-                    if target == "th12":
-                        return [f"    // dynamic wait collapsed from difficulty literals using {rank}", f"    ins_83({wait_value});"]
-                    return [f"    // dynamic wait collapsed from difficulty literals using {rank}", f"    +{literal_time_value(wait_value)}:"]
+                literals = first_difficulty_group(event.get("difficulty_literals", {}))
+                if literals:
+                    normalized = normalize_difficulty(literals)
+                    ranked_lines = ["    // dynamic wait preserved from difficulty literals"]
+                    for rank in ("E", "N", "H", "L"):
+                        if rank not in normalized:
+                            continue
+                        wait_value = str(normalized[rank])
+                        ranked_lines.append(f"    !{rank}")
+                        if target == "th12":
+                            ranked_lines.append(f"    ins_83({wait_value});")
+                        else:
+                            ranked_lines.append(f"    ins_{opcode}({wait_value});")
+                    if len(ranked_lines) > 1:
+                        ranked_lines.append("    !*")
+                        return ranked_lines
                 safe_text = text.replace("ins_", "src_ins_")
                 return [f"    // dynamic wait from source opcode {opcode}; TH12 timer labels need a literal", f"    // original source: {safe_text}"]
             if target == "th12":
-                return [f"    ins_83({wait});"]
+                return wrap_event_rank([f"    ins_83({wait});"], event, target)
             collapsed = literal_time_value(wait)
             if collapsed != wait:
-                return [f"    // dynamic wait expression collapsed for timer syntax: {wait}", f"    +{collapsed}:"]
-            return [f"    +{wait}:"]
+                return wrap_event_rank([f"    // dynamic wait expression collapsed for timer syntax: {wait}", f"    +{collapsed}:"], event, target)
+            return wrap_event_rank([f"    +{wait}:"], event, target)
         lowered = lower_raw_instruction_event(int(opcode or -1), list(args), text, source_game, target)
         if lowered:
-            return lowered
-        return [f"    // unlifted instruction: {text}"]
+            return wrap_event_rank(lowered, event, target)
+        return wrap_event_rank([f"    // unlifted instruction: {text}"], event, target)
     if kind == "time":
         # +N: is a compile-time timestamp accepted by TH10+ thecl, not a wait opcode.
         # It must be preserved for TH12; only TH13+ ins_23/24 waits are lowered to ins_83.
-        return [f"    {text}"]
+        return wrap_event_rank([f"    {text}"], event, target)
     if kind == "label":
         return [f"    {text}"]
     if kind in {"goto", "conditional_goto", "call", "async_call", "return", "var", "assign"}:
         suffix = "" if text.endswith(";") else ";"
-        return [f"    {text}{suffix}"]
+        return wrap_event_rank([f"    {text}{suffix}"], event, target)
     if kind == "raw":
         return [f"    // raw: {text}"]
     return []

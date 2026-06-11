@@ -11,7 +11,7 @@ class Instruction:
     raw: str
     line_no: int
     difficulty: Optional[str] = None
-    difficulty_literals: dict[str, str] = field(default_factory=dict)
+    difficulty_literals: Any = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -93,7 +93,7 @@ class BulletTransform:
     channel: str = "0"
     action_type: str = "customRaw"
     raw_opcode: int = 0
-    raw_args: list[str] = field(default_factory=list)
+    raw_args: list[Any] = field(default_factory=list)
     difficulty: Optional[str] = None
 
 

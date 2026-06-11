@@ -11,9 +11,10 @@ DIFFICULTY_FALLBACK_ORDER = ("N", "H", "E", "LO", "L")
 
 
 def choose_difficulty(difficulty: dict[str, str], default: str = "") -> tuple[str, str]:
+    normalized = normalize_difficulty(difficulty)
     for key in DIFFICULTY_FALLBACK_ORDER:
-        if key in difficulty:
-            return difficulty[key], key
+        if key in normalized:
+            return normalized[key], key
     return default, "placeholder"
 
 
@@ -33,6 +34,137 @@ def difficulty_comment(field: str, value) -> str | None:
     return f"// difficulty {field}: {parts}; lowered using {rank}={v(value, '')}"
 
 
+
+
+def normalize_difficulty(difficulty: dict[str, str]) -> dict[str, str]:
+    normalized: dict[str, str] = {}
+    for key, value in difficulty.items():
+        if key == "*":
+            continue
+        for rank in key:
+            if rank in {"E", "N", "H", "L"}:
+                normalized[rank] = value
+            elif rank == "O":
+                normalized.setdefault("L", value)
+    return normalized
+
+
+def first_difficulty_group(literals: object) -> dict[str, str]:
+    if isinstance(literals, dict):
+        return literals
+    if isinstance(literals, list):
+        for item in literals:
+            if isinstance(item, dict) and item:
+                return item
+    return {}
+
+
+def difficulty_rank_order(difficulty: dict[str, str]) -> list[str]:
+    normalized = normalize_difficulty(difficulty)
+    return [rank for rank in ("E", "N", "H", "L") if rank in normalized]
+
+
+def normalized_rank_marker(marker: str | None, target: str = "") -> str | None:
+    if not marker:
+        return None
+    marker = str(marker).strip()
+    if not marker:
+        return None
+    if marker == "*":
+        return "*"
+    out: list[str] = []
+    for ch in marker:
+        mapped = "L" if ch == "O" else ch
+        if mapped in "ENHL":
+            if mapped not in out:
+                out.append(mapped)
+        elif mapped in "01234567X":
+            out.append(mapped)
+    return "".join(out) or None
+
+
+def wrap_ranked_lines(lines: list[str], difficulty: str | None, target: str = "") -> list[str]:
+    marker = normalized_rank_marker(difficulty, target)
+    if not marker:
+        return lines
+    if marker == "*":
+        return ["!*", *lines]
+    return [f"!{marker}", *lines, "!*"]
+
+
+def emit_ranked_instruction(opcode: int, args: list[str], difficulty: dict[str, str], replace_index: int) -> list[str]:
+    lines: list[str] = []
+    normalized = normalize_difficulty(difficulty)
+    for rank in difficulty_rank_order(difficulty):
+        ranked_args = list(args)
+        ranked_args[replace_index] = normalized[rank]
+        lines.append(f"!{rank}")
+        lines.append(f"ins_{opcode}({', '.join(ranked_args)});")
+    if lines:
+        lines.append("!*")
+    return lines
+
+
+def maybe_difficulty_table(value) -> dict[str, str] | None:
+    if isinstance(value, dict) and isinstance(value.get("difficulty"), dict):
+        return value["difficulty"]
+    return None
+
+
+def resolved_arg(value, default: str) -> str:
+    return v(value, default)
+
+
+def emit_instruction_with_ranked_args(opcode: int, args: list[object], defaults: list[str]) -> list[str]:
+    if not any(maybe_difficulty_table(value) for value in args):
+        return [f"ins_{opcode}({', '.join(str(resolved_arg(value, defaults[idx])) for idx, value in enumerate(args))});"]
+    lines: list[str] = []
+    for rank in ("E", "N", "H", "L"):
+        ranked_args: list[str] = []
+        has_rank = False
+        for idx, value in enumerate(args):
+            difficulty = maybe_difficulty_table(value)
+            if difficulty:
+                normalized = normalize_difficulty(difficulty)
+                ranked_args.append(str(normalized.get(rank, resolved_arg(value, defaults[idx]))))
+                has_rank = has_rank or rank in normalized
+            else:
+                ranked_args.append(str(resolved_arg(value, defaults[idx])))
+        if has_rank:
+            lines.append(f"!{rank}")
+            lines.append(f"ins_{opcode}({', '.join(ranked_args)});")
+    if lines:
+        lines.append("!*")
+    return lines
+
+
+def rank_values(value, fallback: str) -> list[str] | None:
+    difficulty = maybe_difficulty_table(value)
+    if not difficulty:
+        return None
+    normalized = normalize_difficulty(difficulty)
+    return [normalized.get(rank, fallback) for rank in ("E", "N", "H", "L")]
+
+
+def th12_difficulty_speed_args(emitter_id: str, speed_value, fallback_speed: str, speed_step_value, fallback_step: str) -> list[str] | None:
+    first = rank_values(speed_value, fallback_speed)
+    step = rank_values(speed_step_value, fallback_step)
+    if not first and not step:
+        return None
+    first = first or [fallback_speed for _ in range(4)]
+    step = step or [fallback_step for _ in range(4)]
+    return [emitter_id, *first, *step]
+
+
+def th12_difficulty_count_args(emitter_id: str, ways_value, fallback_ways: str, layers_value, fallback_layers: str) -> list[str] | None:
+    ways = rank_values(ways_value, fallback_ways)
+    layer_values = rank_values(layers_value, fallback_layers)
+    if not ways and not layer_values:
+        return None
+    ways = ways or [fallback_ways for _ in range(4)]
+    layer_values = layer_values or [fallback_layers for _ in range(4)]
+    return [emitter_id, *ways, *layer_values]
+
 def compile_bullet_emitter(emitter: BulletEmitter, target: str) -> str:
     if target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
         return compile_th13plus(emitter)
@@ -44,20 +176,33 @@ def compile_bullet_emitter(emitter: BulletEmitter, target: str) -> str:
 def compile_object(obj, target: str) -> str:
     kind = getattr(obj, "kind", None)
     if kind == "BulletEmitter":
-        return compile_bullet_emitter(obj, target)
-    if kind == "LaserEmitter":
-        return compile_laser(obj, target)
-    if kind == "Movement":
-        return compile_movement(obj, target)
-    if kind == "Animation":
-        return compile_named_op(obj, target, ANIMATION_OPS)
-    if kind == "Enemy":
-        return compile_named_op(obj, target, ENEMY_OPS)
-    if kind == "BossPattern":
-        return compile_boss_pattern(obj, target)
-    if kind == "Timeline":
-        return compile_timeline(obj, target)
-    return compile_raw_comment(obj, target)
+        compiled = compile_bullet_emitter(obj, target)
+    elif kind == "LaserEmitter":
+        compiled = compile_laser(obj, target)
+    elif kind == "Movement":
+        compiled = compile_movement(obj, target)
+    elif kind == "Animation":
+        compiled = compile_named_op(obj, target, ANIMATION_OPS)
+    elif kind == "Enemy":
+        compiled = compile_named_op(obj, target, ENEMY_OPS)
+    elif kind == "BossPattern":
+        compiled = compile_boss_pattern(obj, target)
+    elif kind == "Timeline":
+        compiled = compile_timeline(obj, target)
+    else:
+        compiled = compile_raw_comment(obj, target)
+    difficulty = object_difficulty(obj)
+    return "\n".join(wrap_ranked_lines(compiled.splitlines(), difficulty, target))
+
+
+def object_difficulty(obj) -> str | None:
+    raw = getattr(obj, "raw", []) or []
+    difficulties = [getattr(ins, "difficulty", None) for ins in raw if getattr(ins, "difficulty", None)]
+    if difficulties and all(item == difficulties[0] for item in difficulties):
+        return difficulties[0]
+    fields = getattr(obj, "fields", {}) or {}
+    difficulty = fields.get("difficulty")
+    return str(difficulty) if difficulty else None
 
 
 ANIMATION_OPS = {
@@ -183,23 +328,21 @@ def compile_movement(obj, target: str) -> str:
 
 def compile_th13plus(e: BulletEmitter) -> str:
     emitter_id = v(e.id, "0")
-    aim_raw = e.aim.get("mode_raw", mode_raw(e.aim.get("mode"), default="1"))
-    style = v(e.appearance.get("style"), "0")
-    color = v(e.appearance.get("color"), "0")
-    ways = v(e.count.get("ways"), "1")
-    layers = v(e.count.get("layers"), "1")
-    angle = v(e.aim.get("base_angle"), "0.0f")
-    angle_step = v(e.aim.get("angle_step"), "0.0f")
-    speed = v(e.speed.get("first"), "1.0f")
-    speed_step = v(e.speed.get("step"), e.speed.get("last_or_step", "0.0f"))
-    lines = [
-        f"ins_600({emitter_id});",
-        f"ins_607({emitter_id}, {aim_raw});",
-        f"ins_602({emitter_id}, {style}, {color});",
-        f"ins_606({emitter_id}, {ways}, {layers});",
-        f"ins_604({emitter_id}, {angle}, {angle_step});",
-        f"ins_605({emitter_id}, {speed}, {speed_step});",
-    ]
+    aim_raw_value = e.aim.get("mode_raw", mode_raw(e.aim.get("mode"), default="1"))
+    style_value = e.appearance.get("style")
+    color_value = e.appearance.get("color")
+    ways_value = e.count.get("ways")
+    layers_value = e.count.get("layers")
+    angle_value = e.aim.get("base_angle")
+    angle_step_value = e.aim.get("angle_step")
+    speed_value = e.speed.get("first")
+    speed_step_value = e.speed.get("step")
+    lines = [f"ins_600({emitter_id});"]
+    lines.extend(emit_instruction_with_ranked_args(607, [emitter_id, aim_raw_value], ["0", "1"]))
+    lines.extend(emit_instruction_with_ranked_args(602, [emitter_id, style_value, color_value], ["0", "0", "0"]))
+    lines.extend(emit_instruction_with_ranked_args(606, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
+    lines.extend(emit_instruction_with_ranked_args(604, [emitter_id, angle_value, angle_step_value], ["0", "0.0f", "0.0f"]))
+    lines.extend(emit_instruction_with_ranked_args(605, [emitter_id, speed_value, speed_step_value], ["0", "1.0f", e.speed.get("last_or_step", "0.0f")]))
     for field, value in (("speed.first", e.speed.get("first")), ("count.ways", e.count.get("ways"))):
         comment = difficulty_comment(field, value)
         if comment:
@@ -215,27 +358,39 @@ def compile_th13plus(e: BulletEmitter) -> str:
 
 def compile_th12(e: BulletEmitter) -> str:
     emitter_id = v(e.id, "0")
-    aim_raw = e.aim.get("mode_raw", mode_raw(e.aim.get("mode"), default="1"))
-    style = v(e.appearance.get("style"), "0")
-    color = v(e.appearance.get("color"), "0")
-    ways = v(e.count.get("ways"), "1")
-    layers = v(e.count.get("layers"), "1")
-    angle = v(e.aim.get("base_angle"), "0.0f")
-    angle_step = v(e.aim.get("angle_step"), "0.0f")
-    speed = v(e.speed.get("first"), "1.0f")
-    speed_step = v(e.speed.get("step"), e.speed.get("last_or_step", "0.0f"))
-    lines = [
-        f"ins_500({emitter_id});",
-        f"ins_507({emitter_id}, {aim_raw});",
-        f"ins_502({emitter_id}, {style}, {color});",
-        f"ins_506({emitter_id}, {ways}, {layers});",
-        f"ins_504({emitter_id}, {angle}, {angle_step});",
-        f"ins_505({emitter_id}, {speed}, {speed_step});",
-    ]
-    for field, value in (("speed.first", e.speed.get("first")), ("count.ways", e.count.get("ways"))):
+    aim_raw_value = e.aim.get("mode_raw", mode_raw(e.aim.get("mode"), default="1"))
+    style_value = e.appearance.get("style")
+    color_value = e.appearance.get("color")
+    ways_value = e.count.get("ways")
+    speed_value = e.speed.get("first")
+    ways = v(ways_value, "1")
+    layers_value = e.count.get("layers")
+    layers = v(layers_value, "1")
+    angle_value = e.aim.get("base_angle")
+    angle_step_value = e.aim.get("angle_step")
+    angle = v(angle_value, "0.0f")
+    angle_step = v(angle_step_value, "0.0f")
+    speed = v(speed_value, "1.0f")
+    speed_step_value = e.speed.get("step")
+    speed_step = v(speed_step_value, e.speed.get("last_or_step", "0.0f"))
+    lines = [f"ins_500({emitter_id});"]
+    lines.extend(emit_instruction_with_ranked_args(507, [emitter_id, aim_raw_value], ["0", "1"]))
+    lines.extend(emit_instruction_with_ranked_args(502, [emitter_id, style_value, color_value], ["0", "0", "0"]))
+    count_args = th12_difficulty_count_args(emitter_id, ways_value, ways, layers_value, layers)
+    if count_args:
+        lines.append(f"ins_522({', '.join(count_args)});")
+    else:
+        lines.extend(emit_instruction_with_ranked_args(506, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
+    lines.extend(emit_instruction_with_ranked_args(504, [emitter_id, angle_value, angle_step_value], ["0", "0.0f", "0.0f"]))
+    speed_args = th12_difficulty_speed_args(emitter_id, speed_value, speed, speed_step_value, speed_step)
+    if speed_args:
+        lines.append(f"ins_521({', '.join(speed_args)});")
+    else:
+        lines.extend(emit_instruction_with_ranked_args(505, [emitter_id, speed_value, speed_step_value], ["0", "1.0f", "0.0f"]))
+    for field, value in (("speed.first", speed_value), ("speed.step", speed_step_value), ("count.ways", ways_value), ("count.layers", layers_value)):
         comment = difficulty_comment(field, value)
         if comment:
-            lines.insert(0, comment)
+            lines.insert(0, comment.replace("lowered using", "preserved as TH12 difficulty table; default preview"))
     for transform in e.transforms:
         if transform.raw_opcode == 509 and len(transform.raw_args) == 8:
             lines.append(f"ins_509({', '.join(transform.raw_args)});")
@@ -245,6 +400,10 @@ def compile_th12(e: BulletEmitter) -> str:
             lines.append(f"ins_511({', '.join(transform.raw_args)});")
         elif transform.raw_opcode == 512 and len(transform.raw_args) == 1:
             lines.append(f"ins_512({', '.join(transform.raw_args)});")
+        elif transform.raw_opcode == 624 and len(transform.raw_args) == 9:
+            lines.extend(emit_instruction_with_ranked_args(521, transform.raw_args, [emitter_id, "1.0f", "1.0f", "1.0f", "1.0f", "0.0f", "0.0f", "0.0f", "0.0f"]))
+        elif transform.raw_opcode == 625 and len(transform.raw_args) == 9:
+            lines.extend(emit_instruction_with_ranked_args(522, transform.raw_args, [emitter_id, "1", "1", "1", "1", "1", "1", "1", "1"]))
         elif transform.raw_opcode in {609, 610, 611, 612}:
             lines.append(f"// unsupported th13+ transform for th12; preserved source ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
         elif transform.raw_opcode in {510, 511, 512}:

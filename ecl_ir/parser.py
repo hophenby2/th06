@@ -7,7 +7,7 @@ from .model import Function, Instruction, Program, Statement
 
 FUNC_RE = re.compile(r"^\s*(?:void|sub)\s+(\w+)\s*\(([^)]*)\)\s*(?:\{|$)")
 INS_RE = re.compile(r"\bins_(\d+)\s*\((.*)\)\s*;")
-DIFF_RE = re.compile(r"^\s*!(LO|HL|EN|E|N|H|L|\*)\s*(.*)$")
+DIFF_RE = re.compile(r"^\s*!([ENHLOX0-7*]+)\s*(.*)$")
 
 LABEL_RE = re.compile(r"^\s*([A-Za-z_]\w*)\s*:\s*(?://.*)?$")
 TIME_RE = re.compile(r"^\s*\+(\d+)\s*:\s*(?://(.*))?$")
@@ -106,7 +106,8 @@ def parse_decl(path: str | Path) -> Program:
     program = Program(source=str(path), game=infer_game(path))
     current: Function | None = None
     pending_diff: str | None = None
-    pending_literals: dict[str, str] = {}
+    pending_literal_groups: list[dict[str, str]] = []
+    current_literals: dict[str, str] = {}
     resource_name: str | None = None
     resource_lines: list[str] = []
 
@@ -142,11 +143,17 @@ def parse_decl(path: str | Path) -> Program:
             if not line:
                 continue
             if not INS_RE.search(line) and line.endswith(";"):
-                pending_literals[pending_diff] = line[:-1].strip()
+                if pending_diff in current_literals and current_literals:
+                    pending_literal_groups.append(current_literals)
+                    current_literals = {}
+                current_literals[pending_diff] = line[:-1].strip()
                 pending_diff = None
                 continue
         elif pending_diff and not INS_RE.search(line) and line.endswith(";"):
-            pending_literals[pending_diff] = line[:-1].strip()
+            if pending_diff in current_literals and current_literals:
+                pending_literal_groups.append(current_literals)
+                current_literals = {}
+            current_literals[pending_diff] = line[:-1].strip()
             pending_diff = None
             continue
 
@@ -155,6 +162,8 @@ def parse_decl(path: str | Path) -> Program:
             current = Function(func_match.group(1), func_match.group(2).strip())
             program.functions.append(current)
             pending_diff = None
+            pending_literal_groups = []
+            current_literals = {}
             continue
 
         if line == "{" and current is not None:
@@ -163,7 +172,8 @@ def parse_decl(path: str | Path) -> Program:
         if line == "}" and current is not None:
             current = None
             pending_diff = None
-            pending_literals = {}
+            pending_literal_groups = []
+            current_literals = {}
             continue
 
         if not line:
@@ -183,16 +193,18 @@ def parse_decl(path: str | Path) -> Program:
                 raw=raw_line.rstrip(),
                 line_no=line_no,
                 difficulty=pending_diff,
-                difficulty_literals=pending_literals,
+                difficulty_literals=[*pending_literal_groups, current_literals] if current_literals else list(pending_literal_groups),
             )
             current.body.append(ins)
             if current.statements and current.statements[-1].kind == "instruction" and current.statements[-1].line_no == line_no:
-                current.statements[-1].attrs["difficulty_literals"] = dict(pending_literals)
+                current.statements[-1].attrs["difficulty_literals"] = ins.difficulty_literals
             pending_diff = None
-            pending_literals = {}
+            pending_literal_groups = []
+            current_literals = {}
         elif line and not line.startswith("!"):
             pending_diff = None
-            pending_literals = {}
+            pending_literal_groups = []
+            current_literals = {}
 
     if resource_name is not None:
         program.resources.setdefault(resource_name, []).extend(parse_resource_entries("\n".join(resource_lines)))

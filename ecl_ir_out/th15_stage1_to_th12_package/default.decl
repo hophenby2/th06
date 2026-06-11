@@ -362,16 +362,19 @@ void test()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // raw: HL
     // object Movement source_line=241 family=th13plus
+    !NHL
     // movement lowering th13plus -> th12: moveVel
     ins_304([-9989.0f], 0.0f);
+    !*
     // object Movement source_line=242 family=th13plus
     // movement lowering th13plus -> th12: moveVelTime
     ins_305(60, 0, [-9989.0f] + ([-9987.0f] * 0.5235988f), 2.0f);
     // object Movement source_line=244 family=th13plus
+    !E
     // movement lowering th13plus -> th12: moveVel
     ins_304([-9981.0f] + ([-9987.0f] * 0.5235988f), 0.0f);
+    !*
     // object Movement source_line=245 family=th13plus
     // movement lowering th13plus -> th12: moveVelTime
     ins_305(60, 0, -999999.0f, 2.0f);

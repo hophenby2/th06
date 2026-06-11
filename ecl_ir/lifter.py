@@ -14,33 +14,77 @@ def arg(args: list[str], index: int, default: str = "") -> str:
     return args[index] if index < len(args) else default
 
 
-def with_difficulty(value: str, literals: dict[str, str]) -> object:
-    if value in {"[-1]", "[-1.0f]"} and literals:
-        return {"placeholder": value, "difficulty": literals}
+def difficulty_literal_group(value: str, literals: object) -> dict[str, str]:
+    if isinstance(literals, dict):
+        return literals
+    if not isinstance(literals, list) or not literals:
+        return {}
+    index = 1 if value in {"[-2]", "[-2.0f]"} else 0
+    if index < len(literals) and isinstance(literals[index], dict):
+        return literals[index]
+    if isinstance(literals[-1], dict):
+        return literals[-1]
+    return {}
+
+
+def with_difficulty(value: str, literals: object) -> object:
+    if value in {"[-1]", "[-1.0f]", "[-2]", "[-2.0f]"}:
+        group = difficulty_literal_group(value, literals)
+        if group:
+            return {"placeholder": value, "difficulty": group}
     return value
+
+
+def apply_difficulty_args(args: list[str], literals: object) -> list[object]:
+    return [with_difficulty(arg, literals) for arg in args]
+
+
+def with_rank(value: str, difficulty: str | None) -> object:
+    if difficulty and difficulty != "*":
+        return {"placeholder": value, "difficulty": {difficulty: value}}
+    return value
+
+
+def merge_ranked_value(current: object, value: object, difficulty: str | None) -> object:
+    if not difficulty or difficulty == "*":
+        return value
+    if isinstance(current, dict) and isinstance(current.get("difficulty"), dict):
+        merged = dict(current["difficulty"])
+        merged[difficulty] = value
+        return {"placeholder": current.get("placeholder", value), "difficulty": merged}
+    merged = {}
+    if current not in (None, ""):
+        # Keep the previous non-ranked value as fallback preview only.
+        pass
+    merged[difficulty] = value
+    return {"placeholder": value, "difficulty": merged}
+
+
+def set_ranked_field(container: dict, key: str, value: object, difficulty: str | None) -> None:
+    container[key] = merge_ranked_value(container.get(key), value, difficulty)
 
 
 def apply_th13plus(emitter: BulletEmitter, ins: Instruction) -> None:
     args = ins.args
     op = ins.opcode
     if op == 607:
-        emitter.aim["mode_raw"] = arg(args, 1, "0")
+        set_ranked_field(emitter.aim, "mode_raw", with_difficulty(arg(args, 1, "0"), ins.difficulty_literals), ins.difficulty)
         emitter.aim.setdefault("mode", aim_mode_name(arg(args, 1, "0")))
     elif op == 602:
-        emitter.appearance["style"] = arg(args, 1)
-        emitter.appearance["color"] = arg(args, 2)
+        set_ranked_field(emitter.appearance, "style", with_difficulty(arg(args, 1), ins.difficulty_literals), ins.difficulty)
+        set_ranked_field(emitter.appearance, "color", with_difficulty(arg(args, 2), ins.difficulty_literals), ins.difficulty)
     elif op == 603:
         emitter.origin["x"] = arg(args, 1, "0") if not hasattr(emitter, "origin") else emitter.origin.get("x", arg(args, 1, "0"))
         emitter.origin["y"] = arg(args, 2, "0") if not hasattr(emitter, "origin") else arg(args, 2, "0")
     elif op == 604:
-        emitter.aim["base_angle"] = arg(args, 1, "0")
-        emitter.aim["angle_step"] = arg(args, 2, "0")
+        set_ranked_field(emitter.aim, "base_angle", with_difficulty(arg(args, 1, "0"), ins.difficulty_literals), ins.difficulty)
+        set_ranked_field(emitter.aim, "angle_step", with_difficulty(arg(args, 2, "0"), ins.difficulty_literals), ins.difficulty)
     elif op == 605:
-        emitter.speed["first"] = with_difficulty(arg(args, 1, "1"), ins.difficulty_literals)
-        emitter.speed["step"] = arg(args, 2, "0")
+        set_ranked_field(emitter.speed, "first", with_difficulty(arg(args, 1, "1"), ins.difficulty_literals), ins.difficulty)
+        set_ranked_field(emitter.speed, "step", with_difficulty(arg(args, 2, "0"), ins.difficulty_literals), ins.difficulty)
     elif op == 606:
-        emitter.count["ways"] = with_difficulty(arg(args, 1, "1"), ins.difficulty_literals)
-        emitter.count["layers"] = arg(args, 2, "1")
+        set_ranked_field(emitter.count, "ways", with_difficulty(arg(args, 1, "1"), ins.difficulty_literals), ins.difficulty)
+        set_ranked_field(emitter.count, "layers", with_difficulty(arg(args, 2, "1"), ins.difficulty_literals), ins.difficulty)
     elif op == 608:
         emitter.sound["id"] = arg(args, 1)
         emitter.sound["mode"] = arg(args, 2)
@@ -55,10 +99,13 @@ def apply_th13plus(emitter: BulletEmitter, ins: Instruction) -> None:
                 difficulty=ins.difficulty,
             )
         )
-    elif op in {617, 618, 619, 624}:
+    elif op in {617, 618, 619}:
         emitter.speed.setdefault("difficulty_raw", []).append({"opcode": op, "args": args[:], "difficulty": ins.difficulty})
-    elif op in {620, 621, 622, 625}:
+    elif op in {620, 621, 622}:
         emitter.count.setdefault("difficulty_raw", []).append({"opcode": op, "args": args[:], "difficulty": ins.difficulty})
+    elif op in {624, 625}:
+        converted_args = apply_difficulty_args(args, ins.difficulty_literals)
+        emitter.transforms.append(BulletTransform(index=arg(args, 0, "0"), channel="0", action_type="difficultyTable", raw_opcode=op, raw_args=converted_args, difficulty=ins.difficulty))
     elif op == 601:
         emitter.fire_lines.append(ins.line_no)
 
@@ -67,22 +114,22 @@ def apply_th12(emitter: BulletEmitter, ins: Instruction) -> None:
     args = ins.args
     op = ins.opcode
     if op == 507:
-        emitter.aim["mode_raw"] = arg(args, 1, "0")
+        set_ranked_field(emitter.aim, "mode_raw", with_difficulty(arg(args, 1, "0"), ins.difficulty_literals), ins.difficulty)
         emitter.aim.setdefault("mode", aim_mode_name(arg(args, 1, "0")))
     elif op == 502:
-        emitter.appearance["style"] = arg(args, 1)
-        emitter.appearance["color"] = arg(args, 2)
+        set_ranked_field(emitter.appearance, "style", with_difficulty(arg(args, 1), ins.difficulty_literals), ins.difficulty)
+        set_ranked_field(emitter.appearance, "color", with_difficulty(arg(args, 2), ins.difficulty_literals), ins.difficulty)
     elif op == 503:
         emitter.origin = {"x": arg(args, 1, "0"), "y": arg(args, 2, "0")}
     elif op == 504:
-        emitter.aim["base_angle"] = arg(args, 1, "0")
-        emitter.aim["angle_step"] = arg(args, 2, "0")
+        set_ranked_field(emitter.aim, "base_angle", with_difficulty(arg(args, 1, "0"), ins.difficulty_literals), ins.difficulty)
+        set_ranked_field(emitter.aim, "angle_step", with_difficulty(arg(args, 2, "0"), ins.difficulty_literals), ins.difficulty)
     elif op == 505:
-        emitter.speed["first"] = with_difficulty(arg(args, 1, "1"), ins.difficulty_literals)
-        emitter.speed["step"] = arg(args, 2, "0")
+        set_ranked_field(emitter.speed, "first", with_difficulty(arg(args, 1, "1"), ins.difficulty_literals), ins.difficulty)
+        set_ranked_field(emitter.speed, "step", with_difficulty(arg(args, 2, "0"), ins.difficulty_literals), ins.difficulty)
     elif op == 506:
-        emitter.count["ways"] = with_difficulty(arg(args, 1, "1"), ins.difficulty_literals)
-        emitter.count["layers"] = arg(args, 2, "1")
+        set_ranked_field(emitter.count, "ways", with_difficulty(arg(args, 1, "1"), ins.difficulty_literals), ins.difficulty)
+        set_ranked_field(emitter.count, "layers", with_difficulty(arg(args, 2, "1"), ins.difficulty_literals), ins.difficulty)
     elif op == 508:
         emitter.sound["id"] = arg(args, 1)
         emitter.sound["mode"] = arg(args, 2)
@@ -225,19 +272,19 @@ def apply_th10(emitter: BulletEmitter, ins: Instruction) -> None:
     args = ins.args
     op = ins.opcode
     if op == 402:
-        emitter.appearance["style"] = arg(args, 1)
-        emitter.appearance["color"] = arg(args, 2)
+        set_ranked_field(emitter.appearance, "style", arg(args, 1), ins.difficulty)
+        set_ranked_field(emitter.appearance, "color", arg(args, 2), ins.difficulty)
     elif op == 404:
-        emitter.aim["base_angle"] = arg(args, 1, "0")
-        emitter.aim["angle_step"] = arg(args, 2, "0")
+        set_ranked_field(emitter.aim, "base_angle", arg(args, 1, "0"), ins.difficulty)
+        set_ranked_field(emitter.aim, "angle_step", arg(args, 2, "0"), ins.difficulty)
     elif op == 405:
-        emitter.speed["first"] = with_difficulty(arg(args, 1, "1"), ins.difficulty_literals)
-        emitter.speed["step"] = arg(args, 2, "0")
+        set_ranked_field(emitter.speed, "first", with_difficulty(arg(args, 1, "1"), ins.difficulty_literals), ins.difficulty)
+        set_ranked_field(emitter.speed, "step", arg(args, 2, "0"), ins.difficulty)
     elif op == 406:
-        emitter.count["ways"] = with_difficulty(arg(args, 1, "1"), ins.difficulty_literals)
-        emitter.count["layers"] = arg(args, 2, "1")
+        set_ranked_field(emitter.count, "ways", with_difficulty(arg(args, 1, "1"), ins.difficulty_literals), ins.difficulty)
+        set_ranked_field(emitter.count, "layers", arg(args, 2, "1"), ins.difficulty)
     elif op == 407:
-        emitter.aim["mode_raw"] = arg(args, 1, "0")
+        set_ranked_field(emitter.aim, "mode_raw", arg(args, 1, "0"), ins.difficulty)
         emitter.aim["mode"] = aim_mode_name(arg(args, 1, "0"))
     elif op == 408:
         emitter.sound["id"] = arg(args, 1)

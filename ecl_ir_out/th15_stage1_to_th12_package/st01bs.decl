@@ -134,13 +134,14 @@ void Boss1_at(var A, var B, var C)
     // control-flow, async scheduling, and expression semantics require target-game verification
     var D, E, F, G, H;
     // object BulletEmitter source_line=83 family=th13plus
-    // difficulty speed.first: E=1.5f, N=2.5f, H=3.5f, LO=4.1f; lowered using N=2.5f
+    !*
+    // difficulty speed.first: E=1.5f, N=2.5f, H=3.5f, LO=4.1f; preserved as TH12 difficulty table; default preview N=2.5f
     ins_500(0);
     ins_507(0, 1);
     ins_502(0, 13, 8);
     ins_506(0, $F, 1);
     ins_504(0, [-9989.0f], 0.034906585f);
-    ins_505(0, 2.5f, 1.0f);
+    ins_521(0, 1.5f, 2.5f, 3.5f, 4.1f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     ins_501(0);
@@ -154,18 +155,35 @@ void Boss1_at(var A, var B, var C)
     goto Boss1_at_724 @ 0;
     Boss1_at_500:
     $F = $F + 1;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(6);
+    !N
+    ins_83(6);
+    !H
+    ins_83(6);
+    !L
+    ins_83(4);
+    !*
     Boss1_at_724:
     if ($G--) goto Boss1_at_500 @ 0;
     // object BulletEmitter source_line=121 family=th13plus
-    // difficulty speed.first: E=2.0f, N=3.0f, H=3.5f, LO=4.1f; lowered using N=3.0f
+    !*
+    // difficulty speed.first: E=2.0f, N=3.0f, H=3.5f, LO=4.1f; preserved as TH12 difficulty table; default preview N=3.0f
     ins_500(0);
     ins_507(0, 1);
     ins_502(0, 18, 4);
     ins_506(0, $F, 1);
-    ins_504(0, [-9989.0f], [-1.0f]);
-    ins_505(0, 3.0f, 1.0f);
+    !E
+    ins_504(0, [-9989.0f], 0.436332f);
+    !N
+    ins_504(0, [-9989.0f], 0.349066f);
+    !H
+    ins_504(0, [-9989.0f], 0.261799f);
+    !L
+    ins_504(0, [-9989.0f], 0.20944f);
+    !*
+    ins_521(0, 2.0f, 3.0f, 3.5f, 4.1f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
@@ -181,8 +199,16 @@ void Boss1_at(var A, var B, var C)
     Boss1_at_1360:
     %A = %A + %C;
     $F = $F + 1;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(6);
+    !N
+    ins_83(6);
+    !H
+    ins_83(6);
+    !L
+    ins_83(4);
+    !*
     Boss1_at_1660:
     if ($H--) goto Boss1_at_1360 @ 0;
     return;
@@ -196,23 +222,41 @@ void Boss1_at2()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(300);
+    !N
+    ins_83(300);
+    !H
+    ins_83(100);
+    !L
+    ins_83(150);
+    !*
     // object BulletEmitter source_line=186 family=th13plus
-    // difficulty speed.first: E=1.0f, N=1.0f, H=3.0f, LO=5.0f; lowered using N=1.0f
+    !*
+    // difficulty count.layers: E=3, N=3, H=6, LO=9; preserved as TH12 difficulty table; default preview N=3
+    // difficulty speed.first: E=1.0f, N=1.0f, H=3.0f, LO=5.0f; preserved as TH12 difficulty table; default preview N=1.0f
     ins_500(1);
     ins_507(1, 3);
     ins_502(1, 20, 3);
-    ins_506(1, 1, [-1]);
+    ins_522(1, 1, 1, 1, 1, 3, 3, 6, 9);
     ins_504(1, [-9989.0f] + ([-9998.0f] / 32.0f), 0.0f);
-    ins_505(1, 1.0f, 0.8f);
+    ins_521(1, 1.0f, 1.0f, 3.0f, 5.0f, 0.8f, 0.8f, 0.8f, 0.8f);
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_501(1);
     $C = 600;
     goto Boss1_at2_800 @ 0;
     Boss1_at2_560:
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(160);
+    !N
+    ins_83(160);
+    !H
+    ins_83(80);
+    !L
+    ins_83(80);
+    !*
     Boss1_at2_800:
     if ($C--) goto Boss1_at2_560 @ 0;
     return;
@@ -301,8 +345,16 @@ void Boss2()
     goto Boss2_1328 @ 4;
     Boss2_1124:
     @Boss2_at(0.0f, 0.034906585f, -0.17453292f) async;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(60);
+    !N
+    ins_83(60);
+    !H
+    ins_83(60);
+    !L
+    ins_83(60);
+    !*
     // unlifted instruction: ins_412(60, 4, 1.0f);
     ins_83(80);
     Boss2_1328:
@@ -318,13 +370,14 @@ void Boss2_at(var A, var B, var C)
     // control-flow, async scheduling, and expression semantics require target-game verification
     var D, E, F, G;
     // object BulletEmitter source_line=300 family=th13plus
-    // difficulty speed.first: E=1.5f, N=2.5f, H=3.5f, LO=3.5f; lowered using N=2.5f
+    !*
+    // difficulty speed.first: E=1.5f, N=2.5f, H=3.5f, LO=3.5f; preserved as TH12 difficulty table; default preview N=2.5f
     ins_500(0);
     ins_507(0, 1);
     ins_502(0, 13, 8);
     ins_506(0, $F, 1);
     ins_504(0, [-9989.0f], 0.034906585f);
-    ins_505(0, 2.5f, 1.0f);
+    ins_521(0, 1.5f, 2.5f, 3.5f, 3.5f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     ins_501(0);
@@ -338,8 +391,16 @@ void Boss2_at(var A, var B, var C)
     goto Boss2_at_724 @ 0;
     Boss2_at_500:
     $F = $F + 1;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(6);
+    !N
+    ins_83(6);
+    !H
+    ins_83(6);
+    !L
+    ins_83(6);
+    !*
     Boss2_at_724:
     if ($G--) goto Boss2_at_500 @ 0;
     return;
@@ -352,25 +413,43 @@ void Boss2_at2()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(100);
+    !N
+    ins_83(100);
+    !H
+    ins_83(100);
+    !L
+    ins_83(100);
+    !*
     // object BulletEmitter source_line=354 family=th13plus
-    // difficulty count.ways: E=10, N=10, H=16, LO=25; lowered using N=10
-    // difficulty speed.first: E=1.0f, N=1.0f, H=3.0f, LO=4.0f; lowered using N=1.0f
+    !*
+    // difficulty count.layers: E=10, N=10, H=16, LO=25; preserved as TH12 difficulty table; default preview N=10
+    // difficulty count.ways: E=5, N=5, H=10, LO=10; preserved as TH12 difficulty table; default preview N=5
+    // difficulty speed.first: E=1.0f, N=1.0f, H=3.0f, LO=4.0f; preserved as TH12 difficulty table; default preview N=1.0f
     ins_500(1);
     ins_507(1, 3);
     ins_502(1, 13, 6);
-    ins_506(1, 10, [-2]);
+    ins_522(1, 5, 5, 10, 10, 10, 10, 16, 25);
     ins_504(1, [-9998.0f], 0.0f);
-    ins_505(1, 1.0f, 0.8f);
+    ins_521(1, 1.0f, 1.0f, 3.0f, 4.0f, 0.8f, 0.8f, 0.8f, 0.8f);
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_501(1);
     // unlifted instruction: ins_627(1, 64.0f);
     $C = 600;
     goto Boss2_at2_812 @ 0;
     Boss2_at2_664:
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_83(110);
+    !N
     ins_83(90);
+    !H
+    ins_83(90);
+    !L
+    ins_83(90);
+    !*
     Boss2_at2_812:
     if ($C--) goto Boss2_at2_664 @ 0;
     return;
@@ -432,14 +511,18 @@ void BossCard1()
     // object BossPattern source_line=442 family=th13plus
     // BossPattern lowering th13plus -> th12; semantic verification required
     ins_414(0, 0, 2400, "Boss2");
-    // raw: H
     // object BossPattern source_line=444 family=th13plus
+    !ENH
     // BossPattern lowering th13plus -> th12; semantic verification required
     ins_437(2, 2400, 500000, "�e���u�C�[�O���V���[�e�B���O�v");
+    !*
     // object BossPattern source_line=446 family=th13plus
+    !L
     // BossPattern lowering th13plus -> th12; semantic verification required
     ins_437(2, 2400, 500000, "�e���u��͌����������v");
+    !*
     // object Movement source_line=448 family=th13plus
+    !*
     // movement lowering th13plus -> th12: movePosTime
     ins_301(60, 4, 0.0f, 128.0f);
     // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
@@ -456,8 +539,16 @@ void BossCard1()
     goto BossCard1_1420 @ 94;
     BossCard1_1204:
     // unlifted instruction: ins_316(0, 0);
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(120);
+    !N
+    ins_83(120);
+    !H
+    ins_83(20);
+    !L
+    ins_83(50);
+    !*
     // unlifted instruction: ins_412(60, 4, 1.0f);
     ins_83(80);
     @BossCard1_at([-9989.0f]) async;
@@ -480,13 +571,14 @@ void BossCard1_at(var A)
     // control-flow, async scheduling, and expression semantics require target-game verification
     var B, C;
     // object BulletEmitter source_line=486 family=th13plus
-    // difficulty speed.first: E=1.5f, N=2.0f, H=3.0f, LO=4.0f; lowered using N=2.0f
+    !*
+    // difficulty speed.first: E=1.5f, N=2.0f, H=3.0f, LO=4.0f; preserved as TH12 difficulty table; default preview N=2.0f
     ins_500(0);
     ins_507(0, 1);
     ins_502(0, 13, 6);
     ins_506(0, $B, 1);
     ins_504(0, [-9989.0f], 0.034906585f);
-    ins_505(0, 2.0f, 1.0f);
+    ins_521(0, 1.5f, 2.0f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     ins_501(0);
@@ -500,8 +592,16 @@ void BossCard1_at(var A)
     goto BossCard1_at_752 @ 0;
     BossCard1_at_528:
     $B = $B + 1;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_83(6);
+    !N
     ins_83(4);
+    !H
+    ins_83(4);
+    !L
+    ins_83(4);
+    !*
     BossCard1_at_752:
     if ($C--) goto BossCard1_at_528 @ 0;
     return;
@@ -522,13 +622,22 @@ void BossCard1_at2(var A, var B)
     goto BossCard1_at2_1404 @ 0;
     BossCard1_at2_172:
     // object BulletEmitter source_line=536 family=th13plus
-    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=2.0f; lowered using N=1.5f
+    !*
+    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=2.0f; preserved as TH12 difficulty table; default preview N=1.5f
     ins_500($A);
-    ins_507($A, [-1]);
+    !E
+    ins_507($A, 1);
+    !N
+    ins_507($A, 1);
+    !H
+    ins_507($A, 1);
+    !L
+    ins_507($A, 3);
+    !*
     ins_502($A, 18, 3);
     ins_506($A, $F, 1);
     ins_504($A, 1.5707964f + ([-9987.0f] * 0.17453292f), %C);
-    ins_505($A, 1.5f, 1.0f);
+    ins_521($A, 1.5f, 1.5f, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 1, 1, -999999, -999999, -999999.0f, -999999.0f
@@ -544,13 +653,19 @@ void BossCard1_at2(var A, var B)
     unless ($F < $D) goto BossCard1_at2_1144 @ 0;
     $F = $F + 1;
     BossCard1_at2_1144:
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
     ins_83(6);
+    !N
+    ins_83(6);
+    !H
+    ins_83(4);
+    !L
+    ins_83(5);
+    !*
     BossCard1_at2_1264:
     if ($G--) goto BossCard1_at2_960 @ 0;
     ins_83(130);
-    // raw: H
-    %C = %C - 0.034907f;
     BossCard1_at2_1404:
     return;
     // detected loops:
@@ -611,14 +726,18 @@ void BossCard2()
     // object BossPattern source_line=630 family=th13plus
     // BossPattern lowering th13plus -> th12; semantic verification required
     ins_414(0, 0, 2400, "BossDead");
-    // raw: H
     // object BossPattern source_line=632 family=th13plus
+    !ENH
     // BossPattern lowering th13plus -> th12; semantic verification required
     ins_437(6, 2400, 500000, "�e���u���i�e�B�b�N�K���v");
+    !*
     // object BossPattern source_line=634 family=th13plus
+    !L
     // BossPattern lowering th13plus -> th12; semantic verification required
     ins_437(6, 2400, 500000, "�e���u���i�e�B�b�N�K���v");
+    !*
     // object Movement source_line=636 family=th13plus
+    !*
     // movement lowering th13plus -> th12: movePosTime
     ins_301(60, 4, 0.0f, 128.0f);
     // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
@@ -694,13 +813,14 @@ void BossCard2_at(var A, var B)
     // control-flow, async scheduling, and expression semantics require target-game verification
     var C, D;
     // object BulletEmitter source_line=699 family=th13plus
-    // difficulty speed.first: E=1.5f, N=2.0f, H=3.5f, LO=3.5f; lowered using N=2.0f
+    !*
+    // difficulty speed.first: E=1.5f, N=2.0f, H=3.5f, LO=3.5f; preserved as TH12 difficulty table; default preview N=2.0f
     ins_500($A);
     ins_507($A, 1);
     ins_502($A, 13, 4);
     ins_506($A, $C, 1);
     ins_504($A, %B, 0.034906585f);
-    ins_505($A, 2.0f, 1.0f);
+    ins_521($A, 1.5f, 2.0f, 3.5f, 3.5f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     ins_501($A);
@@ -710,8 +830,16 @@ void BossCard2_at(var A, var B)
     goto BossCard2_at_712 @ 0;
     BossCard2_at_488:
     $C = $C + 1;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_83(6);
+    !N
     ins_83(4);
+    !H
+    ins_83(4);
+    !L
+    ins_83(4);
+    !*
     BossCard2_at_712:
     if ($D--) goto BossCard2_at_488 @ 0;
     return;
@@ -726,28 +854,53 @@ void BossCard2_at2(var A, var B)
     var C, D, E, F, G;
     %E = %B;
     $F = 1;
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_83(300);
+    !N
     ins_83(100);
+    !H
+    ins_83(100);
+    !L
+    ins_83(100);
+    !*
     // object BulletEmitter source_line=754 family=th13plus
-    // difficulty speed.first: E=1.0f, N=1.0f, H=1.0f, LO=1.8f; lowered using N=1.0f
+    // difficulty count.layers: E=16, N=16, H=16, LO=1, L=1; preserved as TH12 difficulty table; default preview N=16
+    // difficulty count.ways: E=5, N=5, H=5, LO=1, L=5; preserved as TH12 difficulty table; default preview N=5
+    // difficulty speed.first: E=1.0f, N=1.0f, H=1.0f, LO=1.8f; preserved as TH12 difficulty table; default preview N=1.0f
     ins_500($A);
     ins_507($A, 3);
     ins_502($A, 13, 6);
-    ins_506($A, 5, 1);
+    ins_522($A, 5, 5, 5, 5, 16, 16, 16, 1);
+    !E
+    ins_504($A, [-9998.0f], 0.0f);
+    !N
+    ins_504($A, [-9998.0f], 0.0f);
+    !H
+    ins_504($A, [-9998.0f], 0.0f);
+    !L
     ins_504($A, %E, 0.0f);
-    ins_505($A, 1.0f, 0.8f);
+    !*
+    ins_521($A, 1.0f, 1.0f, 1.0f, 1.8f, 0.8f, 0.8f, 0.8f, 0.8f);
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_501($A);
     // unlifted instruction: ins_627($A, 64.0f);
     $G = 60000;
     goto BossCard2_at2_1180 @ 0;
     BossCard2_at2_744:
-    // raw: H
     unless ($F < 1000) goto BossCard2_at2_1080 @ 0;
     $F = $F + 1;
     BossCard2_at2_1080:
-    // dynamic wait collapsed from difficulty literals using N
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_83(160);
+    !N
     ins_83(90);
+    !H
+    ins_83(90);
+    !L
+    ins_83(4);
+    !*
     BossCard2_at2_1180:
     if ($G--) goto BossCard2_at2_744 @ 0;
     return;
