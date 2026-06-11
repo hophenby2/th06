@@ -1,0 +1,17 @@
+void main()
+{
+    @Test() async;
+    return;
+}
+
+void Test()
+{
+!*
+    ins_500(0);
+    ins_507(0, 0);
+    ins_502(0, 1, 6);
+    ins_506(0, 1, [10000]);
+    ins_504(0, 0.0f, 0.0f);
+    ins_505(0, [10016.0f], 1.0f);
+    return;
+}

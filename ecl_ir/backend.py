@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from .model import BulletEmitter
 
 INT_SENTINEL = "-999999"
@@ -170,6 +171,10 @@ def compile_bullet_emitter(emitter: BulletEmitter, target: str) -> str:
         return compile_th13plus(emitter)
     if target == "th12":
         return compile_th12(emitter)
+    if target in {"th10", "th11"}:
+        return compile_th10_slot(emitter, target)
+    if target in {"th06", "th07", "th08"}:
+        return compile_th08_macro(emitter, target)
     raise ValueError(f"unsupported target backend: {target}")
 
 
@@ -191,8 +196,20 @@ def compile_object(obj, target: str) -> str:
         compiled = compile_timeline(obj, target)
     else:
         compiled = compile_raw_comment(obj, target)
+    if target in {"th06", "th07", "th08", "th09", "th10", "th11"}:
+        compiled = strip_line_comments(compiled)
     difficulty = object_difficulty(obj)
     return "\n".join(wrap_ranked_lines(compiled.splitlines(), difficulty, target))
+
+
+def strip_line_comments(text: str) -> str:
+    lines: list[str] = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("//"):
+            continue
+        lines.append(line)
+    return "\n".join(lines)
 
 
 def object_difficulty(obj) -> str | None:
@@ -207,11 +224,13 @@ def object_difficulty(obj) -> str | None:
 
 ANIMATION_OPS = {
     "th12": {"anmSelect": 258, "anmSetSprite": 259, "anmSetMain": 262, "anmPlay": 263, "anmPlayAbs": 264},
+    "th10_th12": {"anmSelect": 258, "anmSetSprite": 259, "anmSetMain": 262, "anmPlay": 263, "anmPlayAbs": 264},
     "th13plus": {"anmSelect": 302, "anmSetSprite": 303, "anmSetMain": 306, "anmPlay": 307, "anmPlayAbs": 308, "anmSwitch": 317, "anmReset": 318},
 }
 
 ENEMY_OPS = {
     "th12": {"enmCreate": 256, "enmCreateA": 257, "enmCreateM": 260, "enmCreateAM": 261, "enmCreateF": 265, "enmCreateAF": 266, "enmCreateMF": 267, "enmCreateAMF": 268},
+    "th10_th12": {"enmCreate": 256, "enmCreateA": 257, "enmCreateM": 260, "enmCreateAM": 261, "enmCreateF": 265, "enmCreateAF": 266, "enmCreateMF": 267, "enmCreateAMF": 268},
     "th13plus": {"enmCreate": 300, "enmCreateA": 301, "enmCreateM": 304, "enmCreateAM": 305, "enmCreateF": 309, "enmCreateAF": 310, "enmCreateMF": 311, "enmCreateAMF": 312},
 }
 
@@ -222,7 +241,13 @@ BOSS_OPS = {
 
 
 def target_family(target: str) -> str:
-    return "th12" if target == "th12" else "th13plus"
+    if target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+        return "th13plus"
+    if target in {"th10", "th11"}:
+        return "th10_th12"
+    if target in {"th06", "th07", "th08"}:
+        return "th08_macro"
+    return "th12"
 
 
 def compile_named_op(obj, target: str, table_by_family: dict[str, dict[str, int]]) -> str:
@@ -294,6 +319,8 @@ def compile_raw_comment(obj, target: str) -> str:
 
 
 def compile_laser(obj, target: str) -> str:
+    if target in {"th06", "th07", "th08", "th10", "th11"}:
+        return compile_raw_comment(obj, target) + f"\n// laser lowering to {target} is not implemented yet"
     if target not in {"th12", "th13", "th14", "th15", "th16", "th17", "th18"}:
         raise ValueError(f"unsupported laser target: {target}")
     to_th13 = target != "th12"
@@ -309,7 +336,9 @@ def compile_laser(obj, target: str) -> str:
 
 
 def compile_movement(obj, target: str) -> str:
-    if target not in {"th12", "th13", "th14", "th15", "th16", "th17", "th18"}:
+    if target in {"th06", "th07", "th08"}:
+        return compile_raw_comment(obj, target) + f"\n// movement lowering to {target} macro generation is not implemented yet"
+    if target not in {"th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"}:
         raise ValueError(f"unsupported movement target: {target}")
     movement = obj.fields.get("op")
     args = obj.fields.get("args", [])
@@ -323,7 +352,11 @@ def compile_movement(obj, target: str) -> str:
         "moveVel": 304, "moveVelTime": 305, "moveVelRel": 306, "moveVelRelTime": 307,
         "moveEllipse": 320, "moveEllipseTime": 321, "moveBezier": 325, "moveBezierRel": 326, "moveReset": 327,
     }
-    table = th12 if target == "th12" else th13
+    th10 = {
+        "movePos": 320, "movePosTime": 321, "moveVel": 322, "moveVelTime": 323,
+        "moveEllipse": 300, "moveEllipseTime": 300, "moveReset": 327,
+    }
+    table = th10 if target in {"th10", "th11"} else th12 if target == "th12" else th13
     opcode = table.get(movement)
     if opcode is None:
         return compile_raw_comment(obj, target) + f"\n// unsupported movement semantic: {movement}"
@@ -346,7 +379,7 @@ def compile_th13plus(e: BulletEmitter) -> str:
     lines.extend(emit_instruction_with_ranked_args(602, [emitter_id, style_value, color_value], ["0", "0", "0"]))
     lines.extend(emit_instruction_with_ranked_args(606, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
     lines.extend(emit_instruction_with_ranked_args(604, [emitter_id, angle_value, angle_step_value], ["0", "0.0f", "0.0f"]))
-    lines.extend(emit_instruction_with_ranked_args(605, [emitter_id, speed_value, speed_step_value], ["0", "1.0f", e.speed.get("last_or_step", "0.0f")]))
+    lines.extend(emit_instruction_with_ranked_args(605, [emitter_id, speed_value, speed_step_value if speed_step_value is not None else e.speed.get("last_or_step")], ["0", "1.0f", e.speed.get("last_or_step", "0.0f")]))
     for field, value in (("speed.first", e.speed.get("first")), ("count.ways", e.count.get("ways"))):
         comment = difficulty_comment(field, value)
         if comment:
@@ -415,6 +448,8 @@ def compile_th12(e: BulletEmitter) -> str:
     angle_step = v(angle_step_value, "0.0f")
     speed = v(speed_value, "1.0f")
     speed_step_value = e.speed.get("step")
+    if speed_step_value is None and e.speed.get("last_or_step") is not None:
+        speed_step_value = e.speed.get("last_or_step")
     speed_step = v(speed_step_value, e.speed.get("last_or_step", "0.0f"))
     lines = [f"ins_500({emitter_id});"]
     lines.extend(emit_instruction_with_ranked_args(507, [emitter_id, aim_raw_value], ["0", "1"]))
@@ -454,6 +489,101 @@ def compile_th12(e: BulletEmitter) -> str:
         else:
             lines.append(f"// unsupported transform from ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
     return "\n".join(lines)
+
+
+
+def clamp_old_shape(shape: object, target: str) -> str:
+    value = str(v(shape, "0"))
+    if not re.fullmatch(r"-?\d+", value):
+        return value
+    number = int(value)
+    max_shape = 9 if target in {"th06", "th07"} else 20
+    return str(min(max(number, 0), max_shape))
+
+
+def compile_th08_macro(e: BulletEmitter, target: str) -> str:
+    mode = e.aim.get("mode") or aim_mode_name(str(v(e.aim.get("mode_raw"), "1")))
+    opcode = {
+        "aimed_fan": 96,
+        "fan": 97,
+        "aimed_ring": 98,
+        "ring": 99,
+        "offset_aimed_ring": 100,
+        "offset_ring": 101,
+        "random_angle": 102,
+        "random_speed": 103,
+        "random_angle_speed": 104,
+    }.get(mode, 97)
+    style = clamp_old_shape(e.appearance.get("style"), target)
+    color = str(v(e.appearance.get("color"), "0"))
+    ways = str(v(e.count.get("ways"), "1"))
+    layers = str(v(e.count.get("layers"), "1"))
+    speed_max = str(v(e.speed.get("first"), "1.0f"))
+    speed_min = str(v(e.speed.get("step", e.speed.get("last_or_step")), speed_max))
+    angle = str(v(e.aim.get("base_angle"), "0.0f"))
+    angle_step = str(v(e.aim.get("angle_step"), "0.0f"))
+    flags = str(v(e.flags.get("raw"), "0"))
+    lines = [f"// bullet lowering {e.family} -> {target}: macro opcode ins_{opcode}; semantic verification required"]
+    for transform in e.transforms:
+        if transform.raw_opcode == 111 and len(transform.raw_args) == 7:
+            lines.append(f"ins_111({', '.join(str(arg) for arg in transform.raw_args)});")
+        elif transform.raw_opcode in {409, 509, 609, 610, 611, 612}:
+            lines.append(f"// transform not representable in {target} macro backend: ins_{transform.raw_opcode}({', '.join(str(arg) for arg in transform.raw_args)});")
+    # TH06-08 macro order is minspeed, maxspeed; TH10+ slot order stores first/max then last/min.
+    lines.append(f"ins_{opcode}({style}, {color}, {ways}, {layers}, {speed_min}, {speed_max}, {angle}, {angle_step}, {flags});")
+    return "\n".join(lines)
+
+
+def compile_th10_slot(e: BulletEmitter, target: str) -> str:
+    emitter_id = v(e.id, "0")
+    aim_raw_value = e.aim.get("mode_raw", mode_raw(e.aim.get("mode"), default="1"))
+    style_value = e.appearance.get("style")
+    color_value = e.appearance.get("color")
+    ways_value = e.count.get("ways")
+    layers_value = e.count.get("layers")
+    angle_value = e.aim.get("base_angle")
+    angle_step_value = e.aim.get("angle_step")
+    speed_value = e.speed.get("first")
+    speed_step_value = e.speed.get("step", e.speed.get("last_or_step", "0.0f"))
+    start_opcode = 401 if e.fire_lines and e.raw and e.raw[0].opcode == 401 else 400
+    lines = [f"// bullet lowering {e.family} -> {target}: slot backend; semantic verification required"]
+    lines.append(f"ins_{start_opcode}({emitter_id});")
+    lines.extend(emit_instruction_with_ranked_args(407, [emitter_id, aim_raw_value], ["0", "1"]))
+    lines.extend(emit_instruction_with_ranked_args(402, [emitter_id, style_value, color_value], ["0", "0", "0"]))
+    lines.extend(emit_instruction_with_ranked_args(406, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
+    lines.extend(emit_instruction_with_ranked_args(404, [emitter_id, angle_value, angle_step_value], ["0", "0.0f", "0.0f"]))
+    lines.extend(emit_instruction_with_ranked_args(405, [emitter_id, speed_value, speed_step_value], ["0", "1.0f", "0.0f"]))
+    sound = e.sound.get("id")
+    if sound not in (None, ""):
+        lines.append(f"ins_408({emitter_id}, {sound});")
+    for transform in e.transforms:
+        if transform.raw_opcode == 409 and len(transform.raw_args) == 8:
+            lines.append(f"ins_409({', '.join(str(arg) for arg in transform.raw_args)});")
+        elif transform.raw_opcode in {509, 609, 610, 611, 612}:
+            converted = convert_transform_to_th10(transform.raw_opcode, [str(arg) for arg in transform.raw_args])
+            if converted:
+                lines.append(f"ins_409({', '.join(converted)});")
+            else:
+                lines.append(f"// transform not representable in {target} slot backend: ins_{transform.raw_opcode}({', '.join(str(arg) for arg in transform.raw_args)});")
+    if not e.fire_lines:
+        lines.append(f"// source emitter had no explicit fire line; add ins_401({emitter_id}) at call site if needed")
+    elif start_opcode != 401:
+        lines.append(f"ins_401({emitter_id});")
+    return "\n".join(lines)
+
+
+def convert_transform_to_th10(opcode: int, args: list[str]) -> list[str] | None:
+    if opcode == 409 and len(args) == 8:
+        return args
+    if opcode == 509 and len(args) == 8:
+        return args
+    if opcode == 609 and len(args) == 8:
+        return args
+    if opcode in {610, 612} and len(args) >= 12:
+        return [args[0], args[1], args[2], args[3], args[4], args[5], args[8], args[9]]
+    if opcode == 611 and len(args) >= 7:
+        return [args[0], "0", args[1], args[2], args[3], args[4], args[5], args[6]]
+    return None
 
 
 def mode_raw(mode: str | None, default: str = "1") -> str:

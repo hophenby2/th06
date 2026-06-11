@@ -6,7 +6,7 @@ from .model import BulletEmitter, BulletTransform, Function, Instruction, Progra
 
 TH13PLUS_GAMES = {"th13", "th14", "th15", "th16", "th17", "th18"}
 TH12_GAMES = {"th12"}
-TH08_GAMES = {"th08"}
+TH08_GAMES = {"th06", "th07", "th08"}
 TH10_GAMES = {"th10", "th11"}
 
 
