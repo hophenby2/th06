@@ -121,7 +121,7 @@ void DeadAttackEt1()
     // object BulletEmitter source_line=75 family=th13plus
     ins_500(0);
     ins_507(0, 0);
-    ins_502(0, 7, 2);
+    ins_502(0, 6, 2);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
     ins_505(0, [-9981.0f], 1.0f);
@@ -358,7 +358,6 @@ void test()
     // object Movement source_line=245 family=th13plus
     // movement lowering th13plus -> th12: moveVelTime
     ins_305(60, 0, -999999.0f, 2.0f);
-    !*
     return;
 }
 

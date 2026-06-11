@@ -359,10 +359,31 @@ def compile_th13plus(e: BulletEmitter) -> str:
     return "\n".join(lines)
 
 
+def remap_bullet_shape_for_target(e: BulletEmitter, target: str):
+    value = e.appearance.get("style")
+    if target != "th12" or getattr(e, "family", "") != "th13plus":
+        return value
+    if isinstance(value, dict):
+        return {rank: remap_th13plus_shape_to_th12(str(shape)) for rank, shape in value.items()}
+    return remap_th13plus_shape_to_th12(str(value)) if value is not None else value
+
+
+def remap_th13plus_shape_to_th12(shape: str) -> str:
+    table = {
+        "0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5": "4", "6": "5", "7": "6",
+        "8": "7", "9": "8", "10": "9", "11": "10", "12": "11", "13": "12", "14": "13", "15": "14",
+        "16": "15", "17": "16", "18": "18", "19": "18", "20": "19", "21": "20", "22": "21",
+        "23": "22", "24": "22", "25": "24", "26": "29", "27": "29", "28": "24", "29": "25",
+        "30": "18", "31": "9", "32": "26", "33": "23", "34": "28", "35": "7", "36": "9",
+        "37": "15", "38": "30",
+    }
+    return table.get(shape.strip(), shape)
+
+
 def compile_th12(e: BulletEmitter) -> str:
     emitter_id = v(e.id, "0")
     aim_raw_value = e.aim.get("mode_raw", mode_raw(e.aim.get("mode"), default="1"))
-    style_value = e.appearance.get("style")
+    style_value = remap_bullet_shape_for_target(e, target="th12")
     color_value = e.appearance.get("color")
     ways_value = e.count.get("ways")
     speed_value = e.speed.get("first")

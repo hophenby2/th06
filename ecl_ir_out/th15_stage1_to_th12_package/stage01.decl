@@ -228,7 +228,6 @@ void GirlA01_at()
     ins_83(30);
     !*
     // object BulletEmitter source_line=39 family=th13plus
-    !*
     // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; preserved as TH12 difficulty table; default preview N=1.5f
     ins_500(0);
     ins_507(0, 0);
@@ -272,7 +271,7 @@ void GirlA01_at_l()
     // object BulletEmitter source_line=81 family=th13plus
     ins_500(0);
     ins_507(0, 2);
-    ins_502(0, 7, 4);
+    ins_502(0, 6, 4);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
     ins_505(0, 1.0f, 0.0f);
@@ -337,7 +336,6 @@ void GirlA02_at()
     ins_83(30);
     !*
     // object BulletEmitter source_line=128 family=th13plus
-    !*
     // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; preserved as TH12 difficulty table; default preview N=1.5f
     ins_500(0);
     ins_507(0, 0);
@@ -381,7 +379,7 @@ void GirlA02_at_l()
     // object BulletEmitter source_line=170 family=th13plus
     ins_500(0);
     ins_507(0, 2);
-    ins_502(0, 7, 4);
+    ins_502(0, 6, 4);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
     ins_505(0, 1.0f, 0.0f);
@@ -443,7 +441,6 @@ void GirlA03_at()
     ins_83(30);
     !*
     // object BulletEmitter source_line=217 family=th13plus
-    !*
     // difficulty speed.first: E=1.5f, N=1.5f, H=3.0f, LO=4.0f; preserved as TH12 difficulty table; default preview N=1.5f
     ins_500(0);
     ins_507(0, 0);
@@ -532,7 +529,7 @@ void GirlB01_at()
     // object BulletEmitter source_line=281 family=th13plus
     ins_500(0);
     ins_507(0, 1);
-    ins_502(0, 8, 6);
+    ins_502(0, 7, 6);
     ins_506(0, 1, 1);
     ins_504(0, 1.5707964f, 0.34906584f);
     ins_505(0, 1.0f, 0.0f);
@@ -627,7 +624,7 @@ void GirlB02_at()
     // object BulletEmitter source_line=342 family=th13plus
     ins_500(0);
     ins_507(0, 2);
-    ins_502(0, 5, 2);
+    ins_502(0, 4, 2);
     ins_506(0, 1, 1);
     ins_504(0, [-9998.0f], 0.0f);
     ins_505(0, 1.0f, 0.0f);
@@ -684,7 +681,6 @@ void GirlBlueA01e()
     ins_410(2);
     !NHL
     @GirlA01_at() async;
-    !*
     !*
     @GirlA01();
     // unlifted instruction: ins_1();
@@ -793,11 +789,10 @@ void GirlC01_at()
     var A, B, C;
     ins_83(60);
     // object BulletEmitter source_line=444 family=th13plus
-    !*
     // difficulty count.ways: E=1, N=1, H=2, LO=5; preserved as TH12 difficulty table; default preview N=1
     ins_500(0);
     ins_507(0, 1);
-    ins_502(0, 8, 6);
+    ins_502(0, 7, 6);
     ins_522(0, 1, 1, 2, 5, 1, 1, 1, 1);
     ins_504(0, 1.5707964f, 0.12217305f);
     ins_505(0, %A, 0.0f);
@@ -898,11 +893,10 @@ void GirlD01_at()
     var A;
     ins_83(60);
     // object BulletEmitter source_line=526 family=th13plus
-    !*
     // difficulty count.layers: E=2, N=6, H=6, LO=6; preserved as TH12 difficulty table; default preview N=6
     ins_500(0);
     ins_507(0, 9);
-    ins_502(0, 7, 4);
+    ins_502(0, 6, 4);
     ins_522(0, 10, 10, 10, 10, 2, 6, 6, 6);
     ins_504(0, 0.0f, 0.05235988f);
     ins_505(0, 1.6f, 1.6f);
@@ -1046,12 +1040,11 @@ void GirlD02_at()
     var A;
     ins_83(60);
     // object BulletEmitter source_line=644 family=th13plus
-    !*
     // difficulty count.layers: E=2, N=6, H=8, LO=6; preserved as TH12 difficulty table; default preview N=6
     // difficulty speed.first: E=1.6f, N=1.6f, H=3.0f, LO=4.0f; preserved as TH12 difficulty table; default preview N=1.6f
     ins_500(0);
     ins_507(0, 9);
-    ins_502(0, 7, 2);
+    ins_502(0, 6, 2);
     ins_522(0, 8, 8, 8, 8, 2, 6, 8, 6);
     ins_504(0, 0.0f, 0.05235988f);
     ins_521(0, 1.6f, 1.6f, 3.0f, 4.0f, 1.6f, 1.6f, 1.6f, 1.6f);
@@ -1169,7 +1162,6 @@ void GirlRedA01e()
     ins_410(1);
     !NHL
     @GirlA01_at() async;
-    !*
     !*
     @GirlA01();
     // unlifted instruction: ins_1();
@@ -1462,7 +1454,6 @@ void MainSub00()
     ins_260("GirlRedA02", %A, -28.0f, 100, 1000, 1);
     !*
     // object Enemy source_line=947 family=th13plus
-    !*
     // Enemy lowering th13plus -> th12: enmCreateM; semantic verification required
     ins_260("GirlBlueA02", %A + _f(32), -16.0f, 100, 1000, 1);
     ins_83(30);
@@ -1843,7 +1834,6 @@ void Phantom01()
     !HL
     @Phantom01_at() async;
     !*
-    !*
     ins_83(60);
     // raw opcode fallback th15->th12: ins_503 -> ins_403; verify semantics
     ins_403(12);
@@ -1865,7 +1855,7 @@ void Phantom01_at()
     // object BulletEmitter source_line=1200 family=th13plus
     ins_500(0);
     ins_507(0, 0);
-    ins_502(0, 5, 4);
+    ins_502(0, 4, 4);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.0f);
     ins_505(0, 1.0f, 0.0f);
@@ -1940,7 +1930,7 @@ void Phantom02_at()
     // object BulletEmitter source_line=1245 family=th13plus
     ins_500(0);
     ins_507(0, 0);
-    ins_502(0, 7, 6);
+    ins_502(0, 6, 6);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.017453292f);
     ins_505(0, 1.0f, 0.0f);
@@ -1983,7 +1973,6 @@ void Phantom02b()
     @Phantom02_at() async;
     !*
     // object Movement source_line=1273 family=th13plus
-    !*
     // movement lowering th13plus -> th12: moveVel
     ins_304(1.5707964f, 0.0f);
     // object Movement source_line=1274 family=th13plus

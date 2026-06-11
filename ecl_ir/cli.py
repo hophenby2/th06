@@ -381,7 +381,23 @@ def remap_raw_named_args(source_opcode: int, target_opcode: int, args: list[str]
             return ["1"]
         if args[0] == "3":
             return ["2"]
+    if source_game == "th15" and target == "th12" and source_opcode == 602 and target_opcode == 502 and len(args) >= 3:
+        mapped = args[:]
+        mapped[1] = remap_th15_bullet_shape_to_th12(mapped[1])
+        return mapped
     return args
+
+
+def remap_th15_bullet_shape_to_th12(shape: str) -> str:
+    table = {
+        "0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5": "4", "6": "5", "7": "6",
+        "8": "7", "9": "8", "10": "9", "11": "10", "12": "11", "13": "12", "14": "13", "15": "14",
+        "16": "15", "17": "16", "18": "18", "19": "18", "20": "19", "21": "20", "22": "21",
+        "23": "22", "24": "22", "25": "24", "26": "29", "27": "29", "28": "24", "29": "25",
+        "30": "18", "31": "9", "32": "26", "33": "23", "34": "28", "35": "7", "36": "9",
+        "37": "15", "38": "30",
+    }
+    return table.get(str(shape).strip(), shape)
 
 
 def literal_time_value(value: str) -> str:
@@ -394,12 +410,84 @@ def literal_time_value(value: str) -> str:
     return "1"
 
 
-def lower_raw_instruction_event(opcode: int, args: list[object], text: str, source_game: str, target: str) -> list[str]:
+RANK_PLACEHOLDER_RE = re.compile(r"\[-([12])(?:\.0f)?\]")
+
+
+def replace_rank_placeholders(arg: str, groups: list[dict[str, str]], rank: str) -> tuple[str, bool]:
+    replaced = False
+
+    def repl(match: re.Match[str]) -> str:
+        nonlocal replaced
+        index = int(match.group(1)) - 1
+        if index >= len(groups):
+            return match.group(0)
+        normalized = normalize_difficulty(groups[index])
+        if rank in normalized:
+            replaced = True
+            return normalized[rank]
+        fallback, _ = choose_difficulty(groups[index], match.group(0))
+        if fallback != match.group(0):
+            replaced = True
+        return fallback
+
+    return RANK_PLACEHOLDER_RE.sub(repl, arg), replaced
+
+
+def difficulty_literal_groups(difficulty_literals: object) -> list[dict[str, str]]:
+    if isinstance(difficulty_literals, list):
+        return [item for item in difficulty_literals if isinstance(item, dict) and item]
+    if isinstance(difficulty_literals, dict) and difficulty_literals:
+        return [difficulty_literals]
+    return []
+
+
+def emit_ranked_raw_instruction(opcode: int, args: list[str], difficulty_literals: object) -> list[str] | None:
+    groups = difficulty_literal_groups(difficulty_literals)
+    if not groups or not any(RANK_PLACEHOLDER_RE.search(arg) for arg in args):
+        return None
+
+    lines: list[str] = []
+    for rank in ("E", "N", "H", "L"):
+        ranked_args: list[str] = []
+        any_replaced = False
+        for arg in args:
+            ranked_arg, replaced = replace_rank_placeholders(str(arg), groups, rank)
+            ranked_args.append(ranked_arg)
+            any_replaced = any_replaced or replaced
+        if any_replaced:
+            lines.append(f"    !{rank}")
+            lines.append(f"    ins_{opcode}({', '.join(ranked_args)});")
+    if not lines:
+        return None
+    lines.append("    !*")
+    return lines
+
+
+def emit_ranked_text_from_literals(text: str, difficulty_literals: object) -> list[str] | None:
+    groups = difficulty_literal_groups(difficulty_literals)
+    if not groups or not RANK_PLACEHOLDER_RE.search(text):
+        return None
+    lines: list[str] = []
+    for rank in ("E", "N", "H", "L"):
+        ranked_text, replaced = replace_rank_placeholders(text, groups, rank)
+        if replaced:
+            lines.append(f"    !{rank}")
+            lines.append(f"    {ranked_text}")
+    if not lines:
+        return None
+    lines.append("    !*")
+    return lines
+
+
+def lower_raw_instruction_event(opcode: int, args: list[object], text: str, source_game: str, target: str, difficulty_literals: object = None) -> list[str]:
     if source_game in {"th13", "th14", "th15", "th16", "th17", "th18"} and target == "th12":
         if opcode in TH13PLUS_TO_TH12_RAW_REORDER:
             mapped, order = TH13PLUS_TO_TH12_RAW_REORDER[opcode]
             mapped_args = [str(args[index]) for index in order if index < len(args)]
             mapped_args = remap_raw_named_args(opcode, mapped, mapped_args, source_game, target)
+            ranked = emit_ranked_raw_instruction(mapped, mapped_args, difficulty_literals)
+            if ranked:
+                return [f"    // raw-order opcode map {source_game}->th12: ins_{opcode} -> ins_{mapped}; ranked args from source difficulty literals", *ranked]
             return [
                 f"    // raw-order opcode map {source_game}->th12: ins_{opcode} -> ins_{mapped}; verify semantics",
                 f"    ins_{mapped}({', '.join(mapped_args)});",
@@ -407,6 +495,9 @@ def lower_raw_instruction_event(opcode: int, args: list[object], text: str, sour
         if opcode in TH13PLUS_TO_TH12_RAW:
             mapped = TH13PLUS_TO_TH12_RAW[opcode]
             mapped_args = remap_raw_named_args(opcode, mapped, [str(arg) for arg in args], source_game, target)
+            ranked = emit_ranked_raw_instruction(mapped, mapped_args, difficulty_literals)
+            if ranked:
+                return [f"    // raw opcode fallback {source_game}->th12: ins_{opcode} -> ins_{mapped}; ranked args from source difficulty literals", *ranked]
             return [
                 f"    // raw opcode fallback {source_game}->th12: ins_{opcode} -> ins_{mapped}; verify semantics",
                 f"    ins_{mapped}({', '.join(mapped_args)});",
@@ -471,8 +562,10 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
             if collapsed != wait:
                 return wrap_event_rank([f"    // dynamic wait expression collapsed for timer syntax: {wait}", f"    +{collapsed}:"], event, target)
             return wrap_event_rank([f"    +{wait}:"], event, target)
-        lowered = lower_raw_instruction_event(int(opcode or -1), list(args), text, source_game, target)
+        lowered = lower_raw_instruction_event(int(opcode or -1), list(args), text, source_game, target, event.get("difficulty_literals", []))
         if lowered:
+            if any(line.strip().startswith("!") for line in lowered):
+                return lowered
             return wrap_event_rank(lowered, event, target)
         return wrap_event_rank([f"    // unlifted instruction: {text}"], event, target)
     if kind == "time":
@@ -483,7 +576,11 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         return [f"    {text}"]
     if kind in {"goto", "conditional_goto", "call", "async_call", "return", "var", "assign"}:
         suffix = "" if text.endswith(";") else ";"
-        return wrap_event_rank([f"    {text}{suffix}"], event, target)
+        statement_text = f"{text}{suffix}"
+        ranked = emit_ranked_text_from_literals(statement_text, event.get("difficulty_literals", []))
+        if ranked:
+            return ranked
+        return wrap_event_rank([f"    {statement_text}"], event, target)
     if kind == "raw":
         if re.fullmatch(r"[%$]?[A-Za-z_][A-Za-z0-9_]*|[-+]?\d+(?:\.\d+)?f?", text):
             return wrap_event_rank([f"    {text};"], event, target)

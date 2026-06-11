@@ -130,14 +130,21 @@ void Boss1_at(var A, var B, var C)
     // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
     ins_507(0, 1);
     // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
-    ins_502(0, 13, 8);
+    ins_502(0, 12, 8);
     // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
     ins_506(0, 1, 1);
     // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
     ins_504(0, [-9989.0f], 0.034906585f);
+    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    !E
+    ins_505(0, 1.5f, 1.0f);
+    !N
+    ins_505(0, 2.5f, 1.0f);
+    !H
+    ins_505(0, 3.5f, 1.0f);
+    !L
+    ins_505(0, 4.1f, 1.0f);
     !*
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; verify semantics
-    ins_505(0, [-1.0f], 1.0f);
     // unlifted instruction: ins_611(0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611(0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // raw-order opcode map th15->th12: ins_302 -> ins_258; verify semantics
@@ -173,12 +180,26 @@ void Boss1_at(var A, var B, var C)
     ins_502(0, 18, 4);
     // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
     ins_506(0, 1, 1);
+    // raw opcode fallback th15->th12: ins_604 -> ins_504; ranked args from source difficulty literals
+    !E
+    ins_504(0, [-9989.0f], 0.436332f);
+    !N
+    ins_504(0, [-9989.0f], 0.349066f);
+    !H
+    ins_504(0, [-9989.0f], 0.261799f);
+    !L
+    ins_504(0, [-9989.0f], 0.20944f);
     !*
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
-    ins_504(0, [-9989.0f], [-1.0f]);
+    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    !E
+    ins_505(0, 2.0f, 1.0f);
+    !N
+    ins_505(0, 3.0f, 1.0f);
+    !H
+    ins_505(0, 3.5f, 1.0f);
+    !L
+    ins_505(0, 4.1f, 1.0f);
     !*
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; verify semantics
-    ins_505(0, [-1.0f], 1.0f);
     // unlifted instruction: ins_611(0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611(0, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611(0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
@@ -234,15 +255,29 @@ void Boss1_at2()
     // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
     ins_507(1, 3);
     // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
-    ins_502(1, 20, 3);
+    ins_502(1, 19, 3);
+    // raw opcode fallback th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
+    !E
+    ins_506(1, 1, 3);
+    !N
+    ins_506(1, 1, 3);
+    !H
+    ins_506(1, 1, 6);
+    !L
+    ins_506(1, 1, 9);
     !*
-    // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
-    ins_506(1, 1, [-1]);
     // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
     ins_504(1, 0.0f, 0.034906585f);
+    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    !E
+    ins_505(1, 1.0f, 0.8f);
+    !N
+    ins_505(1, 1.0f, 0.8f);
+    !H
+    ins_505(1, 3.0f, 0.8f);
+    !L
+    ins_505(1, 5.0f, 0.8f);
     !*
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; verify semantics
-    ins_505(1, [-1.0f], 0.8f);
     // unlifted instruction: ins_611(1, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     $C = 600;
     goto Boss1_at2_800 @ 0;
@@ -372,14 +407,21 @@ void Boss2_at(var A, var B, var C)
     // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
     ins_507(0, 1);
     // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
-    ins_502(0, 13, 8);
+    ins_502(0, 12, 8);
     // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
     ins_506(0, 1, 1);
     // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
     ins_504(0, [-9989.0f], 0.034906585f);
+    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    !E
+    ins_505(0, 1.5f, 1.0f);
+    !N
+    ins_505(0, 2.5f, 1.0f);
+    !H
+    ins_505(0, 3.5f, 1.0f);
+    !L
+    ins_505(0, 3.5f, 1.0f);
     !*
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; verify semantics
-    ins_505(0, [-1.0f], 1.0f);
     // unlifted instruction: ins_611(0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611(0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // raw-order opcode map th15->th12: ins_302 -> ins_258; verify semantics
@@ -432,15 +474,29 @@ void Boss2_at2()
     // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
     ins_507(1, 3);
     // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
-    ins_502(1, 13, 6);
+    ins_502(1, 12, 6);
+    // raw opcode fallback th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
+    !E
+    ins_506(1, 5, 10);
+    !N
+    ins_506(1, 5, 10);
+    !H
+    ins_506(1, 10, 16);
+    !L
+    ins_506(1, 10, 25);
     !*
-    // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
-    ins_506(1, [-1], [-2]);
     // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
     ins_504(1, 0.0f, 0.034906585f);
+    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    !E
+    ins_505(1, 1.0f, 0.8f);
+    !N
+    ins_505(1, 1.0f, 0.8f);
+    !H
+    ins_505(1, 3.0f, 0.8f);
+    !L
+    ins_505(1, 4.0f, 0.8f);
     !*
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; verify semantics
-    ins_505(1, [-1.0f], 0.8f);
     // unlifted instruction: ins_611(1, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_627(1, 64.0f);
     $C = 600;
@@ -526,7 +582,6 @@ void BossCard1()
     // raw opcode fallback th15->th12: ins_537 -> ins_437; verify semantics
     ins_437(2, 2400, 500000, "�e���u��͌����������v");
     !*
-    !*
     // raw-order opcode map th15->th12: ins_401 -> ins_301; verify semantics
     ins_301(60, 4, 0.0f, 128.0f);
     // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
@@ -578,14 +633,21 @@ void BossCard1_at(var A)
     // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
     ins_507(0, 1);
     // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
-    ins_502(0, 13, 6);
+    ins_502(0, 12, 6);
     // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
     ins_506(0, 1, 1);
     // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
     ins_504(0, 1.5707964f, 0.034906585f);
+    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    !E
+    ins_505(0, 1.5f, 1.0f);
+    !N
+    ins_505(0, 2.0f, 1.0f);
+    !H
+    ins_505(0, 3.0f, 1.0f);
+    !L
+    ins_505(0, 4.0f, 1.0f);
     !*
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; verify semantics
-    ins_505(0, [-1.0f], 1.0f);
     // unlifted instruction: ins_611(0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611(0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // raw-order opcode map th15->th12: ins_302 -> ins_258; verify semantics
@@ -634,18 +696,32 @@ void BossCard1_at2(var A, var B)
     BossCard1_at2_172:
     // raw opcode fallback th15->th12: ins_600 -> ins_500; verify semantics
     ins_500($A);
+    // raw opcode fallback th15->th12: ins_607 -> ins_507; ranked args from source difficulty literals
+    !E
+    ins_507($A, 1);
+    !N
+    ins_507($A, 1);
+    !H
+    ins_507($A, 1);
+    !L
+    ins_507($A, 3);
     !*
-    // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
-    ins_507($A, [-1]);
     // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
     ins_502($A, 18, 3);
     // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
     ins_506($A, 1, 1);
     // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
     ins_504($A, 1.5707964f + ([-9987.0f] * 0.17453292f), %C);
+    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    !E
+    ins_505($A, 1.5f, 1.0f);
+    !N
+    ins_505($A, 1.5f, 1.0f);
+    !H
+    ins_505($A, 2.0f, 1.0f);
+    !L
+    ins_505($A, 2.0f, 1.0f);
     !*
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; verify semantics
-    ins_505($A, [-1.0f], 1.0f);
     // unlifted instruction: ins_611($A, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611($A, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611($A, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
@@ -681,7 +757,6 @@ void BossCard1_at2(var A, var B)
     %C = %C - 0.034907f;
     !*
     BossCard1_at2_1404:
-    !*
     if ($E--) goto BossCard1_at2_172 @ 0;
     return;
     // detected loops:
@@ -747,7 +822,6 @@ void BossCard2()
     !L
     // raw opcode fallback th15->th12: ins_537 -> ins_437; verify semantics
     ins_437(6, 2400, 500000, "�e���u���i�e�B�b�N�K���v");
-    !*
     !*
     // raw-order opcode map th15->th12: ins_401 -> ins_301; verify semantics
     ins_301(60, 4, 0.0f, 128.0f);
@@ -826,14 +900,21 @@ void BossCard2_at(var A, var B)
     // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
     ins_507($A, 1);
     // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
-    ins_502($A, 13, 4);
+    ins_502($A, 12, 4);
     // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
     ins_506($A, 1, 1);
     // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
     ins_504($A, %B, 0.034906585f);
+    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    !E
+    ins_505($A, 1.5f, 1.0f);
+    !N
+    ins_505($A, 2.0f, 1.0f);
+    !H
+    ins_505($A, 3.5f, 1.0f);
+    !L
+    ins_505($A, 3.5f, 1.0f);
     !*
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; verify semantics
-    ins_505($A, [-1.0f], 1.0f);
     // unlifted instruction: ins_611($A, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611($A, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     $C = 1;
@@ -887,15 +968,29 @@ void BossCard2_at2(var A, var B)
     // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
     ins_507($A, 3);
     // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
-    ins_502($A, 13, 6);
+    ins_502($A, 12, 6);
+    // raw opcode fallback th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
+    !E
+    ins_506($A, 5, 16);
+    !N
+    ins_506($A, 5, 16);
+    !H
+    ins_506($A, 5, 16);
+    !L
+    ins_506($A, 1, 1);
     !*
-    // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
-    ins_506($A, [-1], [-2]);
     // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
     ins_504($A, 0.0f, 0.034906585f);
+    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    !E
+    ins_505($A, 1.0f, 0.8f);
+    !N
+    ins_505($A, 1.0f, 0.8f);
+    !H
+    ins_505($A, 1.0f, 0.8f);
+    !L
+    ins_505($A, 1.8f, 0.8f);
     !*
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; verify semantics
-    ins_505($A, [-1.0f], 0.8f);
     // unlifted instruction: ins_611($A, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_627($A, 64.0f);
     $G = 60000;
@@ -912,7 +1007,6 @@ void BossCard2_at2(var A, var B)
     !L
     // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
     ins_504($A, %E, 0.0f);
-    !*
     !*
     %E = %E + 3.883222f;
     // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics

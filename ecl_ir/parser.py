@@ -149,6 +149,12 @@ def parse_decl(path: str | Path) -> Program:
             pending_diff = diff_match.group(1)
             line = diff_match.group(2).strip()
             statement_line = line
+            if pending_diff == "*" and not line:
+                if current_literals:
+                    pending_literal_groups.append(current_literals)
+                    current_literals = {}
+                pending_diff = None
+                continue
             if not line:
                 continue
             if is_difficulty_literal_statement(line, line_no):
@@ -189,6 +195,8 @@ def parse_decl(path: str | Path) -> Program:
             continue
 
         stmt = classify_statement(statement_line, line_no, pending_diff)
+        if current is not None and pending_literal_groups:
+            stmt.attrs["difficulty_literals"] = list(pending_literal_groups)
         if current is not None:
             current.statements.append(stmt)
         elif stmt.kind != "comment":
