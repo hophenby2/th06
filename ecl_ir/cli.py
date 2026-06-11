@@ -114,6 +114,10 @@ def th12_stage01_compat_wrappers(function_names: set[str]) -> list[str]:
     return lines
 
 
+def is_fire_instruction(ins) -> bool:
+    return getattr(ins, "opcode", None) in {401, 501, 601}
+
+
 def emit_function_body(function_objects: list[object], target: str) -> list[str]:
     timelines = [obj for obj in function_objects if getattr(obj, "kind", None) == "Timeline"]
     semantic_objects = [obj for obj in function_objects if getattr(obj, "kind", None) != "Timeline"]
@@ -129,7 +133,7 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
             object_starts.setdefault(getattr(obj, "source_line", 0), []).append(obj)
             continue
         object_starts.setdefault(raw[0].line_no, []).append(obj)
-        covered_lines.update(ins.line_no for ins in raw)
+        covered_lines.update(ins.line_no for ins in raw if not is_fire_instruction(ins))
 
     lines: list[str] = []
     lines.append(f"    // Timeline lowering {timeline.family} -> {target}; interleaved structured draft")
@@ -178,7 +182,7 @@ TH13PLUS_TO_TH12_RAW = {
     532: 438, 533: 439, 534: 440, 535: 435, 536: 436, 537: 437, 538: 438, 539: 439,
     540: 440, 542: 442, 543: 443, 544: 444, 545: 445, 546: 446, 547: 447, 548: 448,
     549: 449, 552: 452, 553: 453, 554: 454, 555: 455, 556: 456,
-    612: 512,
+    601: 501, 612: 512,
 }
 
 TH13PLUS_TO_TH12_RAW_UNSUPPORTED = {

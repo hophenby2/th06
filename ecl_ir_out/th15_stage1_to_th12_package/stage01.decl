@@ -268,13 +268,14 @@ void GirlA01_at()
     ins_521(0, 1.5f, 1.5f, 2.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 7.0f, -999999.0f
-    ins_501(0);
     unless ([-9959] == 3) goto GirlA01_at_540 @ 0;
     GirlA01_at_540:
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 1, 1, 4, 20);
     goto GirlA01_at_720 @ 0;
     GirlA01_at_600:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(30);
@@ -308,10 +309,11 @@ void GirlA01_at_l()
     ins_522(0, 3, 3, 3, 6, 1, 1, 1, 1);
     ins_521(0, 2.2f, 2.2f, 2.2f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     $A = 1;
     goto GirlA01_at_l_412 @ 0;
     GirlA01_at_l_372:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     ins_83(30);
     GirlA01_at_l_412:
     if ($A--) goto GirlA01_at_l_372 @ 0;
@@ -375,13 +377,14 @@ void GirlA02_at()
     ins_521(0, 1.5f, 1.5f, 2.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 7.0f, -999999.0f
-    ins_501(0);
     unless ([-9959] == 3) goto GirlA02_at_540 @ 0;
     GirlA02_at_540:
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 1, 1, 4, 20);
     goto GirlA02_at_720 @ 0;
     GirlA02_at_600:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(30);
@@ -415,10 +418,11 @@ void GirlA02_at_l()
     ins_522(0, 3, 3, 3, 6, 1, 1, 1, 1);
     ins_521(0, 2.2f, 2.2f, 2.2f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     $A = 1;
     goto GirlA02_at_l_412 @ 0;
     GirlA02_at_l_372:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     ins_83(30);
     GirlA02_at_l_412:
     if ($A--) goto GirlA02_at_l_372 @ 0;
@@ -478,11 +482,12 @@ void GirlA03_at()
     ins_504(0, 0.0f, 1.0471976f);
     ins_521(0, 1.5f, 1.5f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 1, 1, 7, 16);
     goto GirlA03_at_600 @ 0;
     GirlA03_at_480:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(60);
@@ -565,7 +570,6 @@ void GirlB01_at()
     ins_521(0, 1.2f, 1.6f, 2.2f, 4.2f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // unsupported th15->th12 opcode ins_614: TH15 bullet difficulty/rank extension is not TH12 opcode 514; parameter formats differ
     // original: ins_614(1, 0);
     // unlifted instruction: ins_603(1, 8.0f, 0.0f);
@@ -573,7 +577,10 @@ void GirlB01_at()
     ins_435($A, 3, 8, 60, 300);
     goto GirlB01_at_628 @ 0;
     GirlB01_at_488:
-    // unlifted instruction: ins_601(1);
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(1);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(20);
@@ -659,13 +666,16 @@ void GirlB02_at()
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, -2147483648, 60, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 4, 60, -999999, 0.016666668f, -999999.0f
-    ins_501(0);
     ins_83(60 + ([-10000] % 80));
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     $A = 1;
     goto GirlB02_at_1088 @ 0;
     GirlB02_at_668:
     // raw opcode fallback th15->th12: ins_548 -> ins_448; verify semantics
     ins_448(240 + ([-10000] % 40), 120 + ([-10000] % 40), 100 + ([-10000] % 40), 70 + ([-10000] % 40));
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     GirlB02_at_1088:
     if ($A--) goto GirlB02_at_668 @ 0;
     return;
@@ -816,7 +826,6 @@ void GirlC01_at()
     ins_504(0, 1.5707964f, 0.12217305f);
     ins_505(0, %A, 0.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($B, 1, 3, 6, 12);
     goto GirlC01_at_860 @ 0;
@@ -828,6 +837,8 @@ void GirlC01_at()
     goto GirlC01_at_716 @ 0;
     GirlC01_at_492:
     %A = %A + 0.15f;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(4);
@@ -921,13 +932,14 @@ void GirlD01_at()
     ins_505(0, 1.6f, 1.6f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 4.0f, -999999.0f
-    ins_501(0);
     unless ([-9959] == 3) goto GirlD01_at_460 @ 0;
     GirlD01_at_460:
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 2, 3, 6, 10);
     goto GirlD01_at_640 @ 0;
     GirlD01_at_520:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(120);
@@ -960,7 +972,6 @@ void GirlD01_at2()
     ins_505(1, %B, 0.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
-    ins_501(1);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($D, 2, 4, 4, 4);
     goto GirlD01_at2_1096 @ 0;
@@ -975,6 +986,8 @@ void GirlD01_at2()
     goto GirlD01_at2_952 @ 0;
     GirlD01_at2_604:
     %B = %B + 0.07f;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(1);
     ins_83(3);
     $F = 2;
     goto GirlD01_at2_908 @ 0;
@@ -1067,11 +1080,12 @@ void GirlD02_at()
     ins_504(0, 0.0f, 0.05235988f);
     ins_521(0, 1.6f, 1.6f, 3.0f, 4.0f, 1.6f, 1.6f, 1.6f, 1.6f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 2, 5, 8, 4);
     goto GirlD02_at_596 @ 0;
     GirlD02_at_476:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(120);
@@ -1104,7 +1118,6 @@ void GirlD02_at2()
     ins_505(1, %B, 0.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
-    ins_501(1);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($D, 2, 4, 4, 4);
     goto GirlD02_at2_1096 @ 0;
@@ -1119,6 +1132,8 @@ void GirlD02_at2()
     goto GirlD02_at2_952 @ 0;
     GirlD02_at2_604:
     %B = %B + 0.07f;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(1);
     ins_83(3);
     $F = 2;
     goto GirlD02_at2_908 @ 0;
@@ -1876,12 +1891,13 @@ void Phantom01_at()
     ins_522(0, 1, 1, 1, 1, 1, 1, 1, 8);
     ins_521(0, 1.0f, 1.0f, 3.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 1, 1, 1, 2);
     goto Phantom01_at_504 @ 0;
     Phantom01_at_372:
     ins_83(60 + ([-10000] % 90));
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     Phantom01_at_504:
     if ($A--) goto Phantom01_at_372 @ 0;
     return;
@@ -1950,8 +1966,9 @@ void Phantom02_at()
     ins_522(0, 1, 3, 3, 3, 1, 1, 4, 8);
     ins_521(0, 1.0f, 2.0f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     ins_83(120 + ([-10000] % 100));
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     return;
 }
 

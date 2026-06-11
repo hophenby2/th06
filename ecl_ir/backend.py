@@ -352,7 +352,6 @@ def compile_th13plus(e: BulletEmitter) -> str:
             lines.append(f"ins_{transform.raw_opcode}({', '.join(transform.raw_args)});")
         else:
             lines.append(f"// unsupported transform from ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
-    lines.append(f"ins_601({emitter_id});")
     return "\n".join(lines)
 
 
@@ -410,7 +409,6 @@ def compile_th12(e: BulletEmitter) -> str:
             lines.append(f"// unsupported th12 transform opcode/arity in generated context; preserved source ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
         else:
             lines.append(f"// unsupported transform from ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
-    lines.append(f"ins_501({emitter_id});")
     return "\n".join(lines)
 
 

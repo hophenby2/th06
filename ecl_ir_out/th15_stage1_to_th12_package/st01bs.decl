@@ -144,7 +144,6 @@ void Boss1_at(var A, var B, var C)
     ins_521(0, 1.5f, 2.5f, 3.5f, 4.1f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // object Animation source_line=100 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
     ins_258(3);
@@ -155,6 +154,8 @@ void Boss1_at(var A, var B, var C)
     goto Boss1_at_724 @ 0;
     Boss1_at_500:
     $F = $F + 1;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(6);
@@ -188,7 +189,6 @@ void Boss1_at(var A, var B, var C)
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 1048576, 0, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // object Animation source_line=149 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
     ins_258(3);
@@ -199,6 +199,8 @@ void Boss1_at(var A, var B, var C)
     Boss1_at_1360:
     %A = %A + %C;
     $F = $F + 1;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(6);
@@ -243,10 +245,11 @@ void Boss1_at2()
     ins_504(1, [-9989.0f] + ([-9998.0f] / 32.0f), 0.0f);
     ins_521(1, 1.0f, 1.0f, 3.0f, 5.0f, 0.8f, 0.8f, 0.8f, 0.8f);
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501(1);
     $C = 600;
     goto Boss1_at2_800 @ 0;
     Boss1_at2_560:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(1);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(160);
@@ -316,6 +319,7 @@ void Boss2()
     // object Movement source_line=263 family=th13plus
     // movement lowering th13plus -> th12: movePosTime
     ins_301(0, 0, 0.0f, 0.0f);
+    // unlifted instruction: ins_401(0, 0, 0.0f, 0.0f);
     // raw: [-9949] = 0;
     // raw: [-9948] = 0;
     // raw: [-9947] = 1;
@@ -380,7 +384,6 @@ void Boss2_at(var A, var B, var C)
     ins_521(0, 1.5f, 2.5f, 3.5f, 3.5f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // object Animation source_line=317 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
     ins_258(3);
@@ -391,6 +394,8 @@ void Boss2_at(var A, var B, var C)
     goto Boss2_at_724 @ 0;
     Boss2_at_500:
     $F = $F + 1;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(6);
@@ -435,11 +440,12 @@ void Boss2_at2()
     ins_504(1, [-9998.0f], 0.0f);
     ins_521(1, 1.0f, 1.0f, 3.0f, 4.0f, 0.8f, 0.8f, 0.8f, 0.8f);
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501(1);
     // unlifted instruction: ins_627(1, 64.0f);
     $C = 600;
     goto Boss2_at2_812 @ 0;
     Boss2_at2_664:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(1);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(110);
@@ -505,6 +511,7 @@ void BossCard1()
     // object Movement source_line=438 family=th13plus
     // movement lowering th13plus -> th12: movePosTime
     ins_301(0, 0, 0.0f, 0.0f);
+    // unlifted instruction: ins_401(0, 0, 0.0f, 0.0f);
     // raw: [-9949] = 0;
     // raw: [-9948] = 0;
     // raw: [-9947] = 1;
@@ -525,6 +532,8 @@ void BossCard1()
     !*
     // movement lowering th13plus -> th12: movePosTime
     ins_301(60, 4, 0.0f, 128.0f);
+    !*
+    // unlifted instruction: ins_401(60, 4, 0.0f, 128.0f);
     // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
     ins_404(0.0f, 128.0f, 240.0f, 64.0f);
     // unlifted instruction: ins_316(0, 0);
@@ -581,7 +590,6 @@ void BossCard1_at(var A)
     ins_521(0, 1.5f, 2.0f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // object Animation source_line=503 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
     ins_258(3);
@@ -592,6 +600,8 @@ void BossCard1_at(var A)
     goto BossCard1_at_752 @ 0;
     BossCard1_at_528:
     $B = $B + 1;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(6);
@@ -644,7 +654,6 @@ void BossCard1_at2(var A, var B)
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_612: $A, 0, 16, 60, 1, 0, 0, %B, -999999.0f, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 512, 12, 2, -999999.0f, -999999.0f
-    ins_501($A);
     $F = 1;
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($G, 6, 20, 40, 60);
@@ -653,6 +662,8 @@ void BossCard1_at2(var A, var B)
     unless ($F < $D) goto BossCard1_at2_1144 @ 0;
     $F = $F + 1;
     BossCard1_at2_1144:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501($A);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(6);
@@ -720,6 +731,7 @@ void BossCard2()
     // object Movement source_line=626 family=th13plus
     // movement lowering th13plus -> th12: movePosTime
     ins_301(0, 0, 0.0f, 0.0f);
+    // unlifted instruction: ins_401(0, 0, 0.0f, 0.0f);
     // raw: [-9949] = 0;
     // raw: [-9948] = 0;
     // raw: [-9947] = 1;
@@ -740,6 +752,8 @@ void BossCard2()
     !*
     // movement lowering th13plus -> th12: movePosTime
     ins_301(60, 4, 0.0f, 128.0f);
+    !*
+    // unlifted instruction: ins_401(60, 4, 0.0f, 128.0f);
     // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
     ins_404(0.0f, 128.0f, 240.0f, 64.0f);
     // unlifted instruction: ins_316(0, 0);
@@ -823,13 +837,14 @@ void BossCard2_at(var A, var B)
     ins_521($A, 1.5f, 2.0f, 3.5f, 3.5f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 1, 1, -999999, -999999, -999999.0f, -999999.0f
-    ins_501($A);
     $C = 1;
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($D, 6, 8, 8, 8);
     goto BossCard2_at_712 @ 0;
     BossCard2_at_488:
     $C = $C + 1;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501($A);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(6);
@@ -883,11 +898,12 @@ void BossCard2_at2(var A, var B)
     !*
     ins_521($A, 1.0f, 1.0f, 1.0f, 1.8f, 0.8f, 0.8f, 0.8f, 0.8f);
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501($A);
     // unlifted instruction: ins_627($A, 64.0f);
     $G = 60000;
     goto BossCard2_at2_1180 @ 0;
     BossCard2_at2_744:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501($A);
     unless ($F < 1000) goto BossCard2_at2_1080 @ 0;
     $F = $F + 1;
     BossCard2_at2_1080:
@@ -979,6 +995,7 @@ void BossEscape()
     // object Movement source_line=858 family=th13plus
     // movement lowering th13plus -> th12: movePosTime
     ins_301(60, 4, -224.0f, -16.0f);
+    // unlifted instruction: ins_401(60, 4, -224.0f, -16.0f);
     ins_83(60);
     // unlifted instruction: ins_1();
     // unlifted instruction: ins_1();

@@ -69,6 +69,7 @@ void MBossB()
     // object Movement source_line=39 family=th13plus
     // movement lowering th13plus -> th12: movePosTime
     ins_301(100, 4, 0.0f, 128.0f);
+    // unlifted instruction: ins_401(100, 4, 0.0f, 128.0f);
     ins_83(40);
     // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
     ins_404(0.0f, 128.0f, 280.0f, 256.0f);
@@ -129,7 +130,6 @@ void MBossB1_at(var A, var B, var C)
     ins_521(0, 1.5f, 2.0f, 3.1f, 4.1f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // object Animation source_line=98 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
     ins_258(3);
@@ -141,6 +141,8 @@ void MBossB1_at(var A, var B, var C)
     MBossB1_at_528:
     %A = %A + %C;
     $F = $F + 1;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(6);
@@ -174,7 +176,6 @@ void MBossB1_at(var A, var B, var C)
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 1048576, 0, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // object Animation source_line=149 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
     ins_258(3);
@@ -185,6 +186,8 @@ void MBossB1_at(var A, var B, var C)
     MBossB1_at_1464:
     %A = %A + %C;
     $F = $F + 1;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(6);
@@ -228,10 +231,11 @@ void MBossB1_at2()
     ins_504(1, [-9989.0f] + ([-9998.0f] / 32.0f), 0.0f);
     ins_521(1, 1.0f, 1.0f, 1.0f, 1.0f, 0.8f, 0.8f, 0.8f, 0.8f);
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501(1);
     $C = 600;
     goto MBossB1_at2_720 @ 0;
     MBossB1_at2_480:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(1);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(160);
@@ -306,6 +310,7 @@ void MBossBDead()
     // object Movement source_line=257 family=th13plus
     // movement lowering th13plus -> th12: movePosTime
     ins_301(60, 4, -192.0f, -32.0f);
+    // unlifted instruction: ins_401(60, 4, -192.0f, -32.0f);
     ins_83(60);
     // unlifted instruction: ins_1();
     // unlifted instruction: ins_1();
@@ -342,6 +347,7 @@ void MBossBEscape()
     // object Movement source_line=280 family=th13plus
     // movement lowering th13plus -> th12: movePosTime
     ins_301(60, 4, 0.0f, -32.0f);
+    // unlifted instruction: ins_401(60, 4, 0.0f, -32.0f);
     ins_83(10);
     ins_83(50);
     // unlifted instruction: ins_1();
@@ -396,6 +402,7 @@ void MBossCardB1()
     // object Movement source_line=318 family=th13plus
     // movement lowering th13plus -> th12: movePosTime
     ins_301(0, 0, 0.0f, 0.0f);
+    // unlifted instruction: ins_401(0, 0, 0.0f, 0.0f);
     // raw: [-9949] = 0;
     // raw: [-9948] = 0;
     // raw: [-9947] = 1;
@@ -409,6 +416,7 @@ void MBossCardB1()
     // object Movement source_line=325 family=th13plus
     // movement lowering th13plus -> th12: movePosTime
     ins_301(60, 4, 0.0f, 128.0f);
+    // unlifted instruction: ins_401(60, 4, 0.0f, 128.0f);
     // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
     ins_404(0.0f, 128.0f, 240.0f, 64.0f);
     // unlifted instruction: ins_316(0, 0);
@@ -459,7 +467,6 @@ void MBossCardB1_at()
     ins_521(0, 1.5f, 2.0f, 1.5f, 2.1f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     // object Animation source_line=374 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
     ins_258(3);
@@ -470,6 +477,8 @@ void MBossCardB1_at()
     goto MBossCardB1_at_752 @ 0;
     MBossCardB1_at_528:
     $B = $B + 1;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(6);
@@ -511,7 +520,6 @@ void MBossCardB1_at2(var A, var B)
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, -2147483648, 60, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: $A, 0, 8, 60, -999999, 0.001f, %B
-    ins_501($A);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($D, 10, 10, 1, 1);
     %E = 4.0f;
@@ -521,6 +529,8 @@ void MBossCardB1_at2(var A, var B)
     MBossCardB1_at2_712:
     %E = %E - 0.1f;
     $D = $D + 1;
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501($A);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(6);

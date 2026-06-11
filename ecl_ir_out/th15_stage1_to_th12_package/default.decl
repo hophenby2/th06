@@ -128,10 +128,11 @@ void DeadAttackEt1()
     ins_504(0, 0.0f, 0.05235988f);
     ins_505(0, [-9981.0f], 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    ins_501(0);
     $A = [-9985];
     goto DeadAttackEt1_364 @ 0;
     DeadAttackEt1_324:
+    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    ins_501(0);
     // dynamic wait from source opcode 23; TH12 timer labels need a literal
     // original source: src_ins_23([-9984]);
     DeadAttackEt1_364:
