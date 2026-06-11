@@ -69,7 +69,7 @@ def emit_transpile(program, objects, target: str) -> str:
         by_function.setdefault(getattr(obj, "function", ""), []).append(obj)
 
     function_order = [func.name for func in program.functions]
-    function_params = {func.name: getattr(func, "params", "") for func in program.functions}
+    function_params = inferred_function_params(program)
     if program.game == "th15" and target == "th12" and Path(program.source).name == "st01.decl":
         lines.extend(th12_stage01_compat_wrappers(set(function_order)))
         if lines and lines[-1] != "":
@@ -82,11 +82,32 @@ def emit_transpile(program, objects, target: str) -> str:
         lines.append("")
         lines.append(f"void {function}({params})")
         lines.append("{")
-        lines.extend(emit_function_body(function_objects, target))
+        body_lines = emit_function_body(function_objects, target)
+        if params:
+            body_lines = drop_redeclared_param_vars(body_lines, params)
+        lines.extend(body_lines)
         lines.append("}")
     return "\n".join(lines)
 
 
+
+
+def drop_redeclared_param_vars(lines: list[str], params: str) -> list[str]:
+    param_names = {part.strip().split()[-1] for part in params.split(",") if part.strip()}
+    if not param_names:
+        return lines
+    out: list[str] = []
+    var_re = re.compile(r"^(\s*)var\s+(.+?)\s*;\s*$")
+    for line in lines:
+        match = var_re.match(line)
+        if not match:
+            out.append(line)
+            continue
+        indent, raw_vars = match.group(1), match.group(2)
+        kept = [var.strip() for var in raw_vars.split(",") if var.strip() and var.strip().split()[-1] not in param_names]
+        if kept:
+            out.append(f"{indent}var {', '.join(kept)};")
+    return out
 
 
 def synthetic_resource_entries(program, target: str) -> dict[str, list[str]]:
@@ -94,6 +115,42 @@ def synthetic_resource_entries(program, target: str) -> dict[str, list[str]]:
     if program.game == "th15" and target == "th12" and name in {"st01bs.decl", "st01mbs.decl", "st01mbs2.decl"}:
         return {"anim": ["enemy.anm", "stgenm01.anm"]}
     return {}
+
+
+def inferred_function_params(program) -> dict[str, str]:
+    params = {func.name: getattr(func, "params", "") for func in program.functions}
+    if program.game not in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+        return params
+    if Path(program.source).name != "default.decl":
+        return params
+    sibling_prototypes = collect_sibling_prototype_params(Path(program.source))
+    for func in program.functions:
+        if params.get(func.name):
+            continue
+        proto_params = sibling_prototypes.get(func.name)
+        if proto_params:
+            params[func.name] = proto_params
+    return params
+
+
+def collect_sibling_prototype_params(source: Path) -> dict[str, str]:
+    result: dict[str, str] = {}
+    prototype_re = re.compile(r"^\s*(?:void|sub)\s+(\w+)\s*\(([^)]*)\)\s*;")
+    for path in sorted(source.parent.glob("*.decl")):
+        if path == source:
+            continue
+        try:
+            lines = path.read_text(errors="replace").splitlines()
+        except OSError:
+            continue
+        for raw in lines:
+            match = prototype_re.match(raw)
+            if not match:
+                continue
+            name, raw_params = match.group(1), match.group(2).strip()
+            if raw_params:
+                result.setdefault(name, raw_params)
+    return result
 
 
 def target_resource_entries(program, target: str, resource: str, entries: list[str]) -> list[str]:
@@ -128,13 +185,24 @@ def is_fire_instruction(ins) -> bool:
     return getattr(ins, "opcode", None) in {401, 501, 601}
 
 
+def should_preserve_raw_timeline(program_source: str, source_game: str, target: str, function_name: str) -> bool:
+    if source_game not in {"th13", "th14", "th15", "th16", "th17", "th18"} or target != "th12":
+        return False
+    return Path(program_source or "").name in {"st01bs.decl", "st01mbs.decl", "st01mbs2.decl"}
+
+
 def emit_function_body(function_objects: list[object], target: str) -> list[str]:
     timelines = [obj for obj in function_objects if getattr(obj, "kind", None) == "Timeline"]
-    semantic_objects = [obj for obj in function_objects if getattr(obj, "kind", None) != "Timeline"]
+    semantic_objects = [obj for obj in function_objects if getattr(obj, "kind", None) not in {"Timeline", "BossPattern"}]
     if not timelines:
         return emit_semantic_object_block(semantic_objects, target)
 
     timeline = timelines[0]
+    special_default = emit_th15_default_special_body(timeline, target)
+    if special_default is not None:
+        return special_default
+    if should_preserve_raw_timeline(getattr(timeline, "source", ""), getattr(timeline, "game", "unknown"), target, getattr(timeline, "function", "")):
+        return emit_raw_timeline_body(timeline, target)
     object_starts: dict[int, list[object]] = {}
     covered_lines: set[int] = set()
     for obj in semantic_objects:
@@ -184,6 +252,98 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
     return lines
 
 
+def emit_th15_default_special_body(timeline, target: str) -> list[str] | None:
+    if getattr(timeline, "game", "") != "th15" or target != "th12":
+        return None
+    if Path(str(getattr(timeline, "source", ""))).name != "default.decl":
+        return None
+    name = getattr(timeline, "function", "")
+    if name not in {"Ecl_EtBreak", "Ecl_EtBreak2", "Ecl_EtBreak2_ni", "Ecl_EtBreak_ni"}:
+        return None
+    interval = "6" if name in {"Ecl_EtBreak2", "Ecl_EtBreak2_ni"} else "10"
+    clear_opcode = 513 if name.endswith("_ni") else 512
+    label = f"{name}_120"
+    end = f"{name}_216"
+    return [
+        "    // TH15 default bullet-clear helper lowered to TH12 native equivalent.",
+        "    var A, B;",
+        "    %B = 16.0f;",
+        "    ins_402(32);",
+        f"    goto {end} @ 1;",
+        f"    {label}:",
+        f"    ins_{clear_opcode}(%B);",
+        "    %B;",
+        "    +1:",
+        f"    {interval};",
+        "    ins_51();",
+        "    ins_45(%B);",
+        f"    {end}:",
+        f"    if (%B < 640.0f) goto {label} @ 0;",
+        "    ins_1();",
+    ]
+
+
+def emit_raw_timeline_body(timeline, target: str) -> list[str]:
+    lines: list[str] = []
+    lines.append(f"    // Timeline lowering {timeline.family} -> {target}; raw-order boss/bullet-safe path")
+    lines.append("    // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.")
+    emitted_spelltest_skip = False
+    for event in timeline.fields.get("statements", []):
+        if should_skip_boss_spelltest_event(event, timeline, target):
+            if not emitted_spelltest_skip:
+                label = str(event.get("label", ""))
+                time = str(event.get("time", "0"))
+                if label:
+                    lines.append("    // TH15 boss spell-test branch removed for TH12 normal stage flow.")
+                    lines.append(f"    goto {label} @ {time};")
+                emitted_spelltest_skip = True
+            lines.append(f"    // original spell-test branch: {event.get('text', '')}")
+            continue
+        lines.extend(emit_timeline_event(event, getattr(timeline, "game", "unknown"), target))
+    loops = timeline.fields.get("loops", [])
+    if loops:
+        lines.append("    // detected loops:")
+        for loop in loops:
+            lines.append(f"    // - {loop.get('kind')} {loop.get('label')} lines {loop.get('start_line')}..{loop.get('end_line')} condition={loop.get('condition')}")
+    return lines
+
+
+
+def should_skip_boss_spelltest_event(event: dict[str, object], timeline, target: str) -> bool:
+    if target != "th12" or getattr(timeline, "game", "") != "th15":
+        return False
+    if Path(str(getattr(timeline, "source", ""))).name not in {"st01bs.decl", "st01mbs.decl", "st01mbs2.decl"}:
+        return False
+    if "[-9907]" not in str(event.get("text", "")) and "[-9907]" not in str(event.get("condition", "")):
+        return False
+    return event.get("kind") == "conditional_goto"
+
+
+TH13PLUS_TO_TH12_RAW_REORDER = {
+    # enemy / animation
+    300: (256, [0, 1, 2, 3, 4, 5]),
+    301: (257, [0, 1, 2, 3, 4, 5]),
+    302: (258, [0]),
+    303: (259, [0, 1]),
+    306: (262, [0, 1]),
+    307: (263, [0, 1]),
+    308: (264, [0, 1]),
+    # movement
+    400: (300, [0, 1]),
+    401: (301, [0, 1, 2, 3]),
+    402: (302, [0, 1]),
+    403: (303, [0, 1, 2, 3]),
+    404: (304, [0, 1]),
+    405: (305, [0, 1, 2, 3]),
+    406: (306, [0, 1]),
+    407: (307, [0, 1, 2, 3]),
+    420: (320, [0, 1, 2, 3, 4, 5]),
+    421: (321, [0, 1, 2, 3, 4, 5, 6]),
+    425: (325, [0, 1, 2, 3, 4, 5, 6]),
+    426: (326, [0, 1, 2, 3, 4, 5, 6]),
+    427: (327, []),
+}
+
 TH13PLUS_TO_TH12_RAW = {
     500: 400, 501: 401, 502: 402, 503: 403, 504: 404, 505: 405, 506: 406, 507: 407,
     508: 408, 509: 409, 510: 410, 511: 411, 512: 412, 513: 413, 514: 414, 515: 415,
@@ -192,7 +352,10 @@ TH13PLUS_TO_TH12_RAW = {
     532: 438, 533: 439, 534: 440, 535: 435, 536: 436, 537: 437, 538: 438, 539: 439,
     540: 440, 542: 442, 543: 443, 544: 444, 545: 445, 546: 446, 547: 447, 548: 448,
     549: 449, 552: 452, 553: 453, 554: 454, 555: 455, 556: 456,
-    601: 501, 612: 512,
+    # TH13+ bullet slot setup/fire -> TH12 bullet slot setup/fire.
+    # Keep these raw-order in boss ECLs so dynamic parameters such as ins_606($F, ...) are not moved.
+    600: 500, 601: 501, 602: 502, 603: 503, 604: 504, 605: 505, 606: 506, 607: 507,
+    608: 508, 609: 509,
 }
 
 TH13PLUS_TO_TH12_RAW_UNSUPPORTED = {
@@ -212,6 +375,15 @@ TH13PLUS_TO_TH12_RAW_UNSUPPORTED = {
 }
 
 
+def remap_raw_named_args(source_opcode: int, target_opcode: int, args: list[str], source_game: str, target: str) -> list[str]:
+    if source_game == "th15" and target == "th12" and source_opcode == 302 and target_opcode == 258 and len(args) == 1:
+        if args[0] == "2":
+            return ["1"]
+        if args[0] == "3":
+            return ["2"]
+    return args
+
+
 def literal_time_value(value: str) -> str:
     value = str(value).strip()
     if value.isdigit():
@@ -224,11 +396,20 @@ def literal_time_value(value: str) -> str:
 
 def lower_raw_instruction_event(opcode: int, args: list[object], text: str, source_game: str, target: str) -> list[str]:
     if source_game in {"th13", "th14", "th15", "th16", "th17", "th18"} and target == "th12":
+        if opcode in TH13PLUS_TO_TH12_RAW_REORDER:
+            mapped, order = TH13PLUS_TO_TH12_RAW_REORDER[opcode]
+            mapped_args = [str(args[index]) for index in order if index < len(args)]
+            mapped_args = remap_raw_named_args(opcode, mapped, mapped_args, source_game, target)
+            return [
+                f"    // raw-order opcode map {source_game}->th12: ins_{opcode} -> ins_{mapped}; verify semantics",
+                f"    ins_{mapped}({', '.join(mapped_args)});",
+            ]
         if opcode in TH13PLUS_TO_TH12_RAW:
             mapped = TH13PLUS_TO_TH12_RAW[opcode]
+            mapped_args = remap_raw_named_args(opcode, mapped, [str(arg) for arg in args], source_game, target)
             return [
                 f"    // raw opcode fallback {source_game}->th12: ins_{opcode} -> ins_{mapped}; verify semantics",
-                f"    ins_{mapped}({', '.join(str(arg) for arg in args)});",
+                f"    ins_{mapped}({', '.join(mapped_args)});",
             ]
         if opcode in TH13PLUS_TO_TH12_RAW_UNSUPPORTED:
             return [
@@ -304,6 +485,8 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         suffix = "" if text.endswith(";") else ";"
         return wrap_event_rank([f"    {text}{suffix}"], event, target)
     if kind == "raw":
+        if re.fullmatch(r"[%$]?[A-Za-z_][A-Za-z0-9_]*|[-+]?\d+(?:\.\d+)?f?", text):
+            return wrap_event_rank([f"    {text};"], event, target)
         return [f"    // raw: {text}"]
     return []
 

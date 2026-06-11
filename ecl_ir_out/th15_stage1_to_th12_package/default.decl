@@ -11,11 +11,10 @@ void BossItemCard()
     return;
 }
 
-void BossItemPhase()
+void BossItemPhase(var A, var B, var C)
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    var A, B, C;
     unless ([-9986] == 0) goto BossItemPhase_240 @ 0;
     // raw opcode fallback th15->th12: ins_506 -> ins_406; verify semantics
     ins_406();
@@ -57,11 +56,10 @@ void BossItemPhase2()
     return;
 }
 
-void BossItemPhase3()
+void BossItemPhase3(var A, var B, var C)
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    var A, B, C;
     unless ([-9986] == 0) goto BossItemPhase3_240 @ 0;
     // raw opcode fallback th15->th12: ins_506 -> ins_406; verify semantics
     ins_406();
@@ -83,9 +81,9 @@ void DeadAttack1()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // raw: [-9981.0f] = 3.0f;
-    // raw: [-9985] = 3;
-    // raw: [-9984] = 5;
+    [-9981.0f] = 3.0f;
+    [-9985] = 3;
+    [-9984] = 5;
     // object Movement source_line=56 family=th13plus
     // no safe lowering implemented for Movement family=th13plus to th12
     // ins_424(0);
@@ -100,9 +98,9 @@ void DeadAttack2()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // raw: [-9981.0f] = 3.0f;
-    // raw: [-9985] = 5;
-    // raw: [-9984] = 4;
+    [-9981.0f] = 3.0f;
+    [-9985] = 5;
+    [-9984] = 4;
     // object Movement source_line=66 family=th13plus
     // no safe lowering implemented for Movement family=th13plus to th12
     // ins_424(0);
@@ -144,96 +142,78 @@ void DeadAttackEt1()
 
 void Ecl_EtBreak()
 {
-    // Timeline lowering structured -> th12; interleaved structured draft
-    // control-flow, async scheduling, and expression semantics require target-game verification
-    var A;
-    %A = 16.0f;
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // TH15 default bullet-clear helper lowered to TH12 native equivalent.
+    var A, B;
+    %B = 16.0f;
     ins_402(32);
     goto Ecl_EtBreak_216 @ 1;
     Ecl_EtBreak_120:
-    // unlifted instruction: ins_615(%A);
-    // raw: %A;
+    ins_512(%B);
+    %B;
     +1:
-    // raw: 10;
-    // unlifted instruction: ins_51();
-    // unlifted instruction: ins_45(%A);
+    10;
+    ins_51();
+    ins_45(%B);
     Ecl_EtBreak_216:
-    if (%A < 640.0f) goto Ecl_EtBreak_120 @ 0;
-    // unlifted instruction: ins_1();
-    // detected loops:
-    // - counter_loop Ecl_EtBreak_120 lines 98..106 condition=%A < 640.0f
+    if (%B < 640.0f) goto Ecl_EtBreak_120 @ 0;
+    ins_1();
 }
 
 void Ecl_EtBreak2()
 {
-    // Timeline lowering structured -> th12; interleaved structured draft
-    // control-flow, async scheduling, and expression semantics require target-game verification
-    var A;
-    %A = 16.0f;
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // TH15 default bullet-clear helper lowered to TH12 native equivalent.
+    var A, B;
+    %B = 16.0f;
     ins_402(32);
     goto Ecl_EtBreak2_216 @ 1;
     Ecl_EtBreak2_120:
-    // unlifted instruction: ins_615(%A);
-    // raw: %A;
+    ins_512(%B);
+    %B;
     +1:
-    // raw: 6;
-    // unlifted instruction: ins_51();
-    // unlifted instruction: ins_45(%A);
+    6;
+    ins_51();
+    ins_45(%B);
     Ecl_EtBreak2_216:
-    if (%A < 640.0f) goto Ecl_EtBreak2_120 @ 0;
-    // unlifted instruction: ins_1();
-    // detected loops:
-    // - counter_loop Ecl_EtBreak2_120 lines 116..124 condition=%A < 640.0f
+    if (%B < 640.0f) goto Ecl_EtBreak2_120 @ 0;
+    ins_1();
 }
 
 void Ecl_EtBreak2_ni()
 {
-    // Timeline lowering structured -> th12; interleaved structured draft
-    // control-flow, async scheduling, and expression semantics require target-game verification
-    var A;
-    %A = 16.0f;
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // TH15 default bullet-clear helper lowered to TH12 native equivalent.
+    var A, B;
+    %B = 16.0f;
     ins_402(32);
     goto Ecl_EtBreak2_ni_216 @ 1;
     Ecl_EtBreak2_ni_120:
-    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
-    // original: ins_616(%A);
-    // raw: %A;
+    ins_513(%B);
+    %B;
     +1:
-    // raw: 6;
-    // unlifted instruction: ins_51();
-    // unlifted instruction: ins_45(%A);
+    6;
+    ins_51();
+    ins_45(%B);
     Ecl_EtBreak2_ni_216:
-    if (%A < 640.0f) goto Ecl_EtBreak2_ni_120 @ 0;
-    // unlifted instruction: ins_1();
-    // detected loops:
-    // - counter_loop Ecl_EtBreak2_ni_120 lines 134..142 condition=%A < 640.0f
+    if (%B < 640.0f) goto Ecl_EtBreak2_ni_120 @ 0;
+    ins_1();
 }
 
 void Ecl_EtBreak_ni()
 {
-    // Timeline lowering structured -> th12; interleaved structured draft
-    // control-flow, async scheduling, and expression semantics require target-game verification
-    var A;
-    %A = 16.0f;
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // TH15 default bullet-clear helper lowered to TH12 native equivalent.
+    var A, B;
+    %B = 16.0f;
     ins_402(32);
     goto Ecl_EtBreak_ni_216 @ 1;
     Ecl_EtBreak_ni_120:
-    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
-    // original: ins_616(%A);
-    // raw: %A;
+    ins_513(%B);
+    %B;
     +1:
-    // raw: 10;
-    // unlifted instruction: ins_51();
-    // unlifted instruction: ins_45(%A);
+    10;
+    ins_51();
+    ins_45(%B);
     Ecl_EtBreak_ni_216:
-    if (%A < 640.0f) goto Ecl_EtBreak_ni_120 @ 0;
-    // unlifted instruction: ins_1();
-    // detected loops:
-    // - counter_loop Ecl_EtBreak_ni_120 lines 152..160 condition=%A < 640.0f
+    if (%B < 640.0f) goto Ecl_EtBreak_ni_120 @ 0;
+    ins_1();
 }
 
 void EffChargePoint()
@@ -253,11 +233,10 @@ void EffChargePoint()
     return;
 }
 
-void EffChargePoint2()
+void EffChargePoint2(var A, var B, var C, var D, var E)
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    var A, B, C, D, E;
     // object Animation source_line=177 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
     ins_258(1);
@@ -274,11 +253,10 @@ void EffChargePoint2()
     return;
 }
 
-void EffChargePoint3()
+void EffChargePoint3(var A, var B, var C, var D, var E, var F)
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    var A, B, C, D, E, F;
     // object Animation source_line=189 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
     ins_258(1);
@@ -303,10 +281,8 @@ void MainBossSpell()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // object BossPattern source_line=202 family=th13plus
-    // BossPattern lowering th13plus -> th12; semantic verification required
+    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
     ins_424(43);
-    ins_424(81);
     +10:
     // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
     ins_418(-1);
@@ -316,6 +292,8 @@ void MainBossSpell()
     ins_257("Boss", 144.0f, -16.0f, 40, 1000, 1);
     // raw opcode fallback th15->th12: ins_520 -> ins_420; verify semantics
     ins_420();
+    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    ins_424(81);
     ins_83(170);
     // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
     ins_418(-2);
@@ -328,10 +306,8 @@ void MainMBossSpell()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // object BossPattern source_line=217 family=th13plus
-    // BossPattern lowering th13plus -> th12; semantic verification required
+    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
     ins_424(22);
-    ins_424(81);
     +10:
     // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
     ins_418(-3);
@@ -341,6 +317,8 @@ void MainMBossSpell()
     ins_257("MBoss", 144.0f, -16.0f, 40, 1000, 1);
     // raw opcode fallback th15->th12: ins_520 -> ins_420; verify semantics
     ins_420();
+    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    ins_424(81);
     ins_83(100);
     // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
     ins_418(-2);
@@ -355,7 +333,8 @@ void et_ofs_r()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C, D;
     // unlifted instruction: ins_81(%C, %D, [-9998.0f], %B * [-9999.0f]);
-    // unlifted instruction: ins_603($A, %C, %D);
+    // raw opcode fallback th15->th12: ins_603 -> ins_503; verify semantics
+    ins_503($A, %C, %D);
     return;
 }
 

@@ -14,7 +14,9 @@ def lift_timelines(program: Program) -> list[TimelineOp]:
         if not func.statements:
             continue
         timeline = TimelineOp(program.game, func.name, func.statements[0].line_no, func.name)
+        timeline.source = program.source
         timeline.fields = {
+            "source": program.source,
             "statements": [statement_to_event(stmt) for stmt in func.statements],
             "labels": collect_labels(func),
             "calls": collect_calls(func),

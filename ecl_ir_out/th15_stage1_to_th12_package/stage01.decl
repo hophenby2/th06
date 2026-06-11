@@ -542,7 +542,8 @@ void GirlB01_at()
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
     // unsupported th15->th12 opcode ins_614: TH15 bullet difficulty/rank extension is not TH12 opcode 514; parameter formats differ
     // original: ins_614(1, 0);
-    // unlifted instruction: ins_603(1, 8.0f, 0.0f);
+    // raw opcode fallback th15->th12: ins_603 -> ins_503; verify semantics
+    ins_503(1, 8.0f, 0.0f);
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 3, 8, 60, 300);
     goto GirlB01_at_628 @ 0;
@@ -1247,8 +1248,7 @@ void MainBoss()
     +1:
     // raw opcode fallback th15->th12: ins_520 -> ins_420; verify semantics
     ins_420();
-    // object BossPattern source_line=802 family=th13plus
-    // BossPattern lowering th13plus -> th12; semantic verification required
+    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
     ins_424(81);
     +60:
     // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
@@ -1287,8 +1287,7 @@ void MainFront()
     // control-flow, async scheduling, and expression semantics require target-game verification
     @MainSub00();
     ins_83(320);
-    // object BossPattern source_line=830 family=th13plus
-    // BossPattern lowering th13plus -> th12; semantic verification required
+    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
     ins_424(1);
     ins_83(230);
     @MainSub01b() async;
@@ -1351,8 +1350,7 @@ void MainMBossDebug()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // object BossPattern source_line=878 family=th13plus
-    // BossPattern lowering th13plus -> th12; semantic verification required
+    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
     ins_424(22);
     // object Enemy source_line=879 family=th13plus
     // Enemy lowering th13plus -> th12: enmCreateA; semantic verification required
@@ -1529,11 +1527,11 @@ void MainSub02()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // raw: [-9981.0f] = 0.087266f;
+    [-9981.0f] = 0.087266f;
     $A = 10;
     goto MainSub02_540 @ 0;
     MainSub02_140:
-    // raw: [-9981.0f] = [-9981.0f] - 0.003491f;
+    [-9981.0f] = [-9981.0f] - 0.003491f;
     // object Enemy source_line=992 family=th13plus
     // Enemy lowering th13plus -> th12: enmCreate; semantic verification required
     ins_256("GirlRedA03", 120.0f, -24.0f, 50, 1000, 1);
@@ -1541,7 +1539,7 @@ void MainSub02()
     // Enemy lowering th13plus -> th12: enmCreateM; semantic verification required
     ins_260("GirlRedA03", -120.0f, -24.0f, 50, 1000, 1);
     ins_83(10);
-    // raw: [-9981.0f] = [-9981.0f] - 0.003491f;
+    [-9981.0f] = [-9981.0f] - 0.003491f;
     // object Enemy source_line=996 family=th13plus
     // Enemy lowering th13plus -> th12: enmCreate; semantic verification required
     ins_256("GirlBlueA03", 120.0f, -24.0f, 50, 1000, 1);
@@ -2011,12 +2009,8 @@ void main()
     // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
     ins_402(32);
     ins_83(1);
-    // object BossPattern source_line=1289 family=th13plus
-    // BossPattern lowering th13plus -> th12; semantic verification required
+    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
     ins_424(0);
-    ins_424(2);
-    ins_424(4);
-    ins_424(41);
     // TH15 debug/spell selector removed for TH12 normal stage entry.
     // Original [-9907] branch can trap TH12 in a pre-stage spell-test loop.
     goto main_440 @ 0;
@@ -2046,6 +2040,8 @@ void main()
     ins_425();
     // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
     // original: ins_616(640.0f);
+    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    ins_424(2);
     ins_83(2);
     // object Enemy source_line=1316 family=th13plus
     // Enemy lowering th13plus -> th12: enmCreateA; semantic verification required
@@ -2055,6 +2051,8 @@ void main()
     ins_83(120);
     // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
     // original: ins_616(640.0f);
+    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    ins_424(4);
     ins_83(2);
     // object Enemy source_line=1323 family=th13plus
     // Enemy lowering th13plus -> th12: enmCreateA; semantic verification required
@@ -2066,6 +2064,8 @@ void main()
     ins_425();
     // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
     // original: ins_616(640.0f);
+    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    ins_424(41);
     ins_83(160);
     // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
     ins_418(0);

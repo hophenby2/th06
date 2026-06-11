@@ -16,7 +16,7 @@ COND_GOTO_RE = re.compile(r"^\s*(if|unless)\s*\((.*)\)\s*goto\s+([A-Za-z_]\w*)\s
 CALL_RE = re.compile(r"^\s*@([A-Za-z_]\w*)\s*\((.*)\)\s*(async)?\s*;")
 RETURN_RE = re.compile(r"^\s*return\s*;")
 VAR_RE = re.compile(r"^\s*var\s+(.+?)\s*;")
-ASSIGN_RE = re.compile(r"^\s*([%$][A-Za-z0-9_]+)\s*=\s*(.+?)\s*;")
+ASSIGN_RE = re.compile(r"^\s*((?:[%$][A-Za-z0-9_]+)|(?:\[-?\d+(?:\.0f)?\]))\s*=\s*(.+?)\s*;")
 RESOURCE_RE = re.compile(r"^\s*(anim|ecli)\s*\{\s*$")
 RESOURCE_INLINE_RE = re.compile(r"^\s*(anim|ecli)\s*\{(.*)\}\s*$")
 PROTOTYPE_RE = re.compile(r"^\s*(?:void|sub)\s+(\w+)\s*\(([^)]*)\)\s*;")
