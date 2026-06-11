@@ -270,7 +270,7 @@ void GirlA01_at_l()
     ins_83(30);
     // object BulletEmitter source_line=81 family=th13plus
     ins_500(0);
-    ins_507(0, 2);
+    ins_507(0, 4);
     ins_502(0, 6, 4);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
@@ -378,7 +378,7 @@ void GirlA02_at_l()
     ins_83(30);
     // object BulletEmitter source_line=170 family=th13plus
     ins_500(0);
-    ins_507(0, 2);
+    ins_507(0, 4);
     ins_502(0, 6, 4);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
@@ -623,7 +623,7 @@ void GirlB02_at()
     var A;
     // object BulletEmitter source_line=342 family=th13plus
     ins_500(0);
-    ins_507(0, 2);
+    ins_507(0, 4);
     ins_502(0, 4, 2);
     ins_506(0, 1, 1);
     ins_504(0, [-9998.0f], 0.0f);

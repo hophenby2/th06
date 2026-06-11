@@ -385,7 +385,19 @@ def remap_raw_named_args(source_opcode: int, target_opcode: int, args: list[str]
         mapped = args[:]
         mapped[1] = remap_th15_bullet_shape_to_th12(mapped[1])
         return mapped
+    if source_game == "th15" and target == "th12" and source_opcode == 607 and target_opcode == 507 and len(args) >= 2:
+        mapped = args[:]
+        mapped[1] = remap_th15_bullet_spread_style_to_th12(mapped[1])
+        return mapped
     return args
+
+
+def remap_th15_bullet_spread_style_to_th12(style: str) -> str:
+    table = {
+        "2": "4",
+        "3": "5",
+    }
+    return table.get(str(style).strip(), style)
 
 
 def remap_th15_bullet_shape_to_th12(shape: str) -> str:
@@ -441,7 +453,7 @@ def difficulty_literal_groups(difficulty_literals: object) -> list[dict[str, str
     return []
 
 
-def emit_ranked_raw_instruction(opcode: int, args: list[str], difficulty_literals: object) -> list[str] | None:
+def emit_ranked_raw_instruction(opcode: int, args: list[str], difficulty_literals: object, source_opcode: int | None = None, source_game: str = "", target: str = "") -> list[str] | None:
     groups = difficulty_literal_groups(difficulty_literals)
     if not groups or not any(RANK_PLACEHOLDER_RE.search(arg) for arg in args):
         return None
@@ -455,6 +467,8 @@ def emit_ranked_raw_instruction(opcode: int, args: list[str], difficulty_literal
             ranked_args.append(ranked_arg)
             any_replaced = any_replaced or replaced
         if any_replaced:
+            if source_opcode is not None:
+                ranked_args = remap_raw_named_args(source_opcode, opcode, ranked_args, source_game, target)
             lines.append(f"    !{rank}")
             lines.append(f"    ins_{opcode}({', '.join(ranked_args)});")
     if not lines:
@@ -485,7 +499,7 @@ def lower_raw_instruction_event(opcode: int, args: list[object], text: str, sour
             mapped, order = TH13PLUS_TO_TH12_RAW_REORDER[opcode]
             mapped_args = [str(args[index]) for index in order if index < len(args)]
             mapped_args = remap_raw_named_args(opcode, mapped, mapped_args, source_game, target)
-            ranked = emit_ranked_raw_instruction(mapped, mapped_args, difficulty_literals)
+            ranked = emit_ranked_raw_instruction(mapped, mapped_args, difficulty_literals, opcode, source_game, target)
             if ranked:
                 return [f"    // raw-order opcode map {source_game}->th12: ins_{opcode} -> ins_{mapped}; ranked args from source difficulty literals", *ranked]
             return [
@@ -495,7 +509,7 @@ def lower_raw_instruction_event(opcode: int, args: list[object], text: str, sour
         if opcode in TH13PLUS_TO_TH12_RAW:
             mapped = TH13PLUS_TO_TH12_RAW[opcode]
             mapped_args = remap_raw_named_args(opcode, mapped, [str(arg) for arg in args], source_game, target)
-            ranked = emit_ranked_raw_instruction(mapped, mapped_args, difficulty_literals)
+            ranked = emit_ranked_raw_instruction(mapped, mapped_args, difficulty_literals, opcode, source_game, target)
             if ranked:
                 return [f"    // raw opcode fallback {source_game}->th12: ins_{opcode} -> ins_{mapped}; ranked args from source difficulty literals", *ranked]
             return [

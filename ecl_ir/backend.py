@@ -359,6 +359,23 @@ def compile_th13plus(e: BulletEmitter) -> str:
     return "\n".join(lines)
 
 
+def remap_bullet_spread_style_for_target(e: BulletEmitter, target: str):
+    value = e.aim.get("mode_raw")
+    if target != "th12" or getattr(e, "family", "") != "th13plus":
+        return value
+    if isinstance(value, dict):
+        return {rank: remap_th13plus_spread_style_to_th12(str(style)) for rank, style in value.items()}
+    return remap_th13plus_spread_style_to_th12(str(value)) if value is not None else value
+
+
+def remap_th13plus_spread_style_to_th12(style: str) -> str:
+    table = {
+        "2": "4",
+        "3": "5",
+    }
+    return table.get(style.strip(), style)
+
+
 def remap_bullet_shape_for_target(e: BulletEmitter, target: str):
     value = e.appearance.get("style")
     if target != "th12" or getattr(e, "family", "") != "th13plus":
@@ -382,7 +399,9 @@ def remap_th13plus_shape_to_th12(shape: str) -> str:
 
 def compile_th12(e: BulletEmitter) -> str:
     emitter_id = v(e.id, "0")
-    aim_raw_value = e.aim.get("mode_raw", mode_raw(e.aim.get("mode"), default="1"))
+    aim_raw_value = remap_bullet_spread_style_for_target(e, target="th12")
+    if aim_raw_value is None:
+        aim_raw_value = mode_raw(e.aim.get("mode"), default="1")
     style_value = remap_bullet_shape_for_target(e, target="th12")
     color_value = e.appearance.get("color")
     ways_value = e.count.get("ways")
