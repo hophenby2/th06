@@ -11,6 +11,7 @@ from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
 from .reference import validate_opcode_args
 from .semantics import generation_for_game
+from .luastg_backend import emit_luastg_file
 
 
 def load_objects(path: str):
@@ -791,6 +792,12 @@ def cmd_scan(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_luastg(args: argparse.Namespace) -> int:
+    names = args.functions.split(",") if args.functions else None
+    emit_luastg_file(args.input, args.output, args.module_name, names)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Experimental cross-game Touhou ECL IR tool")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -817,6 +824,13 @@ def main(argv: list[str] | None = None) -> int:
     scan.add_argument("root")
     scan.add_argument("--json", action="store_true")
     scan.set_defaults(func=cmd_scan)
+
+    luastg = sub.add_parser("luastg", help="lower ECL boss IR to an approximate LuaSTG module")
+    luastg.add_argument("input")
+    luastg.add_argument("--output", required=True)
+    luastg.add_argument("--module-name", default="ecl_stage06_boss")
+    luastg.add_argument("--functions", help="comma-separated ECL function names to emit; default emits Boss* functions")
+    luastg.set_defaults(func=cmd_luastg)
 
     args = parser.parse_args(argv)
     return args.func(args)
