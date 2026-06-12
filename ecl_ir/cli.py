@@ -802,7 +802,7 @@ def main(argv: list[str] | None = None) -> int:
     compile_cmd = sub.add_parser("compile", help="lift one object and lower to target backend")
     compile_cmd.add_argument("input")
     compile_cmd.add_argument("--target", required=True, choices=["th06", "th07", "th08", "th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"])
-    compile_cmd.add_argument("--kind", default="BulletEmitter", choices=["BulletEmitter", "LaserEmitter", "Movement", "Animation", "Enemy", "BossPattern", "Timeline"])
+    compile_cmd.add_argument("--kind", default="BulletEmitter", choices=["BulletEmitter", "LaserEmitter", "Movement", "Animation", "Enemy", "BossPattern", "Timeline", "EffectEmitter", "FamiliarSpawner", "AutoBulletTimer", "BossTimer", "MotionModifier"])
     compile_cmd.add_argument("--index", type=int, default=0, help="0-based lifted object index within --kind")
     compile_cmd.set_defaults(func=cmd_compile)
 

@@ -218,6 +218,29 @@ def compile_th08_vm_arithmetic(event: dict[str, object], target: str) -> str | N
         return "\n".join([stack_push(args[1]), stack_push(args[2]), f"ins_{op}();", f"ins_{setter}({args[0]});"])
     if op_key in unary_float_ops and len(args) == 2:
         return "\n".join([stack_push(args[1]), f"ins_{unary_float_ops[op_key]}();", f"ins_45({args[0]});"])
+    if op_key == "flow.fset_rand_sign" and len(args) == 2:
+        return "\n".join([f"// random sign approximated using positive magnitude", stack_push(args[1]), f"ins_45({args[0]});"])
+    if op_key == "flow.math_circle_pos" and len(args) == 4:
+        return "\n".join([
+            f"// TH08 circlePos lowered through stack VM",
+            stack_push(args[2]), f"ins_80();", stack_push(args[3]), f"ins_55();", f"ins_45({args[0]});",
+            stack_push(args[2]), f"ins_79();", stack_push(args[3]), f"ins_55();", f"ins_45({args[1]});",
+        ])
+    if op_key == "flow.math_angle" and len(args) == 5:
+        return f"ins_87({args[0]}, {args[1]}, {args[2]}, {args[3]}, {args[4]});"
+    if op_key == "flow.math_distance" and len(args) == 5:
+        if target not in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+            return None
+        # TH13+ squareSumRoot(dst, x_delta, y_delta) maps distance between two points.
+        return "\n".join([
+            stack_push(args[3]), stack_push(args[1]), "ins_53();", "ins_45([-9931.0f]);",
+            stack_push(args[4]), stack_push(args[2]), "ins_53();", "ins_45([-9930.0f]);",
+            f"ins_86({args[0]}, [-9931.0f], [-9930.0f]);",
+        ])
+    if op_key == "flow.dec" and len(args) == 1:
+        return f"ins_78({args[0]});"
+    if op_key == "flow.inc" and len(args) == 1:
+        return "\n".join([stack_push(args[0]), "1;", "ins_50();", f"ins_43({args[0]});"])
     if op_key == "flow.norm_rad" and len(args) == 1:
         return f"ins_82({args[0]});"
     return None
@@ -275,10 +298,13 @@ def compile_th08_anm_alias(event: dict[str, object], target: str) -> str | None:
     sprite_opcode = target_opcode_for_op_key("anm.set_sprite", target)
     if op_key == "anm.set" and len(args) == 1 and select_opcode and main_opcode and is_opcode_supported(target, select_opcode) and is_opcode_supported(target, main_opcode):
         return "\n".join([f"ins_{select_opcode}(0);", f"ins_{main_opcode}(0, {args[0]});"])
+    if op_key in {"anm.set_ex", "anm.set_boss_ex"} and len(args) == 1 and select_opcode and main_opcode and is_opcode_supported(target, select_opcode) and is_opcode_supported(target, main_opcode):
+        base = args[0]
+        if re.fullmatch(r"-?\d+", base):
+            values = [str(int(base) + i) for i in range(6)]
+            return "\n".join([f"ins_{select_opcode}(0);", *[f"ins_{main_opcode}({slot}, {script});" for slot, script in enumerate(values)]])
     if op_key == "anm.set_slot" and len(args) == 2 and sprite_opcode and is_opcode_supported(target, sprite_opcode):
         return f"ins_{sprite_opcode}({args[0]}, {args[1]});"
-    if op_key in {"anm.set_ex", "anm.set_boss_ex"}:
-        return compile_lossy_semantic_fallback(event, target) or f"// dropped source-specific semantic op for {target}: {op_key}({', '.join(args)})"
     return None
 
 
@@ -288,6 +314,8 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
         return None
     if op_key == "flow.call_async" and str(event.get("source_game") or "") in {"th06", "th07", "th08"} and str(event.get("args", ["", ""])[-1]) == "-1":
         return f"// dropped disabled async call for {target}: callAsync(..., -1)"
+    if op_key == "flow.float_time" and target not in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+        return compile_lossy_semantic_fallback(event, target)
     if lowered := compile_th08_vm_arithmetic(event, target):
         return lowered
     if lowered := compile_th08_movement_alias(event, target):
@@ -493,6 +521,16 @@ def compile_object(obj, target: str) -> str:
         compiled = compile_named_op(obj, target, ENEMY_OPS)
     elif kind == "BossPattern":
         compiled = compile_boss_pattern(obj, target)
+    elif kind == "EffectEmitter":
+        compiled = compile_effect_emitter(obj, target)
+    elif kind == "FamiliarSpawner":
+        compiled = compile_familiar_spawner(obj, target)
+    elif kind == "AutoBulletTimer":
+        compiled = compile_auto_bullet_timer(obj, target)
+    elif kind == "BossTimer":
+        compiled = compile_boss_timer(obj, target)
+    elif kind == "MotionModifier":
+        compiled = compile_motion_modifier(obj, target)
     elif kind == "Timeline":
         compiled = compile_timeline(obj, target)
     else:
@@ -552,6 +590,11 @@ def target_family(target: str) -> str:
 
 
 def compile_named_op(obj, target: str, table_by_family: dict[str, dict[str, int]]) -> str:
+    if getattr(obj, "kind", None) == "Animation" and obj.fields.get("op") == "anmPlayAttack":
+        lowered = emit_target_op(target, "anm.play", ["0", "0"])
+        if lowered:
+            return f"// animation semantic lowering {obj.family} -> {target}: legacy boss attack animation approximated as ANM play\n{lowered}"
+        return compile_structured_preserve(obj, target, "legacy boss attack animation has no verified target slot")
     event = {
         "op_key": obj.fields.get("op_key"),
         "source_game": getattr(obj, "game", ""),
@@ -631,6 +674,261 @@ def compile_raw_comment(obj, target: str) -> str:
     for ins in getattr(obj, "raw", []):
         lines.append(f"// {ins.raw.strip()}")
     return "\n".join(lines)
+
+
+def object_ir_events(obj) -> list[dict[str, object]]:
+    events = list((getattr(obj, "fields", {}) or {}).get("ir_ops") or [])
+    if events:
+        return events
+    return [
+        {"op_key": None, "source_game": getattr(obj, "game", ""), "source_opcode": ins.opcode, "args": ins.args}
+        for ins in getattr(obj, "raw", [])
+    ]
+
+
+def compile_structured_preserve(obj, target: str, reason: str = "no native equivalent") -> str:
+    fields = getattr(obj, "fields", {}) or {}
+    lines = [f"// semantic object preserved for {target}: {obj.kind}.{fields.get('semantic', obj.family)} ({reason})"]
+    for key in ("effect", "spawn", "trail", "focus_animation", "timer", "interrupt", "life_bar", "motion"):
+        if key in fields:
+            lines.append(f"//   {key}: {fields[key]}")
+    for ins in getattr(obj, "raw", []):
+        lines.append(f"//   source: {ins.raw.strip()}")
+    return "\n".join(lines)
+
+
+def emit_if_supported(target: str, op_key: str, args: list[str], source_game: str = "", source_opcode: int = -1) -> str | None:
+    opcode = target_opcode_for_op_key(op_key, target)
+    if opcode is None or not is_opcode_supported(target, opcode) or not target_opcode_is_safe(target, opcode):
+        return None
+    adapted = adapt_args_for_op_key(op_key, source_game, source_opcode, target, opcode, [str(arg) for arg in args])
+    if adapted is None:
+        return None
+    adapted = normalize_target_args_for_op_key(op_key, target, adapted)
+    error = validate_opcode_args(target, opcode, adapted)
+    if error:
+        return None
+    return emit_checked_instruction(target, opcode, adapted)
+
+
+def emit_target_op(target: str, op_key: str, args: list[str]) -> str | None:
+    opcode = target_opcode_for_op_key(op_key, target)
+    if opcode is None or not is_opcode_supported(target, opcode) or not target_opcode_is_safe(target, opcode):
+        return None
+    normalized = normalize_target_args_for_op_key(op_key, target, [str(arg) for arg in args])
+    error = validate_opcode_args(target, opcode, normalized)
+    if error:
+        return None
+    return emit_checked_instruction(target, opcode, normalized)
+
+
+def target_sub_name(value: object) -> str:
+    text = str(value).strip()
+    if text.startswith('"') and text.endswith('"'):
+        return text
+    if re.fullmatch(r"-?\d+", text):
+        return f'"Sub{text}"'
+    return f'"{text}"'
+
+
+def float_literal(value: object, default: str = "0.0f") -> str:
+    text = str(value).strip()
+    if re.fullmatch(r"[-+]?\d+", text):
+        return f"{text}.0f"
+    if re.fullmatch(r"[-+]?\d+\.\d+f?", text):
+        return text if text.endswith("f") else f"{text}f"
+    if re.fullmatch(r"\[-?\d+\]", text):
+        return text[:-1] + ".0f]"
+    if re.fullmatch(r"\[-?\d+(?:\.0f)?\]", text):
+        return text
+    return default
+
+
+def compile_effect_emitter(obj, target: str) -> str:
+    fields = getattr(obj, "fields", {}) or {}
+    semantic = str(fields.get("semantic", ""))
+    lines = [f"// EffectEmitter lowering {obj.family} -> {target}: {semantic}"]
+    if semantic in {"effect_burst", "effect_burst_angle"}:
+        effect = fields.get("effect", {}) or {}
+        script_expr = str(effect.get("script_expr", "0"))
+        amount = str(effect.get("amount", "1"))
+        angle = str(effect.get("angle") or "0.0f")
+        play_rotate = emit_target_op(target, "anm.play_rotate", ["0", script_expr, angle])
+        play_plain = emit_target_op(target, "anm.play", ["0", script_expr])
+        if play_rotate and semantic == "effect_burst_angle":
+            lines.append(f"// approximated old etama effect count={amount} using target ANM play_rotate")
+            lines.append(play_rotate)
+            return "\n".join(lines)
+        if play_plain:
+            lines.append(f"// approximated old etama effect count={amount} using target ANM play")
+            lines.append(play_plain)
+            return "\n".join(lines)
+    if semantic == "card_effect":
+        lowered = next((compile_ir_op_event(event, target) for event in object_ir_events(obj) if compile_ir_op_event(event, target)), None)
+        if lowered:
+            lines.extend(lowered.splitlines())
+            return "\n".join(lines)
+    if semantic in {"spell_effect_state", "spell_start_effect_state"}:
+        high = emit_target_op(target, "anm.play_high", ["0", "0"])
+        if high:
+            lines.append("// approximated legacy spell visual state as target high-priority ANM boundary")
+            lines.append(high)
+            return "\n".join(lines)
+        lines.append("// metadata-only spell visual state boundary; no target runtime opcode required")
+        return "\n".join(lines)
+    return "\n".join(lines + compile_structured_preserve(obj, target, "visual effect has no verified cross-generation equivalent").splitlines())
+
+
+def compile_familiar_spawner(obj, target: str) -> str:
+    fields = getattr(obj, "fields", {}) or {}
+    semantic = str(fields.get("semantic", ""))
+    spawn = fields.get("spawn", {}) or {}
+    lines = [f"// FamiliarSpawner lowering {obj.family} -> {target}: {semantic}"]
+    if spawn:
+        sub = target_sub_name(spawn.get("sub", ""))
+        x = str(spawn.get("x", "0.0f"))
+        y = str(spawn.get("y", "0.0f"))
+        life = str(spawn.get("life", "0"))
+        item = str(spawn.get("item", "0"))
+        score = str(spawn.get("score", "0"))
+        rel = spawn.get("position_mode") != "absolute"
+        op_key = "enemy.create_func" if rel else "enemy.create_abs_func"
+        fallback = [sub, x, y, life, item, score]
+        if not emit_target_op(target, op_key, fallback):
+            op_key = "enemy.create" if rel else "enemy.create_abs"
+            fallback = [sub, x, y, life, item, score]
+        lowered = emit_target_op(target, op_key, fallback)
+        if lowered:
+            lines.append("// approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata")
+            lines.append(lowered)
+            return "\n".join(lines)
+    if semantic == "focus_animation":
+        focus = fields.get("focus_animation", {}) or {}
+        lowered = emit_target_op(target, "anm.play", ["0", str(focus.get("script_expr", "0"))])
+        if lowered:
+            lines.append("// approximated familiar focus ANM as ordinary ANM play")
+            lines.append(lowered)
+            return "\n".join(lines)
+    if semantic == "trail_toggle":
+        lines.append("// metadata-only familiar trail toggle; target games have no verified equivalent trail runtime")
+        return "\n".join(lines)
+    return "\n".join(lines + compile_structured_preserve(obj, target, "familiar runtime behavior is TH08-specific").splitlines())
+
+
+def compile_auto_bullet_timer(obj, target: str) -> str:
+    fields = getattr(obj, "fields", {}) or {}
+    semantic = str(fields.get("semantic", ""))
+    timer = fields.get("timer", {}) or {}
+    lines = [f"// AutoBulletTimer lowering {obj.family} -> {target}: {semantic}"]
+    if semantic == "defer_attribute_fire":
+        lines.append("// target slot emitters are configured without implicit fire; no instruction needed")
+        return "\n".join(lines)
+    interval = str(timer.get("interval", "1"))
+    fire = emit_target_op(target, "bullet.fire", ["0"])
+    if fire:
+        lines.append(f"// auto-fire interval={interval} preserved as high-level timer; emitted one fire tick at source position")
+        lines.append(fire)
+        return "\n".join(lines)
+    return "\n".join(lines + compile_structured_preserve(obj, target, "target has no verified auto-fire timer primitive").splitlines())
+
+
+def compile_boss_timer(obj, target: str) -> str:
+    fields = getattr(obj, "fields", {}) or {}
+    semantic = str(fields.get("semantic", ""))
+    lines = [f"// BossTimer lowering {obj.family} -> {target}: {semantic}"]
+    interrupt = fields.get("interrupt", {}) or {}
+    if interrupt:
+        if interrupt.get("trigger") == "life_leq":
+            args = ["0", str(interrupt.get("life", "0")), "0", target_sub_name(interrupt.get("sub", "-1"))]
+        else:
+            args = ["0", "0", str(interrupt.get("time", "0")), target_sub_name(interrupt.get("sub", "-1"))]
+        lowered = emit_target_op(target, "boss.set_interrupt", args)
+        if lowered:
+            lines.append("// lowered threshold interrupt through target boss interrupt object")
+            lines.append(lowered)
+            return "\n".join(lines)
+    if semantic == "timer_set":
+        lowered = emit_target_op(target, "boss.timer_reset", [])
+        if lowered:
+            lines.append("// target timer reset approximates legacy upward timer set")
+            lines.append(lowered)
+            return "\n".join(lines)
+    if semantic == "life_bar_segment":
+        bar = fields.get("life_bar", {}) or {}
+        marker_hp = float_literal(bar.get("life_min", "0"))
+        lowered = emit_target_op(target, "unit.life_marker", [str(bar.get("slot", "0")), marker_hp, str(bar.get("color", "0"))])
+        if lowered:
+            lines.append("// lowered lifebar color segment to target life marker approximation")
+            lines.append(lowered)
+            return "\n".join(lines)
+    if semantic == "visible_life_count":
+        if target == "th12":
+            lowered = emit_target_op(target, "unit.life_hide", [])
+        elif target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+            lowered = emit_target_op(target, "bullet.life_hide", ["0"])
+        else:
+            lowered = None
+        if lowered:
+            lines.append("// visible life-count HUD state approximated by keeping target lifebar visible")
+            lines.append(lowered)
+            return "\n".join(lines)
+    if semantic == "bomb_immunity_state":
+        enabled = str((fields.get("args") or ["1"])[0]) != "0"
+        if target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+            lowered = emit_target_op(target, "unit.bomb_shield", ["1" if enabled else "0", "0"])
+            invuln = emit_target_op(target, "unit.bomb_invuln", ["0.0f" if enabled else "1.0f"])
+            if lowered or invuln:
+                lines.append("// lowered legacy bomb-immunity state to target bomb shield/invulnerability controls")
+                if lowered:
+                    lines.append(lowered)
+                if invuln:
+                    lines.append(invuln)
+                return "\n".join(lines)
+        elif target == "th12":
+            lowered = emit_target_op(target, "movement.bomb_shield", ["1" if enabled else "0", "0.0f"])
+            if lowered:
+                lines.append("// lowered legacy bomb-immunity state to TH12 bombShield approximation")
+                lines.append(lowered)
+                return "\n".join(lines)
+    if semantic == "boss_runtime_state":
+        lowered = emit_target_op(target, "unit.set_invuln", ["0"])
+        if lowered:
+            lines.append("// preserved unknown boss runtime state as explicit no-duration invulnerability state boundary")
+            lines.append(lowered)
+            return "\n".join(lines)
+    return "\n".join(lines + compile_structured_preserve(obj, target, "boss HUD/timer semantics differ across generations").splitlines())
+
+
+def compile_motion_modifier(obj, target: str) -> str:
+    fields = getattr(obj, "fields", {}) or {}
+    semantic = str(fields.get("semantic", ""))
+    motion = fields.get("motion", {}) or {}
+    lines = [f"// MotionModifier lowering {obj.family} -> {target}: {semantic}"]
+    if semantic in {"random_direction_tween", "random_direction_tween_variant"}:
+        lowered = emit_target_op(target, "movement.velocity.tween", [str(motion.get("time", "0")), str(motion.get("mode", "0")), "0.0f", str(motion.get("speed", "0.0f"))])
+        if lowered:
+            lines.append("// approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata")
+            lines.append(lowered)
+            return "\n".join(lines)
+    if semantic == "circle_speed_change":
+        lowered = emit_target_op(target, "movement.circle.tween", [str(motion.get("time", "0")), "0", str(motion.get("angular_velocity", "0.0f")), "0.0f", str(motion.get("radius_velocity", "0.0f"))])
+        if lowered:
+            lines.append("// approximated legacy circle speed change through target circle tween")
+            lines.append(lowered)
+            return "\n".join(lines)
+    if semantic == "angular_velocity":
+        lowered = emit_target_op(target, "movement.circle.tween", ["999999", "0", str(motion.get("angular_velocity", "0.0f")), "0.0f", "0.0f"])
+        if lowered:
+            lines.append("// approximated legacy per-frame angular velocity as long-lived target circle tween")
+            lines.append(lowered)
+            return "\n".join(lines)
+    if semantic == "linear_acceleration":
+        lowered = emit_target_op(target, "movement.velocity.tween", ["999999", "0", "0.0f", str(motion.get("acceleration", "0.0f"))])
+        if lowered:
+            lines.append("// approximated legacy per-frame acceleration as long-lived target velocity tween")
+            lines.append(lowered)
+            return "\n".join(lines)
+    return "\n".join(lines + compile_structured_preserve(obj, target, "motion modifier needs runtime state unavailable in target opcode").splitlines())
 
 
 def compile_laser(obj, target: str) -> str:

@@ -202,3 +202,33 @@ class HelperRoutine(IRObject):
 class TimelineRewrite(IRObject):
     def __init__(self, game: str, function: str, source_line: int, id: str = "timeline_rewrite", family: str = "program"):
         super().__init__("TimelineRewrite", game, function, source_line, id, family)
+
+
+@dataclass
+class EffectEmitter(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "effect"):
+        super().__init__("EffectEmitter", game, function, source_line, id, family)
+
+
+@dataclass
+class FamiliarSpawner(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "familiar"):
+        super().__init__("FamiliarSpawner", game, function, source_line, id, family)
+
+
+@dataclass
+class AutoBulletTimer(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "bullet_timer"):
+        super().__init__("AutoBulletTimer", game, function, source_line, id, family)
+
+
+@dataclass
+class BossTimer(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "boss_timer"):
+        super().__init__("BossTimer", game, function, source_line, id, family)
+
+
+@dataclass
+class MotionModifier(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "motion_modifier"):
+        super().__init__("MotionModifier", game, function, source_line, id, family)

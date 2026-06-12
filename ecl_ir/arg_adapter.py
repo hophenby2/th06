@@ -241,6 +241,18 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_12: ArgLayout((), {"mode": "0", "name": '""'}),
         GEN_13: ArgLayout(("mode", "name"), {"mode": "0", "name": '""'}),
     },
+    "flow.float_time": {
+        GEN_OLD: ArgLayout(("var", "duration", "curve", "mode", "initial", "final", "p1", "p2"), {"slot": "0"}),
+        GEN_10: ArgLayout(("slot", "var", "duration", "mode", "initial", "final"), {"slot": "0"}),
+        GEN_12: ArgLayout(("slot", "var", "duration", "mode", "initial", "final"), {"slot": "0"}),
+        GEN_13: ArgLayout(("slot", "var", "duration", "mode", "initial", "final"), {"slot": "0"}),
+    },
+    "unit.et_protect_range": {
+        GEN_OLD: ArgLayout(("radius",), {}),
+        GEN_10: ArgLayout(("radius",), {}),
+        GEN_12: ArgLayout(("radius",), {}),
+        GEN_13: ArgLayout(("radius",), {}),
+    },
     "boss.set_interrupt": {
         GEN_OLD: ArgLayout(("sub",), {"phase": "0", "life": "0", "time": "0"}),
         GEN_10: ArgLayout(("phase", "life", "time", "sub"), {"phase": "0", "life": "0", "time": "0"}),

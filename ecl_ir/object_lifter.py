@@ -4,7 +4,22 @@ from collections import defaultdict
 from typing import Iterable
 
 from .lifter import lift_program as lift_bullets
-from .model import AnimationOp, BossPattern, EnemyOp, Function, Instruction, IRObject, LaserEmitter, MovementOp, Program
+from .model import (
+    AnimationOp,
+    AutoBulletTimer,
+    BossPattern,
+    BossTimer,
+    EffectEmitter,
+    EnemyOp,
+    FamiliarSpawner,
+    Function,
+    Instruction,
+    IRObject,
+    LaserEmitter,
+    MotionModifier,
+    MovementOp,
+    Program,
+)
 from .op_ir import op_event, op_key_for_opcode
 from .program_lifter import lift_program_adapters
 from .timeline_lifter import lift_timelines
@@ -37,7 +52,131 @@ def lift_all_objects(program: Program) -> list[object]:
         objects.extend(lift_movements(program, func))
         objects.extend(lift_animation_enemy(program, func))
         objects.extend(lift_boss_patterns(program, func))
+        objects.extend(lift_high_level_legacy_objects(program, func))
     return sorted(objects, key=lambda obj: (getattr(obj, "function", ""), getattr(obj, "source_line", 0), getattr(obj, "kind", "")))
+
+
+def lift_high_level_legacy_objects(program: Program, func: Function) -> list[IRObject]:
+    if program.game not in {"th06", "th07", "th08"}:
+        return []
+    objects: list[IRObject] = []
+    for ins in func.body:
+        op = ins.opcode
+        if op in {128, 129, 139, 140, 153}:
+            obj = make_obj(EffectEmitter, program, func, ins, "th08_effect", a(ins, 0, "0"))
+            apply_legacy_effect(obj, ins)
+            objects.append(obj)
+        elif op in {83, 90, 91, 92, 174}:
+            obj = make_obj(FamiliarSpawner, program, func, ins, "th08_familiar", a(ins, 0, "0"))
+            apply_legacy_familiar(obj, ins)
+            objects.append(obj)
+        elif op in {105, 106, 107}:
+            obj = make_obj(AutoBulletTimer, program, func, ins, "th08_auto_bullet", "0")
+            apply_legacy_auto_bullet(obj, ins)
+            objects.append(obj)
+        elif op in {132, 133, 134, 148, 158, 173, 184}:
+            obj = make_obj(BossTimer, program, func, ins, "th08_boss_timer", a(ins, 0, "0"))
+            apply_legacy_boss_timer(obj, ins)
+            objects.append(obj)
+        elif op in {67, 70, 71, 74, 178}:
+            obj = make_obj(MotionModifier, program, func, ins, "th08_motion_modifier", "0")
+            apply_legacy_motion_modifier(obj, ins)
+            objects.append(obj)
+    return objects
+
+
+def apply_legacy_effect(obj: EffectEmitter, ins: Instruction) -> None:
+    effect_names = {
+        128: "card_effect",
+        129: "spell_effect_state",
+        139: "effect_burst",
+        140: "effect_burst_angle",
+        153: "spell_start_effect_state",
+    }
+    fields = obj.fields
+    fields.update({"semantic": effect_names.get(ins.opcode, f"effect_{ins.opcode}"), "op_key": op_key_for_opcode(obj.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
+    if ins.opcode == 139:
+        fields["effect"] = {"source": "etama.anm", "script_expr": f"({a(ins, 0, '0')} + 28)", "amount": a(ins, 1, "1"), "color": a(ins, 2, "0"), "angle": None}
+    elif ins.opcode == 140:
+        fields["effect"] = {"source": "etama.anm", "script_expr": f"({a(ins, 0, '0')} + 28)", "amount": a(ins, 1, "1"), "color": a(ins, 2, "0"), "angle": a(ins, 3, "0.0f"), "unknown": ins.args[4:]}
+
+
+def apply_legacy_familiar(obj: FamiliarSpawner, ins: Instruction) -> None:
+    familiar_names = {
+        83: "trail_toggle",
+        90: "create_absolute",
+        91: "create_relative",
+        92: "create_following",
+        174: "focus_animation",
+    }
+    fields = obj.fields
+    fields.update({"semantic": familiar_names.get(ins.opcode, f"familiar_{ins.opcode}"), "op_key": op_key_for_opcode(obj.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
+    if ins.opcode in {90, 91, 92}:
+        fields["spawn"] = {
+            "sub": a(ins, 0, ""),
+            "x": a(ins, 1, "0.0f"),
+            "y": a(ins, 2, "0.0f"),
+            "life": a(ins, 3, "0"),
+            "item": a(ins, 4, "0"),
+            "score": a(ins, 5, "0"),
+            "position_mode": "absolute" if ins.opcode == 90 else "relative",
+            "follow_owner": ins.opcode == 92,
+            "focus_invulnerable": True,
+            "clear_bullets_on_death": True,
+        }
+    elif ins.opcode == 83:
+        fields["trail"] = {"enabled": a(ins, 0, "0")}
+    elif ins.opcode == 174:
+        fields["focus_animation"] = {"source": "etama.anm", "script_expr": f"({a(ins, 0, '0')} + 48)"}
+
+
+def apply_legacy_auto_bullet(obj: AutoBulletTimer, ins: Instruction) -> None:
+    semantics = {105: "auto_fire_interval", 106: "auto_fire_interval_random_initial_delay", 107: "defer_attribute_fire"}
+    obj.fields.update({"semantic": semantics.get(ins.opcode, f"auto_bullet_{ins.opcode}"), "op_key": op_key_for_opcode(obj.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
+    if ins.opcode in {105, 106}:
+        obj.fields["timer"] = {"interval": a(ins, 0, "1"), "initial_delay": "random_0_interval" if ins.opcode == 106 else "none", "fire_mode": "current_bullet_attributes"}
+    else:
+        obj.fields["timer"] = {"defer_attribute_fire": True}
+
+
+def apply_legacy_boss_timer(obj: BossTimer, ins: Instruction) -> None:
+    semantics = {
+        132: "timer_set",
+        133: "life_threshold_interrupt",
+        134: "timer_threshold_interrupt",
+        148: "visible_life_count",
+        158: "life_bar_segment",
+        173: "bomb_immunity_state",
+        184: "boss_runtime_state",
+    }
+    obj.fields.update({"semantic": semantics.get(ins.opcode, f"boss_timer_{ins.opcode}"), "op_key": op_key_for_opcode(obj.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
+    if ins.opcode == 132:
+        obj.fields["timer"] = {"start": a(ins, 0, "0"), "direction": "up", "attack_timer_expr": "threshold - timer"}
+    elif ins.opcode == 133:
+        obj.fields["interrupt"] = {"trigger": "life_leq", "unknown": a(ins, 0, "0"), "life": a(ins, 1, "0"), "sub": a(ins, 2, "-1")}
+    elif ins.opcode == 134:
+        obj.fields["interrupt"] = {"trigger": "timer_geq", "time": a(ins, 0, "0"), "sub": a(ins, 1, "-1")}
+    elif ins.opcode == 158:
+        obj.fields["life_bar"] = {"slot": a(ins, 0, "0"), "life_min": a(ins, 1, "0"), "life_max": a(ins, 2, "0"), "color": a(ins, 3, "0")}
+
+
+def apply_legacy_motion_modifier(obj: MotionModifier, ins: Instruction) -> None:
+    semantics = {
+        67: "random_direction_tween",
+        70: "angular_velocity",
+        71: "linear_acceleration",
+        74: "circle_speed_change",
+        178: "random_direction_tween_variant",
+    }
+    obj.fields.update({"semantic": semantics.get(ins.opcode, f"motion_modifier_{ins.opcode}"), "op_key": op_key_for_opcode(obj.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
+    if ins.opcode in {67, 178}:
+        obj.fields["motion"] = {"time": a(ins, 0, "0"), "mode": a(ins, 1, "0"), "speed": a(ins, 2, "0.0f"), "direction": "random_player_bounded", "variant": ins.opcode == 178}
+    elif ins.opcode == 70:
+        obj.fields["motion"] = {"angular_velocity": a(ins, 0, "0.0f")}
+    elif ins.opcode == 71:
+        obj.fields["motion"] = {"acceleration": a(ins, 0, "0.0f")}
+    elif ins.opcode == 74:
+        obj.fields["motion"] = {"time": a(ins, 0, "0"), "angular_velocity": a(ins, 1, "0.0f"), "radius_velocity": a(ins, 2, "0.0f"), "requires_circle_motion": True}
 
 
 def lift_lasers(program: Program, func: Function) -> list[LaserEmitter]:
@@ -162,6 +301,10 @@ def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
         animation = {258: "anmSelect", 259: "anmSetSprite", 262: "anmSetMain", 263: "anmPlay", 264: "anmPlayAbs"}
         enemy = {256: "enmCreate", 257: "enmCreateA", 260: "enmCreateM", 261: "enmCreateAM", 265: "enmCreateF", 266: "enmCreateAF", 267: "enmCreateMF", 268: "enmCreateAMF"}
         family = "th10_th11"
+    elif program.game in {"th06", "th07", "th08"}:
+        animation = {62: "anmPlayAttack"}
+        enemy = {}
+        family = "th08_legacy"
     else:
         return objects
     for ins in func.body:

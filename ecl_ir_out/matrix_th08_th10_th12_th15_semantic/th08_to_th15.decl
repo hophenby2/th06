@@ -8,7 +8,13 @@ void Sub0()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th08->th15: anm.set_ex
-    // dropped source-specific semantic op for th15: anm.set_ex(0)
+    ins_302(0);
+    ins_306(0, 0);
+    ins_306(1, 1);
+    ins_306(2, 2);
+    ins_306(3, 3);
+    ins_306(4, 4);
+    ins_306(5, 5);
     // semantic op_key lowering th08->th15: unit.set_hitbox
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: flow.fset
@@ -142,11 +148,14 @@ void Sub0()
     ins_45([-9979.0f]);
     // semantic op_key lowering th08->th15: movement.move_dir
     ins_404([-9979.0f], 0.1f);
-    // semantic op_key lowering th08->th15: movement.move_accel
-    // dropped source-specific semantic op for th15: movement.move_accel(0.01f)
+    // object MotionModifier source_line=34 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: linear_acceleration
+    // approximated legacy per-frame acceleration as long-lived target velocity tween
+    ins_405(999999, 0, 0.0f, 0.01f);
     +60:
-    // semantic op_key lowering th08->th15: raw.et_delay
-    // dropped source-specific semantic op for th15: raw.et_delay()
+    // object AutoBulletTimer source_line=36 family=th08_auto_bullet
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: defer_attribute_fire
+    // target slot emitters are configured without implicit fire; no instruction needed
     // object BulletEmitter source_line=37 family=th08_macro
     !H
     ins_600(0);
@@ -168,13 +177,17 @@ void Sub0()
     !*
     // semantic op_key lowering th08->th15: bullet.fire
     ins_601(0);
+    // object AutoBulletTimer source_line=40 family=th08_auto_bullet
     !H
-    // semantic op_key lowering th08->th15: raw.et_on_auto_delay
-    // dropped source-specific semantic op for th15: raw.et_on_auto_delay(90)
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval_random_initial_delay
+    // auto-fire interval=90 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     !*
+    // object AutoBulletTimer source_line=41 family=th08_auto_bullet
     !L
-    // semantic op_key lowering th08->th15: raw.et_on_auto_delay
-    // dropped source-specific semantic op for th15: raw.et_on_auto_delay(30)
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval_random_initial_delay
+    // auto-fire interval=30 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     !*
     +5000:
     !*
@@ -187,15 +200,22 @@ void Sub1()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th08->th15: anm.set_ex
-    // dropped source-specific semantic op for th15: anm.set_ex(30)
+    ins_302(0);
+    ins_306(0, 30);
+    ins_306(1, 31);
+    ins_306(2, 32);
+    ins_306(3, 33);
+    ins_306(4, 34);
+    ins_306(5, 35);
     // semantic op_key lowering th08->th15: anm.set_slot
     ins_303(0, 48);
     // semantic op_key lowering th08->th15: unit.set_hitbox
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: unit.set_invuln
     ins_515(30);
-    // semantic op_key lowering th08->th15: raw.et_delay
-    // dropped source-specific semantic op for th15: raw.et_delay()
+    // object AutoBulletTimer source_line=52 family=th08_auto_bullet
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: defer_attribute_fire
+    // target slot emitters are configured without implicit fire; no instruction needed
     // object BulletEmitter source_line=53 family=th08_macro
     !E
     ins_600(0);
@@ -258,9 +278,11 @@ void Sub1()
     ins_43([10000]);
     !*
     +1:
+    // object AutoBulletTimer source_line=64 family=th08_auto_bullet
     !*
-    // semantic op_key lowering th08->th15: raw.et_on_auto
-    // dropped source-specific semantic op for th15: raw.et_on_auto([10000])
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval
+    // auto-fire interval=[10000] preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     +29:
     // object BulletEmitter source_line=66 family=th08_macro
     !N
@@ -294,13 +316,17 @@ void Sub1()
     // semantic op_key lowering th08->th15: flow.fset
     0.0f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(2, 0.0f, 0.0f, 50, -2, 100)
+    // object FamiliarSpawner source_line=71 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub2", 0.0f, 0.0f, 50, -2, 100);
     // semantic op_key lowering th08->th15: flow.fset
     3.1415927f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(2, 0.0f, 0.0f, 50, -2, 100)
+    // object FamiliarSpawner source_line=73 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub2", 0.0f, 0.0f, 50, -2, 100);
     +120:
     // semantic op_key lowering th08->th15: movement.move_dir
     ins_404(0.3926991f, 0.7f);
@@ -320,13 +346,16 @@ void Sub2()
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: flow.ins_79
     // dropped source-specific semantic op for th15: flow.ins_79(16)
-    // semantic op_key lowering th08->th15: flow.trail_familiar_set
-    // dropped source-specific semantic op for th15: flow.trail_familiar_set(1)
+    // object FamiliarSpawner source_line=85 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: trail_toggle
+    // metadata-only familiar trail toggle; target games have no verified equivalent trail runtime
     // semantic op_key lowering th08->th15: movement.circle.set
     ins_408([-9981.0f], 0.05235988f, 0.0f, 0.64f);
     +100:
-    // semantic op_key lowering th08->th15: movement.move_circle_change
-    // dropped source-specific semantic op for th15: movement.move_circle_change(6000, 0.05235988f, 0.0f)
+    // object MotionModifier source_line=88 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: circle_speed_change
+    // approximated legacy circle speed change through target circle tween
+    ins_409(6000, 0, 0.05235988f, 0.0f, 0.0f);
     +5000:
     // semantic op_key lowering th08->th15: flow.delete
     ins_1();
@@ -337,15 +366,22 @@ void Sub3()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th08->th15: anm.set_ex
-    // dropped source-specific semantic op for th15: anm.set_ex(30)
+    ins_302(0);
+    ins_306(0, 30);
+    ins_306(1, 31);
+    ins_306(2, 32);
+    ins_306(3, 33);
+    ins_306(4, 34);
+    ins_306(5, 35);
     // semantic op_key lowering th08->th15: anm.set_slot
     ins_303(0, 48);
     // semantic op_key lowering th08->th15: unit.set_hitbox
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: unit.set_invuln
     ins_515(30);
-    // semantic op_key lowering th08->th15: raw.et_delay
-    // dropped source-specific semantic op for th15: raw.et_delay()
+    // object AutoBulletTimer source_line=99 family=th08_auto_bullet
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: defer_attribute_fire
+    // target slot emitters are configured without implicit fire; no instruction needed
     // object BulletEmitter source_line=100 family=th08_macro
     !E
     ins_600(0);
@@ -408,9 +444,11 @@ void Sub3()
     ins_43([10000]);
     !*
     +1:
+    // object AutoBulletTimer source_line=111 family=th08_auto_bullet
     !*
-    // semantic op_key lowering th08->th15: raw.et_on_auto
-    // dropped source-specific semantic op for th15: raw.et_on_auto([10000])
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval
+    // auto-fire interval=[10000] preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     +29:
     // object BulletEmitter source_line=113 family=th08_macro
     !N
@@ -444,13 +482,17 @@ void Sub3()
     // semantic op_key lowering th08->th15: flow.fset
     0.0f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(4, 0.0f, 0.0f, 50, -2, 100)
+    // object FamiliarSpawner source_line=118 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub4", 0.0f, 0.0f, 50, -2, 100);
     // semantic op_key lowering th08->th15: flow.fset
     3.1415927f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(4, 0.0f, 0.0f, 50, -2, 100)
+    // object FamiliarSpawner source_line=120 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub4", 0.0f, 0.0f, 50, -2, 100);
     +120:
     // semantic op_key lowering th08->th15: movement.move_dir
     ins_404(0.3926991f, 0.7f);
@@ -470,13 +512,16 @@ void Sub4()
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: flow.ins_79
     // dropped source-specific semantic op for th15: flow.ins_79(16)
-    // semantic op_key lowering th08->th15: flow.trail_familiar_set
-    // dropped source-specific semantic op for th15: flow.trail_familiar_set(1)
+    // object FamiliarSpawner source_line=132 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: trail_toggle
+    // metadata-only familiar trail toggle; target games have no verified equivalent trail runtime
     // semantic op_key lowering th08->th15: movement.circle.set
     ins_408([-9981.0f], -0.05235988f, 0.0f, 0.64f);
     +100:
-    // semantic op_key lowering th08->th15: movement.move_circle_change
-    // dropped source-specific semantic op for th15: movement.move_circle_change(6000, -0.05235988f, 0.0f)
+    // object MotionModifier source_line=135 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: circle_speed_change
+    // approximated legacy circle speed change through target circle tween
+    ins_409(6000, 0, -0.05235988f, 0.0f, 0.0f);
     +5000:
     // semantic op_key lowering th08->th15: flow.delete
     ins_1();
@@ -487,7 +532,13 @@ void Sub5()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th08->th15: anm.set_ex
-    // dropped source-specific semantic op for th15: anm.set_ex(30)
+    ins_302(0);
+    ins_306(0, 30);
+    ins_306(1, 31);
+    ins_306(2, 32);
+    ins_306(3, 33);
+    ins_306(4, 34);
+    ins_306(5, 35);
     // semantic op_key lowering th08->th15: anm.set_slot
     ins_303(0, 48);
     // semantic op_key lowering th08->th15: unit.set_hitbox
@@ -529,23 +580,31 @@ void Sub5()
     // semantic op_key lowering th08->th15: flow.fset
     0.0f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(10, 0.0f, 0.0f, 100, -2, 100)
+    // object FamiliarSpawner source_line=153 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub10", 0.0f, 0.0f, 100, -2, 100);
     // semantic op_key lowering th08->th15: flow.fset
     3.1415927f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(10, 0.0f, 0.0f, 100, -2, 100)
+    // object FamiliarSpawner source_line=155 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub10", 0.0f, 0.0f, 100, -2, 100);
     // semantic op_key lowering th08->th15: flow.fset
     1.5707964f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(10, 0.0f, 0.0f, 100, -2, 100)
+    // object FamiliarSpawner source_line=157 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub10", 0.0f, 0.0f, 100, -2, 100);
     // semantic op_key lowering th08->th15: flow.fset
     -1.5707964f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(10, 0.0f, 0.0f, 100, -2, 100)
+    // object FamiliarSpawner source_line=159 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub10", 0.0f, 0.0f, 100, -2, 100);
     +230:
     // semantic op_key lowering th08->th15: movement.move_dir
     ins_404(0.0f, 0.7f);
@@ -729,8 +788,9 @@ void Sub10()
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: flow.ins_79
     // dropped source-specific semantic op for th15: flow.ins_79(16)
-    // semantic op_key lowering th08->th15: flow.trail_familiar_set
-    // dropped source-specific semantic op for th15: flow.trail_familiar_set(1)
+    // object FamiliarSpawner source_line=233 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: trail_toggle
+    // metadata-only familiar trail toggle; target games have no verified equivalent trail runtime
     // semantic op_key lowering th08->th15: movement.circle.set
     ins_408([-9981.0f], -0.05235988f, 0.0f, 0.64f);
     !E
@@ -750,9 +810,11 @@ void Sub10()
     ins_15("Sub9");
     !*
     +100:
+    // object MotionModifier source_line=240 family=th08_motion_modifier
     !*
-    // semantic op_key lowering th08->th15: movement.move_circle_change
-    // dropped source-specific semantic op for th15: movement.move_circle_change(6000, -0.05235988f, 0.0f)
+    // MotionModifier lowering th08_motion_modifier -> th15: circle_speed_change
+    // approximated legacy circle speed change through target circle tween
+    ins_409(6000, 0, -0.05235988f, 0.0f, 0.0f);
     +5000:
     // semantic op_key lowering th08->th15: flow.delete
     ins_1();
@@ -763,7 +825,13 @@ void Sub11()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th08->th15: anm.set_ex
-    // dropped source-specific semantic op for th15: anm.set_ex(30)
+    ins_302(0);
+    ins_306(0, 30);
+    ins_306(1, 31);
+    ins_306(2, 32);
+    ins_306(3, 33);
+    ins_306(4, 34);
+    ins_306(5, 35);
     // semantic op_key lowering th08->th15: anm.set_slot
     ins_303(0, 48);
     // semantic op_key lowering th08->th15: unit.set_hitbox
@@ -805,23 +873,31 @@ void Sub11()
     // semantic op_key lowering th08->th15: flow.fset
     0.0f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(12, 0.0f, 0.0f, 100, -2, 100)
+    // object FamiliarSpawner source_line=258 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub12", 0.0f, 0.0f, 100, -2, 100);
     // semantic op_key lowering th08->th15: flow.fset
     3.1415927f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(12, 0.0f, 0.0f, 100, -2, 100)
+    // object FamiliarSpawner source_line=260 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub12", 0.0f, 0.0f, 100, -2, 100);
     // semantic op_key lowering th08->th15: flow.fset
     1.5707964f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(12, 0.0f, 0.0f, 100, -2, 100)
+    // object FamiliarSpawner source_line=262 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub12", 0.0f, 0.0f, 100, -2, 100);
     // semantic op_key lowering th08->th15: flow.fset
     -1.5707964f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(12, 0.0f, 0.0f, 100, -2, 100)
+    // object FamiliarSpawner source_line=264 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub12", 0.0f, 0.0f, 100, -2, 100);
     +240:
     // semantic op_key lowering th08->th15: movement.move_dir
     ins_404(0.0f, 0.7f);
@@ -841,8 +917,9 @@ void Sub12()
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: flow.ins_79
     // dropped source-specific semantic op for th15: flow.ins_79(16)
-    // semantic op_key lowering th08->th15: flow.trail_familiar_set
-    // dropped source-specific semantic op for th15: flow.trail_familiar_set(1)
+    // object FamiliarSpawner source_line=276 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: trail_toggle
+    // metadata-only familiar trail toggle; target games have no verified equivalent trail runtime
     // semantic op_key lowering th08->th15: movement.circle.set
     ins_408([-9981.0f], 0.05235988f, 0.0f, 0.64f);
     !E
@@ -862,9 +939,11 @@ void Sub12()
     ins_15("Sub9");
     !*
     +100:
+    // object MotionModifier source_line=283 family=th08_motion_modifier
     !*
-    // semantic op_key lowering th08->th15: movement.move_circle_change
-    // dropped source-specific semantic op for th15: movement.move_circle_change(6000, 0.05235988f, 0.0f)
+    // MotionModifier lowering th08_motion_modifier -> th15: circle_speed_change
+    // approximated legacy circle speed change through target circle tween
+    ins_409(6000, 0, 0.05235988f, 0.0f, 0.0f);
     +5000:
     // semantic op_key lowering th08->th15: flow.delete
     ins_1();
@@ -891,8 +970,9 @@ void Sub13()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: movement.move_dir
     ins_404([-9981.0f], 3.7f);
-    // semantic op_key lowering th08->th15: raw.et_delay
-    // dropped source-specific semantic op for th15: raw.et_delay()
+    // object AutoBulletTimer source_line=295 family=th08_auto_bullet
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: defer_attribute_fire
+    // target slot emitters are configured without implicit fire; no instruction needed
     // object BulletEmitter source_line=296 family=th08_macro
     ins_600(0);
     ins_607(0, 0);
@@ -902,13 +982,17 @@ void Sub13()
     ins_605(0, 0.8f, 0.5f);
     // semantic op_key lowering th08->th15: bullet.fire
     ins_601(0);
+    // object AutoBulletTimer source_line=298 family=th08_auto_bullet
     !H
-    // semantic op_key lowering th08->th15: raw.et_on_auto_delay
-    // dropped source-specific semantic op for th15: raw.et_on_auto_delay(500)
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval_random_initial_delay
+    // auto-fire interval=500 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     !*
+    // object AutoBulletTimer source_line=299 family=th08_auto_bullet
     !L
-    // semantic op_key lowering th08->th15: raw.et_on_auto_delay
-    // dropped source-specific semantic op for th15: raw.et_on_auto_delay(100)
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval_random_initial_delay
+    // auto-fire interval=100 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     !*
     +5000:
     !*
@@ -922,26 +1006,40 @@ void Sub14()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th08->th15: unit.flag_set
     ins_502(56);
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(51, 16, 0)
+    // object EffectEmitter source_line=307 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=16 using target ANM play
+    ins_307(0, (51 + 28));
     +4:
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(51, 16, 0)
+    // object EffectEmitter source_line=309 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=16 using target ANM play
+    ins_307(0, (51 + 28));
     +4:
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(51, 16, 0)
+    // object EffectEmitter source_line=311 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=16 using target ANM play
+    ins_307(0, (51 + 28));
     +4:
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(51, 16, 0)
+    // object EffectEmitter source_line=313 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=16 using target ANM play
+    ins_307(0, (51 + 28));
     +4:
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(51, 16, 0)
+    // object EffectEmitter source_line=315 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=16 using target ANM play
+    ins_307(0, (51 + 28));
     +4:
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(51, 16, 0)
+    // object EffectEmitter source_line=317 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=16 using target ANM play
+    ins_307(0, (51 + 28));
     Sub14_160:
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(51, 4, 0)
+    // object EffectEmitter source_line=319 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=4 using target ANM play
+    ins_307(0, (51 + 28));
     +4:
     // semantic op_key lowering th08->th15: flow.jmp
     ins_12(Sub14_160, 20);
@@ -954,7 +1052,13 @@ void Sub15()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th08->th15: anm.set_boss_ex
-    // dropped source-specific semantic op for th15: anm.set_boss_ex(0)
+    ins_302(0);
+    ins_306(0, 0);
+    ins_306(1, 1);
+    ins_306(2, 2);
+    ins_306(3, 3);
+    ins_306(4, 4);
+    ins_306(5, 5);
     // semantic op_key lowering th08->th15: unit.flag_set
     ins_502(20);
     // semantic op_key lowering th08->th15: boss.set_boss
@@ -967,47 +1071,65 @@ void Sub15()
     // semantic op_key lowering th08->th15: boss.life_set
     ins_511(6000);
     !*
-    // semantic op_key lowering th08->th15: raw.timer_threshold
-    // dropped source-specific semantic op for th15: raw.timer_threshold(1260, 18)
+    // object BossTimer source_line=333 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 0, 1260, "Sub18");
     !HL
     // semantic op_key lowering th08->th15: boss.life_set
     ins_511(7300);
     !*
-    // semantic op_key lowering th08->th15: raw.timer_threshold
-    // dropped source-specific semantic op for th15: raw.timer_threshold(1260, 22)
-    // semantic op_key lowering th08->th15: raw.life_threshold
-    // dropped source-specific semantic op for th15: raw.life_threshold(0, 1300, 22)
+    // object BossTimer source_line=335 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 0, 1260, "Sub22");
+    // object BossTimer source_line=336 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: life_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 1300, 0, "Sub22");
+    // object BossTimer source_line=337 family=th08_boss_timer
     !EN
-    // semantic op_key lowering th08->th15: raw.set_life_bar
-    // dropped source-specific semantic op for th15: raw.set_life_bar(0, 0, [10051], -1)
+    // BossTimer lowering th08_boss_timer -> th15: life_bar_segment
+    // lowered lifebar color segment to target life marker approximation
+    ins_527(0, 0.0f, -1);
     !*
+    // object BossTimer source_line=338 family=th08_boss_timer
     !HL
-    // semantic op_key lowering th08->th15: raw.set_life_bar
-    // dropped source-specific semantic op for th15: raw.set_life_bar(0, [10088], [10051], -1)
+    // BossTimer lowering th08_boss_timer -> th15: life_bar_segment
+    // lowered lifebar color segment to target life marker approximation
+    ins_527(0, [10088.0f], -1);
     !*
-    // semantic op_key lowering th08->th15: raw.set_life_bar
-    // dropped source-specific semantic op for th15: raw.set_life_bar(1, 0, [10088], 16752800)
+    // object BossTimer source_line=339 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: life_bar_segment
+    // lowered lifebar color segment to target life marker approximation
+    ins_527(1, 0.0f, 16752800);
     !*
     // semantic op_key lowering th08->th15: movement.position.set
     ins_400(96.0f, -48.0f);
     // semantic op_key lowering th08->th15: movement.position.tween
     ins_401(60, 4, 192.0f, 128.0f);
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object EffectEmitter source_line=342 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, 0.3f, 0.7f, 0.3f, 128.0f)
     +10:
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object EffectEmitter source_line=344 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, -0.3f, 0.7f, 0.3f, 128.0f)
     +10:
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object EffectEmitter source_line=346 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, 0.3f, 0.7f, -0.3f, 128.0f)
     +10:
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object EffectEmitter source_line=348 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, -0.3f, -0.7f, -0.3f, 96.0f)
     +10:
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object EffectEmitter source_line=350 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, 0.3f, -0.7f, -0.3f, 96.0f)
     +10:
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object EffectEmitter source_line=352 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, -0.3f, -0.7f, 0.3f, 96.0f)
     +10:
     // semantic op_key lowering th08->th15: movement.move_limit
@@ -1024,15 +1146,18 @@ void Sub16()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th08->th15: unit.flag_clear
     ins_503(4);
-    // semantic op_key lowering th08->th15: raw.ins_129
-    // dropped source-specific semantic op for th15: raw.ins_129(1)
+    // object EffectEmitter source_line=362 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
     // semantic op_key lowering th08->th15: boss.set_interrupt
     ins_514(0, 0, 0, "Sub18");
     // semantic op_key lowering th08->th15: unit.drop_extra
     ins_507(5, 3);
     Sub16_68:
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object Animation source_line=366 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     // semantic op_key lowering th08->th15: flow.fset_mul
     [-9982.0f];
     0.04f;
@@ -1664,25 +1789,34 @@ void Sub16()
     // semantic op_key lowering th08->th15: flow.fset
     0.0f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(19, 0.0f, 0.0f, 100, 1, 100)
+    // object Animation source_line=501 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
+    // object FamiliarSpawner source_line=502 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub19", 0.0f, 0.0f, 100, 1, 100);
     // semantic op_key lowering th08->th15: flow.fset
     3.1415927f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(19, 0.0f, 0.0f, 100, 1, 100)
+    // object FamiliarSpawner source_line=504 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub19", 0.0f, 0.0f, 100, 1, 100);
     // semantic op_key lowering th08->th15: flow.fset
     1.5707964f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(19, 0.0f, 0.0f, 100, 1, 100)
+    // object FamiliarSpawner source_line=506 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub19", 0.0f, 0.0f, 100, 1, 100);
     // semantic op_key lowering th08->th15: flow.fset
     -1.5707964f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(19, 0.0f, 0.0f, 100, 1, 100)
+    // object FamiliarSpawner source_line=508 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub19", 0.0f, 0.0f, 100, 1, 100);
     // semantic op_key lowering th08->th15: flow.fset
     128.0f;
     ins_45([-9980.0f]);
@@ -1690,23 +1824,31 @@ void Sub16()
     // semantic op_key lowering th08->th15: flow.fset
     0.0f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(20, 0.0f, 0.0f, 100, 1, 100)
+    // object FamiliarSpawner source_line=512 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub20", 0.0f, 0.0f, 100, 1, 100);
     // semantic op_key lowering th08->th15: flow.fset
     3.1415927f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(20, 0.0f, 0.0f, 100, 1, 100)
+    // object FamiliarSpawner source_line=514 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub20", 0.0f, 0.0f, 100, 1, 100);
     // semantic op_key lowering th08->th15: flow.fset
     1.5707964f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(20, 0.0f, 0.0f, 100, 1, 100)
+    // object FamiliarSpawner source_line=516 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub20", 0.0f, 0.0f, 100, 1, 100);
     // semantic op_key lowering th08->th15: flow.fset
     -1.5707964f;
     ins_45([-9981.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(20, 0.0f, 0.0f, 100, 1, 100)
+    // object FamiliarSpawner source_line=518 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub20", 0.0f, 0.0f, 100, 1, 100);
     // semantic op_key lowering th08->th15: flow.call_async
     ins_15("Sub17");
     +6000:
@@ -1787,7 +1929,13 @@ void Sub18()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th08->th15: anm.set_boss_ex
-    // dropped source-specific semantic op for th15: anm.set_boss_ex(0)
+    ins_302(0);
+    ins_306(0, 0);
+    ins_306(1, 1);
+    ins_306(2, 2);
+    ins_306(3, 3);
+    ins_306(4, 4);
+    ins_306(5, 5);
     // semantic op_key lowering th08->th15: movement.move_limit_reset
     ins_505();
     // semantic op_key lowering th08->th15: boss.spell_end
@@ -1817,10 +1965,12 @@ void Sub19()
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: flow.ins_79
     // dropped source-specific semantic op for th15: flow.ins_79(16)
-    // semantic op_key lowering th08->th15: flow.trail_familiar_set
-    // dropped source-specific semantic op for th15: flow.trail_familiar_set(1)
-    // semantic op_key lowering th08->th15: raw.et_delay
-    // dropped source-specific semantic op for th15: raw.et_delay()
+    // object FamiliarSpawner source_line=558 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: trail_toggle
+    // metadata-only familiar trail toggle; target games have no verified equivalent trail runtime
+    // object AutoBulletTimer source_line=559 family=th08_auto_bullet
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: defer_attribute_fire
+    // target slot emitters are configured without implicit fire; no instruction needed
     // object BulletEmitter source_line=560 family=th08_macro
     !E
     ins_600(0);
@@ -1868,15 +2018,21 @@ void Sub19()
     // semantic op_key lowering th08->th15: movement.circle.set
     ins_408([-9981.0f], -0.02617994f, 0.0f, [-9980.0f]);
     +100:
-    // semantic op_key lowering th08->th15: movement.move_circle_change
-    // dropped source-specific semantic op for th15: movement.move_circle_change(6000, -0.02617994f, 0.0f)
+    // object MotionModifier source_line=568 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: circle_speed_change
+    // approximated legacy circle speed change through target circle tween
+    ins_409(6000, 0, -0.02617994f, 0.0f, 0.0f);
+    // object AutoBulletTimer source_line=569 family=th08_auto_bullet
     !E
-    // semantic op_key lowering th08->th15: raw.et_on_auto_delay
-    // dropped source-specific semantic op for th15: raw.et_on_auto_delay(30)
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval_random_initial_delay
+    // auto-fire interval=30 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     !*
+    // object AutoBulletTimer source_line=570 family=th08_auto_bullet
     !NHL
-    // semantic op_key lowering th08->th15: raw.et_on_auto_delay
-    // dropped source-specific semantic op for th15: raw.et_on_auto_delay(10)
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval_random_initial_delay
+    // auto-fire interval=10 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     !*
     +5000:
     !*
@@ -1895,10 +2051,12 @@ void Sub20()
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: flow.ins_79
     // dropped source-specific semantic op for th15: flow.ins_79(16)
-    // semantic op_key lowering th08->th15: flow.trail_familiar_set
-    // dropped source-specific semantic op for th15: flow.trail_familiar_set(1)
-    // semantic op_key lowering th08->th15: raw.et_delay
-    // dropped source-specific semantic op for th15: raw.et_delay()
+    // object FamiliarSpawner source_line=580 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: trail_toggle
+    // metadata-only familiar trail toggle; target games have no verified equivalent trail runtime
+    // object AutoBulletTimer source_line=581 family=th08_auto_bullet
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: defer_attribute_fire
+    // target slot emitters are configured without implicit fire; no instruction needed
     // object BulletEmitter source_line=582 family=th08_macro
     !E
     ins_600(0);
@@ -1946,15 +2104,21 @@ void Sub20()
     // semantic op_key lowering th08->th15: movement.circle.set
     ins_408([-9981.0f], 0.02617994f, 0.0f, [-9980.0f]);
     +100:
-    // semantic op_key lowering th08->th15: movement.move_circle_change
-    // dropped source-specific semantic op for th15: movement.move_circle_change(6000, 0.02617994f, 0.0f)
+    // object MotionModifier source_line=590 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: circle_speed_change
+    // approximated legacy circle speed change through target circle tween
+    ins_409(6000, 0, 0.02617994f, 0.0f, 0.0f);
+    // object AutoBulletTimer source_line=591 family=th08_auto_bullet
     !E
-    // semantic op_key lowering th08->th15: raw.et_on_auto_delay
-    // dropped source-specific semantic op for th15: raw.et_on_auto_delay(30)
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval_random_initial_delay
+    // auto-fire interval=30 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     !*
+    // object AutoBulletTimer source_line=592 family=th08_auto_bullet
     !NHL
-    // semantic op_key lowering th08->th15: raw.et_on_auto_delay
-    // dropped source-specific semantic op for th15: raw.et_on_auto_delay(10)
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval_random_initial_delay
+    // auto-fire interval=10 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     !*
     +5000:
     !*
@@ -2016,8 +2180,10 @@ void Sub22()
 {
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // semantic op_key lowering th08->th15: raw.et_on_auto
-    // dropped source-specific semantic op for th15: raw.et_on_auto(0)
+    // object AutoBulletTimer source_line=612 family=th08_auto_bullet
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval
+    // auto-fire interval=0 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     // semantic op_key lowering th08->th15: enemy.enm_kill_all
     ins_525();
     // semantic op_key lowering th08->th15: bullet.sound
@@ -2026,12 +2192,18 @@ void Sub22()
     ins_502(4);
     // semantic op_key lowering th08->th15: bullet.offset
     ins_603(0, 0.0f, 0.0f);
-    // semantic op_key lowering th08->th15: raw.timer_threshold
-    // dropped source-specific semantic op for th15: raw.timer_threshold(2100, 18)
-    // semantic op_key lowering th08->th15: raw.ins_153
-    // dropped source-specific semantic op for th15: raw.ins_153()
-    // semantic op_key lowering th08->th15: raw.timer_set
-    // dropped source-specific semantic op for th15: raw.timer_set(0)
+    // object BossTimer source_line=617 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 0, 2100, "Sub18");
+    // object EffectEmitter source_line=618 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_start_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
+    // object BossTimer source_line=619 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_set
+    // target timer reset approximates legacy upward timer set
+    ins_513();
     // semantic op_key lowering th08->th15: flow.iset
     0;
     ins_43([10039]);
@@ -2051,8 +2223,10 @@ void Sub22()
     ins_503(4);
     // semantic op_key lowering th08->th15: unit.set_invuln
     ins_515(180);
-    // semantic op_key lowering th08->th15: raw.ins_129
-    // dropped source-specific semantic op for th15: raw.ins_129(2)
+    // object EffectEmitter source_line=627 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
     // semantic op_key lowering th08->th15: boss.set_interrupt
     ins_514(0, 0, 0, "Sub18");
     // semantic op_key lowering th08->th15: flow.fset
@@ -2085,12 +2259,15 @@ void Sub22()
     0.008975979f;
     ins_45([-9980.0f]);
     !*
+    // object Animation source_line=637 family=th08_legacy
     !*
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     Sub22_884:
-    // semantic op_key lowering th08->th15: flow.familiar_create
-    // dropped source-specific semantic op for th15: flow.familiar_create(24, 0.0f, 0.0f, 40, -2, 100)
+    // object FamiliarSpawner source_line=639 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_relative
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub24", 0.0f, 0.0f, 40, -2, 100);
     !H
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -2110,8 +2287,10 @@ void Sub22()
     ins_78([10036]);
     ins_14(Sub22_884, 90);
     +100:
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(60, 4, 1.0f)
+    // object MotionModifier source_line=644 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(60, 4, 0.0f, 1.0f);
     +100:
     // semantic op_key lowering th08->th15: flow.iset
     8;
@@ -2140,12 +2319,15 @@ void Sub22()
     -0.008975979f;
     ins_45([-9980.0f]);
     !*
+    // object Animation source_line=652 family=th08_legacy
     !*
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     Sub22_1140:
-    // semantic op_key lowering th08->th15: flow.familiar_create
-    // dropped source-specific semantic op for th15: flow.familiar_create(24, 0.0f, 0.0f, 40, -2, 100)
+    // object FamiliarSpawner source_line=654 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_relative
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub24", 0.0f, 0.0f, 40, -2, 100);
     !H
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -2165,8 +2347,10 @@ void Sub22()
     ins_78([10036]);
     ins_14(Sub22_1140, 290);
     +100:
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(60, 4, 1.0f)
+    // object MotionModifier source_line=659 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(60, 4, 0.0f, 1.0f);
     +100:
     // semantic op_key lowering th08->th15: flow.iset
     8;
@@ -2188,11 +2372,14 @@ void Sub22()
     // semantic op_key lowering th08->th15: flow.fset
     0.0f;
     ins_45([-9980.0f]);
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object Animation source_line=666 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     Sub22_1376:
-    // semantic op_key lowering th08->th15: flow.familiar_create
-    // dropped source-specific semantic op for th15: flow.familiar_create(24, 0.0f, 0.0f, 40, -2, 100)
+    // object FamiliarSpawner source_line=668 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_relative
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub24", 0.0f, 0.0f, 40, -2, 100);
     !H
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -2212,8 +2399,10 @@ void Sub22()
     ins_78([10036]);
     ins_14(Sub22_1376, 490);
     +100:
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(60, 4, 1.0f)
+    // object MotionModifier source_line=673 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(60, 4, 0.0f, 1.0f);
     +100:
     // semantic op_key lowering th08->th15: flow.jmp
     ins_12(Sub22_772, 90);
@@ -2269,7 +2458,17 @@ void Sub23()
     ins_51();
     ins_45([-9976.0f]);
     // semantic op_key lowering th08->th15: flow.math_circle_pos
-    // dropped source-specific semantic op for th15: flow.math_circle_pos([10094.0f], [10095.0f], [10021.0f], [10022.0f])
+    // TH08 circlePos lowered through stack VM
+    [-9976.0f];
+    ins_80();
+    [-9975.0f];
+    ins_55();
+    ins_45([-9935.0f]);
+    [-9976.0f];
+    ins_79();
+    [-9975.0f];
+    ins_55();
+    ins_45([-9934.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9935.0f];
     [10042.0f];
@@ -2281,9 +2480,17 @@ void Sub23()
     ins_51();
     ins_45([-9934.0f]);
     // semantic op_key lowering th08->th15: flow.math_angle
-    // dropped source-specific semantic op for th15: flow.math_angle([10022.0f], [10094.0f], [10095.0f], [10042.0f], [10043.0f])
+    ins_87([-9975.0f], [-9935.0f], [-9934.0f], [10042.0f], [10043.0f]);
     // semantic op_key lowering th08->th15: flow.math_distance
-    // dropped source-specific semantic op for th15: flow.math_distance([10016.0f], [10094.0f], [10095.0f], [10042.0f], [10043.0f])
+    [10042.0f];
+    [-9935.0f];
+    ins_53();
+    ins_45([-9931.0f]);
+    [10043.0f];
+    [-9934.0f];
+    ins_53();
+    ins_45([-9930.0f]);
+    ins_86([-9981.0f], [-9931.0f], [-9930.0f]);
     // semantic op_key lowering th08->th15: flow.fmul
     [-9981.0f];
     2.0f;
@@ -2332,12 +2539,13 @@ void Sub24()
     ins_306(0, 56);
     // semantic op_key lowering th08->th15: unit.set_hitbox
     ins_501(24.0f, 24.0f);
-    // semantic op_key lowering th08->th15: flow.trail_familiar_set
-    // dropped source-specific semantic op for th15: flow.trail_familiar_set(1)
+    // object FamiliarSpawner source_line=713 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: trail_toggle
+    // metadata-only familiar trail toggle; target games have no verified equivalent trail runtime
     // semantic op_key lowering th08->th15: unit.flag_set
     ins_502(3);
-    // semantic op_key lowering th08->th15: flow.et_protect_range
-    // dropped source-specific semantic op for th15: flow.et_protect_range(0.0f)
+    // semantic op_key lowering th08->th15: unit.et_protect_range
+    ins_526(0.0f);
     !H
     // semantic op_key lowering th08->th15: movement.move_dir
     ins_404([-9981.0f], 2.0f);
@@ -2346,17 +2554,21 @@ void Sub24()
     // semantic op_key lowering th08->th15: movement.move_dir
     ins_404([-9981.0f], 2.4f);
     !*
+    // object MotionModifier source_line=718 family=th08_motion_modifier
     !*
-    // semantic op_key lowering th08->th15: movement.move_curve
-    // dropped source-specific semantic op for th15: movement.move_curve([10017.0f])
+    // MotionModifier lowering th08_motion_modifier -> th15: angular_velocity
+    // approximated legacy per-frame angular velocity as long-lived target circle tween
+    ins_409(999999, 0, [10017.0f], 0.0f, 0.0f);
     // semantic op_key lowering th08->th15: flow.call_async
     ins_15("Sub23");
     +100:
     // semantic op_key lowering th08->th15: unit.flag_clear
     ins_503(3);
     +100:
-    // semantic op_key lowering th08->th15: movement.move_curve
-    // dropped source-specific semantic op for th15: movement.move_curve(0.0f)
+    // object MotionModifier source_line=723 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: angular_velocity
+    // approximated legacy per-frame angular velocity as long-lived target circle tween
+    ins_409(999999, 0, 0.0f, 0.0f, 0.0f);
     +5000:
     // semantic op_key lowering th08->th15: flow.delete
     ins_1();
@@ -2367,7 +2579,13 @@ void Sub25()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th08->th15: anm.set_boss_ex
-    // dropped source-specific semantic op for th15: anm.set_boss_ex(0)
+    ins_302(0);
+    ins_306(0, 0);
+    ins_306(1, 1);
+    ins_306(2, 2);
+    ins_306(3, 3);
+    ins_306(4, 4);
+    ins_306(5, 5);
     // semantic op_key lowering th08->th15: unit.flag_set
     ins_502(20);
     // semantic op_key lowering th08->th15: unit.flag_set
@@ -2378,10 +2596,14 @@ void Sub25()
     ins_501(48.0f, 32.0f);
     // semantic op_key lowering th08->th15: unit.set_invuln
     ins_515(60);
-    // semantic op_key lowering th08->th15: raw.set_lives
-    // dropped source-specific semantic op for th15: raw.set_lives(0)
-    // semantic op_key lowering th08->th15: raw.timer_threshold
-    // dropped source-specific semantic op for th15: raw.timer_threshold(180000, 38)
+    // object BossTimer source_line=736 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: visible_life_count
+    // visible life-count HUD state approximated by keeping target lifebar visible
+    ins_631(0);
+    // object BossTimer source_line=737 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 0, 180000, "Sub38");
     // semantic op_key lowering th08->th15: movement.position.set
     ins_400(-32.0f, -32.0f);
     // semantic op_key lowering th08->th15: movement.position.tween
@@ -2410,50 +2632,72 @@ void Sub26()
     ins_507(6, 4);
     // semantic op_key lowering th08->th15: boss.life_set
     ins_511(13000);
-    // semantic op_key lowering th08->th15: raw.set_lives
-    // dropped source-specific semantic op for th15: raw.set_lives(1)
-    // semantic op_key lowering th08->th15: raw.ins_129
-    // dropped source-specific semantic op for th15: raw.ins_129(2)
+    // object BossTimer source_line=754 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: visible_life_count
+    // visible life-count HUD state approximated by keeping target lifebar visible
+    ins_631(0);
+    // object EffectEmitter source_line=755 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
     // semantic op_key lowering th08->th15: boss.set_interrupt
     ins_514(0, 0, 0, "Sub33");
-    // semantic op_key lowering th08->th15: raw.timer_threshold
-    // dropped source-specific semantic op for th15: raw.timer_threshold(1800, 38)
-    // semantic op_key lowering th08->th15: raw.life_threshold
-    // dropped source-specific semantic op for th15: raw.life_threshold(0, 1500, 38)
-    // semantic op_key lowering th08->th15: raw.set_life_bar
-    // dropped source-specific semantic op for th15: raw.set_life_bar(0, 0, [10088], 16752800)
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object BossTimer source_line=757 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 0, 1800, "Sub38");
+    // object BossTimer source_line=758 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: life_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 1500, 0, "Sub38");
+    // object BossTimer source_line=759 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: life_bar_segment
+    // lowered lifebar color segment to target life marker approximation
+    ins_527(0, 0.0f, 16752800);
+    // object EffectEmitter source_line=760 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, 0.3f, 0.7f, 0.3f, 128.0f)
     +10:
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object EffectEmitter source_line=762 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, -0.3f, 0.7f, 0.3f, 128.0f)
     +10:
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object EffectEmitter source_line=764 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, 0.3f, 0.7f, -0.3f, 128.0f)
     +10:
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object EffectEmitter source_line=766 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, -0.3f, -0.7f, -0.3f, 96.0f)
     +10:
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object EffectEmitter source_line=768 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, 0.3f, -0.7f, -0.3f, 96.0f)
     +10:
-    // semantic op_key lowering th08->th15: raw.card_eff
+    // object EffectEmitter source_line=770 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: card_effect
     // dropped source-specific semantic op for th15: raw.card_eff(6, -0.3f, -0.7f, 0.3f, 96.0f)
     +10:
     // semantic op_key lowering th08->th15: movement.move_limit
     ins_504(32.0f, 48.0f, 352.0f, 128.0f);
     Sub26_436:
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object Animation source_line=774 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     // semantic op_key lowering th08->th15: flow.call
     ins_11("Sub27");
     +120:
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(60, 4, 1.5f)
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(40, 1, -16711681)
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object MotionModifier source_line=777 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(60, 4, 0.0f, 1.5f);
+    // object EffectEmitter source_line=778 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=1 using target ANM play
+    ins_307(0, (40 + 28));
+    // object Animation source_line=779 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     +60:
     // semantic op_key lowering th08->th15: unit.play_sound
     ins_516(15);
@@ -2596,18 +2840,24 @@ void Sub26()
     +80:
     // semantic op_key lowering th08->th15: flow.call
     ins_11("Sub29");
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(40, 4, 1.6f)
+    // object MotionModifier source_line=820 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(40, 4, 0.0f, 1.6f);
     +50:
     // semantic op_key lowering th08->th15: flow.call
     ins_11("Sub29");
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(40, 4, 1.6f)
+    // object MotionModifier source_line=823 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(40, 4, 0.0f, 1.6f);
     +50:
     // semantic op_key lowering th08->th15: flow.call
     ins_11("Sub29");
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(40, 4, 1.6f)
+    // object MotionModifier source_line=826 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(40, 4, 0.0f, 1.6f);
     +50:
     // semantic op_key lowering th08->th15: flow.jmp
     ins_12(Sub26_436, 60);
@@ -2619,8 +2869,10 @@ void Sub27()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th08->th15: unit.play_sound
     ins_516(5);
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(40, 1, -16711681)
+    // object EffectEmitter source_line=834 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=1 using target ANM play
+    ins_307(0, (40 + 28));
     +30:
     // semantic op_key lowering th08->th15: flow.fset_mul
     [-9982.0f];
@@ -2938,8 +3190,9 @@ void Sub28()
 {
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object Animation source_line=909 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     // semantic op_key lowering th08->th15: flow.fset
     [-9928.0f];
     ins_45([-9928.0f]);
@@ -2952,8 +3205,10 @@ void Sub28()
     // semantic op_key lowering th08->th15: flow.fset
     [-9925.0f];
     ins_45([-9925.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_a
-    // dropped source-specific semantic op for th15: flow.familiar_create_a(32, [10042.0f], [10043.0f], 120, -2, 100)
+    // object FamiliarSpawner source_line=914 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_absolute
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_310("Sub32", [10042.0f], [10043.0f], 120, -2, 100);
     // semantic op_key lowering th08->th15: flow.ret
     ins_10();
 }
@@ -3142,8 +3397,9 @@ void Sub32()
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: flow.ins_79
     // dropped source-specific semantic op for th15: flow.ins_79(16)
-    // semantic op_key lowering th08->th15: flow.trail_familiar_set
-    // dropped source-specific semantic op for th15: flow.trail_familiar_set(1)
+    // object FamiliarSpawner source_line=970 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: trail_toggle
+    // metadata-only familiar trail toggle; target games have no verified equivalent trail runtime
     // semantic op_key lowering th08->th15: unit.set_invuln
     ins_515(50);
     // semantic op_key lowering th08->th15: flow.call_async
@@ -3159,18 +3415,22 @@ void Sub32()
     ins_55();
     ins_45([-9979.0f]);
     // semantic op_key lowering th08->th15: flow.fset_rand_sign
-    // approximated random-sign float assignment unavailable in target stack VM: flow.fset_rand_sign([10019.0f], 400.0f)
+    // random sign approximated using positive magnitude
+    400.0f;
+    ins_45([-9978.0f]);
     // semantic op_key lowering th08->th15: flow.float_time
-    // dropped source-specific semantic op for th15: flow.float_time([10042.0f], 180, 7, 0, [10042.0f], [10059.0f], [10018.0f], [10019.0f])
+    ins_91(0, [10042.0f], 180, 0, [10042.0f], [-9926.0f]);
     // semantic op_key lowering th08->th15: flow.fset_mul
     [10086.0f];
     100.0f;
     ins_55();
     ins_45([-9979.0f]);
     // semantic op_key lowering th08->th15: flow.fset_rand_sign
-    // approximated random-sign float assignment unavailable in target stack VM: flow.fset_rand_sign([10019.0f], 400.0f)
+    // random sign approximated using positive magnitude
+    400.0f;
+    ins_45([-9978.0f]);
     // semantic op_key lowering th08->th15: flow.float_time
-    // dropped source-specific semantic op for th15: flow.float_time([10043.0f], 180, 7, 0, [10043.0f], [10060.0f], [10018.0f], [10019.0f])
+    ins_91(0, [10043.0f], 180, 0, [10043.0f], [-9925.0f]);
     +120:
     // semantic op_key lowering th08->th15: flow.call_async
     ins_15("Sub30");
@@ -3193,28 +3453,41 @@ void Sub33()
     ins_515(150);
     // semantic op_key lowering th08->th15: boss.life_set
     ins_511(13000);
-    // semantic op_key lowering th08->th15: raw.set_lives
-    // dropped source-specific semantic op for th15: raw.set_lives(0)
-    // semantic op_key lowering th08->th15: raw.ins_129
-    // dropped source-specific semantic op for th15: raw.ins_129(3)
+    // object BossTimer source_line=995 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: visible_life_count
+    // visible life-count HUD state approximated by keeping target lifebar visible
+    ins_631(0);
+    // object EffectEmitter source_line=996 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
     // semantic op_key lowering th08->th15: boss.set_interrupt
     ins_514(0, 0, 0, "Sub50");
-    // semantic op_key lowering th08->th15: raw.timer_threshold
-    // dropped source-specific semantic op for th15: raw.timer_threshold(1920, 44)
-    // semantic op_key lowering th08->th15: raw.life_threshold
-    // dropped source-specific semantic op for th15: raw.life_threshold(0, 1800, 44)
-    // semantic op_key lowering th08->th15: raw.set_life_bar
-    // dropped source-specific semantic op for th15: raw.set_life_bar(0, 0, [10088], 16752800)
+    // object BossTimer source_line=998 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 0, 1920, "Sub44");
+    // object BossTimer source_line=999 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: life_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 1800, 0, "Sub44");
+    // object BossTimer source_line=1000 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: life_bar_segment
+    // lowered lifebar color segment to target life marker approximation
+    ins_527(0, 0.0f, 16752800);
     +10:
     // semantic op_key lowering th08->th15: movement.move_limit
     ins_504(32.0f, 48.0f, 352.0f, 128.0f);
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(60, 4, 1.4f)
+    // object MotionModifier source_line=1003 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(60, 4, 0.0f, 1.4f);
     +60:
     // semantic op_key lowering th08->th15: flow.nop
     ins_0();
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object Animation source_line=1006 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     // semantic op_key lowering th08->th15: flow.fset
     1.5707964f;
     ins_45([-9974.0f]);
@@ -3235,30 +3508,39 @@ void Sub33()
     // semantic op_key lowering th08->th15: flow.fset
     [10048.0f];
     ins_45([-9928.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create
-    // dropped source-specific semantic op for th15: flow.familiar_create(36, 0.0f, 0.0f, 200, -1, 100)
+    // object FamiliarSpawner source_line=1014 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_relative
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub36", 0.0f, 0.0f, 200, -1, 100);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9928.0f];
     0.7853982f;
     ins_51();
     ins_45([-9928.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create
-    // dropped source-specific semantic op for th15: flow.familiar_create(36, 0.0f, 0.0f, 200, -1, 100)
+    // object FamiliarSpawner source_line=1016 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_relative
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub36", 0.0f, 0.0f, 200, -1, 100);
     // semantic op_key lowering th08->th15: flow.fsub
     [-9928.0f];
     1.5707964f;
     ins_53();
     ins_45([-9928.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create
-    // dropped source-specific semantic op for th15: flow.familiar_create(36, 0.0f, 0.0f, 200, -1, 100)
+    // object FamiliarSpawner source_line=1018 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_relative
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub36", 0.0f, 0.0f, 200, -1, 100);
     +120:
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(80, 4, 1.0f)
+    // object MotionModifier source_line=1020 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(80, 4, 0.0f, 1.0f);
     +120:
     // semantic op_key lowering th08->th15: flow.nop
     ins_0();
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object Animation source_line=1023 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     // semantic op_key lowering th08->th15: flow.iset
     150;
     ins_43([10053]);
@@ -3268,30 +3550,39 @@ void Sub33()
     // semantic op_key lowering th08->th15: flow.fset
     [10048.0f];
     ins_45([-9928.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create
-    // dropped source-specific semantic op for th15: flow.familiar_create(36, 0.0f, 0.0f, 200, -1, 100)
+    // object FamiliarSpawner source_line=1027 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_relative
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub36", 0.0f, 0.0f, 200, -1, 100);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9928.0f];
     0.7853982f;
     ins_51();
     ins_45([-9928.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create
-    // dropped source-specific semantic op for th15: flow.familiar_create(36, 0.0f, 0.0f, 200, -1, 100)
+    // object FamiliarSpawner source_line=1029 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_relative
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub36", 0.0f, 0.0f, 200, -1, 100);
     // semantic op_key lowering th08->th15: flow.fsub
     [-9928.0f];
     1.5707964f;
     ins_53();
     ins_45([-9928.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create
-    // dropped source-specific semantic op for th15: flow.familiar_create(36, 0.0f, 0.0f, 200, -1, 100)
+    // object FamiliarSpawner source_line=1031 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_relative
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub36", 0.0f, 0.0f, 200, -1, 100);
     +120:
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(80, 4, 1.0f)
+    // object MotionModifier source_line=1033 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(80, 4, 0.0f, 1.0f);
     +120:
     // semantic op_key lowering th08->th15: flow.nop
     ins_0();
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object Animation source_line=1036 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     // semantic op_key lowering th08->th15: flow.iset
     120;
     ins_43([10053]);
@@ -3307,8 +3598,10 @@ void Sub33()
     6;
     ins_43([10036]);
     Sub33_936:
-    // semantic op_key lowering th08->th15: flow.familiar_create
-    // dropped source-specific semantic op for th15: flow.familiar_create(36, 0.0f, 0.0f, 160, -1, 100)
+    // object FamiliarSpawner source_line=1042 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_relative
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub36", 0.0f, 0.0f, 160, -1, 100);
     // semantic op_key lowering th08->th15: flow.fsub
     [-9928.0f];
     [-9975.0f];
@@ -3541,7 +3834,10 @@ void Sub35()
     Sub35_692:
     !*
     // semantic op_key lowering th08->th15: flow.inc
-    // dropped source-specific semantic op for th15: flow.inc([10000])
+    [10000];
+    1;
+    ins_50();
+    ins_43([10000]);
     // semantic op_key lowering th08->th15: flow.wait
     ins_23([10037]);
     // semantic op_key lowering th08->th15: flow.jmp
@@ -3561,12 +3857,23 @@ void Sub36()
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: flow.ins_79
     // dropped source-specific semantic op for th15: flow.ins_79(16)
-    // semantic op_key lowering th08->th15: flow.trail_familiar_set
-    // dropped source-specific semantic op for th15: flow.trail_familiar_set(1)
+    // object FamiliarSpawner source_line=1114 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: trail_toggle
+    // metadata-only familiar trail toggle; target games have no verified equivalent trail runtime
     // semantic op_key lowering th08->th15: unit.set_invuln
     ins_515(10);
     // semantic op_key lowering th08->th15: flow.math_circle_pos
-    // dropped source-specific semantic op for th15: flow.math_circle_pos([10016.0f], [10017.0f], [10057.0f], [10058.0f])
+    // TH08 circlePos lowered through stack VM
+    [-9928.0f];
+    ins_80();
+    [-9927.0f];
+    ins_55();
+    ins_45([-9981.0f]);
+    [-9928.0f];
+    ins_79();
+    [-9927.0f];
+    ins_55();
+    ins_45([-9980.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     [10042.0f];
@@ -3578,17 +3885,25 @@ void Sub36()
     ins_51();
     ins_45([-9980.0f]);
     // semantic op_key lowering th08->th15: flow.fset_rand_sign
-    // approximated random-sign float assignment unavailable in target stack VM: flow.fset_rand_sign([10018.0f], 40.0f)
+    // random sign approximated using positive magnitude
+    40.0f;
+    ins_45([-9979.0f]);
     // semantic op_key lowering th08->th15: flow.fset_rand_sign
-    // approximated random-sign float assignment unavailable in target stack VM: flow.fset_rand_sign([10019.0f], 40.0f)
+    // random sign approximated using positive magnitude
+    40.0f;
+    ins_45([-9978.0f]);
     // semantic op_key lowering th08->th15: flow.float_time
-    // dropped source-specific semantic op for th15: flow.float_time([10042.0f], [10053], 7, 0, [10042.0f], [10016.0f], [10018.0f], [10019.0f])
+    ins_91(0, [10042.0f], [10053], 0, [10042.0f], [-9981.0f]);
     // semantic op_key lowering th08->th15: flow.fset_rand_sign
-    // approximated random-sign float assignment unavailable in target stack VM: flow.fset_rand_sign([10018.0f], 40.0f)
+    // random sign approximated using positive magnitude
+    40.0f;
+    ins_45([-9979.0f]);
     // semantic op_key lowering th08->th15: flow.fset_rand_sign
-    // approximated random-sign float assignment unavailable in target stack VM: flow.fset_rand_sign([10019.0f], 40.0f)
+    // random sign approximated using positive magnitude
+    40.0f;
+    ins_45([-9978.0f]);
     // semantic op_key lowering th08->th15: flow.float_time
-    // dropped source-specific semantic op for th15: flow.float_time([10043.0f], [10053], 7, 0, [10043.0f], [10017.0f], [10018.0f], [10019.0f])
+    ins_91(0, [10043.0f], [10053], 0, [10043.0f], [-9980.0f]);
     // semantic op_key lowering th08->th15: flow.wait
     ins_23([10053]);
     // semantic op_key lowering th08->th15: flow.iset
@@ -3614,17 +3929,27 @@ void Sub37()
     ins_1();
     Sub37_40:
     // semantic op_key lowering th08->th15: anm.set_boss_ex
-    // dropped source-specific semantic op for th15: anm.set_boss_ex(0)
+    ins_302(0);
+    ins_306(0, 0);
+    ins_306(1, 1);
+    ins_306(2, 2);
+    ins_306(3, 3);
+    ins_306(4, 4);
+    ins_306(5, 5);
     // semantic op_key lowering th08->th15: unit.flag_set
     ins_502(8);
-    // semantic op_key lowering th08->th15: raw.set_lives
-    // dropped source-specific semantic op for th15: raw.set_lives(0)
+    // object BossTimer source_line=1139 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: visible_life_count
+    // visible life-count HUD state approximated by keeping target lifebar visible
+    ins_631(0);
     // semantic op_key lowering th08->th15: boss.set_boss
     ins_512(0);
     // semantic op_key lowering th08->th15: boss.life_set
     ins_511(1600);
-    // semantic op_key lowering th08->th15: raw.set_life_bar
-    // dropped source-specific semantic op for th15: raw.set_life_bar(0, 0, [10051], 16752800)
+    // object BossTimer source_line=1142 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: life_bar_segment
+    // lowered lifebar color segment to target life marker approximation
+    ins_527(0, 0.0f, 16752800);
     // semantic op_key lowering th08->th15: raw.player_nullify
     // dropped source-specific semantic op for th15: raw.player_nullify(1)
     // semantic op_key lowering th08->th15: movement.move_limit
@@ -3632,26 +3957,39 @@ void Sub37()
     +70:
     // semantic op_key lowering th08->th15: unit.play_sound
     ins_516(5);
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(40, 1, -1)
+    // object EffectEmitter source_line=1147 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=1 using target ANM play
+    ins_307(0, (40 + 28));
     +4:
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(40, 1, -12080)
+    // object EffectEmitter source_line=1149 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=1 using target ANM play
+    ins_307(0, (40 + 28));
     +4:
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(40, 1, -32640)
+    // object EffectEmitter source_line=1151 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=1 using target ANM play
+    ins_307(0, (40 + 28));
     +4:
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(40, 1, -49088)
+    // object EffectEmitter source_line=1153 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=1 using target ANM play
+    ins_307(0, (40 + 28));
     +50:
     // semantic op_key lowering th08->th15: unit.play_sound
     ins_516(15);
-    // semantic op_key lowering th08->th15: raw.ins_173
-    // dropped source-specific semantic op for th15: raw.ins_173(1)
+    // object BossTimer source_line=1156 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: bomb_immunity_state
+    // lowered legacy bomb-immunity state to target bomb shield/invulnerability controls
+    ins_546(1, 0);
+    ins_565(0.0f);
     // semantic op_key lowering th08->th15: unit.flag_clear
     ins_503(8);
-    // semantic op_key lowering th08->th15: raw.ins_129
-    // dropped source-specific semantic op for th15: raw.ins_129(3)
+    // object EffectEmitter source_line=1158 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
     // semantic op_key lowering th08->th15: boss.set_interrupt
     ins_514(0, 0, 0, "Sub51");
     // semantic op_key lowering th08->th15: flow.call
@@ -3662,8 +4000,10 @@ void Sub38()
 {
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // semantic op_key lowering th08->th15: raw.et_on_auto
-    // dropped source-specific semantic op for th15: raw.et_on_auto(0)
+    // object AutoBulletTimer source_line=1165 family=th08_auto_bullet
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval
+    // auto-fire interval=0 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     // semantic op_key lowering th08->th15: enemy.enm_kill_all
     ins_525();
     // semantic op_key lowering th08->th15: bullet.sound
@@ -3672,12 +4012,18 @@ void Sub38()
     ins_502(4);
     // semantic op_key lowering th08->th15: bullet.offset
     ins_603(0, 0.0f, 0.0f);
-    // semantic op_key lowering th08->th15: raw.timer_threshold
-    // dropped source-specific semantic op for th15: raw.timer_threshold(1920, 33)
-    // semantic op_key lowering th08->th15: raw.ins_153
-    // dropped source-specific semantic op for th15: raw.ins_153()
-    // semantic op_key lowering th08->th15: raw.timer_set
-    // dropped source-specific semantic op for th15: raw.timer_set(0)
+    // object BossTimer source_line=1170 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 0, 1920, "Sub33");
+    // object EffectEmitter source_line=1171 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_start_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
+    // object BossTimer source_line=1172 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_set
+    // target timer reset approximates legacy upward timer set
+    ins_513();
     // semantic op_key lowering th08->th15: flow.iset
     0;
     ins_43([10039]);
@@ -3705,18 +4051,23 @@ void Sub38()
     ins_503(4);
     // semantic op_key lowering th08->th15: unit.set_invuln
     ins_515(180);
-    // semantic op_key lowering th08->th15: raw.ins_129
-    // dropped source-specific semantic op for th15: raw.ins_129(2)
+    // object EffectEmitter source_line=1182 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
     // semantic op_key lowering th08->th15: boss.set_interrupt
     ins_514(0, 0, 0, "Sub33");
     // semantic op_key lowering th08->th15: flow.fset
     64.0f;
     ins_45([-9977.0f]);
     Sub38_1240:
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(40, 1, -16711681)
+    // object Animation source_line=1186 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
+    // object EffectEmitter source_line=1187 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=1 using target ANM play
+    ins_307(0, (40 + 28));
     +60:
     // semantic op_key lowering th08->th15: flow.iset
     120;
@@ -3794,13 +4145,18 @@ void Sub38()
     24.0f;
     ins_51();
     ins_45([-9977.0f]);
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(60, 4, 2.0f)
+    // object MotionModifier source_line=1216 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(60, 4, 0.0f, 2.0f);
     +60:
-    // semantic op_key lowering th08->th15: raw.eff_create
-    // dropped source-specific semantic op for th15: raw.eff_create(40, 1, -16711681)
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object EffectEmitter source_line=1218 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst
+    // approximated old etama effect count=1 using target ANM play
+    ins_307(0, (40 + 28));
+    // object Animation source_line=1219 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     +60:
     // semantic op_key lowering th08->th15: flow.iset
     120;
@@ -3878,8 +4234,10 @@ void Sub38()
     24.0f;
     ins_51();
     ins_45([-9977.0f]);
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(60, 4, 1.5f)
+    // object MotionModifier source_line=1248 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(60, 4, 0.0f, 1.5f);
     +60:
     // semantic op_key lowering th08->th15: flow.jmp
     ins_12(Sub38_1240, 90);
@@ -3905,8 +4263,10 @@ void Sub39()
     [10053.0f];
     ins_57();
     ins_45([-9926.0f]);
-    // semantic op_key lowering th08->th15: flow.familiar_create_f
-    // dropped source-specific semantic op for th15: flow.familiar_create_f(43, 0.0f, 0.0f, [10054], -2, 100)
+    // object FamiliarSpawner source_line=1259 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_following
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub43", 0.0f, 0.0f, [10054], -2, 100);
     // semantic op_key lowering th08->th15: flow.ret
     ins_10();
 }
@@ -4378,10 +4738,13 @@ void Sub43()
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: flow.ins_79
     // dropped source-specific semantic op for th15: flow.ins_79(16)
-    // semantic op_key lowering th08->th15: flow.trail_familiar_set
-    // dropped source-specific semantic op for th15: flow.trail_familiar_set(1)
-    // semantic op_key lowering th08->th15: anm.familiar
-    // dropped source-specific semantic op for th15: anm.familiar(1)
+    // object FamiliarSpawner source_line=1358 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: trail_toggle
+    // metadata-only familiar trail toggle; target games have no verified equivalent trail runtime
+    // object FamiliarSpawner source_line=1359 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: focus_animation
+    // approximated familiar focus ANM as ordinary ANM play
+    ins_307(0, (1 + 48));
     // semantic op_key lowering th08->th15: unit.set_invuln
     ins_515(10);
     // semantic op_key lowering th08->th15: flow.fdiv
@@ -4393,8 +4756,10 @@ void Sub43()
     ins_408([-9928.0f], [-9927.0f], 0.0f, [-9926.0f]);
     // semantic op_key lowering th08->th15: flow.wait
     ins_23([10053]);
-    // semantic op_key lowering th08->th15: movement.move_circle_change
-    // dropped source-specific semantic op for th15: movement.move_circle_change(0, [10058.0f], 0.0f)
+    // object MotionModifier source_line=1364 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: circle_speed_change
+    // approximated legacy circle speed change through target circle tween
+    ins_409(0, 0, [10058.0f], 0.0f, 0.0f);
     // semantic op_key lowering th08->th15: flow.call_async
     ins_15("Sub42");
     +960:
@@ -4406,8 +4771,10 @@ void Sub44()
 {
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // semantic op_key lowering th08->th15: raw.et_on_auto
-    // dropped source-specific semantic op for th15: raw.et_on_auto(0)
+    // object AutoBulletTimer source_line=1372 family=th08_auto_bullet
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval
+    // auto-fire interval=0 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     // semantic op_key lowering th08->th15: enemy.enm_kill_all
     ins_525();
     // semantic op_key lowering th08->th15: bullet.sound
@@ -4416,12 +4783,18 @@ void Sub44()
     ins_502(4);
     // semantic op_key lowering th08->th15: bullet.offset
     ins_603(0, 0.0f, 0.0f);
-    // semantic op_key lowering th08->th15: raw.timer_threshold
-    // dropped source-specific semantic op for th15: raw.timer_threshold(2220, 33)
-    // semantic op_key lowering th08->th15: raw.ins_153
-    // dropped source-specific semantic op for th15: raw.ins_153()
-    // semantic op_key lowering th08->th15: raw.timer_set
-    // dropped source-specific semantic op for th15: raw.timer_set(0)
+    // object BossTimer source_line=1377 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 0, 2220, "Sub33");
+    // object EffectEmitter source_line=1378 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_start_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
+    // object BossTimer source_line=1379 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_set
+    // target timer reset approximates legacy upward timer set
+    ins_513();
     // semantic op_key lowering th08->th15: flow.iset
     0;
     ins_43([10039]);
@@ -4482,16 +4855,19 @@ void Sub44()
     ins_57();
     ins_45([-9975.0f]);
     Sub44_1332:
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object Animation source_line=1397 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     // semantic op_key lowering th08->th15: flow.fset
     [-9977.0f];
     ins_45([-9928.0f]);
     // semantic op_key lowering th08->th15: flow.call
     ins_11("Sub47");
     +200:
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(60, 4, 1.3f)
+    // object MotionModifier source_line=1401 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(60, 4, 0.0f, 1.3f);
     // semantic op_key lowering th08->th15: flow.iset
     130;
     ins_43([10053]);
@@ -4506,11 +4882,14 @@ void Sub44()
     // semantic op_key lowering th08->th15: flow.iset
     6;
     ins_43([10036]);
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object Animation source_line=1406 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     Sub44_1500:
-    // semantic op_key lowering th08->th15: flow.familiar_create
-    // dropped source-specific semantic op for th15: flow.familiar_create(46, 0.0f, 0.0f, 20, -2, 10)
+    // object FamiliarSpawner source_line=1408 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: create_relative
+    // approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata
+    ins_309("Sub46", 0.0f, 0.0f, 20, -2, 10);
     // semantic op_key lowering th08->th15: flow.fsub
     [-9928.0f];
     [-9975.0f];
@@ -4536,7 +4915,10 @@ void Sub44()
     ins_55();
     ins_45([-9977.0f]);
     // semantic op_key lowering th08->th15: flow.inc
-    // dropped source-specific semantic op for th15: flow.inc([10039])
+    [10039];
+    1;
+    ins_50();
+    ins_43([10039]);
     +180:
     // semantic op_key lowering th08->th15: flow.jmp
     ins_12(Sub44_1332, 90);
@@ -4620,12 +5002,23 @@ void Sub46()
     ins_501(24.0f, 24.0f);
     // semantic op_key lowering th08->th15: flow.ins_79
     // dropped source-specific semantic op for th15: flow.ins_79(16)
-    // semantic op_key lowering th08->th15: flow.trail_familiar_set
-    // dropped source-specific semantic op for th15: flow.trail_familiar_set(1)
+    // object FamiliarSpawner source_line=1444 family=th08_familiar
+    // FamiliarSpawner lowering th08_familiar -> th15: trail_toggle
+    // metadata-only familiar trail toggle; target games have no verified equivalent trail runtime
     // semantic op_key lowering th08->th15: unit.set_invuln
     ins_515(60);
     // semantic op_key lowering th08->th15: flow.math_circle_pos
-    // dropped source-specific semantic op for th15: flow.math_circle_pos([10016.0f], [10017.0f], [10057.0f], [10058.0f])
+    // TH08 circlePos lowered through stack VM
+    [-9928.0f];
+    ins_80();
+    [-9927.0f];
+    ins_55();
+    ins_45([-9981.0f]);
+    [-9928.0f];
+    ins_79();
+    [-9927.0f];
+    ins_55();
+    ins_45([-9980.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     [10042.0f];
@@ -4637,17 +5030,25 @@ void Sub46()
     ins_51();
     ins_45([-9980.0f]);
     // semantic op_key lowering th08->th15: flow.fset_rand_sign
-    // approximated random-sign float assignment unavailable in target stack VM: flow.fset_rand_sign([10018.0f], 40.0f)
+    // random sign approximated using positive magnitude
+    40.0f;
+    ins_45([-9979.0f]);
     // semantic op_key lowering th08->th15: flow.fset_rand_sign
-    // approximated random-sign float assignment unavailable in target stack VM: flow.fset_rand_sign([10019.0f], 40.0f)
+    // random sign approximated using positive magnitude
+    40.0f;
+    ins_45([-9978.0f]);
     // semantic op_key lowering th08->th15: flow.float_time
-    // dropped source-specific semantic op for th15: flow.float_time([10042.0f], [10053], 7, 0, [10042.0f], [10016.0f], [10018.0f], [10019.0f])
+    ins_91(0, [10042.0f], [10053], 0, [10042.0f], [-9981.0f]);
     // semantic op_key lowering th08->th15: flow.fset_rand_sign
-    // approximated random-sign float assignment unavailable in target stack VM: flow.fset_rand_sign([10018.0f], 40.0f)
+    // random sign approximated using positive magnitude
+    40.0f;
+    ins_45([-9979.0f]);
     // semantic op_key lowering th08->th15: flow.fset_rand_sign
-    // approximated random-sign float assignment unavailable in target stack VM: flow.fset_rand_sign([10019.0f], 40.0f)
+    // random sign approximated using positive magnitude
+    40.0f;
+    ins_45([-9978.0f]);
     // semantic op_key lowering th08->th15: flow.float_time
-    // dropped source-specific semantic op for th15: flow.float_time([10043.0f], [10053], 7, 0, [10043.0f], [10017.0f], [10018.0f], [10019.0f])
+    ins_91(0, [10043.0f], [10053], 0, [10043.0f], [-9980.0f]);
     // semantic op_key lowering th08->th15: flow.wait
     ins_23([10053]);
     // semantic op_key lowering th08->th15: flow.call_async
@@ -5026,8 +5427,10 @@ void Sub48()
 {
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // semantic op_key lowering th08->th15: raw.et_on_auto
-    // dropped source-specific semantic op for th15: raw.et_on_auto(0)
+    // object AutoBulletTimer source_line=1548 family=th08_auto_bullet
+    // AutoBulletTimer lowering th08_auto_bullet -> th15: auto_fire_interval
+    // auto-fire interval=0 preserved as high-level timer; emitted one fire tick at source position
+    ins_601(0);
     // semantic op_key lowering th08->th15: enemy.enm_kill_all
     ins_525();
     // semantic op_key lowering th08->th15: bullet.sound
@@ -5036,12 +5439,18 @@ void Sub48()
     ins_502(4);
     // semantic op_key lowering th08->th15: bullet.offset
     ins_603(0, 0.0f, 0.0f);
-    // semantic op_key lowering th08->th15: raw.timer_threshold
-    // dropped source-specific semantic op for th15: raw.timer_threshold(2400, 51)
-    // semantic op_key lowering th08->th15: raw.ins_153
-    // dropped source-specific semantic op for th15: raw.ins_153()
-    // semantic op_key lowering th08->th15: raw.timer_set
-    // dropped source-specific semantic op for th15: raw.timer_set(0)
+    // object BossTimer source_line=1553 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_threshold_interrupt
+    // lowered threshold interrupt through target boss interrupt object
+    ins_514(0, 0, 2400, "Sub51");
+    // object EffectEmitter source_line=1554 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_start_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
+    // object BossTimer source_line=1555 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: timer_set
+    // target timer reset approximates legacy upward timer set
+    ins_513();
     // semantic op_key lowering th08->th15: flow.iset
     0;
     ins_43([10039]);
@@ -5080,16 +5489,19 @@ void Sub48()
     ins_57();
     ins_45([-9975.0f]);
     Sub48_1028:
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object Animation source_line=1569 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     // semantic op_key lowering th08->th15: flow.fset
     [-9977.0f];
     ins_45([-9928.0f]);
     // semantic op_key lowering th08->th15: flow.call
     ins_11("Sub49");
     +130:
-    // semantic op_key lowering th08->th15: movement.move_rand_time
-    // dropped source-specific semantic op for th15: movement.move_rand_time(60, 4, 1.3f)
+    // object MotionModifier source_line=1573 family=th08_motion_modifier
+    // MotionModifier lowering th08_motion_modifier -> th15: random_direction_tween
+    // approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata
+    ins_405(60, 4, 0.0f, 1.3f);
     // semantic op_key lowering th08->th15: flow.iset
     130;
     ins_43([10053]);
@@ -5104,8 +5516,9 @@ void Sub48()
     // semantic op_key lowering th08->th15: flow.iset
     6;
     ins_43([10036]);
-    // semantic op_key lowering th08->th15: anm.play_attack
-    // dropped source-specific semantic op for th15: anm.play_attack()
+    // object Animation source_line=1578 family=th08_legacy
+    // animation semantic lowering th08_legacy -> th15: legacy boss attack animation approximated as ANM play
+    ins_307(0, 0);
     // semantic op_key lowering th08->th15: flow.fset_mul
     -1.0f;
     [-9974.0f];
@@ -5122,7 +5535,10 @@ void Sub48()
     ins_55();
     ins_45([-9977.0f]);
     // semantic op_key lowering th08->th15: flow.inc
-    // dropped source-specific semantic op for th15: flow.inc([10039])
+    [10039];
+    1;
+    ins_50();
+    ins_43([10039]);
     +60:
     // semantic op_key lowering th08->th15: flow.jmp
     ins_12(Sub48_1028, 90);
@@ -5497,13 +5913,17 @@ void Sub50()
 {
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // semantic op_key lowering th08->th15: raw.ins_184
-    // dropped source-specific semantic op for th15: raw.ins_184(1)
+    // object BossTimer source_line=1674 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: boss_runtime_state
+    // preserved unknown boss runtime state as explicit no-duration invulnerability state boundary
+    ins_515(0);
     // semantic op_key lowering th08->th15: flow.iset
     1;
     ins_43([10051]);
-    // semantic op_key lowering th08->th15: raw.ins_129
-    // dropped source-specific semantic op for th15: raw.ins_129(0)
+    // object EffectEmitter source_line=1676 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
     // semantic op_key lowering th08->th15: boss.set_interrupt
     // dropped disabled interrupt for th15: setInterrupt(-1)
     // semantic op_key lowering th08->th15: unit.flag_set
@@ -5528,8 +5948,10 @@ void Sub50()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -1, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1687 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     +1:
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -5538,8 +5960,10 @@ void Sub50()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -1, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1691 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     +1:
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -5548,8 +5972,10 @@ void Sub50()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -32640, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1695 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     +1:
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -5558,8 +5984,10 @@ void Sub50()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -32640, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1699 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     +1:
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -5568,8 +5996,10 @@ void Sub50()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8323200, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1703 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     +1:
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -5578,8 +6008,10 @@ void Sub50()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8323200, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1707 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     +1:
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -5588,8 +6020,10 @@ void Sub50()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8355585, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1711 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     +1:
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -5598,8 +6032,10 @@ void Sub50()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8355585, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1715 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     +1:
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -5608,8 +6044,10 @@ void Sub50()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -128, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1719 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     +1:
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
@@ -5618,8 +6056,10 @@ void Sub50()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -128, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1723 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: unit.play_sound
     ins_516(7);
     // semantic op_key lowering th08->th15: flow.loop
@@ -5627,8 +6067,10 @@ void Sub50()
     ins_14(Sub50_172, 0);
     // semantic op_key lowering th08->th15: unit.play_sound
     ins_516(18);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 64, -8355585, -999.0f, 0, 0)
+    // object EffectEmitter source_line=1727 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=64 using target ANM play_rotate
+    ins_315(0, (26 + 28), -999.0f);
     // semantic op_key lowering th08->th15: boss.spell_end
     ins_523();
     // semantic op_key lowering th08->th15: boss.set_boss
@@ -5645,10 +6087,14 @@ void Sub51()
 {
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // semantic op_key lowering th08->th15: raw.ins_184
-    // dropped source-specific semantic op for th15: raw.ins_184(1)
-    // semantic op_key lowering th08->th15: raw.ins_129
-    // dropped source-specific semantic op for th15: raw.ins_129(0)
+    // object BossTimer source_line=1737 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: boss_runtime_state
+    // preserved unknown boss runtime state as explicit no-duration invulnerability state boundary
+    ins_515(0);
+    // object EffectEmitter source_line=1738 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
     // semantic op_key lowering th08->th15: boss.set_interrupt
     // dropped disabled interrupt for th15: setInterrupt(-1)
     // semantic op_key lowering th08->th15: unit.flag_set
@@ -5658,8 +6104,11 @@ void Sub51()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: movement.move_dir_time
     ins_405(60, 4, [-9981.0f], 0.15f);
-    // semantic op_key lowering th08->th15: raw.ins_173
-    // dropped source-specific semantic op for th15: raw.ins_173(0)
+    // object BossTimer source_line=1743 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: bomb_immunity_state
+    // lowered legacy bomb-immunity state to target bomb shield/invulnerability controls
+    ins_546(0, 0);
+    ins_565(1.0f);
     // semantic op_key lowering th08->th15: flow.jmp_equ
     [10099];
     0;
@@ -5681,8 +6130,10 @@ void Sub51()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -1, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1751 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5690,8 +6141,10 @@ void Sub51()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -1, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1754 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5699,8 +6152,10 @@ void Sub51()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -32640, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1757 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5708,8 +6163,10 @@ void Sub51()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -32640, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1760 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5717,8 +6174,10 @@ void Sub51()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8323200, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1763 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5726,8 +6185,10 @@ void Sub51()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8323200, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1766 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5735,8 +6196,10 @@ void Sub51()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8355585, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1769 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5744,8 +6207,10 @@ void Sub51()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8355585, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1772 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5753,8 +6218,10 @@ void Sub51()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -128, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1775 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5762,15 +6229,19 @@ void Sub51()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -128, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1778 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.loop
     ins_78([10036]);
     ins_14(Sub51_212, 0);
     // semantic op_key lowering th08->th15: unit.play_sound
     ins_516(18);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 64, -8355585, -999.0f, 0, 0)
+    // object EffectEmitter source_line=1781 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=64 using target ANM play_rotate
+    ins_315(0, (26 + 28), -999.0f);
     Sub51_1008:
     // semantic op_key lowering th08->th15: boss.spell_end
     ins_523();
@@ -5792,10 +6263,14 @@ void Sub52()
 {
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // semantic op_key lowering th08->th15: raw.ins_184
-    // dropped source-specific semantic op for th15: raw.ins_184(1)
-    // semantic op_key lowering th08->th15: raw.ins_129
-    // dropped source-specific semantic op for th15: raw.ins_129(0)
+    // object BossTimer source_line=1794 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: boss_runtime_state
+    // preserved unknown boss runtime state as explicit no-duration invulnerability state boundary
+    ins_515(0);
+    // object EffectEmitter source_line=1795 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: spell_effect_state
+    // approximated legacy spell visual state as target high-priority ANM boundary
+    ins_314(0, 0);
     // semantic op_key lowering th08->th15: boss.set_interrupt
     // dropped disabled interrupt for th15: setInterrupt(-1)
     // semantic op_key lowering th08->th15: unit.flag_set
@@ -5805,8 +6280,11 @@ void Sub52()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: movement.move_dir_time
     ins_405(60, 4, [-9981.0f], 0.15f);
-    // semantic op_key lowering th08->th15: raw.ins_173
-    // dropped source-specific semantic op for th15: raw.ins_173(0)
+    // object BossTimer source_line=1800 family=th08_boss_timer
+    // BossTimer lowering th08_boss_timer -> th15: bomb_immunity_state
+    // lowered legacy bomb-immunity state to target bomb shield/invulnerability controls
+    ins_546(0, 0);
+    ins_565(1.0f);
     // semantic op_key lowering th08->th15: flow.iset
     0;
     ins_43([10039]);
@@ -5831,8 +6309,10 @@ void Sub52()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -1, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1809 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5840,8 +6320,10 @@ void Sub52()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -1, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1812 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5849,8 +6331,10 @@ void Sub52()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -32640, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1815 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5858,8 +6342,10 @@ void Sub52()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -32640, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1818 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5867,8 +6353,10 @@ void Sub52()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8323200, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1821 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5876,8 +6364,10 @@ void Sub52()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8323200, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1824 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5885,8 +6375,10 @@ void Sub52()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8355585, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1827 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5894,8 +6386,10 @@ void Sub52()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -8355585, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1830 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5903,8 +6397,10 @@ void Sub52()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -128, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1833 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.fadd
     [-9981.0f];
     0.19634955f;
@@ -5912,15 +6408,19 @@ void Sub52()
     ins_45([-9981.0f]);
     // semantic op_key lowering th08->th15: flow.norm_rad
     ins_82([-9981.0f]);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 1, -128, [10016.0f], 0, 0)
+    // object EffectEmitter source_line=1836 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=1 using target ANM play_rotate
+    ins_315(0, (26 + 28), [10016.0f]);
     // semantic op_key lowering th08->th15: flow.loop
     ins_78([10036]);
     ins_14(Sub52_232, 0);
     // semantic op_key lowering th08->th15: unit.play_sound
     ins_516(18);
-    // semantic op_key lowering th08->th15: raw.eff_create_angle
-    // dropped source-specific semantic op for th15: raw.eff_create_angle(26, 64, -8355585, -999.0f, 0, 0)
+    // object EffectEmitter source_line=1839 family=th08_effect
+    // EffectEmitter lowering th08_effect -> th15: effect_burst_angle
+    // approximated old etama effect count=64 using target ANM play_rotate
+    ins_315(0, (26 + 28), -999.0f);
     // semantic op_key lowering th08->th15: flow.iset
     1;
     ins_43([10039]);

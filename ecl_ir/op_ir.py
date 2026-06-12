@@ -149,6 +149,7 @@ OP_ALIASES = {
     "spell3": "boss.spell3",
     "func_set2": "unit.func_set2",
     "call_async": "flow.call_async",
+    "et_protect_range": "unit.et_protect_range",
 }
 
 OP_KEY_PREFIX_BY_DOMAIN = {
