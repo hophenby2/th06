@@ -1,0 +1,13 @@
+source	target	rc	file	unsupported	lossy	lines	stderr
+th08	th10	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th08_to_th10.decl	815	0	5177	
+th08	th12	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th08_to_th12.decl	815	0	5080	
+th08	th15	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th08_to_th15.decl	846	0	5080	
+th10	th08	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th10_to_th08.decl	0	0	847	
+th10	th12	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th10_to_th12.decl	0	2	3283	
+th10	th15	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th10_to_th15.decl	0	5	3404	
+th12	th08	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th12_to_th08.decl	0	0	1232	
+th12	th10	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th12_to_th10.decl	1	37	4341	
+th12	th15	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th12_to_th15.decl	0	14	4694	
+th15	th08	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th15_to_th08.decl	0	0	667	
+th15	th10	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th15_to_th10.decl	0	20	1841	
+th15	th12	0	th062/ecl_ir_out/matrix_th08_th10_th12_th15_semantic/th15_to_th12.decl	0	17	2119	

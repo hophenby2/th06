@@ -86,15 +86,162 @@ def emit_transpile(program, objects, target: str) -> str:
         lines.append(target_function_header(function, params, target))
         lines.append("{")
         body_lines = emit_function_body(function_objects, target)
+        if generation_for_game(target) == "th06_th08" and params:
+            body_lines = old_target_param_initializers(params) + body_lines
         if params:
             body_lines = drop_redeclared_param_vars(body_lines, params)
         lines.extend(body_lines)
         lines.append("}")
+    if generation_for_game(target) == "th06_th08":
+        lines = normalize_old_target_lines(lines)
     return "\n".join(lines)
 
 
+def normalize_old_target_lines(lines: list[str]) -> list[str]:
+    normalized: list[str] = []
+    for line in lines:
+        stripped = line.lstrip()
+        if stripped.startswith("//"):
+            continue
+        if "//" in line:
+            line = line.split("//", 1)[0].rstrip()
+            stripped = line.lstrip()
+        if not stripped:
+            if normalized and normalized[-1] != "":
+                normalized.append("")
+            continue
+        if re.fullmatch(r"\+[-+]?\d+:", stripped) or re.fullmatch(r"\w+:", stripped):
+            normalized.append(stripped)
+            continue
+        if stripped.startswith("!"):
+            normalized.append(stripped)
+            continue
+        normalized.extend(lower_old_target_expression_line(replace_old_param_refs(line)))
+    while normalized and normalized[0] == "":
+        normalized.pop(0)
+    return normalized
 
 
+
+
+
+
+
+def old_target_param_initializers(params: str) -> list[str]:
+    initials: list[str] = []
+    int_map = {"A": 10000, "B": 10001, "C": 10002, "D": 10003, "E": 10004, "F": 10005}
+    float_map = {"A": 10016, "B": 10017, "C": 10018, "D": 10019, "E": 10020, "F": 10021}
+    for part in [item.strip() for item in params.split(",") if item.strip()]:
+        pieces = part.split()
+        name = pieces[-1] if pieces else ""
+        if not re.fullmatch(r"[A-F]", name):
+            continue
+        if part.startswith("float"):
+            initials.append(f"    ins_7([{float_map[name]}.0f], %{name});")
+        else:
+            initials.append(f"    ins_6([{int_map[name]}], ${name});")
+    return initials
+
+
+def replace_old_param_refs(line: str) -> str:
+    int_map = {"A": "[10000]", "B": "[10001]", "C": "[10002]", "D": "[10003]", "E": "[10004]", "F": "[10005]"}
+    float_map = {"A": "[10016.0f]", "B": "[10017.0f]", "C": "[10018.0f]", "D": "[10019.0f]", "E": "[10020.0f]", "F": "[10021.0f]"}
+    line = re.sub(r"\$([A-F])\b", lambda match: int_map.get(match.group(1), match.group(0)), line)
+    line = re.sub(r"%([A-F])\b", lambda match: float_map.get(match.group(1), match.group(0)), line)
+    return line
+
+
+def lower_old_target_expression_line(line: str) -> list[str]:
+    stripped = line.strip()
+    match = re.fullmatch(r"ins_(\d+)\((.*)\);", stripped)
+    if not match:
+        return [line]
+    opcode = int(match.group(1))
+    args = [part.strip() for part in split_args_text(match.group(2))]
+    prefix = line[:len(line) - len(line.lstrip())]
+    if opcode == 2 and len(args) == 1:
+        lowered = lower_old_int_expr(args[0], "[10008]")
+        if lowered:
+            return [prefix + item for item in [*lowered, "ins_2([10008]);"]]
+    if opcode == 64 and len(args) == 4:
+        setup: list[str] = []
+        out_args = list(args)
+        for index in (2, 3):
+            lowered = lower_old_float_expr(out_args[index], f"[{10030 + index - 2}.0f]")
+            if lowered:
+                setup.extend(lowered)
+                out_args[index] = f"[{10030 + index - 2}.0f]"
+        if setup:
+            return [prefix + item for item in [*setup, f"ins_64({', '.join(out_args)});"]]
+    if opcode == 165 and len(args) == 1:
+        lowered = lower_old_float_expr(args[0], "[10030.0f]")
+        if lowered:
+            return [prefix + item for item in [*lowered, "ins_165([10030.0f]);"]]
+    return [line]
+
+
+def split_args_text(text: str) -> list[str]:
+    args: list[str] = []
+    current: list[str] = []
+    depth = 0
+    in_string = False
+    escape = False
+    for char in text:
+        if in_string:
+            current.append(char)
+            if escape:
+                escape = False
+            elif char == "\\":
+                escape = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+            current.append(char)
+        elif char == "(":
+            depth += 1
+            current.append(char)
+        elif char == ")":
+            depth -= 1
+            current.append(char)
+        elif char == "," and depth == 0:
+            args.append("".join(current).strip())
+            current = []
+        else:
+            current.append(char)
+    if current or text.strip():
+        args.append("".join(current).strip())
+    return args
+
+
+def lower_old_int_expr(expr: str, temp: str) -> list[str] | None:
+    expr = expr.strip()
+    match = re.fullmatch(r"(\[[^\]]+\]|[-+]?\d+)\s*%\s*([-+]?\d+)", expr)
+    if match:
+        return [f"ins_6({temp}, {match.group(1)});", f"ins_14({temp}, {match.group(2)});"]
+    match = re.fullmatch(r"\((\[[^\]]+\]|[-+]?\d+)\s*%\s*([-+]?\d+)\)\s*([+-])\s*([-+]?\d+)", expr)
+    if match:
+        op = "ins_10" if match.group(3) == "+" else "ins_11"
+        return [f"ins_6({temp}, {match.group(1)});", f"ins_14({temp}, {match.group(2)});", f"{op}({temp}, {match.group(4)});"]
+    return None
+
+
+def lower_old_float_expr(expr: str, temp: str) -> list[str] | None:
+    expr = expr.strip()
+    match = re.fullmatch(r"(?:_f\(0\)|0(?:\.0f)?)\s*-\s*(\[[^\]]+\.0f\])", expr)
+    if match:
+        return [f"ins_7({temp}, 0.0f);", f"ins_16({temp}, {match.group(1)});"]
+    match = re.fullmatch(r"(\[[^\]]+\.0f\])\s*([+-])\s*(?:_f\()?([-+]?\d+(?:\.\d+)?)(?:f)?(?:\))?", expr)
+    if match:
+        op = "ins_15" if match.group(2) == "+" else "ins_16"
+        value = match.group(3)
+        if "." not in value:
+            value = f"{value}.0f"
+        elif not value.endswith("f"):
+            value = f"{value}f"
+        return [f"ins_7({temp}, {match.group(1)});", f"{op}({temp}, {value});"]
+    return None
 
 
 def target_function_header(function: str, params: str, target: str) -> str:

@@ -24,7 +24,9 @@ class OpcodeInfo:
     def arity(self) -> int | None:
         if not self.signature:
             return None
-        return sum(1 for ch in self.signature if ch not in "*x")
+        if "*" in self.signature:
+            return None
+        return sum(1 for ch in self.signature if ch != "*")
 
 
 def canonical_game(game: str) -> str:
@@ -223,6 +225,53 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
             target[opcode] = OpcodeInfo(game=game, opcode=opcode, name=(old.name if old else ""), signature=signature, source=f"{old.source}; {info.source}" if old else info.source)
     if "th10" in result and "th11" not in result:
         result["th11"] = dict(result["th10"])
+    if "th10" in result and "th11" in result:
+        for opcode, th11_info in result["th11"].items():
+            th10_info = result["th10"].get(opcode)
+            if th10_info and not th10_info.name and th11_info.name:
+                result["th10"][opcode] = OpcodeInfo(
+                    game="th10",
+                    opcode=opcode,
+                    name=th11_info.name,
+                    signature=th10_info.signature or th11_info.signature,
+                    source=f"{th10_info.source}; name inherited from th11 same-generation table",
+                )
+    if "th12" in result:
+        # TH13+ kept several TH12 opcodes with identical signatures but the scraped
+        # eclmap rows are blank.  Inherit only exact-signature matches so op_key
+        # generation stays semantic without inventing pairwise conversions.
+        inherited_exact_names = {"anmOnEt", "anmRotate", "zIndex", "hitSound"}
+        for game in ("th13", "th14", "th15", "th16", "th165", "th17", "th18", "th185"):
+            if game not in result:
+                continue
+            existing_names = {info.name for info in result[game].values() if info.name}
+            for opcode, th12_info in result["th12"].items():
+                if th12_info.name not in inherited_exact_names:
+                    continue
+                if th12_info.name in existing_names:
+                    continue
+                info = result[game].get(opcode)
+                if info and not info.name and th12_info.name and info.signature == th12_info.signature:
+                    result[game][opcode] = OpcodeInfo(
+                        game=game,
+                        opcode=opcode,
+                        name=th12_info.name,
+                        signature=info.signature,
+                        source=f"{info.source}; name inherited from th12 exact-signature table",
+                    )
+    for game in ("th13", "th14", "th15", "th16", "th165", "th17", "th18", "th185"):
+        if game not in result:
+            continue
+        for opcode in (12, 13, 14):
+            info = result[game].get(opcode)
+            if info:
+                result[game][opcode] = OpcodeInfo(
+                    game=game,
+                    opcode=opcode,
+                    name=info.name,
+                    signature="ot",
+                    source=f"{info.source}; signature forced to thecl format ot",
+                )
     return result
 
 
@@ -270,7 +319,7 @@ def validate_opcode_args(game: str, opcode: int, args: list[object]) -> str | No
     if actual != arity:
         name = opcode_name(game, opcode, f"ins_{opcode}")
         return f"{game} ins_{opcode} {name} expects {arity} args ({signature}), got {actual}"
-    concrete_signature = [ch for ch in signature if ch not in "*x"]
+    concrete_signature = [ch for ch in signature if ch != "*"]
     for index, (expected, value) in enumerate(zip(concrete_signature, args), start=1):
         if not argument_matches_type(str(value), expected):
             name = opcode_name(game, opcode, f"ins_{opcode}")

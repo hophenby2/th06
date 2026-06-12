@@ -1,0 +1,1272 @@
+sub BGirl00()
+{
+}
+
+sub BGirl02()
+{
+}
+
+sub BGirl04()
+{
+}
+
+sub BGirl05()
+{
+}
+
+sub BGirl07()
+{
+}
+
+sub BGirl10()
+{
+}
+
+sub Boss()
+{
+    ins_127(0);
+    ins_80(64);
+    ins_78(48.0f, 48.0f);
+    ins_77(48.0f, 48.0f);
+    ins_160(60);
+    ins_131(10700);
+    ins_64(60, 4, 0.0f, 128.0f);
++60:
+    ins_75(0.0f, 128.0f, 280.0f, 64.0f);
+}
+
+sub Boss1()
+{
+    ins_124(31);
++60:
+Boss1_328:
+    ins_2(12);
+    ins_2(12);
+    ins_2(50);
+    ins_2(32);
+Boss1_640:
+    ins_1();
+}
+
+sub Boss1_at()
+{
+    ins_99(11, 3, 2, 1, 1.0f, 2.4f, 1.5707964f, 0.032724924f, 0);
+Boss1_at_520:
+Boss1_at_720:
+Boss1_at_816:
+Boss1_at_956:
+    ins_108();
+    ins_108();
+    ins_2(3);
+Boss1_at_1764:
+    ins_1();
+}
+
+sub Boss2()
+{
+!ENH
+    ins_131(10700);
+!*
+!L
+    ins_131(10700);
+!*
+    ins_95();
+    ins_112();
+Boss2_248:
+Boss2_268:
+    ins_64(0, 0, 0.0f, 0.0f);
+    ins_123();
+    ins_124(28);
+!ENH
+!*
+!L
+!*
+    ins_160(120);
+    ins_144(1, 20);
+    ins_144(2, 10);
+Boss2_876:
+    ins_124(28);
+    ins_2(60);
+    ins_124(31);
++60:
+Boss2_1000:
+    ins_2(12);
+    ins_2(12);
+    ins_2(12);
+    ins_2(12);
+    ins_2(30);
+Boss2_1440:
+    ins_1();
+}
+
+sub Boss2_at()
+{
+    ins_99(11, 3, 2, 1, 1.0f, 2.4f, 1.5707964f, 0.032724924f, 0);
+Boss2_at_520:
+Boss2_at_720:
+Boss2_at_920:
+Boss2_at_1016:
+Boss2_at_1340:
+    ins_108();
+    ins_108();
+    ins_2(2);
+Boss2_at_2072:
+    ins_1();
+}
+
+sub BossCard1()
+{
+    ins_95();
+    ins_123();
+    ins_124(28);
+    ins_64(0, 0, 0.0f, 0.0f);
+!EN
+!*
+!HL
+!*
+!EN
+!*
+!HL
+!*
+    ins_64(60, 4, 0.0f, 144.0f);
+    ins_75(0.0f, 128.0f, 280.0f, 256.0f);
++60:
++60:
++30:
+BossCard1_1020:
+    ins_2(3000);
+BossCard1_1040:
+BossCard1_1108:
+    ins_2(1000);
+BossCard1_1128:
+    ins_1();
+}
+
+sub BossCard1_at()
+{
+    ins_97(7, 8, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+    ins_97(7, 10, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+BossCard1_at_884:
+    ins_124(19);
+    ins_2(60);
+    ins_124(19);
+    ins_2(40);
+    ins_124(19);
+    ins_2(180);
+BossCard1_at_2188:
+    ins_124(19);
+BossCard1_at_2536:
+    ins_2(180);
+BossCard1_at_2848:
+    ins_124(19);
+BossCard1_at_3196:
+    ins_2(90);
+    ins_64(120, 1, 0.0f, 128.0f);
+BossCard1_at_3396:
+    ins_124(19);
+    ins_2(6);
+BossCard1_at_3560:
+    ins_124(19);
+    ins_2(60);
+    ins_124(19);
+    ins_2(40);
+    ins_124(19);
+    ins_2(180);
+BossCard1_at_4872:
+    ins_124(19);
+BossCard1_at_5220:
+    ins_2(180);
+BossCard1_at_5532:
+    ins_124(19);
+BossCard1_at_5880:
+    ins_2(90);
+    ins_64(120, 1, 0.0f, 128.0f);
+BossCard1_at_6080:
+    ins_124(19);
+    ins_2(6);
+BossCard1_at_6244:
+BossCard1_at_6288:
+    ins_1();
+}
+
+sub BossCard1_atH()
+{
+    ins_97(7, 13, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+    ins_97(7, 10, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+BossCard1_atH_884:
+    ins_124(19);
+    ins_2(40);
+    ins_124(19);
+    ins_2(30);
+    ins_124(19);
+    ins_2(100);
+BossCard1_atH_2188:
+    ins_124(19);
+BossCard1_atH_2536:
+    ins_2(100);
+BossCard1_atH_2848:
+    ins_124(19);
+BossCard1_atH_3196:
+    ins_2(50);
+    ins_64(120, 1, 0.0f, 128.0f);
+BossCard1_atH_3396:
+    ins_124(19);
+    ins_2(6);
+BossCard1_atH_3560:
+    ins_124(19);
+    ins_2(50);
+    ins_124(19);
+    ins_2(30);
+    ins_124(19);
+    ins_2(100);
+BossCard1_atH_4872:
+    ins_124(19);
+BossCard1_atH_5220:
+    ins_2(100);
+BossCard1_atH_5532:
+    ins_124(19);
+BossCard1_atH_5880:
+    ins_2(50);
+    ins_64(120, 1, 0.0f, 128.0f);
+BossCard1_atH_6080:
+    ins_124(19);
+    ins_2(6);
+BossCard1_atH_6244:
+BossCard1_atH_6288:
+    ins_1();
+}
+
+sub BossCard1_atL()
+{
+    ins_97(7, 13, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+    ins_97(7, 10, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+BossCard1_atL_884:
+    ins_124(19);
+    ins_124(19);
+    ins_124(19);
+    ins_2(100);
+BossCard1_atL_2152:
+    ins_124(19);
+BossCard1_atL_2424:
+    ins_2(60);
+BossCard1_atL_2740:
+    ins_124(19);
+BossCard1_atL_3012:
+    ins_2(20);
+    ins_64(120, 1, 0.0f, 128.0f);
+BossCard1_atL_3212:
+    ins_124(19);
+    ins_2(6);
+BossCard1_atL_3376:
+    ins_124(19);
+    ins_124(19);
+    ins_124(19);
+    ins_2(100);
+BossCard1_atL_4652:
+    ins_124(19);
+BossCard1_atL_4924:
+    ins_2(60);
+BossCard1_atL_5236:
+    ins_124(19);
+BossCard1_atL_5508:
+    ins_2(20);
+    ins_64(120, 1, 0.0f, 128.0f);
+BossCard1_atL_5708:
+    ins_124(19);
+    ins_2(6);
+BossCard1_atL_5872:
+BossCard1_atL_5916:
+    ins_1();
+}
+
+sub BossCard2()
+{
+    ins_95();
+    ins_123();
+    ins_124(28);
+    ins_64(0, 0, 0.0f, 0.0f);
+!EN
+!*
+!H
+!*
+!L
+!*
+    ins_64(60, 4, 0.0f, 192.0f);
+    ins_160(60);
++60:
++30:
+BossCard2_1128:
+BossCard2_1712:
+BossCard2_2192:
+BossCard2_2252:
+    ins_2(380);
++40:
+BossCard2_2288:
+    ins_1();
+}
+
+sub BossCard2At()
+{
+    ins_165(0.0f);
+    ins_80(80);
+    ins_78(48.0f, 48.0f);
+    ins_77(48.0f, 48.0f);
+    ins_160(60000);
+BossCard2At_472:
+    ins_2(120);
+    ins_2(120);
+    ins_2(120);
+    ins_2(120);
+    ins_2(120);
+    ins_2(120);
+BossCard2At_808:
+BossCard2At_876:
+    ins_2(1000);
+BossCard2At_896:
+}
+
+sub BossCard2AtH()
+{
+    ins_165(0.0f);
+    ins_80(80);
+    ins_78(48.0f, 48.0f);
+    ins_77(48.0f, 48.0f);
+    ins_160(60000);
+BossCard2AtH_472:
+    ins_2(240);
+    ins_2(120);
+    ins_2(240);
+    ins_2(120);
+    ins_2(240);
+    ins_2(120);
+BossCard2AtH_808:
+BossCard2AtH_876:
+    ins_2(1000);
+BossCard2AtH_896:
+}
+
+sub BossCard2AtL()
+{
+    ins_165(0.0f);
+    ins_80(80);
+    ins_78(48.0f, 48.0f);
+    ins_77(48.0f, 48.0f);
+    ins_160(60000);
+BossCard2AtL_472:
+    ins_2(240);
+    ins_2(60);
+    ins_2(240);
+    ins_2(60);
+    ins_2(240);
+    ins_2(60);
+BossCard2AtL_808:
+BossCard2AtL_876:
+    ins_2(1000);
+BossCard2AtL_896:
+}
+
+sub BossCard2At_at()
+{
+    ins_99(9, 6, 1, 1, 2.0f, 1.0f, [-9970.0f], 0.3926991f, 0);
+    ins_99(9, 6, 1, 1, 2.0f, 1.2f, 0.0f, 0.0f, 0);
+    ins_2(60);
+BossCard2At_at_632:
+    ins_108();
+BossCard2At_at_712:
+    ins_1();
+}
+
+sub BossCard2Move()
+{
+BossCard2Move_60:
+    ins_7([10030.0f], [10027.0f]);
+    ins_16([10030.0f], 1.5707964f);
+    ins_165([10030.0f]);
+    ins_2(1);
+BossCard2Move_160:
+    ins_1();
+}
+
+sub BossCard2_at()
+{
+    ins_98(20, 0, 1, 1, 2.0f, 0.2f, 0.0f, 0.0f, 0);
+    ins_2(240);
+BossCard2_at_412:
+    ins_108();
+    ins_2([10001]);
+BossCard2_at_664:
+    ins_1();
+}
+
+sub BossDead()
+{
+    ins_80(140);
+    ins_124(5);
+BossDead_308:
+BossDead_364:
+    ins_95();
++60:
+    ins_123();
+    ins_144(1, 7);
+    ins_144(2, 10);
+BossDead_616:
+    ins_124(5);
+    ins_127(-1);
+}
+
+sub GGirl00()
+{
+}
+
+sub GGirl02()
+{
+}
+
+sub GGirl04()
+{
+}
+
+sub GGirl05()
+{
+}
+
+sub GGirl07()
+{
+}
+
+sub GGirl10()
+{
+}
+
+sub Girl00()
+{
+    ins_6([10000], [10000]);
+    ins_6([10001], [10001]);
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
+!L
+!*
++80:
++20:
++6000:
+    ins_1();
+}
+
+sub Girl00Dead()
+{
+    ins_98(4, 5, 1, 1, 1.0f, 1.0f, 0.0f, 0.032724924f, 0);
+    ins_108();
+    ins_2(1);
+    ins_1();
+}
+
+sub Girl01()
+{
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
++330:
++6000:
+}
+
+sub Girl02()
+{
+    ins_6([10000], [10000]);
+    ins_6([10001], [10001]);
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
+    ins_2(30);
++6000:
+    ins_1();
+}
+
+sub Girl03()
+{
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
++260:
++6000:
+}
+
+sub Girl03_at()
+{
+    ins_2(160);
+    ins_97(7, 2, 1, 1, 1.0f, 1.0f, [-9989.0f], 0.0f, 0);
+Girl03_at_508:
+    ins_108();
+Girl03_at_664:
+    ins_1();
+}
+
+sub Girl04()
+{
+    ins_6([10000], [10000]);
+    ins_6([10001], [10001]);
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
+    ins_2(120);
++6000:
+    ins_1();
+}
+
+sub Girl04b()
+{
+}
+
+sub Girl05()
+{
+    ins_6([10000], [10000]);
+    ins_6([10001], [10001]);
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
+    ins_2(60);
++6000:
+    ins_1();
+}
+
+sub Girl06()
+{
+    ins_144(1, 3);
+    ins_144(2, 3);
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
++460:
++6000:
+}
+
+sub Girl06_at()
+{
+    ins_97(7, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+Girl06_at_492:
+    ins_108();
+Girl06_at_724:
+    ins_1();
+}
+
+sub Girl06_at2()
+{
+    ins_2(1);
+    ins_97(7, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+Girl06_at2_512:
+    ins_108();
+Girl06_at2_744:
+    ins_1();
+}
+
+sub Girl07()
+{
+    ins_6([10000], [10000]);
+    ins_6([10001], [10001]);
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
+    ins_2(30);
++6000:
+    ins_1();
+}
+
+sub Girl08()
+{
+    ins_144(1, 2);
+    ins_144(2, 2);
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
++460:
++6000:
+}
+
+sub Girl08_at()
+{
+    ins_97(7, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+Girl08_at_492:
+    ins_108();
+Girl08_at_724:
+    ins_1();
+}
+
+sub Girl08_at2()
+{
+    ins_2(1);
+    ins_97(7, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+Girl08_at2_512:
+    ins_108();
+Girl08_at2_744:
+    ins_1();
+}
+
+sub Girl09()
+{
+    ins_144(1, 2);
+    ins_144(2, 2);
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
++6000:
+}
+
+sub Girl09_at()
+{
+    ins_96(3, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.032724924f, 0);
+Girl09_at_380:
+    ins_108();
+Girl09_at_432:
+    ins_1();
+}
+
+sub Girl09_at2()
+{
+    ins_2(1);
+    ins_97(7, 6, 1, 1, 1.0f, 2.0f, 0.0f, 0.0f, 0);
+Girl09_at2_468:
+    ins_108();
+    ins_2(2);
+Girl09_at2_612:
+    ins_1();
+}
+
+sub Girl10()
+{
+    ins_6([10000], [10000]);
+    ins_6([10001], [10001]);
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
+!L
+!*
++60:
++20:
++6000:
+    ins_1();
+}
+
+sub Girl11()
+{
+    ins_80(64);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
+    ins_144(2, 5);
++60:
++6000:
+}
+
+sub Girl11_at()
+{
+    ins_97(7, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+Girl11_at_492:
+    ins_108();
+Girl11_at_648:
+    ins_1();
+}
+
+sub Girl11_at2()
+{
+    ins_2(1);
+    ins_97(7, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+Girl11_at2_512:
+    ins_108();
+Girl11_at2_668:
+    ins_1();
+}
+
+sub Girl11b()
+{
+    ins_80(64);
+    ins_80(2);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
++60:
++6000:
+}
+
+sub GirlTest()
+{
+    ins_80(64);
+    ins_80(2);
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
+    ins_144(1, 3);
+    ins_144(2, 4);
++10:
+GirlTest_388:
+    ins_2(1000);
+GirlTest_408:
++30:
+GirlTest_508:
+    ins_2(1000);
+GirlTest_528:
+    ins_98(3, 2, 1, 1, 1.0f, 1.0f, 0.0f, 0.032724924f, 0);
+    ins_108();
+GirlTest_916:
+    ins_2(100);
+    ins_108();
+GirlTest_956:
+GirlTest_1024:
+    ins_2(1000);
+GirlTest_1044:
+}
+
+sub LogoEnemy()
+{
+    ins_2(700);
+    ins_1();
+}
+
+sub MBoss()
+{
+    ins_127(0);
+    ins_95();
+    ins_80(64);
+    ins_78(48.0f, 48.0f);
+    ins_77(40.0f, 40.0f);
+    ins_131(7000);
+MBoss_680:
+    ins_131(8300);
+MBoss_840:
+    ins_64(60, 4, 96.0f, 128.0f);
+    ins_2(60);
+    ins_75(0.0f, 160.0f, 280.0f, 64.0f);
+MBoss_1056:
+    ins_2(1000);
+MBoss_1076:
+}
+
+sub MBoss1()
+{
+MBoss1_60:
+    ins_2(60);
+MBoss1_112:
+    ins_1();
+}
+
+sub MBoss2()
+{
+    ins_95();
+    ins_112();
+MBoss2_232:
+MBoss2_252:
+    ins_64(0, 0, 0.0f, 0.0f);
+    ins_123();
+    ins_124(28);
+!EN
+!*
+!HL
+!*
+    ins_144(1, 5);
+    ins_144(2, 5);
+MBoss2_800:
+    ins_160(60);
+    ins_64(60, 4, 0.0f, 144.0f);
+    ins_75(0.0f, 160.0f, 280.0f, 64.0f);
++60:
+    ins_124(31);
++60:
+MBoss2_1028:
+    ins_2(12);
+    ins_2(20);
+    ins_2(12);
+MBoss2_1276:
+    ins_2(32);
+MBoss2_1324:
+}
+
+sub MBoss2_at()
+{
+    ins_99(11, 3, 2, 1, 1.0f, 0.4f, 1.5707964f, 0.032724924f, 0);
+MBoss2_at_472:
+MBoss2_at_624:
+MBoss2_at_672:
+MBoss2_at_812:
+    ins_108();
+    ins_108();
+    ins_2(3);
+MBoss2_at_1544:
+    ins_1();
+}
+
+sub MBossCard1()
+{
+    ins_95();
+    ins_123();
+    ins_124(28);
+    ins_64(0, 0, 0.0f, 0.0f);
+!HL
+!*
+    ins_64(60, 4, 96.0f, 144.0f);
+    ins_75(0.0f, 128.0f, 280.0f, 64.0f);
++60:
++60:
+MBossCard1_640:
+    ins_7([10030.0f], 0.0f);
+    ins_16([10030.0f], [10079.0f]);
+    ins_64(120, 0, [10030.0f], [10080.0f]);
+    ins_2(150);
+MBossCard1_912:
+MBossCard1_980:
+    ins_2(1000);
+MBossCard1_1000:
+    ins_1();
+}
+
+sub MBossCard1At()
+{
+    ins_97(7, 6, 1, 1, 8.0f, 8.0f, 3.1415927f, 0.0f, 0);
+MBossCard1At_540:
+    ins_2(1);
+MBossCard1At_892:
+    ins_1();
+}
+
+sub MBossCard1At2()
+{
+    ins_97(9, 4, 1, 1, 1.0f, 0.0f, 0.0f, 0.0f, 0);
+    ins_2(40);
+MBossCard1At2_400:
+    ins_108();
+    ins_2(1);
+MBossCard1At2_1176:
+    ins_1();
+}
+
+sub MBossCard1At2b()
+{
+    ins_97(9, 4, 1, 1, 1.0f, 0.0f, 0.0f, 0.0f, 0);
+    ins_2(40);
+MBossCard1At2b_400:
+    ins_108();
+    ins_2(1);
+MBossCard1At2b_1176:
+    ins_1();
+}
+
+sub MBossDead()
+{
+    ins_127(-1);
+    ins_80(16);
+    ins_76();
+    ins_123();
+    ins_76();
+    ins_64(0, 0, 0.0f, 0.0f);
+    ins_124(28);
+MBossDead_672:
+MBossDead_728:
+    ins_144(1, 10);
+    ins_144(2, 8);
+    ins_144(10, 1);
+    ins_144(14, 1);
+    ins_131(100000);
+    ins_2(120);
+    ins_127(-1);
+    ins_7([10030.0f], [10079.0f]);
+    ins_15([10030.0f], 64.0f);
+    ins_64(60, 4, [10030.0f], -64.0f);
++60:
+}
+
+sub MBossEscape()
+{
+    ins_123();
+    ins_76();
+    ins_95();
+    ins_131(100000);
+    ins_127(-1);
+    ins_80(16);
+    ins_64(60, 4, 0.0f, -32.0f);
++60:
+}
+
+sub MBoss_at1()
+{
+    ins_2(30);
+    ins_99(8, 3, 1, 1, 1.0f, 1.0f, [-9998.0f], 0.0f, 0);
+    ins_111(1, 0, 4096, 1, -999999, -999999.0f, -999999.0f);
+MBoss_at1_812:
+MBoss_at1_960:
+MBoss_at1_1024:
+    ins_108();
+    ins_2(10);
+    ins_108();
+    ins_2(10);
+MBoss_at1_1304:
+    ins_2(30);
+    ins_1();
+}
+
+sub MainBossDebug()
+{
++10:
++60:
+    ins_1();
+    ins_1();
+}
+
+sub MainMBossDebug()
+{
+MainMBossDebug_128:
+    ins_2(1000);
+MainMBossDebug_148:
+    ins_1();
+}
+
+sub MainMsgDebug()
+{
++120:
++1:
++60:
+MainMsgDebug_168:
++4000:
+MainMsgDebug_184:
+    ins_1();
+}
+
+sub MainSub00()
+{
+MainSub00_100:
+    ins_2(20);
+    ins_2(20);
+MainSub00_420:
+MainSub00_528:
+    ins_2(10);
+    ins_2(10);
+MainSub00_848:
+MainSub00_956:
+    ins_2(10);
+    ins_2(10);
+MainSub00_1276:
+    ins_1();
+}
+
+sub MainSub01()
+{
+    ins_1();
+}
+
+sub MainSub02()
+{
+MainSub02_100:
+    ins_2(20);
+MainSub02_260:
+    ins_1();
+}
+
+sub MainSub02b()
+{
+MainSub02b_100:
+    ins_2(20);
+MainSub02b_260:
+    ins_1();
+}
+
+sub MainSub03()
+{
+    ins_1();
+}
+
+sub MainSub04()
+{
+MainSub04_100:
+    ins_2(10);
+    ins_2(10);
+MainSub04_236:
+    ins_1();
+}
+
+sub MainSub05()
+{
+MainSub05_100:
+    ins_2(10);
+    ins_2(10);
+MainSub05_236:
+    ins_1();
+}
+
+sub MainSub06()
+{
+    ins_2(60);
+    ins_1();
+}
+
+sub MainSub07()
+{
+MainSub07_100:
+    ins_2(10);
+    ins_2(10);
+MainSub07_236:
+    ins_2(10);
+    ins_1();
+}
+
+sub MainSub07b()
+{
+MainSub07b_100:
+    ins_2(10);
+    ins_2(10);
+MainSub07b_236:
+    ins_2(10);
+    ins_1();
+}
+
+sub MainSub08()
+{
+MainSub08_100:
+    ins_2(20);
+MainSub08_168:
+    ins_1();
+}
+
+sub MainSub08b()
+{
+MainSub08b_100:
+    ins_2(20);
+MainSub08b_168:
+    ins_1();
+}
+
+sub MainSub09()
+{
+    ins_2(60);
+    ins_2(200);
+    ins_1();
+}
+
+sub MainSub10()
+{
+MainSub10_100:
+    ins_2(120);
+MainSub10_168:
+    ins_1();
+}
+
+sub MainSub10b()
+{
+    ins_2(60);
+MainSub10b_120:
+    ins_2(120);
+MainSub10b_188:
+    ins_1();
+}
+
+sub MainSub11()
+{
+MainSub11_100:
+    ins_2(20);
+    ins_2(20);
+MainSub11_424:
+MainSub11_532:
+    ins_2(10);
+    ins_2(10);
+MainSub11_856:
+MainSub11_964:
+    ins_2(10);
+    ins_2(10);
+MainSub11_1284:
+    ins_1();
+}
+
+sub MainSub12()
+{
+    ins_2(100);
+    ins_2(90);
+    ins_2(90);
+    ins_2(80);
+    ins_2(80);
+    ins_2(60);
+    ins_2(60);
+    ins_1();
+}
+
+sub MainSub13()
+{
+MainSub13_100:
+    ins_2(10);
+    ins_2(10);
+MainSub13_424:
+MainSub13_532:
+    ins_2(6);
+    ins_2(6);
+MainSub13_856:
+MainSub13_964:
+    ins_2(4);
+    ins_2(4);
+MainSub13_1284:
+    ins_1();
+}
+
+sub MapleEnemy()
+{
+    ins_80(32);
+    ins_2(740);
+MapleEnemy_76:
++3:
+}
+
+sub RGirl00()
+{
+}
+
+sub RGirl00_at()
+{
+    ins_6([10000], [10000]);
+    ins_1();
+RGirl00_at_348:
+    ins_96(3, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.3926991f, 0);
+    ins_108();
+    ins_1();
+}
+
+sub RGirl00b()
+{
+}
+
+sub RGirl02()
+{
+}
+
+sub RGirl02_at()
+{
+    ins_97(7, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.3926991f, 0);
+    ins_6([10008], [-10000]);
+    ins_14([10008], 60);
+    ins_2([10008]);
+RGirl02_at_460:
+    ins_108();
+    ins_2([10001]);
+RGirl02_at_620:
+    ins_1();
+}
+
+sub RGirl04()
+{
+}
+
+sub RGirl04_at()
+{
+    ins_96(3, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.049087387f, 0);
+RGirl04_at_600:
+    ins_108();
+    ins_2([10001]);
+RGirl04_at_724:
+    ins_1();
+}
+
+sub RGirl05()
+{
+}
+
+sub RGirl05_at()
+{
+    ins_96(3, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.049087387f, 0);
+RGirl05_at_600:
+    ins_108();
+    ins_2([10001]);
+RGirl05_at_724:
+    ins_1();
+}
+
+sub RGirl07()
+{
+}
+
+sub RGirl07_at()
+{
+    ins_96(3, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.049087387f, 0);
+    ins_6([10008], [-10000]);
+    ins_14([10008], 60);
+    ins_10([10008], 120);
+    ins_2([10008]);
+RGirl07_at_496:
+    ins_108();
+    ins_2([10001]);
+RGirl07_at_620:
+    ins_1();
+}
+
+sub RGirl10()
+{
+}
+
+sub RGirl10_at()
+{
+    ins_6([10000], [10000]);
+    ins_1();
+RGirl10_at_276:
+    ins_96(3, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.032724924f, 0);
+    ins_108();
+    ins_1();
+}
+
+sub RGirl10b()
+{
+}
+
+sub ShipShadow()
+{
+    ins_80(143);
+    ins_2(1460);
+}
+
+sub ShipShadow2()
+{
+    ins_80(143);
+    ins_2(1360);
+}
+
+sub ShipShadowEnemy()
+{
+    ins_2(120);
+    ins_2(3200);
+    ins_1();
+}
+
+sub YGirl00()
+{
+}
+
+sub YGirl02()
+{
+}
+
+sub YGirl04()
+{
+}
+
+sub YGirl05()
+{
+}
+
+sub YGirl07()
+{
+}
+
+sub YGirl10()
+{
+}
+
+sub main()
+{
+    ins_80(32);
++60:
+    ins_2(300);
+    ins_2(590);
+    ins_2(300);
+    ins_2(200);
+    ins_2(300);
+    ins_2(160);
+    ins_2(400);
+    ins_2(160);
+    ins_2(500);
+    ins_2(400);
+    ins_2(500);
+    ins_2(700);
+    ins_2(500);
++60:
+main_1268:
+    ins_2(1000);
+main_1288:
+}

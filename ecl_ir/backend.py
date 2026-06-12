@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import re
-from .arg_adapter import adapt_args_for_op_key
+from .arg_adapter import adapt_args_for_op_key, adapt_values_for_generation
 from .model import BulletEmitter
 from .op_ir import target_opcode_for_op_key
 from .reference import is_opcode_supported, validate_opcode_args
-from .semantics import encode_bullet_shape, encode_spread_style, remap_raw_arg_by_semantic, th12_double_flower_pair
+from .semantics import encode_bullet_shape, encode_spread_style, generation_for_game, remap_raw_arg_by_semantic, th12_double_flower_pair
 
 INT_SENTINEL = "-999999"
 FLOAT_SENTINEL = "-999999.0f"
@@ -135,13 +135,170 @@ def normalize_target_args_for_op_key(op_key: str, target: str, args: list[str]) 
     return normalized
 
 
+
+UNSAFE_TARGET_OPCODES: dict[str, set[int]] = {
+    # thtk12/thecl.exe -c 8 has no usable format entry for these despite names in th08.eclm.
+    "th08": {143, 162},
+}
+
+
+def target_opcode_is_safe(target: str, opcode: int) -> bool:
+    return int(opcode) not in UNSAFE_TARGET_OPCODES.get(target, set())
+
+
+def compile_lossy_semantic_fallback(event: dict[str, object], target: str) -> str | None:
+    op_key = str(event.get("op_key") or "")
+    args = ", ".join(str(arg) for arg in event.get("args", []))
+    if op_key == "flow.debug22":
+        return f"// dropped debug-only semantic op for {target}: debug22({args})"
+    if op_key in {
+        "unit.unknown569", "raw.spec1", "raw.spec2", "laser.debug700", "movement.unknown444", "movement.spell_ex",
+        "enemy.create_legacy270", "enemy.create_maple", "anm.reset", "bullet.distance",
+        "raw.eff_create", "raw.eff_create_angle", "raw.card_eff", "raw.timer_threshold", "raw.ins_129",
+        "raw.et_on_auto_delay", "flow.familiar_create", "flow.familiar_create_f", "flow.familiar_create_a",
+        "flow.trail_familiar_set", "anm.play_attack", "movement.move_rand_time", "flow.ins_79",
+        "anm.set_ex", "anm.set_boss_ex", "movement.move_circle_change", "movement.move_accel", "movement.move_curve",
+        "raw.et_delay", "raw.et_on_auto", "raw.set_life_bar", "raw.ins_153", "raw.timer_set", "raw.set_lives",
+        "raw.life_threshold", "flow.float_time", "flow.math_circle_pos", "flow.inc", "raw.ins_173", "raw.ins_184",
+        "flow.math_angle", "flow.math_distance", "flow.et_protect_range", "raw.val_set", "raw.player_nullify", "anm.familiar",
+    }:
+        return f"// dropped source-specific semantic op for {target}: {op_key}({args})"
+    if target in STACK_VM_TARGETS and op_key == "flow.fset_rand_sign":
+        return f"// approximated random-sign float assignment unavailable in target stack VM: {op_key}({args})"
+    if target in {"th13", "th14", "th15", "th16", "th17", "th18"} and op_key == "unit.death_wait":
+        return "// approximated deathWait on target without deathWait opcode: no-op"
+    if target in {"th10", "th11", "th12"} and op_key == "unit.boss_wait":
+        return "// approximated bossWait on target without bossWait opcode: no-op"
+    if op_key == "boss.set_interrupt" and str(event.get("args", [""])[0]) == "-1":
+        return f"// dropped disabled interrupt for {target}: setInterrupt(-1)"
+    if op_key == "flow.call_async" and str(event.get("args", ["", ""])[-1]) == "-1":
+        return f"// dropped disabled async call for {target}: callAsync(..., -1)"
+    if target in {"th10", "th11"} and op_key in {
+        "anm.on_et", "anm.rotate", "unit.z_index", "unit.hit_sound", "unit.fog",
+        "unit.func_set", "movement.move_set_mirror", "unit.call_std", "unit.stage_logo",
+        "laser.timing", "laser.angle",
+    }:
+        return f"// dropped unsupported presentation/runtime helper for {target}: {op_key}({args})"
+    if target in {"th12", "th13", "th14", "th15", "th16", "th17", "th18"} and op_key == "laser.on_aimed":
+        return "// approximated old aimed laser macro on target laser manager: no-op setup placeholder"
+    return None
+
+
+STACK_VM_TARGETS = {"th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"}
+
+
+def stack_push(value: str) -> str:
+    return f"{value};"
+
+
+def compile_th08_vm_arithmetic(event: dict[str, object], target: str) -> str | None:
+    if target not in STACK_VM_TARGETS or str(event.get("source_game") or "") not in {"th06", "th07", "th08"}:
+        return None
+    op_key = str(event.get("op_key") or "")
+    args = [str(arg) for arg in event.get("args", [])]
+    args = adapt_values_for_generation(args, generation_for_game(str(event.get("source_game") or "")), generation_for_game(target))
+    binary_ops = {
+        "flow.iadd": (50, 43), "flow.isub": (52, 43), "flow.imul": (54, 43), "flow.idiv": (56, 43), "flow.imod": (58, 43),
+        "flow.fadd": (51, 45), "flow.fsub": (53, 45), "flow.fmul": (55, 45), "flow.fdiv": (57, 45), "flow.fmod": (58, 45),
+    }
+    set_binary_ops = {
+        "flow.iset_add": (50, 43), "flow.iset_sub": (52, 43), "flow.iset_mul": (54, 43), "flow.iset_div": (56, 43), "flow.iset_mod": (58, 43),
+        "flow.fset_add": (51, 45), "flow.fset_sub": (53, 45), "flow.fset_mul": (55, 45), "flow.fset_div": (57, 45), "flow.fset_mod": (58, 45),
+    }
+    unary_float_ops = {"flow.fset_sin": 79, "flow.fset_cos": 80}
+    if op_key == "flow.iset" and len(args) == 2:
+        return "\n".join([stack_push(args[1]), f"ins_43({args[0]});"])
+    if op_key == "flow.fset" and len(args) == 2:
+        return "\n".join([stack_push(args[1]), f"ins_45({args[0]});"])
+    if op_key in binary_ops and len(args) == 2:
+        op, setter = binary_ops[op_key]
+        return "\n".join([stack_push(args[0]), stack_push(args[1]), f"ins_{op}();", f"ins_{setter}({args[0]});"])
+    if op_key in set_binary_ops and len(args) == 3:
+        op, setter = set_binary_ops[op_key]
+        return "\n".join([stack_push(args[1]), stack_push(args[2]), f"ins_{op}();", f"ins_{setter}({args[0]});"])
+    if op_key in unary_float_ops and len(args) == 2:
+        return "\n".join([stack_push(args[1]), f"ins_{unary_float_ops[op_key]}();", f"ins_45({args[0]});"])
+    if op_key == "flow.norm_rad" and len(args) == 1:
+        return f"ins_82({args[0]});"
+    return None
+
+
+def compile_th08_movement_alias(event: dict[str, object], target: str) -> str | None:
+    if target not in STACK_VM_TARGETS or str(event.get("source_game") or "") not in {"th06", "th07", "th08"}:
+        return None
+    op_key = str(event.get("op_key") or "")
+    args = adapt_values_for_generation([str(arg) for arg in event.get("args", [])], generation_for_game(str(event.get("source_game") or "")), generation_for_game(target))
+    if op_key == "movement.move_dir" and len(args) == 2:
+        opcode = target_opcode_for_op_key("movement.velocity.set", target)
+        if opcode is not None and is_opcode_supported(target, opcode):
+            return f"ins_{opcode}({args[0]}, {args[1]});"
+    if op_key == "movement.move_dir_time" and len(args) == 4:
+        opcode = target_opcode_for_op_key("movement.velocity.tween", target)
+        if opcode is not None and is_opcode_supported(target, opcode):
+            return f"ins_{opcode}({args[0]}, {args[1]}, {args[2]}, {args[3]});"
+    return None
+
+
+def compile_th08_conditional_jump(event: dict[str, object], target: str) -> str | None:
+    if target not in STACK_VM_TARGETS or str(event.get("source_game") or "") not in {"th06", "th07", "th08"}:
+        return None
+    op_key = str(event.get("op_key") or "")
+    args = adapt_values_for_generation([str(arg) for arg in event.get("args", [])], generation_for_game(str(event.get("source_game") or "")), generation_for_game(target))
+    compare_ops = {
+        "flow.jmp_equ": 59, "flow.jmp_equ_f": 60,
+        "flow.jmp_neq": 61, "flow.jmp_neq_f": 62,
+        "flow.jmp_lss": 63, "flow.jmp_lss_f": 64,
+        "flow.jmp_leq": 65, "flow.jmp_leq_f": 66,
+        "flow.jmp_gre": 67, "flow.jmp_gre_f": 68,
+        "flow.jmp_geq": 69, "flow.jmp_geq_f": 70,
+    }
+    if op_key in compare_ops and len(args) == 4:
+        jump_opcode = target_opcode_for_op_key("flow.jmp_neq", target)
+        if jump_opcode is None or not is_opcode_supported(target, jump_opcode):
+            return None
+        return "\n".join([stack_push(args[0]), stack_push(args[1]), f"ins_{compare_ops[op_key]}();", f"ins_{jump_opcode}({args[3]}, {args[2]});"])
+    if op_key == "flow.loop" and len(args) == 3:
+        jump_opcode = target_opcode_for_op_key("flow.jmp_neq", target)
+        if jump_opcode is None or not is_opcode_supported(target, jump_opcode):
+            return None
+        return "\n".join([f"ins_78({args[2]});", f"ins_{jump_opcode}({args[1]}, {args[0]});"])
+    return None
+
+
+def compile_th08_anm_alias(event: dict[str, object], target: str) -> str | None:
+    if target not in STACK_VM_TARGETS or str(event.get("source_game") or "") not in {"th06", "th07", "th08"}:
+        return None
+    op_key = str(event.get("op_key") or "")
+    args = [str(arg) for arg in event.get("args", [])]
+    select_opcode = target_opcode_for_op_key("anm.select", target)
+    main_opcode = target_opcode_for_op_key("anm.set_main", target)
+    sprite_opcode = target_opcode_for_op_key("anm.set_sprite", target)
+    if op_key == "anm.set" and len(args) == 1 and select_opcode and main_opcode and is_opcode_supported(target, select_opcode) and is_opcode_supported(target, main_opcode):
+        return "\n".join([f"ins_{select_opcode}(0);", f"ins_{main_opcode}(0, {args[0]});"])
+    if op_key == "anm.set_slot" and len(args) == 2 and sprite_opcode and is_opcode_supported(target, sprite_opcode):
+        return f"ins_{sprite_opcode}({args[0]}, {args[1]});"
+    if op_key in {"anm.set_ex", "anm.set_boss_ex"}:
+        return compile_lossy_semantic_fallback(event, target) or f"// dropped source-specific semantic op for {target}: {op_key}({', '.join(args)})"
+    return None
+
+
 def compile_ir_op_event(event: dict[str, object], target: str, comment: str | None = None) -> str | None:
     op_key = str(event.get("op_key") or "")
     if not op_key:
         return None
+    if op_key == "flow.call_async" and str(event.get("source_game") or "") in {"th06", "th07", "th08"} and str(event.get("args", ["", ""])[-1]) == "-1":
+        return f"// dropped disabled async call for {target}: callAsync(..., -1)"
+    if lowered := compile_th08_vm_arithmetic(event, target):
+        return lowered
+    if lowered := compile_th08_movement_alias(event, target):
+        return lowered
+    if lowered := compile_th08_conditional_jump(event, target):
+        return lowered
+    if lowered := compile_th08_anm_alias(event, target):
+        return lowered
     opcode = target_opcode_for_op_key(op_key, target)
-    if opcode is None or not is_opcode_supported(target, opcode):
-        return None
+    if opcode is None or not is_opcode_supported(target, opcode) or not target_opcode_is_safe(target, opcode):
+        return compile_lossy_semantic_fallback(event, target)
     source_game = str(event.get("source_game") or "")
     source_opcode = int(event.get("source_opcode") or -1)
     args = [str(arg) for arg in event.get("args", [])]
@@ -153,7 +310,7 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
     args = normalize_target_args_for_op_key(op_key, target, adapted_args)
     error = validate_opcode_args(target, opcode, args)
     if error:
-        return None
+        return compile_lossy_semantic_fallback(event, target)
     line = emit_checked_instruction(target, opcode, args)
     if comment:
         return f"// {comment}: {op_key} -> ins_{opcode}\n{line}"

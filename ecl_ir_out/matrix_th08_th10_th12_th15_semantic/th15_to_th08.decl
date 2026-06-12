@@ -1,0 +1,689 @@
+sub GirlA01()
+{
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
++30:
++60:
+GirlA01_256:
++1000:
+GirlA01_276:
+    ins_1();
+}
+
+sub GirlA01_at()
+{
+!E
++90:
+!N
++90:
+!H
++30:
+!L
++30:
+!*
+    ins_96(4, 6, 1, 1, 1.0f, 1.5f, 0.0f, 0.05235988f, 0);
+GirlA01_at_540:
+GirlA01_at_600:
+    ins_108();
+!E
++30:
+!N
++30:
+!H
++20:
+!L
++5:
+!*
+GirlA01_at_720:
+    ins_1();
+}
+
+sub GirlA01_at_l()
+{
++30:
+    ins_98(7, 4, 1, 1, 1.0f, 1.0f, 0.0f, 0.05235988f, 0);
+GirlA01_at_l_372:
+    ins_108();
++30:
+GirlA01_at_l_412:
+    ins_1();
+}
+
+sub GirlA02()
+{
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
++30:
++60:
+GirlA02_236:
++1000:
+GirlA02_256:
+    ins_1();
+}
+
+sub GirlA02_at()
+{
+!E
++90:
+!N
++90:
+!H
++30:
+!L
++30:
+!*
+    ins_96(4, 6, 1, 1, 1.0f, 1.5f, 0.0f, 0.05235988f, 0);
+GirlA02_at_540:
+GirlA02_at_600:
+    ins_108();
+!E
++30:
+!N
++30:
+!H
++20:
+!L
++5:
+!*
+GirlA02_at_720:
+    ins_1();
+}
+
+sub GirlA02_at_l()
+{
++30:
+    ins_98(7, 4, 1, 1, 1.0f, 1.0f, 0.0f, 0.05235988f, 0);
+GirlA02_at_l_372:
+    ins_108();
++30:
+GirlA02_at_l_412:
+    ins_1();
+}
+
+sub GirlA03()
+{
+    ins_78(24.0f, 24.0f);
+    ins_77(16.0f, 16.0f);
++60:
++120:
+GirlA03_232:
++1000:
+GirlA03_252:
+    ins_1();
+}
+
+sub GirlA03_at()
+{
+!E
++180:
+!N
++90:
+!H
++30:
+!L
++30:
+!*
+    ins_96(4, 6, 3, 1, 1.0f, 1.5f, 0.0f, 1.0471976f, 0);
+GirlA03_at_480:
+    ins_108();
+!E
++60:
+!N
++60:
+!H
++60:
+!L
++20:
+!*
+GirlA03_at_600:
+    ins_1();
+}
+
+sub GirlB01()
+{
+    ins_144(1, 2);
+    ins_144(2, 1);
+    ins_78(32.0f, 32.0f);
+    ins_77(24.0f, 24.0f);
++180:
++60:
+GirlB01_428:
++1000:
+GirlB01_448:
+}
+
+sub GirlB01_at()
+{
++60:
+    ins_97(8, 6, 1, 1, 1.0f, 1.0f, 1.5707964f, 0.34906584f, 0);
+    ins_110(8.0f, 0.0f);
+GirlB01_at_488:
+    ins_108();
+    ins_108();
+!E
++20:
+!N
++20:
+!H
++10:
+!L
++10:
+!*
+GirlB01_at_628:
+    ins_1();
+}
+
+sub GirlB02()
+{
+    ins_78(28.0f, 28.0f);
+    ins_77(16.0f, 16.0f);
+    ins_144(1, 1);
+    ins_144(2, 2);
++10:
++140:
++60:
+GirlB02_424:
++1000:
+GirlB02_444:
+}
+
+sub GirlB02_at()
+{
+    ins_98(5, 2, 1, 1, 1.0f, 1.0f, [-9998.0f], 0.0f, 0);
++60:
+    ins_108();
+GirlB02_at_668:
+    ins_108();
+GirlB02_at_1088:
+    ins_1();
+}
+
+sub GirlBlueA01()
+{
+}
+
+sub GirlBlueA01e()
+{
+}
+
+sub GirlBlueA02()
+{
+}
+
+sub GirlBlueA02e()
+{
+}
+
+sub GirlBlueA03()
+{
+}
+
+sub GirlC01()
+{
+    ins_144(1, 1);
+    ins_144(2, 2);
+    ins_78(32.0f, 32.0f);
+    ins_77(24.0f, 24.0f);
+GirlC01_320:
++60:
+GirlC01_452:
++1000:
+GirlC01_472:
+}
+
+sub GirlC01_at()
+{
++60:
+    ins_97(8, 6, 1, 1, 0.0f, 1.0f, 1.5707964f, 0.12217305f, 0);
+GirlC01_at_396:
+GirlC01_at_492:
+    ins_108();
+!E
++4:
+!N
++4:
+!H
++2:
+!L
++1:
+!*
+GirlC01_at_716:
+!E
++60:
+!N
++60:
+!H
++30:
+!L
++20:
+!*
+GirlC01_at_860:
+    ins_1();
+}
+
+sub GirlD01()
+{
+    ins_144(1, 2);
+    ins_144(2, 4);
+    ins_78(32.0f, 32.0f);
+    ins_77(24.0f, 24.0f);
++80:
++60:
+GirlD01_420:
++1000:
+GirlD01_440:
+}
+
+sub GirlD01_at()
+{
++60:
+    ins_97(7, 4, 10, 6, 1.6f, 1.6f, 0.0f, 0.05235988f, 0);
+GirlD01_at_460:
+GirlD01_at_520:
+    ins_108();
+!E
++120:
+!N
++120:
+!H
++60:
+!L
++30:
+!*
+GirlD01_at_640:
+    ins_1();
+}
+
+sub GirlD01_at2()
+{
++60:
+    ins_97(18, 3, 1, 1, 0.0f, 1.0f, 0.0f, 0.08726646f, 0);
+GirlD01_at2_360:
+GirlD01_at2_604:
+    ins_108();
++3:
+GirlD01_at2_812:
++3:
+GirlD01_at2_908:
+GirlD01_at2_952:
+!E
++180:
+!N
++180:
+!H
++130:
+!L
++90:
+!*
+GirlD01_at2_1096:
+    ins_1();
+}
+
+sub GirlD02()
+{
+    ins_144(1, 2);
+    ins_144(2, 4);
+    ins_78(32.0f, 32.0f);
+    ins_77(24.0f, 24.0f);
++240:
++60:
+GirlD02_420:
++1000:
+GirlD02_440:
+}
+
+sub GirlD02_at()
+{
++60:
+    ins_97(7, 2, 8, 6, 1.6f, 1.6f, 0.0f, 0.05235988f, 0);
+GirlD02_at_476:
+    ins_108();
+!E
++120:
+!N
++120:
+!H
++60:
+!L
++30:
+!*
+GirlD02_at_596:
+    ins_1();
+}
+
+sub GirlD02_at2()
+{
++60:
+    ins_97(18, 3, 1, 1, 0.0f, 1.0f, 0.0f, 0.08726646f, 0);
+GirlD02_at2_360:
+GirlD02_at2_604:
+    ins_108();
++3:
+GirlD02_at2_812:
++3:
+GirlD02_at2_908:
+GirlD02_at2_952:
+!E
++180:
+!N
++180:
+!H
++130:
+!L
++90:
+!*
+GirlD02_at2_1096:
+    ins_1();
+}
+
+sub GirlRedA01()
+{
+}
+
+sub GirlRedA01e()
+{
+}
+
+sub GirlRedA02()
+{
+}
+
+sub GirlRedA02e()
+{
+}
+
+sub GirlRedA03()
+{
+}
+
+sub LogoEnemy()
+{
++1410:
+    ins_1();
+}
+
+sub MainBoss()
+{
++1:
++60:
+    ins_1();
+    ins_1();
+}
+
+sub MainBossDebug()
+{
++10:
+    ins_1();
+}
+
+sub MainBossDebug2()
+{
++10:
+    ins_1();
+}
+
+sub MainFront()
+{
++320:
++230:
++330:
++135:
++120:
+    ins_1();
+}
+
+sub MainLatter()
+{
++61:
+    ins_1();
+}
+
+sub MainLatter2()
+{
++61:
+    ins_1();
+}
+
+sub MainLatter2B()
+{
++60:
+    ins_1();
+}
+
+sub MainLatterB()
+{
++60:
+    ins_1();
+}
+
+sub MainMBossDebug()
+{
+MainMBossDebug_128:
++1000:
+MainMBossDebug_148:
+    ins_1();
+}
+
+sub MainMsgDebug()
+{
++10:
++1:
++60:
+MainMsgDebug_168:
++4000:
+MainMsgDebug_184:
+    ins_1();
+}
+
+sub MainSub00()
+{
+MainSub00_140:
++30:
+MainSub00_432:
+MainSub00_580:
++30:
+MainSub00_872:
++100:
+MainSub00_1000:
++30:
+!NHL
+!*
+!E
+!*
++30:
+MainSub00_1708:
+MainSub00_1816:
+    ins_1();
+}
+
+sub MainSub01()
+{
++60:
++60:
+    ins_1();
+}
+
+sub MainSub01b()
+{
+MainSub01b_140:
++30:
+MainSub01b_376:
+    ins_1();
+}
+
+sub MainSub02()
+{
+MainSub02_140:
++10:
++10:
+MainSub02_540:
+    ins_1();
+}
+
+sub MainSub03()
+{
++60:
++80:
++20:
+    ins_1();
+}
+
+sub MainSub04()
+{
+MainSub04_100:
+MainSub04_320:
++80:
+MainSub04_560:
++80:
+MainSub04_836:
++80:
+MainSub04_1112:
++80:
+MainSub04_1132:
+MainSub04_1396:
++19:
+    ins_1();
+}
+
+sub MainSub05()
+{
+MainSub05_140:
++30:
+MainSub05_376:
+MainSub05_524:
++30:
+MainSub05_760:
+MainSub05_944:
++30:
+MainSub05_1180:
+MainSub05_1396:
++30:
+MainSub05_1632:
++60:
+    ins_1();
+}
+
+sub MainSub05b()
+{
++60:
++120:
++60:
+    ins_1();
+}
+
+sub MainSub06()
+{
+MainSub06_100:
+MainSub06_320:
++80:
+MainSub06_560:
++80:
+MainSub06_836:
++80:
+MainSub06_1112:
++80:
+MainSub06_1132:
+MainSub06_1396:
++19:
+    ins_1();
+}
+
+sub MainSub07()
+{
++60:
++300:
++60:
+    ins_1();
+}
+
+sub MapleEnemy()
+{
+    ins_80(32);
+MapleEnemy_120:
++4:
+MapleEnemy_164:
+MapleEnemy_232:
++5:
+MapleEnemy_276:
+}
+
+sub Phantom01()
+{
+    ins_78(28.0f, 28.0f);
+    ins_77(16.0f, 16.0f);
+    ins_80(12);
++60:
+    ins_81(12);
+Phantom01_364:
++1000:
+Phantom01_384:
+}
+
+sub Phantom01_at()
+{
+    ins_96(5, 4, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+Phantom01_at_372:
++60:
+    ins_108();
+Phantom01_at_504:
+    ins_1();
+}
+
+sub Phantom02()
+{
+    ins_78(28.0f, 28.0f);
+    ins_77(16.0f, 16.0f);
+    ins_80(12);
++140:
++90:
+Phantom02_464:
++1000:
+Phantom02_484:
+}
+
+sub Phantom02_at()
+{
+    ins_96(7, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.017453292f, 0);
++120:
+    ins_108();
+    ins_1();
+}
+
+sub Phantom02b()
+{
+    ins_124(50);
+    ins_78(28.0f, 28.0f);
+    ins_77(16.0f, 16.0f);
+    ins_80(12);
+    ins_144(1, 1);
++60:
+    ins_81(12);
+Phantom02b_500:
++1000:
+Phantom02b_520:
+}
+
+sub main()
+{
+    ins_80(32);
++1:
+main_316:
+main_352:
+main_376:
++1000:
+main_396:
+main_440:
++60:
+    ins_95();
++2:
++160:
++120:
++2:
++160:
++300:
+    ins_95();
++160:
+main_1244:
++1000:
+main_1264:
+}
