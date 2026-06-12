@@ -1,0 +1,2 @@
+thecl.exe:th062/ecl_ir_out/matrix_th08_th10_th12_th15_retry/th10_stage1_to_th08.decl:12,10: stack variable declaration is not allowed in version: 8
+0160:fixme:kernelbase:AppPolicyGetProcessTerminationMethod FFFFFFFA, 0022CAF4

@@ -6,10 +6,11 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from .backend import choose_difficulty, compile_bullet_emitter, compile_object, first_difficulty_group, normalize_difficulty, th12_aux_emitter_id, wrap_ranked_lines
+from .backend import choose_difficulty, compile_bullet_emitter, compile_ir_op_event, compile_object, first_difficulty_group, normalize_difficulty, th12_aux_emitter_id, wrap_ranked_lines
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
-from .semantics import generation_for_game, opcode_map_for, remap_raw_arg_by_semantic, unsupported_opcode_reason
+from .reference import validate_opcode_args
+from .semantics import generation_for_game
 
 
 def load_objects(path: str):
@@ -56,12 +57,14 @@ def emit_transpile(program, objects, target: str) -> str:
     lines.append("// whole-file lowering is a structured draft; verify target-game scheduling and resources")
     resources = apply_resource_plans(dict(program.resources), objects, target)
     for resource, entries in resources.items():
+        if not should_emit_resource(resource, target):
+            continue
         quoted = "; ".join(f'"{entry}"' for entry in entries)
         lines.append(f"{resource} {{ {quoted}; }}")
-    if program.top_level:
+    top_level_lines = target_top_level_lines(program.top_level, target)
+    if top_level_lines:
         lines.append("// top-level declarations")
-        for stmt in program.top_level:
-            lines.append(stmt.raw.strip())
+        lines.extend(top_level_lines)
 
     by_function: dict[str, list[object]] = {}
     for obj in objects:
@@ -80,7 +83,7 @@ def emit_transpile(program, objects, target: str) -> str:
             continue
         params = function_params.get(function, "")
         lines.append("")
-        lines.append(f"void {function}({params})")
+        lines.append(target_function_header(function, params, target))
         lines.append("{")
         body_lines = emit_function_body(function_objects, target)
         if params:
@@ -90,6 +93,40 @@ def emit_transpile(program, objects, target: str) -> str:
     return "\n".join(lines)
 
 
+
+
+
+
+def target_function_header(function: str, params: str, target: str) -> str:
+    if generation_for_game(target) == "th06_th08":
+        return f"sub {function}()"
+    return f"void {function}({params})"
+
+
+def target_top_level_lines(statements: list[object], target: str) -> list[str]:
+    lines: list[str] = []
+    skip_timeline_depth = 0
+    keep_old_timeline = generation_for_game(target) == "th06_th08"
+    for stmt in statements:
+        raw = getattr(stmt, "raw", "").strip()
+        if not raw:
+            continue
+        if skip_timeline_depth:
+            skip_timeline_depth += raw.count("{")
+            skip_timeline_depth -= raw.count("}")
+            if skip_timeline_depth <= 0:
+                skip_timeline_depth = 0
+            continue
+        if raw.startswith("timeline "):
+            if keep_old_timeline:
+                lines.append(raw)
+            else:
+                skip_timeline_depth = max(1, raw.count("{") - raw.count("}"))
+            continue
+        if keep_old_timeline:
+            continue
+        lines.append(raw)
+    return lines
 
 
 def drop_redeclared_param_vars(lines: list[str], params: str) -> list[str]:
@@ -109,6 +146,16 @@ def drop_redeclared_param_vars(lines: list[str], params: str) -> list[str]:
             out.append(f"{indent}var {', '.join(kept)};")
     return out
 
+
+
+
+def should_emit_resource(resource: str, target: str) -> bool:
+    target_generation = generation_for_game(target)
+    if target_generation == "th06_th08":
+        return resource == "timeline"
+    if resource == "timeline":
+        return False
+    return True
 
 
 def apply_resource_plans(resources: dict[str, list[str]], objects: list[object], target: str) -> dict[str, list[str]]:
@@ -374,10 +421,6 @@ def lower_bullet_fire_opcode(opcode: int, args: list[object], source_game: str, 
     return None
 
 
-def remap_raw_named_args(source_opcode: int, target_opcode: int, args: list[str], source_game: str, target: str) -> list[str]:
-    return remap_raw_arg_by_semantic(source_game, target, source_opcode, target_opcode, args)
-
-
 def literal_time_value(value: str) -> str:
     value = str(value).strip()
     if value.isdigit():
@@ -433,8 +476,6 @@ def emit_ranked_raw_instruction(opcode: int, args: list[str], difficulty_literal
             ranked_args.append(ranked_arg)
             any_replaced = any_replaced or replaced
         if any_replaced:
-            if source_opcode is not None:
-                ranked_args = remap_raw_named_args(source_opcode, opcode, ranked_args, source_game, target)
             lines.append(f"    !{rank}")
             lines.append(f"    ins_{opcode}({', '.join(ranked_args)});")
     if not lines:
@@ -459,34 +500,28 @@ def emit_ranked_text_from_literals(text: str, difficulty_literals: object) -> li
     return lines
 
 
-def lower_raw_instruction_event(opcode: int, args: list[object], text: str, source_game: str, target: str, difficulty_literals: object = None) -> list[str]:
-    raw_map = opcode_map_for(source_game, target, opcode)
-    if raw_map:
-        mapped = raw_map.target_opcode
-        if raw_map.arg_order is None:
-            mapped_args = [str(arg) for arg in args]
-            mapping_label = "semantic opcode fallback"
-        else:
-            mapped_args = [str(args[index]) for index in raw_map.arg_order if index < len(args)]
-            mapping_label = "semantic opcode reorder"
-        mapped_args = remap_raw_named_args(opcode, mapped, mapped_args, source_game, target)
-        ranked = emit_ranked_raw_instruction(mapped, mapped_args, difficulty_literals, opcode, source_game, target)
-        semantic_note = f" semantic={raw_map.semantic}" if raw_map.semantic else ""
-        if ranked:
-            return [f"    // {mapping_label} {source_game}->{target}: ins_{opcode} -> ins_{mapped};{semantic_note}; ranked args from source difficulty literals", *ranked]
+def lower_raw_instruction_event(opcode: int, args: list[object], text: str, source_game: str, target: str, difficulty_literals: object = None, ir_op: dict[str, object] | None = None) -> list[str]:
+    if ir_op:
+        semantic_line = compile_ir_op_event(ir_op, target)
+        if semantic_line:
+            rendered = [line if line.startswith("    ") else f"    {line}" for line in semantic_line.splitlines()]
+            first_instruction = next((line.strip() for line in rendered if line.strip().startswith("ins_")), "")
+            match = re.match(r"ins_(\d+)\((.*)\);", first_instruction)
+            if match:
+                mapped = int(match.group(1))
+                mapped_args = [part.strip() for part in match.group(2).split(",")] if match.group(2).strip() else []
+                ranked = emit_ranked_raw_instruction(mapped, mapped_args, difficulty_literals)
+                if ranked:
+                    return [f"    // semantic op_key lowering {source_game}->{target}: {ir_op.get('op_key')} -> ins_{mapped}; ranked args from source difficulty literals", *ranked]
+            return [f"    // semantic op_key lowering {source_game}->{target}: {ir_op.get('op_key')}", *rendered]
         return [
-            f"    // {mapping_label} {source_game}->{target}: ins_{opcode} -> ins_{mapped};{semantic_note}; verify semantics",
-            f"    ins_{mapped}({', '.join(mapped_args)});",
-        ]
-    unsupported_reason = unsupported_opcode_reason(source_game, target, opcode)
-    if unsupported_reason:
-        return [
-            f"    // unsupported {source_game}->{target} opcode ins_{opcode}: {unsupported_reason}",
+            f"    // unsupported semantic op_key for {source_game}->{target}: {ir_op.get('op_key')}",
             f"    // original: {text}",
         ]
-    return []
-
-
+    return [
+        f"    // no semantic op_key; pairwise opcode fallback disabled for {source_game}->{target}: ins_{opcode}",
+        f"    // original: {text}",
+    ]
 
 
 def wrap_event_rank(lines: list[str], event: dict[str, object], target: str) -> list[str]:
@@ -522,6 +557,8 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
                         ranked_lines.append(f"    !{rank}")
                         if target == "th12":
                             ranked_lines.append(f"    ins_83({wait_value});")
+                        elif generation_for_game(target) in {"th06_th08", "th10_th11"}:
+                            ranked_lines.append(f"    +{literal_time_value(wait_value)}:")
                         else:
                             ranked_lines.append(f"    ins_{opcode}({wait_value});")
                     if len(ranked_lines) > 1:
@@ -531,6 +568,9 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
                 return [f"    // dynamic wait from source opcode {opcode}; TH12 timer labels need a literal", f"    // original source: {safe_text}"]
             if target == "th12":
                 return wrap_event_rank([f"    ins_83({wait});"], event, target)
+            if target in {"th10", "th11"}:
+                collapsed = literal_time_value(wait)
+                return wrap_event_rank([f"    +{collapsed}:"], event, target)
             collapsed = literal_time_value(wait)
             if collapsed != wait:
                 return wrap_event_rank([f"    // dynamic wait expression collapsed for timer syntax: {wait}", f"    +{collapsed}:"], event, target)
@@ -538,7 +578,7 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         fire_lowered = lower_bullet_fire_opcode(int(opcode or -1), list(args), source_game, target, bullet_state)
         if fire_lowered:
             return wrap_event_rank(fire_lowered, event, target)
-        lowered = lower_raw_instruction_event(int(opcode or -1), list(args), text, source_game, target, event.get("difficulty_literals", []))
+        lowered = lower_raw_instruction_event(int(opcode or -1), list(args), text, source_game, target, event.get("difficulty_literals", []), event.get("ir_op"))
         if lowered:
             if any(line.strip().startswith("!") for line in lowered):
                 return lowered
@@ -550,6 +590,10 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         return wrap_event_rank([f"    {text}"], event, target)
     if kind == "label":
         return [f"    {text}"]
+    if generation_for_game(target) == "th06_th08" and kind in {"goto", "conditional_goto", "call", "async_call", "return", "var", "assign"}:
+        if kind == "return":
+            return wrap_event_rank(["    ins_1();"], event, target)
+        return [f"    // old target drops {kind}: {text}"]
     if kind in {"goto", "conditional_goto", "call", "async_call", "return", "var", "assign"}:
         suffix = "" if text.endswith(";") else ";"
         statement_text = f"{text}{suffix}"

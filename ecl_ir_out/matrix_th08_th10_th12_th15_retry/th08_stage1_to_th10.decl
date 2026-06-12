@@ -1,0 +1,4363 @@
+// source: th062/th08/ecldata1.decl
+// source game: th08
+// target: th10
+// whole-file lowering is a structured draft; verify target-game scheduling and resources
+// top-level declarations
+timeline Timeline0()
+{
++1: //1
+ins_0(0, 14, 30.0f, -16.0f, 20, 0, -2, 1000);
++399: //400
+ins_0(0, 0, 30.0f, -16.0f, 20, 0, 0, 1000);
++20: //420
+ins_0(0, 0, 60.0f, -16.0f, 20, 0, 0, 1000);
++20: //440
+ins_0(0, 0, 90.0f, -16.0f, 20, 0, 0, 1000);
++20: //460
+ins_0(0, 0, 40.0f, -16.0f, 20, 0, 0, 1000);
++20: //480
+ins_0(0, 0, 70.0f, -16.0f, 20, 0, 1, 1000);
++20: //500
+ins_0(0, 0, 100.0f, -16.0f, 20, 0, 1, 1000);
+ins_1(0, 1, 320.0f, -32.0f, 150, 0, -2, 1500);
++100: //600
+ins_0(0, 0, 30.0f, -16.0f, 20, 0, 0, 1000);
++20: //620
+ins_0(0, 0, 60.0f, -16.0f, 20, 0, 0, 1000);
++20: //640
+ins_0(0, 0, 90.0f, -16.0f, 20, 0, 0, 1000);
++20: //660
+ins_0(0, 0, 40.0f, -16.0f, 20, 0, 0, 1000);
++20: //680
+ins_0(0, 0, 70.0f, -16.0f, 20, 0, 1, 1000);
++20: //700
+ins_0(0, 0, 100.0f, -16.0f, 20, 0, 1, 1000);
++100: //800
+ins_0(0, 0, 354.0f, -16.0f, 20, 0, 0, 1000);
++10: //810
+ins_0(0, 0, 324.0f, -16.0f, 20, 0, 0, 1000);
++10: //820
+ins_0(0, 0, 294.0f, -16.0f, 20, 0, 0, 1000);
++10: //830
+ins_0(0, 0, 344.0f, -16.0f, 20, 0, 0, 1000);
++10: //840
+ins_0(0, 0, 314.0f, -16.0f, 20, 0, 0, 1000);
++10: //850
+ins_0(0, 0, 284.0f, -16.0f, 20, 0, 0, 1000);
+ins_0(0, 3, 192.0f, -32.0f, 150, 0, -2, 1500);
++10: //860
+ins_0(0, 0, 354.0f, -16.0f, 20, 0, 0, 1000);
++10: //870
+ins_0(0, 0, 324.0f, -16.0f, 20, 0, 0, 1000);
++10: //880
+ins_0(0, 0, 294.0f, -16.0f, 20, 0, 1, 1000);
++10: //890
+ins_0(0, 0, 344.0f, -16.0f, 20, 0, 1, 1000);
++10: //900
+ins_0(0, 0, 314.0f, -16.0f, 20, 0, 1, 1000);
++10: //910
+ins_0(0, 0, 284.0f, -16.0f, 20, 0, 1, 1000);
++100: //1010
+ins_0(0, 1, 120.0f, -32.0f, 150, 0, 2, 1500);
++160: //1170
+ins_1(0, 3, 264.0f, -32.0f, 200, 0, 2, 1500);
++200: //1370
+ins_0(0, 0, 100.0f, -32.0f, 20, 0, 0, 500);
++10: //1380
+ins_0(0, 0, 110.0f, -32.0f, 20, 0, 0, 500);
++10: //1390
+ins_0(0, 0, 120.0f, -32.0f, 20, 0, 0, 500);
++10: //1400
+ins_0(0, 0, 30.0f, -32.0f, 20, 0, 0, 500);
++10: //1410
+ins_0(0, 0, 40.0f, -32.0f, 20, 0, 1, 500);
++10: //1420
+ins_0(0, 0, 50.0f, -32.0f, 20, 0, 1, 500);
++10: //1430
+ins_0(0, 0, 284.0f, -32.0f, 20, 0, 0, 500);
++10: //1440
+ins_0(0, 0, 274.0f, -32.0f, 20, 0, 0, 500);
++10: //1450
+ins_0(0, 0, 264.0f, -32.0f, 20, 0, 0, 500);
++10: //1460
+ins_0(0, 0, 354.0f, -32.0f, 20, 0, 0, 500);
++10: //1470
+ins_0(0, 0, 344.0f, -32.0f, 20, 0, 1, 500);
++10: //1480
+ins_0(0, 0, 334.0f, -32.0f, 20, 0, 1, 500);
++60: //1540
+ins_0(0, 1, 80.0f, -16.0f, 300, 0, 1, 500);
+ins_1(0, 11, 304.0f, -16.0f, 400, 0, 1, 500);
++400: //1940
+ins_0(0, 5, 80.0f, -16.0f, 300, 0, 1, 500);
+ins_1(0, 3, 304.0f, -16.0f, 400, 0, 1, 500);
++200: //2140
+ins_0(0, 0, 100.0f, -32.0f, 20, 0, 0, 500);
++10: //2150
+ins_0(0, 0, 110.0f, -32.0f, 20, 0, 0, 500);
++10: //2160
+ins_0(0, 0, 120.0f, -32.0f, 20, 0, 0, 500);
++10: //2170
+ins_0(0, 0, 30.0f, -32.0f, 20, 0, 0, 500);
++10: //2180
+ins_0(0, 0, 40.0f, -32.0f, 20, 0, 1, 500);
++10: //2190
+ins_0(0, 0, 50.0f, -32.0f, 20, 0, 1, 500);
++10: //2200
+ins_0(0, 0, 100.0f, -32.0f, 20, 0, 0, 500);
++10: //2210
+ins_0(0, 0, 110.0f, -32.0f, 20, 0, 0, 500);
++10: //2220
+ins_0(0, 0, 120.0f, -32.0f, 20, 0, 0, 500);
++10: //2230
+ins_0(0, 0, 30.0f, -32.0f, 20, 0, 0, 500);
++10: //2240
+ins_0(0, 0, 40.0f, -32.0f, 20, 0, 1, 500);
++10: //2250
+ins_0(0, 0, 50.0f, -32.0f, 20, 0, 1, 500);
++120: //2370
+ins_0(0, 0, 284.0f, -32.0f, 20, 0, 0, 500);
++10: //2380
+ins_0(0, 0, 274.0f, -32.0f, 20, 0, 0, 500);
++10: //2390
+ins_0(0, 0, 264.0f, -32.0f, 20, 0, 0, 500);
++10: //2400
+ins_0(0, 0, 354.0f, -32.0f, 20, 0, 0, 500);
++10: //2410
+ins_0(0, 0, 344.0f, -32.0f, 20, 0, 1, 500);
++10: //2420
+ins_0(0, 0, 334.0f, -32.0f, 20, 0, 1, 500);
++20: //2440
+ins_0(0, 0, 100.0f, -32.0f, 20, 0, 0, 500);
++20: //2460
+ins_0(0, 0, 110.0f, -32.0f, 20, 0, 0, 500);
++20: //2480
+ins_0(0, 0, 120.0f, -32.0f, 20, 0, 0, 500);
++20: //2500
+ins_0(0, 0, 30.0f, -32.0f, 20, 0, 0, 500);
++20: //2520
+ins_0(0, 0, 40.0f, -32.0f, 20, 0, 1, 500);
++20: //2540
+ins_0(0, 0, 50.0f, -32.0f, 20, 0, 1, 500);
++10: //2550
+ins_0(0, 13, -16.0f, 96.0f, 20, 0, 0, 500);
++5: //2555
+ins_0(0, 13, -16.0f, 32.0f, 20, 0, 0, 500);
++5: //2560
+ins_0(0, 13, -16.0f, 64.0f, 20, 0, -2, 500);
++5: //2565
+ins_0(0, 13, -16.0f, 128.0f, 20, 0, 0, 500);
++5: //2570
+ins_1(0, 13, 400.0f, 64.0f, 20, 0, 0, 500);
++5: //2575
+ins_0(0, 13, -16.0f, 80.0f, 20, 0, -2, 500);
++5: //2580
+ins_1(0, 13, 400.0f, 32.0f, 20, 0, 0, 500);
++5: //2585
+ins_0(0, 13, -16.0f, 128.0f, 20, 0, 0, 500);
++5: //2590
+ins_1(0, 13, 400.0f, 64.0f, 20, 0, 0, 500);
++5: //2595
+ins_1(0, 13, 400.0f, 80.0f, 20, 0, -2, 500);
++5: //2600
+ins_1(0, 13, 400.0f, 32.0f, 20, 0, 0, 500);
++5: //2605
+ins_1(0, 13, 400.0f, 128.0f, 20, 0, -2, 500);
++5: //2610
+ins_0(0, 13, -16.0f, 64.0f, 20, 0, 0, 500);
++5: //2615
+ins_1(0, 13, 400.0f, 80.0f, 20, 0, -2, 500);
++5: //2620
+ins_0(0, 13, -16.0f, 32.0f, 20, 0, 0, 500);
++5: //2625
+ins_1(0, 13, 400.0f, 80.0f, 20, 0, 0, 500);
++5: //2630
+ins_0(0, 13, -16.0f, 32.0f, 20, 0, 0, 500);
+ins_0(0, 1, 80.0f, -16.0f, 200, 0, 1, 500);
+ins_1(0, 3, 304.0f, -16.0f, 200, 0, 1, 500);
+ins_0(0, 5, 80.0f, -16.0f, 200, 0, 1, 500);
+ins_1(0, 11, 304.0f, -16.0f, 200, 0, 1, 500);
++5: //2635
+ins_0(0, 13, -16.0f, 128.0f, 20, 0, 0, 500);
++5: //2640
+ins_0(0, 13, -16.0f, 64.0f, 20, 0, 0, 500);
++5: //2645
+ins_0(0, 13, -16.0f, 80.0f, 20, 0, -2, 500);
++5: //2650
+ins_1(0, 13, 400.0f, 32.0f, 20, 0, -2, 500);
++5: //2655
+ins_0(0, 13, -16.0f, 128.0f, 20, 0, 0, 500);
++5: //2660
+ins_1(0, 13, 400.0f, 64.0f, 20, 0, 0, 500);
++5: //2665
+ins_0(0, 13, -16.0f, 80.0f, 20, 0, 0, 500);
++5: //2670
+ins_1(0, 13, 400.0f, 32.0f, 20, 0, 0, 500);
++5: //2675
+ins_0(0, 13, -16.0f, 64.0f, 20, 0, 0, 500);
++5: //2680
+ins_0(0, 13, -16.0f, 80.0f, 20, 0, -2, 500);
++5: //2685
+ins_1(0, 13, 400.0f, 32.0f, 20, 0, -2, 500);
++5: //2690
+ins_0(0, 13, -16.0f, 64.0f, 20, 0, 0, 500);
++5: //2695
+ins_0(0, 13, -16.0f, 80.0f, 20, 0, -2, 500);
++5: //2700
+ins_1(0, 13, 400.0f, 32.0f, 20, 0, -2, 500);
++5: //2705
+ins_0(0, 13, -16.0f, 64.0f, 20, 0, 0, 500);
++5: //2710
+ins_0(0, 13, -16.0f, 80.0f, 20, 0, -2, 500);
++5: //2715
+ins_1(0, 13, 400.0f, 32.0f, 20, 0, -2, 500);
++5: //2720
+ins_0(0, 13, -16.0f, 180.0f, 20, 0, -2, 500);
++5: //2725
+ins_1(0, 13, 400.0f, 132.0f, 20, 0, -2, 500);
++5: //2730
+ins_0(0, 13, -16.0f, 164.0f, 20, 0, 0, 500);
++5: //2735
+ins_0(0, 13, -16.0f, 80.0f, 20, 0, -2, 500);
++5: //2740
+ins_1(0, 13, 400.0f, 132.0f, 20, 0, -2, 500);
++5: //2745
+ins_0(0, 13, -16.0f, 64.0f, 20, 0, 0, 500);
++5: //2750
+ins_0(0, 13, -16.0f, 180.0f, 20, 0, -2, 500);
++5: //2755
+ins_1(0, 13, 400.0f, 32.0f, 20, 0, -2, 500);
++5: //2760
+ins_0(0, 13, -16.0f, 180.0f, 20, 0, -2, 500);
++5: //2765
+ins_1(0, 13, 400.0f, 132.0f, 20, 0, -2, 500);
++5: //2770
+ins_0(0, 13, -16.0f, 64.0f, 20, 0, 0, 500);
++5: //2775
+ins_0(0, 13, -16.0f, 150.0f, 20, 0, -2, 500);
++5: //2780
+ins_1(0, 13, 400.0f, 112.0f, 20, 0, -2, 500);
++5: //2785
+ins_0(0, 13, -16.0f, 96.0f, 20, 0, 0, 500);
++5: //2790
+ins_0(0, 13, -16.0f, 160.0f, 20, 0, -2, 500);
++5: //2795
+ins_1(0, 13, 400.0f, 128.0f, 20, 0, -2, 500);
++140: //2935
+ins_0(0, 15, 192.0f, -16.0f, -5536, 0, -2, 100000);
+ins_10(0, 0);
+ins_14(0, 1);
+ins_0(0, 5, 80.0f, -16.0f, 300, 0, 1, 500);
++100: //3035
+ins_1(0, 3, 304.0f, -16.0f, 400, 0, 1, 500);
++300: //3335
+ins_0(0, 3, 80.0f, -16.0f, 300, 0, 1, 500);
++100: //3435
+ins_1(0, 5, 304.0f, -16.0f, 400, 0, 1, 500);
++300: //3735
+ins_0(0, 5, 80.0f, -16.0f, 300, 0, 1, 500);
+ins_1(0, 11, 304.0f, -16.0f, 400, 0, 1, 500);
++440: //4175
+ins_6(0, 0);
+ins_7(0);
+ins_0(0, 25, 192.0f, -16.0f, -5536, 0, -2, 100000);
++1: //4176
+ins_7(0);
+ins_8(0, 0, 1);
+ins_7(0);
+ins_10(0, 0);
+ins_0(0, 37, 192.0f, 128.0f, -5536, 0, -2, 100000);
++1: //4177
+ins_10(0, 0);
+ins_6(0, 1);
+65535:
+ins_7(-1);
+}
+timeline Timeline1()
+{
++20: //20
+ins_13(0, 1);
++100: //120
+ins_0(0, 0, 324.0f, -16.0f, 20, 0, 0, 1000);
++10: //130
+ins_0(0, 0, 294.0f, -16.0f, 20, 0, 0, 1000);
++10: //140
+ins_0(0, 0, 344.0f, -16.0f, 20, 0, 0, 1000);
++10: //150
+ins_0(0, 0, 314.0f, -16.0f, 20, 0, 0, 1000);
++10: //160
+ins_0(0, 0, 284.0f, -16.0f, 20, 0, 0, 1000);
++10: //170
+ins_0(0, 0, 354.0f, -16.0f, 20, 0, 0, 1000);
++10: //180
+ins_0(0, 0, 324.0f, -16.0f, 20, 0, 0, 1000);
++10: //190
+ins_0(0, 0, 294.0f, -16.0f, 20, 0, 1, 1000);
++10: //200
+ins_0(0, 0, 344.0f, -16.0f, 20, 0, 1, 1000);
++10: //210
+ins_0(0, 0, 314.0f, -16.0f, 20, 0, 1, 1000);
++10: //220
+ins_0(0, 0, 284.0f, -16.0f, 20, 0, 1, 1000);
++100: //320
+ins_0(0, 0, 30.0f, -16.0f, 20, 0, 0, 1000);
++10: //330
+ins_0(0, 0, 60.0f, -16.0f, 20, 0, 0, 1000);
++10: //340
+ins_0(0, 0, 90.0f, -16.0f, 20, 0, 0, 1000);
++10: //350
+ins_0(0, 0, 40.0f, -16.0f, 20, 0, 0, 1000);
++10: //360
+ins_0(0, 0, 70.0f, -16.0f, 20, 0, 0, 1000);
++10: //370
+ins_0(0, 0, 100.0f, -16.0f, 20, 0, 0, 1000);
++10: //380
+ins_0(0, 0, 30.0f, -16.0f, 20, 0, 0, 1000);
++10: //390
+ins_0(0, 0, 60.0f, -16.0f, 20, 0, 0, 1000);
++10: //400
+ins_0(0, 0, 90.0f, -16.0f, 20, 0, 1, 1000);
++10: //410
+ins_0(0, 0, 40.0f, -16.0f, 20, 0, 1, 1000);
++10: //420
+ins_0(0, 0, 70.0f, -16.0f, 20, 0, 1, 1000);
++10: //430
+ins_0(0, 0, 100.0f, -16.0f, 20, 0, 1, 1000);
++100: //530
+ins_0(0, 0, 354.0f, -16.0f, 20, 0, 0, 1000);
++10: //540
+ins_0(0, 0, 60.0f, -16.0f, 20, 0, 0, 1000);
++10: //550
+ins_0(0, 0, 294.0f, -16.0f, 20, 0, 0, 1000);
++10: //560
+ins_0(0, 0, 40.0f, -16.0f, 20, 0, 0, 1000);
++10: //570
+ins_0(0, 0, 314.0f, -16.0f, 20, 0, -2, 1000);
++10: //580
+ins_0(0, 0, 100.0f, -16.0f, 20, 0, -2, 1000);
++10: //590
+ins_0(0, 0, 354.0f, -16.0f, 20, 0, -2, 1000);
++10: //600
+ins_0(0, 0, 60.0f, -16.0f, 20, 0, -2, 1000);
++10: //610
+ins_0(0, 0, 294.0f, -16.0f, 20, 0, -2, 1000);
++10: //620
+ins_0(0, 0, 40.0f, -16.0f, 20, 0, -2, 1000);
++10: //630
+ins_0(0, 0, 314.0f, -16.0f, 20, 0, 1, 1000);
++10: //640
+ins_0(0, 0, 284.0f, -16.0f, 20, 0, 1, 1000);
++100: //740
+ins_0(0, 0, 354.0f, -16.0f, 20, 0, 0, 1000);
++10: //750
+ins_0(0, 0, 60.0f, -16.0f, 20, 0, 0, 1000);
++10: //760
+ins_0(0, 0, 294.0f, -16.0f, 20, 0, 0, 1000);
++10: //770
+ins_0(0, 0, 40.0f, -16.0f, 20, 0, 0, 1000);
++10: //780
+ins_0(0, 0, 314.0f, -16.0f, 20, 0, -2, 1000);
++10: //790
+ins_0(0, 0, 100.0f, -16.0f, 20, 0, -2, 1000);
++10: //800
+ins_0(0, 0, 354.0f, -16.0f, 20, 0, -2, 1000);
++10: //810
+ins_0(0, 0, 60.0f, -16.0f, 20, 0, -2, 1000);
++10: //820
+ins_0(0, 0, 294.0f, -16.0f, 20, 0, -2, 1000);
++10: //830
+ins_0(0, 0, 40.0f, -16.0f, 20, 0, -2, 1000);
++10: //840
+ins_0(0, 0, 314.0f, -16.0f, 20, 0, 1, 1000);
++10: //850
+ins_0(0, 0, 284.0f, -16.0f, 20, 0, 1, 1000);
+65535:
+ins_7(-1);
+}
+
+void Sub0()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_55(0);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_7([10018.0f], [10042.0f]);
+    // unlifted instruction: ins_7([10019.0f], [10043.0f]);
+    // unlifted instruction: ins_26([10016.0f], [10045.0f], [10042.0f]);
+    // unlifted instruction: ins_26([10017.0f], [10046.0f], [10043.0f]);
+    // unlifted instruction: ins_17([10016.0f], 0.6f);
+    // unlifted instruction: ins_17([10017.0f], 0.6f);
+    // unlifted instruction: ins_15([10016.0f], [10042.0f]);
+    // unlifted instruction: ins_15([10017.0f], [10043.0f]);
+    // unlifted instruction: ins_64(100, 4, [10016.0f], [10017.0f]);
+    // unlifted instruction: ins_6([10036], 90);
+    Sub0_252:
+    // unlifted instruction: ins_26([10016.0f], [10045.0f], [10018.0f]);
+    // unlifted instruction: ins_26([10017.0f], [10046.0f], [10019.0f]);
+    // unlifted instruction: ins_17([10016.0f], 0.6f);
+    // unlifted instruction: ins_17([10017.0f], 0.6f);
+    // unlifted instruction: ins_26([10020.0f], [10016.0f], [10079.0f]);
+    // unlifted instruction: ins_26([10021.0f], [10017.0f], [10080.0f]);
+    // unlifted instruction: ins_17([10020.0f], 0.002f);
+    // unlifted instruction: ins_17([10021.0f], 0.002f);
+    // unlifted instruction: ins_15([10079.0f], [10020.0f]);
+    // unlifted instruction: ins_15([10080.0f], [10021.0f]);
+    +1:
+    // unlifted instruction: ins_5(0, Sub0_252, [10036]);
+    // object BulletEmitter source_line=29 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 0, 6);
+    ins_406(0, 1, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 1.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=30 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 0, 6);
+    ins_406(0, 1, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 1.8f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=31 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 0, 6);
+    ins_406(0, 1, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.2f, 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_25([10018.0f], [10048.0f], 3.1415927f);
+    // unlifted instruction: ins_65([10018.0f], 0.1f);
+    // unlifted instruction: ins_71(0.01f);
+    +60:
+    // unlifted instruction: ins_107();
+    // object BulletEmitter source_line=37 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 1, 2);
+    ins_406(0, 1, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=38 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 1, 2);
+    ins_406(0, 1, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.6f, 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_108();
+    !H
+    // unlifted instruction: ins_106(90);
+    !*
+    !L
+    // unlifted instruction: ins_106(30);
+    !*
+    +5000:
+    !*
+    // unlifted instruction: ins_1();
+}
+
+void Sub1()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_55(30);
+    // unlifted instruction: ins_57(0, 48);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_160(30);
+    // unlifted instruction: ins_107();
+    // object BulletEmitter source_line=53 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 2);
+    ins_406(0, 1, 1);
+    ins_404(0, 0.0f, 0.08975979f);
+    ins_405(0, 1.1f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=54 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 2);
+    ins_406(0, 3, 2);
+    ins_404(0, 0.0f, 0.08975979f);
+    ins_405(0, 1.8f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=55 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 2);
+    ins_406(0, 5, 2);
+    ins_404(0, 0.0f, 0.08975979f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=56 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 2);
+    ins_406(0, 5, 3);
+    ins_404(0, 0.0f, 0.08975979f);
+    ins_405(0, 3.2f, 1.0f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_108();
+    // unlifted instruction: ins_66(60, 4, 1.5707964f, 2.2f);
+    !E
+    // unlifted instruction: ins_6([10000], 120);
+    !*
+    !N
+    // unlifted instruction: ins_6([10000], 60);
+    !*
+    !H
+    // unlifted instruction: ins_6([10000], 40);
+    !*
+    !L
+    // unlifted instruction: ins_6([10000], 30);
+    !*
+    +1:
+    !*
+    // unlifted instruction: ins_105([10000]);
+    +29:
+    // object BulletEmitter source_line=66 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 2);
+    ins_406(0, 32, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 1.1f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=67 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 2);
+    ins_406(0, 32, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=68 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 2);
+    ins_406(0, 32, 2);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.1f, 0.5f);
+    ins_401(0);
+    !*
+    +30:
+    !*
+    // unlifted instruction: ins_7([10016.0f], 0.0f);
+    // unlifted instruction: ins_92(2, 0.0f, 0.0f, 50, -2, 100);
+    // unlifted instruction: ins_7([10016.0f], 3.1415927f);
+    // unlifted instruction: ins_92(2, 0.0f, 0.0f, 50, -2, 100);
+    +120:
+    // unlifted instruction: ins_65(0.3926991f, 0.7f);
+    +5000:
+    // unlifted instruction: ins_1();
+}
+
+void Sub2()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(55);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_79(16);
+    // unlifted instruction: ins_83(1);
+    // unlifted instruction: ins_73(100, [10016.0f], 0.05235988f, 0.64f);
+    +100:
+    // unlifted instruction: ins_74(6000, 0.05235988f, 0.0f);
+    +5000:
+    // unlifted instruction: ins_1();
+}
+
+void Sub3()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_55(30);
+    // unlifted instruction: ins_57(0, 48);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_160(30);
+    // unlifted instruction: ins_107();
+    // object BulletEmitter source_line=100 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 2);
+    ins_406(0, 1, 1);
+    ins_404(0, 0.0f, 0.08975979f);
+    ins_405(0, 1.1f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=101 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 2);
+    ins_406(0, 3, 2);
+    ins_404(0, 0.0f, 0.08975979f);
+    ins_405(0, 1.8f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=102 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 2);
+    ins_406(0, 5, 2);
+    ins_404(0, 0.0f, 0.08975979f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=103 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 2);
+    ins_406(0, 5, 3);
+    ins_404(0, 0.0f, 0.08975979f);
+    ins_405(0, 3.2f, 1.0f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_108();
+    // unlifted instruction: ins_66(60, 4, 1.5707964f, 2.2f);
+    !E
+    // unlifted instruction: ins_6([10000], 120);
+    !*
+    !N
+    // unlifted instruction: ins_6([10000], 60);
+    !*
+    !H
+    // unlifted instruction: ins_6([10000], 40);
+    !*
+    !L
+    // unlifted instruction: ins_6([10000], 30);
+    !*
+    +1:
+    !*
+    // unlifted instruction: ins_105([10000]);
+    +29:
+    // object BulletEmitter source_line=113 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 2);
+    ins_406(0, 32, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 1.1f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=114 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 2);
+    ins_406(0, 32, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=115 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 2);
+    ins_406(0, 32, 2);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.1f, 0.5f);
+    ins_401(0);
+    !*
+    +30:
+    !*
+    // unlifted instruction: ins_7([10016.0f], 0.0f);
+    // unlifted instruction: ins_92(4, 0.0f, 0.0f, 50, -2, 100);
+    // unlifted instruction: ins_7([10016.0f], 3.1415927f);
+    // unlifted instruction: ins_92(4, 0.0f, 0.0f, 50, -2, 100);
+    +120:
+    // unlifted instruction: ins_65(0.3926991f, 0.7f);
+    +5000:
+    // unlifted instruction: ins_1();
+}
+
+void Sub4()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(55);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_79(16);
+    // unlifted instruction: ins_83(1);
+    // unlifted instruction: ins_73(100, [10016.0f], -0.05235988f, 0.64f);
+    +100:
+    // unlifted instruction: ins_74(6000, -0.05235988f, 0.0f);
+    +5000:
+    // unlifted instruction: ins_1();
+}
+
+void Sub5()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_55(30);
+    // unlifted instruction: ins_57(0, 48);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_160(30);
+    // unlifted instruction: ins_66(60, 4, 1.5707964f, 2.0f);
+    +30:
+    // object BulletEmitter source_line=148 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 6);
+    ins_406(0, 32, 1);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 1.1f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=149 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 6);
+    ins_406(0, 32, 1);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 1.5f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=150 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 6);
+    ins_406(0, 32, 2);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 2.1f, 0.5f);
+    ins_401(0);
+    !*
+    +40:
+    !*
+    // unlifted instruction: ins_7([10016.0f], 0.0f);
+    // unlifted instruction: ins_92(10, 0.0f, 0.0f, 100, -2, 100);
+    // unlifted instruction: ins_7([10016.0f], 3.1415927f);
+    // unlifted instruction: ins_92(10, 0.0f, 0.0f, 100, -2, 100);
+    // unlifted instruction: ins_7([10016.0f], 1.5707964f);
+    // unlifted instruction: ins_92(10, 0.0f, 0.0f, 100, -2, 100);
+    // unlifted instruction: ins_7([10016.0f], -1.5707964f);
+    // unlifted instruction: ins_92(10, 0.0f, 0.0f, 100, -2, 100);
+    +230:
+    // unlifted instruction: ins_65(0.0f, 0.7f);
+    +5000:
+    // unlifted instruction: ins_1();
+}
+
+void Sub6()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +100:
+    // unlifted instruction: ins_0();
+    Sub6_12:
+    // unlifted instruction: ins_25([10016.0f], [10069.0f], 3.1415927f);
+    // object BulletEmitter source_line=172 family=th08_macro
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 3, 6);
+    ins_406(0, 2, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 1.3f, 0.5f);
+    ins_401(0);
+    +128:
+    // unlifted instruction: ins_4(100, Sub6_12);
+    // unlifted instruction: ins_53();
+}
+
+void Sub7()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +40:
+    // unlifted instruction: ins_0();
+    Sub7_12:
+    // unlifted instruction: ins_25([10016.0f], [10069.0f], 3.1415927f);
+    // object BulletEmitter source_line=184 family=th08_macro
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 3, 6);
+    ins_406(0, 2, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    +32:
+    // object BulletEmitter source_line=186 family=th08_macro
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 3, 6);
+    ins_406(0, 2, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    +96:
+    // unlifted instruction: ins_4(40, Sub7_12);
+    // unlifted instruction: ins_53();
+}
+
+void Sub8()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +1:
+    // unlifted instruction: ins_0();
+    Sub8_12:
+    // unlifted instruction: ins_25([10016.0f], [10069.0f], 3.1415927f);
+    // object BulletEmitter source_line=198 family=th08_macro
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 3, 6);
+    ins_406(0, 2, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    +16:
+    // object BulletEmitter source_line=200 family=th08_macro
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 3, 6);
+    ins_406(0, 2, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    +16:
+    // object BulletEmitter source_line=202 family=th08_macro
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 3, 6);
+    ins_406(0, 2, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    +96:
+    // unlifted instruction: ins_4(1, Sub8_12);
+    // unlifted instruction: ins_53();
+}
+
+void Sub9()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +1:
+    // unlifted instruction: ins_0();
+    Sub9_12:
+    // unlifted instruction: ins_25([10016.0f], [10069.0f], 3.1415927f);
+    // object BulletEmitter source_line=214 family=th08_macro
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 3, 6);
+    ins_406(0, 3, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.6f, 0.5f);
+    ins_401(0);
+    +8:
+    // object BulletEmitter source_line=216 family=th08_macro
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 3, 6);
+    ins_406(0, 3, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.6f, 0.5f);
+    ins_401(0);
+    +8:
+    // object BulletEmitter source_line=218 family=th08_macro
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 3, 6);
+    ins_406(0, 3, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.6f, 0.5f);
+    ins_401(0);
+    +8:
+    // object BulletEmitter source_line=220 family=th08_macro
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 3, 6);
+    ins_406(0, 3, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.6f, 0.5f);
+    ins_401(0);
+    +8:
+    // object BulletEmitter source_line=222 family=th08_macro
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 3, 6);
+    ins_406(0, 3, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.6f, 0.5f);
+    ins_401(0);
+    +96:
+    // unlifted instruction: ins_4(1, Sub9_12);
+    // unlifted instruction: ins_53();
+}
+
+void Sub10()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(55);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_79(16);
+    // unlifted instruction: ins_83(1);
+    // unlifted instruction: ins_73(100, [10016.0f], -0.05235988f, 0.64f);
+    !E
+    // unlifted instruction: ins_135(0, 6);
+    !*
+    !N
+    // unlifted instruction: ins_135(0, 7);
+    !*
+    !H
+    // unlifted instruction: ins_135(0, 8);
+    !*
+    !L
+    // unlifted instruction: ins_135(0, 9);
+    !*
+    +100:
+    !*
+    // unlifted instruction: ins_74(6000, -0.05235988f, 0.0f);
+    +5000:
+    // unlifted instruction: ins_1();
+}
+
+void Sub11()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_55(30);
+    // unlifted instruction: ins_57(0, 48);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_160(30);
+    // unlifted instruction: ins_66(60, 4, 1.5707964f, 2.0f);
+    +30:
+    // object BulletEmitter source_line=253 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 6);
+    ins_406(0, 32, 1);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 1.1f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=254 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 6);
+    ins_406(0, 32, 1);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 1.5f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=255 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 6);
+    ins_406(0, 32, 2);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 2.1f, 0.5f);
+    ins_401(0);
+    !*
+    +20:
+    !*
+    // unlifted instruction: ins_7([10016.0f], 0.0f);
+    // unlifted instruction: ins_92(12, 0.0f, 0.0f, 100, -2, 100);
+    // unlifted instruction: ins_7([10016.0f], 3.1415927f);
+    // unlifted instruction: ins_92(12, 0.0f, 0.0f, 100, -2, 100);
+    // unlifted instruction: ins_7([10016.0f], 1.5707964f);
+    // unlifted instruction: ins_92(12, 0.0f, 0.0f, 100, -2, 100);
+    // unlifted instruction: ins_7([10016.0f], -1.5707964f);
+    // unlifted instruction: ins_92(12, 0.0f, 0.0f, 100, -2, 100);
+    +240:
+    // unlifted instruction: ins_65(0.0f, 0.7f);
+    +5000:
+    // unlifted instruction: ins_1();
+}
+
+void Sub12()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(55);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_79(16);
+    // unlifted instruction: ins_83(1);
+    // unlifted instruction: ins_73(100, [10016.0f], 0.05235988f, 0.64f);
+    !E
+    // unlifted instruction: ins_135(0, 6);
+    !*
+    !N
+    // unlifted instruction: ins_135(0, 7);
+    !*
+    !H
+    // unlifted instruction: ins_135(0, 8);
+    !*
+    !L
+    // unlifted instruction: ins_135(0, 9);
+    !*
+    +100:
+    !*
+    // unlifted instruction: ins_74(6000, 0.05235988f, 0.0f);
+    +5000:
+    // unlifted instruction: ins_1();
+}
+
+void Sub13()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(49);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_27([10016.0f], [10035.0f], 0.09817477f);
+    // unlifted instruction: ins_15([10016.0f], 0.0f);
+    // unlifted instruction: ins_65([10016.0f], 3.7f);
+    // unlifted instruction: ins_107();
+    // object BulletEmitter source_line=296 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 3, 10);
+    ins_406(0, 1, 1);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_108();
+    !H
+    // unlifted instruction: ins_106(500);
+    !*
+    !L
+    // unlifted instruction: ins_106(100);
+    !*
+    +5000:
+    !*
+    // unlifted instruction: ins_1();
+}
+
+void Sub14()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_80(56);
+    // unlifted instruction: ins_139(51, 16, 0);
+    +4:
+    // unlifted instruction: ins_139(51, 16, 0);
+    +4:
+    // unlifted instruction: ins_139(51, 16, 0);
+    +4:
+    // unlifted instruction: ins_139(51, 16, 0);
+    +4:
+    // unlifted instruction: ins_139(51, 16, 0);
+    +4:
+    // unlifted instruction: ins_139(51, 16, 0);
+    Sub14_160:
+    // unlifted instruction: ins_139(51, 4, 0);
+    +4:
+    // unlifted instruction: ins_4(20, Sub14_160);
+    // unlifted instruction: ins_1();
+}
+
+void Sub15()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_59(0);
+    // unlifted instruction: ins_80(20);
+    // unlifted instruction: ins_127(0);
+    // unlifted instruction: ins_77(48.0f, 48.0f);
+    // unlifted instruction: ins_160(60);
+    !EN
+    // unlifted instruction: ins_131(6000);
+    !*
+    // unlifted instruction: ins_134(1260, 18);
+    !HL
+    // unlifted instruction: ins_131(7300);
+    !*
+    // unlifted instruction: ins_134(1260, 22);
+    // unlifted instruction: ins_133(0, 1300, 22);
+    !EN
+    // unlifted instruction: ins_158(0, 0, [10051], -1);
+    !*
+    !HL
+    // unlifted instruction: ins_158(0, [10088], [10051], -1);
+    !*
+    // unlifted instruction: ins_158(1, 0, [10088], 16752800);
+    !*
+    // unlifted instruction: ins_63(96.0f, -48.0f);
+    // unlifted instruction: ins_64(60, 4, 192.0f, 128.0f);
+    // unlifted instruction: ins_128(6, 0.3f, 0.7f, 0.3f, 128.0f);
+    +10:
+    // unlifted instruction: ins_128(6, -0.3f, 0.7f, 0.3f, 128.0f);
+    +10:
+    // unlifted instruction: ins_128(6, 0.3f, 0.7f, -0.3f, 128.0f);
+    +10:
+    // unlifted instruction: ins_128(6, -0.3f, -0.7f, -0.3f, 96.0f);
+    +10:
+    // unlifted instruction: ins_128(6, 0.3f, -0.7f, -0.3f, 96.0f);
+    +10:
+    // unlifted instruction: ins_128(6, -0.3f, -0.7f, 0.3f, 96.0f);
+    +10:
+    // unlifted instruction: ins_75(32.0f, 48.0f, 352.0f, 128.0f);
+    // unlifted instruction: ins_52(16);
+    // unlifted instruction: ins_1();
+}
+
+void Sub16()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_81(4);
+    // unlifted instruction: ins_129(1);
+    // unlifted instruction: ins_130(18);
+    // unlifted instruction: ins_144(5, 3);
+    Sub16_68:
+    // unlifted instruction: ins_62();
+    // unlifted instruction: ins_27([10016.0f], [10082.0f], 0.04f);
+    // unlifted instruction: ins_16([10016.0f], 1.5707964f);
+    // unlifted instruction: ins_42([10040], 0, 0, Sub16_340);
+    // unlifted instruction: ins_111(0, 64, 0, 40, 1, 1.5707964f, 1.5f);
+    // object BulletEmitter source_line=371 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 50, 1, 1.5707964f, 1.4f);
+    // object BulletEmitter source_line=373 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_4(0, Sub16_1612);
+    Sub16_340:
+    // unlifted instruction: ins_42([10040], 1, 0, Sub16_724);
+    // unlifted instruction: ins_111(0, 64, 0, 40, 1, 1.5707964f, 1.5f);
+    // object BulletEmitter source_line=378 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 50, 1, 1.5707964f, 1.4f);
+    // object BulletEmitter source_line=380 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 60, 1, 1.5707964f, 1.3f);
+    // object BulletEmitter source_line=382 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, 1.5707964f, 1.2f);
+    // object BulletEmitter source_line=384 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_4(0, Sub16_1612);
+    Sub16_724:
+    // unlifted instruction: ins_42([10040], 2, 0, Sub16_1108);
+    // unlifted instruction: ins_111(0, 64, 0, 40, 1, 1.5707964f, 1.5f);
+    // object BulletEmitter source_line=389 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 12, 1);
+    ins_404(0, [10016.0f], 0.22439948f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 50, 1, 1.5707964f, 1.4f);
+    // object BulletEmitter source_line=391 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 12, 1);
+    ins_404(0, [10016.0f], 0.22439948f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 60, 1, 1.5707964f, 1.3f);
+    // object BulletEmitter source_line=393 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 12, 1);
+    ins_404(0, [10016.0f], 0.22439948f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, 1.5707964f, 1.2f);
+    // object BulletEmitter source_line=395 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 12, 1);
+    ins_404(0, [10016.0f], 0.22439948f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_4(0, Sub16_1612);
+    Sub16_1108:
+    // unlifted instruction: ins_111(0, 64, 0, 40, 1, 1.5707964f, 2.2f);
+    // object BulletEmitter source_line=399 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 50, 1, 1.5707964f, 2.1f);
+    // object BulletEmitter source_line=401 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 60, 1, 1.5707964f, 2.0f);
+    // object BulletEmitter source_line=403 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, 1.5707964f, 1.9f);
+    // object BulletEmitter source_line=405 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, 1.5707964f, 1.7f);
+    // object BulletEmitter source_line=407 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, 1.5707964f, 1.5f);
+    // object BulletEmitter source_line=409 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    Sub16_1612:
+    +60:
+    // unlifted instruction: ins_27([10016.0f], [10082.0f], 0.04f);
+    // unlifted instruction: ins_15([10016.0f], 1.5707964f);
+    // unlifted instruction: ins_42([10040], 0, 60, Sub16_1872);
+    // unlifted instruction: ins_111(0, 64, 0, 40, 1, -1.5707964f, 1.5f);
+    // object BulletEmitter source_line=416 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 50, 1, -1.5707964f, 1.4f);
+    // object BulletEmitter source_line=418 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_4(60, Sub16_3144);
+    Sub16_1872:
+    // unlifted instruction: ins_42([10040], 1, 60, Sub16_2256);
+    // unlifted instruction: ins_111(0, 64, 0, 40, 1, -1.5707964f, 1.5f);
+    // object BulletEmitter source_line=423 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 50, 1, -1.5707964f, 1.4f);
+    // object BulletEmitter source_line=425 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 60, 1, -1.5707964f, 1.3f);
+    // object BulletEmitter source_line=427 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, -1.5707964f, 1.2f);
+    // object BulletEmitter source_line=429 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 10, 1);
+    ins_404(0, [10016.0f], 0.31415927f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_4(60, Sub16_3144);
+    Sub16_2256:
+    // unlifted instruction: ins_42([10040], 2, 60, Sub16_2640);
+    // unlifted instruction: ins_111(0, 64, 0, 40, 1, -1.5707964f, 1.5f);
+    // object BulletEmitter source_line=434 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 12, 1);
+    ins_404(0, [10016.0f], 0.22439948f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 50, 1, -1.5707964f, 1.4f);
+    // object BulletEmitter source_line=436 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 12, 1);
+    ins_404(0, [10016.0f], 0.22439948f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 60, 1, -1.5707964f, 1.3f);
+    // object BulletEmitter source_line=438 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 12, 1);
+    ins_404(0, [10016.0f], 0.22439948f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, -1.5707964f, 1.2f);
+    // object BulletEmitter source_line=440 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 12, 1);
+    ins_404(0, [10016.0f], 0.22439948f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_4(60, Sub16_3144);
+    Sub16_2640:
+    // unlifted instruction: ins_111(0, 64, 0, 40, 1, -1.5707964f, 2.2f);
+    // object BulletEmitter source_line=444 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 50, 1, -1.5707964f, 2.1f);
+    // object BulletEmitter source_line=446 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 60, 1, -1.5707964f, 2.0f);
+    // object BulletEmitter source_line=448 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, -1.5707964f, 1.9f);
+    // object BulletEmitter source_line=450 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 60, 1, -1.5707964f, 1.7f);
+    // object BulletEmitter source_line=452 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, -1.5707964f, 1.5f);
+    // object BulletEmitter source_line=454 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, 20, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    Sub16_3144:
+    +60:
+    // unlifted instruction: ins_64(50, 4, 288.0f, 120.0f);
+    +120:
+    // unlifted instruction: ins_0();
+    // unlifted instruction: ins_111(0, 32, 0, 60, -1, -0.016666668f, -0.0032724924f);
+    !E
+    // unlifted instruction: ins_7([10016.0f], 0.025f);
+    !*
+    !N
+    // unlifted instruction: ins_7([10016.0f], 0.025f);
+    !*
+    !H
+    // unlifted instruction: ins_7([10016.0f], 0.033333335f);
+    !*
+    !L
+    // unlifted instruction: ins_7([10016.0f], 0.041666668f);
+    !*
+    !*
+    // unlifted instruction: ins_111(1, 16, 0, 60, -1, [10016.0f], -999.9f);
+    // object BulletEmitter source_line=466 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 8);
+    ins_406(0, 1, 5);
+    ins_404(0, 1.9634954f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=467 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 8);
+    ins_406(0, 3, 5);
+    ins_404(0, 1.9634954f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=468 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 8);
+    ins_406(0, 3, 6);
+    ins_404(0, 1.9634954f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=469 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 8);
+    ins_406(0, 3, 6);
+    ins_404(0, 1.9634954f, 0.034906585f);
+    ins_405(0, 3.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=470 family=th08_macro
+    !*
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 7);
+    ins_406(0, 2, 6);
+    ins_404(0, 1.9634954f, 1.0471976f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 32, 0, 60, -1, -0.016666668f, 0.0032724924f);
+    // object BulletEmitter source_line=472 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 8);
+    ins_406(0, 1, 5);
+    ins_404(0, 1.5707964f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=473 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 8);
+    ins_406(0, 3, 5);
+    ins_404(0, 1.5707964f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=474 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 8);
+    ins_406(0, 3, 6);
+    ins_404(0, 1.5707964f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=475 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 8);
+    ins_406(0, 3, 6);
+    ins_404(0, 1.5707964f, 0.034906585f);
+    ins_405(0, 3.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=476 family=th08_macro
+    !*
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 7);
+    ins_406(0, 2, 6);
+    ins_404(0, 1.5707964f, 1.0471976f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    +60:
+    // unlifted instruction: ins_64(50, 4, 96.0f, 120.0f);
+    +100:
+    // unlifted instruction: ins_0();
+    // unlifted instruction: ins_111(0, 32, 0, 60, -1, -0.016666668f, 0.0032724924f);
+    // unlifted instruction: ins_111(1, 16, 0, 60, -1, [10016.0f], -999.9f);
+    // object BulletEmitter source_line=483 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 6);
+    ins_406(0, 1, 5);
+    ins_404(0, 1.1780972f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=484 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 6);
+    ins_406(0, 3, 5);
+    ins_404(0, 1.1780972f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=485 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 6);
+    ins_406(0, 3, 6);
+    ins_404(0, 1.1780972f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=486 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 6);
+    ins_406(0, 3, 6);
+    ins_404(0, 1.1780972f, 0.034906585f);
+    ins_405(0, 3.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=487 family=th08_macro
+    !*
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 5);
+    ins_406(0, 2, 6);
+    ins_404(0, 1.1780972f, 1.0471976f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 32, 0, 60, -1, -0.016666668f, -0.0032724924f);
+    // object BulletEmitter source_line=489 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 6);
+    ins_406(0, 1, 5);
+    ins_404(0, 1.5707964f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=490 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 6);
+    ins_406(0, 3, 5);
+    ins_404(0, 1.5707964f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=491 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 6);
+    ins_406(0, 3, 6);
+    ins_404(0, 1.5707964f, 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=492 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 6);
+    ins_406(0, 3, 6);
+    ins_404(0, 1.5707964f, 0.034906585f);
+    ins_405(0, 3.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=493 family=th08_macro
+    !*
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 3, 5);
+    ins_406(0, 2, 6);
+    ins_404(0, 1.5707964f, 1.0471976f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    +60:
+    // unlifted instruction: ins_64(50, 4, 96.0f, 120.0f);
+    +60:
+    // unlifted instruction: ins_64(50, 4, 192.0f, 120.0f);
+    // unlifted instruction: ins_7([10017.0f], 64.0f);
+    +80:
+    // unlifted instruction: ins_7([10016.0f], 0.0f);
+    // unlifted instruction: ins_62();
+    // unlifted instruction: ins_92(19, 0.0f, 0.0f, 100, 1, 100);
+    // unlifted instruction: ins_7([10016.0f], 3.1415927f);
+    // unlifted instruction: ins_92(19, 0.0f, 0.0f, 100, 1, 100);
+    // unlifted instruction: ins_7([10016.0f], 1.5707964f);
+    // unlifted instruction: ins_92(19, 0.0f, 0.0f, 100, 1, 100);
+    // unlifted instruction: ins_7([10016.0f], -1.5707964f);
+    // unlifted instruction: ins_92(19, 0.0f, 0.0f, 100, 1, 100);
+    // unlifted instruction: ins_7([10017.0f], 128.0f);
+    +80:
+    // unlifted instruction: ins_7([10016.0f], 0.0f);
+    // unlifted instruction: ins_92(20, 0.0f, 0.0f, 100, 1, 100);
+    // unlifted instruction: ins_7([10016.0f], 3.1415927f);
+    // unlifted instruction: ins_92(20, 0.0f, 0.0f, 100, 1, 100);
+    // unlifted instruction: ins_7([10016.0f], 1.5707964f);
+    // unlifted instruction: ins_92(20, 0.0f, 0.0f, 100, 1, 100);
+    // unlifted instruction: ins_7([10016.0f], -1.5707964f);
+    // unlifted instruction: ins_92(20, 0.0f, 0.0f, 100, 1, 100);
+    // unlifted instruction: ins_135(0, 17);
+    +6000:
+    // unlifted instruction: ins_4(0, Sub16_68);
+}
+
+void Sub17()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    !E
+    // unlifted instruction: ins_6([10000], 300);
+    !*
+    !N
+    // unlifted instruction: ins_6([10000], 100);
+    !*
+    !H
+    // unlifted instruction: ins_6([10000], 60);
+    !*
+    !L
+    // unlifted instruction: ins_6([10000], 40);
+    !*
+    Sub17_80:
+    // object BulletEmitter source_line=531 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 1, 6);
+    ins_406(0, 16, 1);
+    ins_404(0, [10082.0f], 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=532 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 1, 6);
+    ins_406(0, 32, 1);
+    ins_404(0, [10082.0f], 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=533 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 1, 6);
+    ins_406(0, 32, 1);
+    ins_404(0, [10082.0f], 0.034906585f);
+    ins_405(0, 2.0f, 0.9f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=534 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 1, 6);
+    ins_406(0, 32, 1);
+    ins_404(0, [10082.0f], 0.034906585f);
+    ins_405(0, 3.0f, 0.9f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_2([10000]);
+    // unlifted instruction: ins_4(0, Sub17_80);
+}
+
+void Sub18()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_59(0);
+    // unlifted instruction: ins_76();
+    // unlifted instruction: ins_123();
+    // unlifted instruction: ins_80(3);
+    // unlifted instruction: ins_81(16);
+    +30:
+    // unlifted instruction: ins_64(60, 4, 320.0f, -32.0f);
+    +60:
+    // unlifted instruction: ins_127(-1);
+    // unlifted instruction: ins_1();
+}
+
+void Sub19()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(56);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_79(16);
+    // unlifted instruction: ins_83(1);
+    // unlifted instruction: ins_107();
+    // object BulletEmitter source_line=560 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 6);
+    ins_406(0, 1, 1);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 1.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=561 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 6);
+    ins_406(0, 2, 1);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 1.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=562 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 6);
+    ins_406(0, 3, 1);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 1.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=563 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 6);
+    ins_406(0, 2, 2);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 2.0f, 1.0f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_108();
+    // unlifted instruction: ins_18([10017.0f], 100.0f);
+    // unlifted instruction: ins_73(100, [10016.0f], -0.02617994f, [10017.0f]);
+    +100:
+    // unlifted instruction: ins_74(6000, -0.02617994f, 0.0f);
+    !E
+    // unlifted instruction: ins_106(30);
+    !*
+    !NHL
+    // unlifted instruction: ins_106(10);
+    !*
+    +5000:
+    !*
+    // unlifted instruction: ins_1();
+}
+
+void Sub20()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(56);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_79(16);
+    // unlifted instruction: ins_83(1);
+    // unlifted instruction: ins_107();
+    // object BulletEmitter source_line=582 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 2);
+    ins_406(0, 1, 1);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 1.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=583 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 2);
+    ins_406(0, 1, 1);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 1.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=584 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 2);
+    ins_406(0, 2, 1);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 1.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=585 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 2);
+    ins_406(0, 2, 2);
+    ins_404(0, [10069.0f], 0.18479957f);
+    ins_405(0, 2.0f, 1.0f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_108();
+    // unlifted instruction: ins_18([10017.0f], 100.0f);
+    // unlifted instruction: ins_73(100, [10016.0f], 0.02617994f, [10017.0f]);
+    +100:
+    // unlifted instruction: ins_74(6000, 0.02617994f, 0.0f);
+    !E
+    // unlifted instruction: ins_106(30);
+    !*
+    !NHL
+    // unlifted instruction: ins_106(10);
+    !*
+    +5000:
+    !*
+    // unlifted instruction: ins_1();
+}
+
+void Sub21()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +200:
+    // unlifted instruction: ins_0();
+    Sub21_12:
+    // object BulletEmitter source_line=602 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 7, 3);
+    ins_406(0, 7, 2);
+    ins_404(0, 0.0f, 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=603 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 7, 3);
+    ins_406(0, 9, 3);
+    ins_404(0, 0.0f, 0.19634955f);
+    ins_405(0, 3.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=604 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 7, 3);
+    ins_406(0, 32, 1);
+    ins_404(0, 3.1415927f, 0.14279966f);
+    ins_405(0, 2.5f, 1.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=605 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 7, 3);
+    ins_406(0, 32, 3);
+    ins_404(0, 3.1415927f, 0.14279966f);
+    ins_405(0, 3.0f, 1.5f);
+    ins_401(0);
+    !*
+    +100:
+    !*
+    // unlifted instruction: ins_4(200, Sub21_12);
+}
+
+void Sub22()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_105(0);
+    // unlifted instruction: ins_95();
+    // unlifted instruction: ins_113(-1, -1);
+    // unlifted instruction: ins_80(4);
+    // unlifted instruction: ins_110(0.0f, 0.0f);
+    // unlifted instruction: ins_134(2100, 18);
+    // unlifted instruction: ins_153();
+    // unlifted instruction: ins_132(0);
+    // unlifted instruction: ins_6([10039], 0);
+    // unlifted instruction: ins_64(90, 4, 192.0f, 144.0f);
+    !H
+    // unlifted instruction: ins_122(0, 0, 10000000, "�u���u�n��̗����v", "���O���E�i�C�g�o�O", "�u�͖��ł��J��Ԃ����������A�u���͓̂��������Ă��邩��", "�g�łn��̗����̗l�Ɍ�����B");
+    !*
+    !L
+    // unlifted instruction: ins_122(0, 1, 10000000, "�u���u�n��̜a���v", "���O���E�i�C�g�o�O", "�u�̌��Ȃ񂩂ŕ׋�����Ɩڂ������Ȃ�܂��B", "�Ƃ��������ł��������邩�疳���B�Ðl���x�����ȁB");
+    !*
+    +90:
+    !*
+    // unlifted instruction: ins_81(4);
+    // unlifted instruction: ins_160(180);
+    // unlifted instruction: ins_129(2);
+    // unlifted instruction: ins_130(18);
+    // unlifted instruction: ins_7([10020.0f], 64.0f);
+    // unlifted instruction: ins_135(0, 21);
+    Sub22_772:
+    !H
+    // unlifted instruction: ins_6([10036], 8);
+    !*
+    !L
+    // unlifted instruction: ins_6([10036], 11);
+    !*
+    !*
+    // unlifted instruction: ins_7([10016.0f], 0.0f);
+    !H
+    // unlifted instruction: ins_7([10017.0f], 0.0057119867f);
+    !*
+    !L
+    // unlifted instruction: ins_7([10017.0f], 0.008975979f);
+    !*
+    !*
+    // unlifted instruction: ins_62();
+    Sub22_884:
+    // unlifted instruction: ins_91(24, 0.0f, 0.0f, 40, -2, 100);
+    !H
+    // unlifted instruction: ins_15([10016.0f], 0.7853982f);
+    !*
+    !L
+    // unlifted instruction: ins_15([10016.0f], 0.57119864f);
+    !*
+    !*
+    // unlifted instruction: ins_5(90, Sub22_884, [10036]);
+    +100:
+    // unlifted instruction: ins_67(60, 4, 1.0f);
+    +100:
+    // unlifted instruction: ins_6([10036], 8);
+    !H
+    // unlifted instruction: ins_6([10036], 8);
+    !*
+    !L
+    // unlifted instruction: ins_6([10036], 11);
+    !*
+    !*
+    // unlifted instruction: ins_7([10016.0f], 0.0f);
+    !H
+    // unlifted instruction: ins_7([10017.0f], -0.0057119867f);
+    !*
+    !L
+    // unlifted instruction: ins_7([10017.0f], -0.008975979f);
+    !*
+    !*
+    // unlifted instruction: ins_62();
+    Sub22_1140:
+    // unlifted instruction: ins_91(24, 0.0f, 0.0f, 40, -2, 100);
+    !H
+    // unlifted instruction: ins_15([10016.0f], 0.7853982f);
+    !*
+    !L
+    // unlifted instruction: ins_15([10016.0f], 0.57119864f);
+    !*
+    !*
+    // unlifted instruction: ins_5(290, Sub22_1140, [10036]);
+    +100:
+    // unlifted instruction: ins_67(60, 4, 1.0f);
+    +100:
+    // unlifted instruction: ins_6([10036], 8);
+    !H
+    // unlifted instruction: ins_6([10036], 10);
+    !*
+    !L
+    // unlifted instruction: ins_6([10036], 13);
+    !*
+    !*
+    // unlifted instruction: ins_7([10016.0f], [10082.0f]);
+    // unlifted instruction: ins_7([10017.0f], 0.0f);
+    // unlifted instruction: ins_62();
+    Sub22_1376:
+    // unlifted instruction: ins_91(24, 0.0f, 0.0f, 40, -2, 100);
+    !H
+    // unlifted instruction: ins_15([10016.0f], 0.62831855f);
+    !*
+    !L
+    // unlifted instruction: ins_15([10016.0f], 0.48332193f);
+    !*
+    !*
+    // unlifted instruction: ins_5(490, Sub22_1376, [10036]);
+    +100:
+    // unlifted instruction: ins_67(60, 4, 1.0f);
+    +100:
+    // unlifted instruction: ins_4(90, Sub22_772);
+}
+
+void Sub23()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_111(0, 8192, 1, 400, -1, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(1, 131072, 1, 120, -1, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(3, 16384, 1, 3, 6, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(4, 524288, 0, 27, -1, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(5, 262144, 0, -1, -1, -1.0f, -1.0f);
+    // unlifted instruction: ins_7([10023.0f], [10082.0f]);
+    Sub23_220:
+    // unlifted instruction: ins_15([10023.0f], 0.5235988f);
+    // unlifted instruction: ins_37([10023.0f]);
+    // unlifted instruction: ins_32([10022.0f], [10023.0f]);
+    !H
+    // unlifted instruction: ins_17([10022.0f], 32.0f);
+    !*
+    !L
+    // unlifted instruction: ins_17([10022.0f], 32.0f);
+    !*
+    !*
+    // unlifted instruction: ins_25([10021.0f], [10069.0f], 1.5707964f);
+    // unlifted instruction: ins_38([10094.0f], [10095.0f], [10021.0f], [10022.0f]);
+    // unlifted instruction: ins_15([10094.0f], [10042.0f]);
+    // unlifted instruction: ins_15([10095.0f], [10043.0f]);
+    // unlifted instruction: ins_34([10022.0f], [10094.0f], [10095.0f], [10042.0f], [10043.0f]);
+    // unlifted instruction: ins_39([10016.0f], [10094.0f], [10095.0f], [10042.0f], [10043.0f]);
+    // unlifted instruction: ins_17([10016.0f], 2.0f);
+    // unlifted instruction: ins_18([10016.0f], 3600.0f);
+    // unlifted instruction: ins_111(2, 16, 0, 60, -1, [10016.0f], -999.0f);
+    // object BulletEmitter source_line=701 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 3, 7);
+    ins_406(0, 1, 1);
+    ins_404(0, [10022.0f], 0.0f);
+    ins_405(0, 0.0f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_15([10023.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10023.0f]);
+    +6:
+    // unlifted instruction: ins_4(0, Sub23_220);
+    // unlifted instruction: ins_53();
+}
+
+void Sub24()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(56);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_83(1);
+    // unlifted instruction: ins_80(3);
+    // unlifted instruction: ins_82(0.0f);
+    !H
+    // unlifted instruction: ins_65([10016.0f], 2.0f);
+    !*
+    !L
+    // unlifted instruction: ins_65([10016.0f], 2.4f);
+    !*
+    !*
+    // unlifted instruction: ins_70([10017.0f]);
+    // unlifted instruction: ins_135(0, 23);
+    +100:
+    // unlifted instruction: ins_81(3);
+    +100:
+    // unlifted instruction: ins_70(0.0f);
+    +5000:
+    // unlifted instruction: ins_1();
+}
+
+void Sub25()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_59(0);
+    // unlifted instruction: ins_80(20);
+    // unlifted instruction: ins_80(3);
+    // unlifted instruction: ins_127(0);
+    // unlifted instruction: ins_77(48.0f, 32.0f);
+    // unlifted instruction: ins_160(60);
+    // unlifted instruction: ins_148(0);
+    // unlifted instruction: ins_134(180000, 38);
+    // unlifted instruction: ins_63(-32.0f, -32.0f);
+    // unlifted instruction: ins_64(60, 4, 192.0f, 128.0f);
+    // unlifted instruction: ins_126(26, 1);
+    Sub25_204:
+    +100:
+    // unlifted instruction: ins_4(0, Sub25_204);
+}
+
+void Sub26()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_81(4);
+    // unlifted instruction: ins_81(3);
+    // unlifted instruction: ins_160(120);
+    // unlifted instruction: ins_123();
+    // unlifted instruction: ins_144(6, 4);
+    // unlifted instruction: ins_131(13000);
+    // unlifted instruction: ins_148(1);
+    // unlifted instruction: ins_129(2);
+    // unlifted instruction: ins_130(33);
+    // unlifted instruction: ins_134(1800, 38);
+    // unlifted instruction: ins_133(0, 1500, 38);
+    // unlifted instruction: ins_158(0, 0, [10088], 16752800);
+    // unlifted instruction: ins_128(6, 0.3f, 0.7f, 0.3f, 128.0f);
+    +10:
+    // unlifted instruction: ins_128(6, -0.3f, 0.7f, 0.3f, 128.0f);
+    +10:
+    // unlifted instruction: ins_128(6, 0.3f, 0.7f, -0.3f, 128.0f);
+    +10:
+    // unlifted instruction: ins_128(6, -0.3f, -0.7f, -0.3f, 96.0f);
+    +10:
+    // unlifted instruction: ins_128(6, 0.3f, -0.7f, -0.3f, 96.0f);
+    +10:
+    // unlifted instruction: ins_128(6, -0.3f, -0.7f, 0.3f, 96.0f);
+    +10:
+    // unlifted instruction: ins_75(32.0f, 48.0f, 352.0f, 128.0f);
+    Sub26_436:
+    // unlifted instruction: ins_62();
+    // unlifted instruction: ins_52(27);
+    +120:
+    // unlifted instruction: ins_67(60, 4, 1.5f);
+    // unlifted instruction: ins_139(40, 1, -16711681);
+    // unlifted instruction: ins_62();
+    +60:
+    // unlifted instruction: ins_124(15);
+    // unlifted instruction: ins_27([10016.0f], [10033.0f], 128.0f);
+    // unlifted instruction: ins_15([10016.0f], 128.0f);
+    // unlifted instruction: ins_27([10017.0f], [10033.0f], 48.0f);
+    // unlifted instruction: ins_15([10017.0f], 192.0f);
+    // unlifted instruction: ins_7([10065.0f], 0.0f);
+    // unlifted instruction: ins_7([10066.0f], -0.05235988f);
+    // unlifted instruction: ins_7([10067.0f], 96.0f);
+    // unlifted instruction: ins_7([10068.0f], [10017.0f]);
+    // unlifted instruction: ins_52(28);
+    // unlifted instruction: ins_27([10016.0f], [10033.0f], 128.0f);
+    // unlifted instruction: ins_15([10016.0f], 128.0f);
+    // unlifted instruction: ins_27([10017.0f], [10033.0f], 48.0f);
+    // unlifted instruction: ins_15([10017.0f], 192.0f);
+    // unlifted instruction: ins_7([10065.0f], -3.1415927f);
+    // unlifted instruction: ins_7([10066.0f], 0.05235988f);
+    // unlifted instruction: ins_7([10067.0f], 160.0f);
+    // unlifted instruction: ins_7([10068.0f], [10017.0f]);
+    // unlifted instruction: ins_52(28);
+    // unlifted instruction: ins_27([10016.0f], [10033.0f], 128.0f);
+    // unlifted instruction: ins_15([10016.0f], 128.0f);
+    // unlifted instruction: ins_27([10017.0f], [10033.0f], 48.0f);
+    // unlifted instruction: ins_15([10017.0f], 192.0f);
+    // unlifted instruction: ins_7([10065.0f], 2.3561945f);
+    // unlifted instruction: ins_7([10066.0f], 0.05235988f);
+    // unlifted instruction: ins_7([10067.0f], 224.0f);
+    // unlifted instruction: ins_7([10068.0f], [10017.0f]);
+    // unlifted instruction: ins_52(28);
+    // unlifted instruction: ins_27([10016.0f], [10033.0f], 128.0f);
+    // unlifted instruction: ins_15([10016.0f], 128.0f);
+    // unlifted instruction: ins_27([10017.0f], [10033.0f], 48.0f);
+    // unlifted instruction: ins_15([10017.0f], 192.0f);
+    // unlifted instruction: ins_7([10065.0f], 0.7853982f);
+    // unlifted instruction: ins_7([10066.0f], -0.05235988f);
+    // unlifted instruction: ins_7([10067.0f], 288.0f);
+    // unlifted instruction: ins_7([10068.0f], [10017.0f]);
+    // unlifted instruction: ins_52(28);
+    +80:
+    // unlifted instruction: ins_52(29);
+    // unlifted instruction: ins_67(40, 4, 1.6f);
+    +50:
+    // unlifted instruction: ins_52(29);
+    // unlifted instruction: ins_67(40, 4, 1.6f);
+    +50:
+    // unlifted instruction: ins_52(29);
+    // unlifted instruction: ins_67(40, 4, 1.6f);
+    +50:
+    // unlifted instruction: ins_4(60, Sub26_436);
+}
+
+void Sub27()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_124(5);
+    // unlifted instruction: ins_139(40, 1, -16711681);
+    +30:
+    // unlifted instruction: ins_27([10016.0f], [10082.0f], 0.04f);
+    // unlifted instruction: ins_15([10016.0f], 1.0471976f);
+    // unlifted instruction: ins_25([10017.0f], [10016.0f], 1.0471976f);
+    !E
+    // unlifted instruction: ins_7([10023.0f], 0.026666667f);
+    !*
+    !N
+    // unlifted instruction: ins_7([10023.0f], 0.026666667f);
+    !*
+    !H
+    // unlifted instruction: ins_7([10023.0f], 0.03f);
+    !*
+    !L
+    // unlifted instruction: ins_7([10023.0f], 0.045f);
+    !*
+    !*
+    // unlifted instruction: ins_111(1, 16, 0, 60, -1, [10023.0f], -999.0f);
+    // unlifted instruction: ins_111(0, 64, 0, 60, 1, -1.8325957f, 0.3f);
+    !E
+    // unlifted instruction: ins_6([10000], 2);
+    !*
+    !N
+    // unlifted instruction: ins_6([10000], 4);
+    !*
+    !H
+    // unlifted instruction: ins_6([10000], 5);
+    !*
+    !L
+    // unlifted instruction: ins_6([10000], 7);
+    !*
+    +10:
+    // object BulletEmitter source_line=850 family=th08_macro
+    !*
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.14279966f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=851 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.14279966f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, -1.8325957f, 0.2f);
+    +10:
+    // object BulletEmitter source_line=854 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.15707964f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=855 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.15707964f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 80, 1, -1.8325957f, 0.1f);
+    +10:
+    // object BulletEmitter source_line=858 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.17453292f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=859 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.17453292f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 90, 1, -1.8325957f, 0.0f);
+    +10:
+    // object BulletEmitter source_line=862 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=863 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    +40:
+    // unlifted instruction: ins_27([10016.0f], [10082.0f], 0.04f);
+    // unlifted instruction: ins_16([10016.0f], 0.8975979f);
+    // unlifted instruction: ins_26([10017.0f], [10016.0f], 1.0471976f);
+    // unlifted instruction: ins_111(0, 64, 0, 60, 1, 1.8325957f, 0.3f);
+    +10:
+    // object BulletEmitter source_line=870 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.14279966f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=871 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.14279966f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, 1.8325957f, 0.2f);
+    +10:
+    // object BulletEmitter source_line=874 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.15707964f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=875 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.15707964f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 80, 1, 1.8325957f, 0.1f);
+    +10:
+    // object BulletEmitter source_line=878 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.17453292f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=879 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.17453292f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 90, 1, 1.8325957f, 0.0f);
+    +10:
+    // object BulletEmitter source_line=882 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=883 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 13);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    +30:
+    // unlifted instruction: ins_27([10016.0f], [10082.0f], 0.04f);
+    // unlifted instruction: ins_15([10016.0f], 0.7853982f);
+    // unlifted instruction: ins_25([10017.0f], [10016.0f], 1.0471976f);
+    // unlifted instruction: ins_111(0, 64, 0, 60, 1, -1.8325957f, 0.3f);
+    +10:
+    // object BulletEmitter source_line=890 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.14279966f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=891 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.14279966f);
+    ins_405(0, 0.8f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 70, 1, -1.8325957f, 0.2f);
+    +10:
+    // object BulletEmitter source_line=894 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.15707964f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=895 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.15707964f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 80, 1, -1.8325957f, 0.1f);
+    +10:
+    // object BulletEmitter source_line=898 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.17453292f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=899 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.17453292f);
+    ins_405(0, 1.6f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(0, 64, 0, 90, 1, -1.8325957f, 0.0f);
+    +10:
+    // object BulletEmitter source_line=902 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=903 family=th08_macro
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 2, 8);
+    ins_406(0, [10000], 1);
+    ins_404(0, [10017.0f], 0.19634955f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_53();
+}
+
+void Sub28()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_62();
+    // unlifted instruction: ins_7([10057.0f], [10057.0f]);
+    // unlifted instruction: ins_7([10058.0f], [10058.0f]);
+    // unlifted instruction: ins_7([10059.0f], [10059.0f]);
+    // unlifted instruction: ins_7([10060.0f], [10060.0f]);
+    // unlifted instruction: ins_90(32, [10042.0f], [10043.0f], 120, -2, 100);
+    // unlifted instruction: ins_53();
+}
+
+void Sub29()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_7([10016.0f], 1.0f);
+    // unlifted instruction: ins_6([10036], 10);
+    Sub29_40:
+    // object BulletEmitter source_line=923 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 3, 13);
+    ins_406(0, 1, 1);
+    ins_404(0, 0.0f, 0.7853982f);
+    ins_405(0, [10016.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=924 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 3, 13);
+    ins_406(0, 3, 1);
+    ins_404(0, 0.0f, 0.7853982f);
+    ins_405(0, [10016.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=925 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 3, 13);
+    ins_406(0, 3, 1);
+    ins_404(0, 0.0f, 0.5235988f);
+    ins_405(0, [10016.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=926 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 3, 13);
+    ins_406(0, 5, 1);
+    ins_404(0, 0.0f, 0.3926991f);
+    ins_405(0, [10016.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_15([10016.0f], 0.2f);
+    +1:
+    // unlifted instruction: ins_5(0, Sub29_40, [10036]);
+    // unlifted instruction: ins_53();
+}
+
+void Sub30()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    !E
+    // unlifted instruction: ins_6([10000], 40);
+    !*
+    !N
+    // unlifted instruction: ins_6([10000], 10);
+    !*
+    !H
+    // unlifted instruction: ins_6([10000], 7);
+    !*
+    !L
+    // unlifted instruction: ins_6([10000], 7);
+    !*
+    !E
+    // unlifted instruction: ins_7([10018.0f], 1.3f);
+    !*
+    !N
+    // unlifted instruction: ins_7([10018.0f], 1.3f);
+    !*
+    !H
+    // unlifted instruction: ins_7([10018.0f], 1.5f);
+    !*
+    !L
+    // unlifted instruction: ins_7([10018.0f], 1.7f);
+    !*
+    Sub30_160:
+    !*
+    // unlifted instruction: ins_7([10016.0f], [10082.0f]);
+    // object BulletEmitter source_line=945 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 10);
+    ins_406(0, 3, 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10018.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_15([10016.0f], 0.024543693f);
+    // object BulletEmitter source_line=947 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 8);
+    ins_406(0, 3, 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10018.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_15([10016.0f], 0.024543693f);
+    // object BulletEmitter source_line=949 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 6);
+    ins_406(0, 3, 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10018.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_2([10000]);
+    // unlifted instruction: ins_4(0, Sub30_160);
+    // unlifted instruction: ins_53();
+}
+
+void Sub31()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    Sub31_0:
+    // unlifted instruction: ins_25([10016.0f], [10069.0f], 3.1415927f);
+    // object BulletEmitter source_line=959 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 13);
+    ins_406(0, 5, 1);
+    ins_404(0, [10016.0f], 0.19634955f);
+    ins_405(0, 1.5f, 0.5f);
+    ins_401(0);
+    +10:
+    // unlifted instruction: ins_4(0, Sub31_0);
+    // unlifted instruction: ins_53();
+}
+
+void Sub32()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(56);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_79(16);
+    // unlifted instruction: ins_83(1);
+    // unlifted instruction: ins_160(50);
+    // unlifted instruction: ins_135(0, 31);
+    // unlifted instruction: ins_73(60, [10057.0f], [10058.0f], 1.0666667f);
+    // unlifted instruction: ins_135(0, -1);
+    +60:
+    // unlifted instruction: ins_27([10018.0f], [10085.0f], 100.0f);
+    // unlifted instruction: ins_9([10019.0f], 400.0f);
+    // unlifted instruction: ins_36([10042.0f], 180, 7, 0, [10042.0f], [10059.0f], [10018.0f], [10019.0f]);
+    // unlifted instruction: ins_27([10018.0f], [10086.0f], 100.0f);
+    // unlifted instruction: ins_9([10019.0f], 400.0f);
+    // unlifted instruction: ins_36([10043.0f], 180, 7, 0, [10043.0f], [10060.0f], [10018.0f], [10019.0f]);
+    +120:
+    // unlifted instruction: ins_135(0, 30);
+    +60:
+    // unlifted instruction: ins_1();
+}
+
+void Sub33()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_81(4);
+    // unlifted instruction: ins_123();
+    // unlifted instruction: ins_144(6, 5);
+    // unlifted instruction: ins_160(150);
+    // unlifted instruction: ins_131(13000);
+    // unlifted instruction: ins_148(0);
+    // unlifted instruction: ins_129(3);
+    // unlifted instruction: ins_130(50);
+    // unlifted instruction: ins_134(1920, 44);
+    // unlifted instruction: ins_133(0, 1800, 44);
+    // unlifted instruction: ins_158(0, 0, [10088], 16752800);
+    +10:
+    // unlifted instruction: ins_75(32.0f, 48.0f, 352.0f, 128.0f);
+    // unlifted instruction: ins_67(60, 4, 1.4f);
+    +60:
+    // unlifted instruction: ins_0();
+    // unlifted instruction: ins_62();
+    // unlifted instruction: ins_7([10023.0f], 1.5707964f);
+    // unlifted instruction: ins_28([10022.0f], [10023.0f], 2.5f);
+    // unlifted instruction: ins_135(0, 34);
+    Sub33_340:
+    // unlifted instruction: ins_6([10053], 180);
+    // unlifted instruction: ins_7([10058.0f], 192.0f);
+    // unlifted instruction: ins_7([10057.0f], [10048.0f]);
+    // unlifted instruction: ins_91(36, 0.0f, 0.0f, 200, -1, 100);
+    // unlifted instruction: ins_15([10057.0f], 0.7853982f);
+    // unlifted instruction: ins_91(36, 0.0f, 0.0f, 200, -1, 100);
+    // unlifted instruction: ins_16([10057.0f], 1.5707964f);
+    // unlifted instruction: ins_91(36, 0.0f, 0.0f, 200, -1, 100);
+    +120:
+    // unlifted instruction: ins_67(80, 4, 1.0f);
+    +120:
+    // unlifted instruction: ins_0();
+    // unlifted instruction: ins_62();
+    // unlifted instruction: ins_6([10053], 150);
+    // unlifted instruction: ins_7([10058.0f], 160.0f);
+    // unlifted instruction: ins_7([10057.0f], [10048.0f]);
+    // unlifted instruction: ins_91(36, 0.0f, 0.0f, 200, -1, 100);
+    // unlifted instruction: ins_15([10057.0f], 0.7853982f);
+    // unlifted instruction: ins_91(36, 0.0f, 0.0f, 200, -1, 100);
+    // unlifted instruction: ins_16([10057.0f], 1.5707964f);
+    // unlifted instruction: ins_91(36, 0.0f, 0.0f, 200, -1, 100);
+    +120:
+    // unlifted instruction: ins_67(80, 4, 1.0f);
+    +120:
+    // unlifted instruction: ins_0();
+    // unlifted instruction: ins_62();
+    // unlifted instruction: ins_6([10053], 120);
+    // unlifted instruction: ins_7([10058.0f], 128.0f);
+    // unlifted instruction: ins_25([10057.0f], [10048.0f], [10023.0f]);
+    // unlifted instruction: ins_6([10036], 6);
+    Sub33_936:
+    // unlifted instruction: ins_91(36, 0.0f, 0.0f, 160, -1, 100);
+    // unlifted instruction: ins_16([10057.0f], [10022.0f]);
+    +10:
+    // unlifted instruction: ins_5(550, Sub33_936, [10036]);
+    // unlifted instruction: ins_27([10023.0f], -1.0f, [10023.0f]);
+    // unlifted instruction: ins_27([10022.0f], -1.0f, [10022.0f]);
+    +200:
+    // unlifted instruction: ins_4(70, Sub33_340);
+}
+
+void Sub34()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +260:
+    !E
+    // unlifted instruction: ins_6([10000], 300);
+    !*
+    !N
+    // unlifted instruction: ins_6([10000], 120);
+    !*
+    !H
+    // unlifted instruction: ins_6([10000], 120);
+    !*
+    !L
+    // unlifted instruction: ins_6([10000], 60);
+    !*
+    Sub34_80:
+    // object BulletEmitter source_line=1060 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 2, 10);
+    ins_406(0, 16, 1);
+    ins_404(0, -3.1415927f, 3.1415927f);
+    ins_405(0, 1.5f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1061 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 2, 10);
+    ins_406(0, 32, 1);
+    ins_404(0, -3.1415927f, 3.1415927f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1062 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 2, 10);
+    ins_406(0, 32, 2);
+    ins_404(0, -3.1415927f, 3.1415927f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1063 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 2);
+    ins_402(0, 2, 10);
+    ins_406(0, 32, 2);
+    ins_404(0, -3.1415927f, 3.1415927f);
+    ins_405(0, 3.0f, 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_2([10000]);
+    // unlifted instruction: ins_4(260, Sub34_80);
+}
+
+void Sub35()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    !E
+    // unlifted instruction: ins_6([10037], 4);
+    !*
+    !N
+    // unlifted instruction: ins_6([10037], 2);
+    !*
+    !H
+    // unlifted instruction: ins_6([10037], 2);
+    !*
+    !L
+    // unlifted instruction: ins_6([10037], 2);
+    !*
+    Sub35_80:
+    !*
+    // unlifted instruction: ins_6([10001], [10096]);
+    // unlifted instruction: ins_6([10002], 0);
+    // unlifted instruction: ins_42([10001], 1, 0, Sub35_188);
+    // unlifted instruction: ins_6([10002], 1);
+    // unlifted instruction: ins_4(0, Sub35_380);
+    Sub35_188:
+    // unlifted instruction: ins_50([10001], 3, 0, Sub35_308);
+    // dynamic wait from source opcode 24; TH12 timer labels need a literal
+    // original source: src_ins_24([10003], [10000], 2);
+    // unlifted instruction: ins_42([10003], 0, 0, Sub35_288);
+    // unlifted instruction: ins_6([10002], 1);
+    Sub35_288:
+    // unlifted instruction: ins_4(0, Sub35_380);
+    Sub35_308:
+    // dynamic wait from source opcode 24; TH12 timer labels need a literal
+    // original source: src_ins_24([10003], [10000], 3);
+    // unlifted instruction: ins_42([10003], 0, 0, Sub35_380);
+    // unlifted instruction: ins_6([10002], 1);
+    Sub35_380:
+    // unlifted instruction: ins_40([10002], 0, 0, Sub35_692);
+    // unlifted instruction: ins_27([10016.0f], [10033.0f], 32.0f);
+    // unlifted instruction: ins_16([10016.0f], 16.0f);
+    // unlifted instruction: ins_27([10017.0f], [10033.0f], 32.0f);
+    // unlifted instruction: ins_16([10017.0f], 16.0f);
+    // unlifted instruction: ins_110([10016.0f], [10017.0f]);
+    // object BulletEmitter source_line=1098 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 8);
+    ins_402(0, 3, 13);
+    ins_406(0, 1, 1);
+    ins_404(0, -3.1415927f, 3.1415927f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1099 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 8);
+    ins_402(0, 3, 13);
+    ins_406(0, 1, 1);
+    ins_404(0, -3.1415927f, 3.1415927f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1100 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 8);
+    ins_402(0, 3, 13);
+    ins_406(0, 2, 1);
+    ins_404(0, -3.1415927f, 3.1415927f);
+    ins_405(0, 3.0f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1101 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 8);
+    ins_402(0, 3, 13);
+    ins_406(0, 3, 1);
+    ins_404(0, -3.1415927f, 3.1415927f);
+    ins_405(0, 3.5f, 0.5f);
+    ins_401(0);
+    !*
+    Sub35_692:
+    !*
+    // unlifted instruction: ins_30([10000]);
+    // unlifted instruction: ins_2([10037]);
+    // unlifted instruction: ins_4(0, Sub35_80);
+    // unlifted instruction: ins_53();
+}
+
+void Sub36()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(56);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_79(16);
+    // unlifted instruction: ins_83(1);
+    // unlifted instruction: ins_160(10);
+    // unlifted instruction: ins_38([10016.0f], [10017.0f], [10057.0f], [10058.0f]);
+    // unlifted instruction: ins_15([10016.0f], [10042.0f]);
+    // unlifted instruction: ins_15([10017.0f], [10043.0f]);
+    // unlifted instruction: ins_9([10018.0f], 40.0f);
+    // unlifted instruction: ins_9([10019.0f], 40.0f);
+    // unlifted instruction: ins_36([10042.0f], [10053], 7, 0, [10042.0f], [10016.0f], [10018.0f], [10019.0f]);
+    // unlifted instruction: ins_9([10018.0f], 40.0f);
+    // unlifted instruction: ins_9([10019.0f], 40.0f);
+    // unlifted instruction: ins_36([10043.0f], [10053], 7, 0, [10043.0f], [10017.0f], [10018.0f], [10019.0f]);
+    // unlifted instruction: ins_2([10053]);
+    // unlifted instruction: ins_6([10000], 0);
+    // unlifted instruction: ins_135(0, 35);
+    +120:
+    // unlifted instruction: ins_1();
+}
+
+void Sub37()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_50([10098], 2, 0, Sub37_40);
+    // unlifted instruction: ins_1();
+    Sub37_40:
+    // unlifted instruction: ins_59(0);
+    // unlifted instruction: ins_80(8);
+    // unlifted instruction: ins_148(0);
+    // unlifted instruction: ins_127(0);
+    // unlifted instruction: ins_131(1600);
+    // unlifted instruction: ins_158(0, 0, [10051], 16752800);
+    // unlifted instruction: ins_176(1);
+    // unlifted instruction: ins_75(32.0f, 48.0f, 352.0f, 128.0f);
+    +70:
+    // unlifted instruction: ins_124(5);
+    // unlifted instruction: ins_139(40, 1, -1);
+    +4:
+    // unlifted instruction: ins_139(40, 1, -12080);
+    +4:
+    // unlifted instruction: ins_139(40, 1, -32640);
+    +4:
+    // unlifted instruction: ins_139(40, 1, -49088);
+    +50:
+    // unlifted instruction: ins_124(15);
+    // unlifted instruction: ins_173(1);
+    // unlifted instruction: ins_81(8);
+    // unlifted instruction: ins_129(3);
+    // unlifted instruction: ins_130(51);
+    // unlifted instruction: ins_52(48);
+}
+
+void Sub38()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_105(0);
+    // unlifted instruction: ins_95();
+    // unlifted instruction: ins_113(-1, -1);
+    // unlifted instruction: ins_80(4);
+    // unlifted instruction: ins_110(0.0f, 0.0f);
+    // unlifted instruction: ins_134(1920, 33);
+    // unlifted instruction: ins_153();
+    // unlifted instruction: ins_132(0);
+    // unlifted instruction: ins_6([10039], 0);
+    // unlifted instruction: ins_64(90, 4, 192.0f, 128.0f);
+    !E
+    // unlifted instruction: ins_122(0, 2, 10000000, "�����u�t�@�C���t���C�t�F�m���m���v", "���O���E�i�C�g�o�O", "�u�̔�������", " ");
+    !*
+    !N
+    // unlifted instruction: ins_122(0, 3, 10000000, "�����u�t�@�C���t���C�t�F�m���m���v", "���O���E�i�C�g�o�O", "�u�̔�������", "������ƒ����ۂ����������c�c�A���̓����͌u�̓�������Ȃ��ˁB");
+    !*
+    !H
+    // unlifted instruction: ins_122(0, 4, 10000000, "�����u�t�@�C���t���C�t�F�m���m���v", "���O���E�i�C�g�o�O", "�u�̔�������", "�ǂ��炩�ƌ����ƃo�b�^�Ȋ����B�܂�峂Ȃ�Ȃ�ł�������B");
+    !*
+    !L
+    // unlifted instruction: ins_122(0, 5, 10000000, "�����u�t�@�C���t���C�t�F�m���m���v", "���O���E�i�C�g�o�O", "�u�̔�������", "�R���c�L���V�̑̂�E�ނƊy�����B�������Ȃ��ł��w�p�b�`���B");
+    !*
+    +90:
+    !*
+    // unlifted instruction: ins_81(4);
+    // unlifted instruction: ins_160(180);
+    // unlifted instruction: ins_129(2);
+    // unlifted instruction: ins_130(33);
+    // unlifted instruction: ins_7([10020.0f], 64.0f);
+    Sub38_1240:
+    // unlifted instruction: ins_62();
+    // unlifted instruction: ins_139(40, 1, -16711681);
+    +60:
+    // unlifted instruction: ins_6([10061], 120);
+    // unlifted instruction: ins_7([10065.0f], 0.0f);
+    // unlifted instruction: ins_7([10066.0f], 3.1415927f);
+    // unlifted instruction: ins_7([10067.0f], [10020.0f]);
+    // unlifted instruction: ins_6([10062], 10);
+    // unlifted instruction: ins_52(39);
+    // unlifted instruction: ins_6([10061], 120);
+    // unlifted instruction: ins_7([10065.0f], 1.5707964f);
+    // unlifted instruction: ins_7([10066.0f], 3.1415927f);
+    // unlifted instruction: ins_7([10067.0f], [10020.0f]);
+    // unlifted instruction: ins_6([10062], 60);
+    // unlifted instruction: ins_52(39);
+    // unlifted instruction: ins_6([10061], 120);
+    // unlifted instruction: ins_7([10065.0f], 3.1415927f);
+    // unlifted instruction: ins_7([10066.0f], 3.1415927f);
+    // unlifted instruction: ins_7([10067.0f], [10020.0f]);
+    // unlifted instruction: ins_6([10062], 10);
+    // unlifted instruction: ins_52(39);
+    // unlifted instruction: ins_6([10061], 120);
+    // unlifted instruction: ins_7([10065.0f], -1.5707964f);
+    // unlifted instruction: ins_7([10066.0f], 3.1415927f);
+    // unlifted instruction: ins_7([10067.0f], [10020.0f]);
+    // unlifted instruction: ins_6([10062], 60);
+    // unlifted instruction: ins_52(39);
+    +60:
+    // unlifted instruction: ins_52(40);
+    // unlifted instruction: ins_15([10020.0f], 24.0f);
+    // unlifted instruction: ins_67(60, 4, 2.0f);
+    +60:
+    // unlifted instruction: ins_139(40, 1, -16711681);
+    // unlifted instruction: ins_62();
+    +60:
+    // unlifted instruction: ins_6([10061], 120);
+    // unlifted instruction: ins_7([10065.0f], 0.0f);
+    // unlifted instruction: ins_7([10066.0f], -3.1415927f);
+    // unlifted instruction: ins_7([10067.0f], [10020.0f]);
+    // unlifted instruction: ins_6([10062], 10);
+    // unlifted instruction: ins_52(39);
+    // unlifted instruction: ins_6([10061], 120);
+    // unlifted instruction: ins_7([10065.0f], 1.5707964f);
+    // unlifted instruction: ins_7([10066.0f], -3.1415927f);
+    // unlifted instruction: ins_7([10067.0f], [10020.0f]);
+    // unlifted instruction: ins_6([10062], 60);
+    // unlifted instruction: ins_52(39);
+    // unlifted instruction: ins_6([10061], 120);
+    // unlifted instruction: ins_7([10065.0f], 3.1415927f);
+    // unlifted instruction: ins_7([10066.0f], -3.1415927f);
+    // unlifted instruction: ins_7([10067.0f], [10020.0f]);
+    // unlifted instruction: ins_6([10062], 10);
+    // unlifted instruction: ins_52(39);
+    // unlifted instruction: ins_6([10061], 120);
+    // unlifted instruction: ins_7([10065.0f], -1.5707964f);
+    // unlifted instruction: ins_7([10066.0f], -3.1415927f);
+    // unlifted instruction: ins_7([10067.0f], [10020.0f]);
+    // unlifted instruction: ins_6([10062], 60);
+    // unlifted instruction: ins_52(39);
+    +60:
+    // unlifted instruction: ins_52(41);
+    // unlifted instruction: ins_15([10020.0f], 24.0f);
+    // unlifted instruction: ins_67(60, 4, 1.5f);
+    +60:
+    // unlifted instruction: ins_4(90, Sub38_1240);
+}
+
+void Sub39()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_6([10053], [10053]);
+    // unlifted instruction: ins_7([10057.0f], [10057.0f]);
+    // unlifted instruction: ins_28([10058.0f], [10058.0f], [10053.0f]);
+    // unlifted instruction: ins_28([10059.0f], [10059.0f], [10053.0f]);
+    // unlifted instruction: ins_92(43, 0.0f, 0.0f, [10054], -2, 100);
+    // unlifted instruction: ins_53();
+}
+
+void Sub40()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_6([10036], 40);
+    // unlifted instruction: ins_7([10016.0f], -1.5707964f);
+    // unlifted instruction: ins_7([10017.0f], [10016.0f]);
+    // unlifted instruction: ins_7([10018.0f], 0.09817477f);
+    // unlifted instruction: ins_111(0, 8192, 1, 270, -1, -1.0f, -1.0f);
+    Sub40_120:
+    // unlifted instruction: ins_111(1, 64, 1, 90, 2, -1.5707964f, 1.4f);
+    // object BulletEmitter source_line=1272 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 8);
+    ins_406(0, 2, 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, 3.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1273 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 8);
+    ins_406(0, 2, 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, 3.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1274 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 8);
+    ins_406(0, 4, 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, 3.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1275 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 8);
+    ins_406(0, 4, 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, 3.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1276 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 2, 1);
+    ins_404(0, [10016.0f], 0.7853982f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1277 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 2, 1);
+    ins_404(0, [10016.0f], 0.7853982f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1278 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 3, 1);
+    ins_404(0, [10016.0f], 0.7853982f);
+    ins_405(0, 2.2f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1279 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 3, 1);
+    ins_404(0, [10016.0f], 0.7853982f);
+    ins_405(0, 2.2f, 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_111(1, 64, 0, 90, 2, 1.5707964f, -999.0f);
+    // object BulletEmitter source_line=1281 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 8);
+    ins_406(0, 1, 1);
+    ins_404(0, [10017.0f], 0.2617994f);
+    ins_405(0, 1.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1282 family=th08_macro
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 2, 1);
+    ins_404(0, [10017.0f], 0.7853982f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=1283 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 8);
+    ins_406(0, 2, 1);
+    ins_404(0, [10017.0f], 0.2617994f);
+    ins_405(0, 1.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1284 family=th08_macro
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 4, 1);
+    ins_404(0, [10017.0f], 0.7853982f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=1285 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 8);
+    ins_406(0, 2, 1);
+    ins_404(0, [10017.0f], 0.2617994f);
+    ins_405(0, 1.8f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1286 family=th08_macro
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 4, 2);
+    ins_404(0, [10017.0f], 0.7853982f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    !*
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_16([10017.0f], [10018.0f]);
+    // unlifted instruction: ins_16([10017.0f], [10018.0f]);
+    // unlifted instruction: ins_17([10018.0f], 1.03f);
+    +9:
+    // unlifted instruction: ins_5(0, Sub40_120, [10036]);
+    // unlifted instruction: ins_53();
+}
+
+void Sub41()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_6([10036], 40);
+    // unlifted instruction: ins_7([10016.0f], -1.5707964f);
+    // unlifted instruction: ins_7([10017.0f], [10016.0f]);
+    // unlifted instruction: ins_7([10018.0f], 0.09817477f);
+    // unlifted instruction: ins_111(0, 8192, 1, 270, -1, -1.0f, -1.0f);
+    Sub41_120:
+    // unlifted instruction: ins_111(1, 64, 1, 90, 2, -1.5707964f, 1.4f);
+    // object BulletEmitter source_line=1305 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 8);
+    ins_406(0, 2, 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, 3.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1306 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 8);
+    ins_406(0, 2, 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, 3.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1307 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 8);
+    ins_406(0, 4, 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, 3.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1308 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 2, 8);
+    ins_406(0, 4, 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, 3.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1309 family=th08_macro
+    !E
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 2, 1);
+    ins_404(0, [10016.0f], 0.7853982f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1310 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 2, 1);
+    ins_404(0, [10016.0f], 0.7853982f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1311 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 3, 1);
+    ins_404(0, [10016.0f], 0.7853982f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1312 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 3, 1);
+    ins_404(0, [10016.0f], 0.7853982f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_111(1, 64, 1, 90, 2, 1.5707964f, -999.0f);
+    // object BulletEmitter source_line=1314 family=th08_macro
+    !N
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 8);
+    ins_406(0, 1, 1);
+    ins_404(0, [10017.0f], 0.2617994f);
+    ins_405(0, 1.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1315 family=th08_macro
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 2, 1);
+    ins_404(0, [10017.0f], 0.7853982f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=1316 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 8);
+    ins_406(0, 2, 1);
+    ins_404(0, [10017.0f], 0.2617994f);
+    ins_405(0, 1.4f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1317 family=th08_macro
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 4, 1);
+    ins_404(0, [10017.0f], 0.7853982f);
+    ins_405(0, 1.2f, 0.5f);
+    ins_401(0);
+    // object BulletEmitter source_line=1318 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 8);
+    ins_406(0, 2, 1);
+    ins_404(0, [10017.0f], 0.2617994f);
+    ins_405(0, 1.8f, 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1319 family=th08_macro
+    ins_400(0);
+    ins_407(0, 1);
+    ins_402(0, 2, 10);
+    ins_406(0, 4, 2);
+    ins_404(0, [10017.0f], 0.7853982f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    !*
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_16([10017.0f], [10018.0f]);
+    // unlifted instruction: ins_17([10018.0f], 1.03f);
+    +9:
+    // unlifted instruction: ins_5(0, Sub41_120, [10036]);
+    // unlifted instruction: ins_53();
+}
+
+void Sub42()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    !E
+    // unlifted instruction: ins_6([10000], 100);
+    !*
+    !N
+    // unlifted instruction: ins_6([10000], 80);
+    !*
+    !H
+    // unlifted instruction: ins_6([10000], 50);
+    !*
+    !L
+    // unlifted instruction: ins_6([10000], 20);
+    !*
+    !E
+    // unlifted instruction: ins_6([10001], 1);
+    !*
+    !N
+    // unlifted instruction: ins_6([10001], 1);
+    !*
+    !H
+    // unlifted instruction: ins_6([10001], 2);
+    !*
+    !L
+    // unlifted instruction: ins_6([10001], 2);
+    !*
+    !E
+    // unlifted instruction: ins_7([10016.0f], 1.0f);
+    !*
+    !N
+    // unlifted instruction: ins_7([10016.0f], 1.5f);
+    !*
+    !H
+    // unlifted instruction: ins_7([10016.0f], 2.0f);
+    !*
+    !L
+    // unlifted instruction: ins_7([10016.0f], 2.5f);
+    !*
+    Sub42_240:
+    // object BulletEmitter source_line=1344 family=th08_macro
+    !ENHL67
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 3, 6);
+    ins_406(0, 1, 5);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.5f, 1.0f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1345 family=th08_macro
+    !ENHL57
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 1, 5);
+    ins_406(0, 1, [10001]);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, [10016.0f], 1.0f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_2([10000]);
+    // object BulletEmitter source_line=1347 family=th08_macro
+    !ENHL67
+    ins_400(0);
+    ins_407(0, 0);
+    ins_402(0, 3, 6);
+    ins_406(0, 1, 5);
+    ins_404(0, 0.0f, 0.18479957f);
+    ins_405(0, 2.5f, 1.0f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_2([10000]);
+    // unlifted instruction: ins_4(0, Sub42_240);
+    // unlifted instruction: ins_53();
+}
+
+void Sub43()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(55);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_79(16);
+    // unlifted instruction: ins_83(1);
+    // unlifted instruction: ins_174(1);
+    // unlifted instruction: ins_160(10);
+    // unlifted instruction: ins_18([10017.0f], 100.0f);
+    // unlifted instruction: ins_73([10053], [10057.0f], [10058.0f], [10059.0f]);
+    // unlifted instruction: ins_2([10053]);
+    // unlifted instruction: ins_74(0, [10058.0f], 0.0f);
+    // unlifted instruction: ins_135(0, 42);
+    +960:
+    // unlifted instruction: ins_1();
+}
+
+void Sub44()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_105(0);
+    // unlifted instruction: ins_95();
+    // unlifted instruction: ins_113(-1, -1);
+    // unlifted instruction: ins_80(4);
+    // unlifted instruction: ins_110(0.0f, 0.0f);
+    // unlifted instruction: ins_134(2220, 33);
+    // unlifted instruction: ins_153();
+    // unlifted instruction: ins_132(0);
+    // unlifted instruction: ins_6([10039], 0);
+    // unlifted instruction: ins_64(90, 4, 192.0f, 128.0f);
+    !E
+    // unlifted instruction: ins_122(0, 6, 10000000, "忕��u���g���o�O�v", "���O���E�i�C�g�o�O", "�������", "�L���C�ł��B");
+    !*
+    !N
+    // unlifted instruction: ins_122(0, 7, 10000000, "忕��u���g���o�O�X�g�[���v", "���O���E�i�C�g�o�O", "�������", "��ʂ̗�����z������u�Ԃł��B�����̐_��B");
+    !*
+    !H
+    // unlifted instruction: ins_122(0, 8, 10000000, "忕��u�i�C�g�o�O�X�g�[���v", "���O���E�i�C�g�o�O", "���͂������ĉ��߂Ă�����Ƃ��ǂ�峂ɐ�������ł��傤�B", "���āA峂̗��͉��߂Ȃ��B");
+    !*
+    !L
+    // unlifted instruction: ins_122(0, 9, 10000000, "忕��u�i�C�g�o�O�g���l�[�h�v", "���O���E�i�C�g�o�O", "�����Č����΂�����Ƒ傫�ڂ̐΂������グ����A", "�A���̗����т�����t���Ă����A���̊����B");
+    !*
+    +90:
+    !*
+    // unlifted instruction: ins_81(4);
+    // unlifted instruction: ins_160(180);
+    !E
+    // unlifted instruction: ins_6([10039], 2);
+    !*
+    !N
+    // unlifted instruction: ins_6([10039], 5);
+    !*
+    !H
+    // unlifted instruction: ins_6([10039], 5);
+    !*
+    !L
+    // unlifted instruction: ins_6([10039], 5);
+    !*
+    !*
+    // unlifted instruction: ins_7([10020.0f], 0.049087387f);
+    // unlifted instruction: ins_7([10023.0f], 1.5707964f);
+    // unlifted instruction: ins_28([10022.0f], [10023.0f], 2.5f);
+    Sub44_1332:
+    // unlifted instruction: ins_62();
+    // unlifted instruction: ins_7([10065.0f], [10020.0f]);
+    // unlifted instruction: ins_52(47);
+    +200:
+    // unlifted instruction: ins_67(60, 4, 1.3f);
+    // unlifted instruction: ins_6([10053], 130);
+    // unlifted instruction: ins_7([10058.0f], 128.0f);
+    // unlifted instruction: ins_25([10057.0f], [10048.0f], [10023.0f]);
+    // unlifted instruction: ins_6([10036], 6);
+    // unlifted instruction: ins_62();
+    Sub44_1500:
+    // unlifted instruction: ins_91(46, 0.0f, 0.0f, 20, -2, 10);
+    // unlifted instruction: ins_16([10057.0f], [10022.0f]);
+    +10:
+    // unlifted instruction: ins_5(290, Sub44_1500, [10036]);
+    // unlifted instruction: ins_27([10023.0f], -1.0f, [10023.0f]);
+    // unlifted instruction: ins_27([10022.0f], -1.0f, [10022.0f]);
+    // unlifted instruction: ins_27([10020.0f], -1.0f, [10020.0f]);
+    // unlifted instruction: ins_30([10039]);
+    +180:
+    // unlifted instruction: ins_4(90, Sub44_1332);
+}
+
+void Sub45()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_6([10036], 6);
+    !E
+    // unlifted instruction: ins_6([10038], 16);
+    !*
+    !N
+    // unlifted instruction: ins_6([10038], 4);
+    !*
+    !H
+    // unlifted instruction: ins_6([10038], 3);
+    !*
+    !L
+    // unlifted instruction: ins_6([10038], 2);
+    !*
+    Sub45_100:
+    !*
+    // unlifted instruction: ins_27([10016.0f], [10033.0f], 32.0f);
+    // unlifted instruction: ins_16([10016.0f], 16.0f);
+    // unlifted instruction: ins_27([10017.0f], [10033.0f], 32.0f);
+    // unlifted instruction: ins_16([10017.0f], 16.0f);
+    // unlifted instruction: ins_110([10016.0f], [10017.0f]);
+    // object BulletEmitter source_line=1433 family=th08_macro
+    ins_400(0);
+    ins_407(0, 8);
+    ins_402(0, 3, 8);
+    ins_406(0, 1, 1);
+    ins_404(0, -3.1415927f, 3.1415927f);
+    ins_405(0, 2.0f, 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_2([10038]);
+    // unlifted instruction: ins_5(0, Sub45_100, [10036]);
+    // unlifted instruction: ins_53();
+}
+
+void Sub46()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_54(55);
+    // unlifted instruction: ins_77(24.0f, 24.0f);
+    // unlifted instruction: ins_79(16);
+    // unlifted instruction: ins_83(1);
+    // unlifted instruction: ins_160(60);
+    // unlifted instruction: ins_38([10016.0f], [10017.0f], [10057.0f], [10058.0f]);
+    // unlifted instruction: ins_15([10016.0f], [10042.0f]);
+    // unlifted instruction: ins_15([10017.0f], [10043.0f]);
+    // unlifted instruction: ins_9([10018.0f], 40.0f);
+    // unlifted instruction: ins_9([10019.0f], 40.0f);
+    // unlifted instruction: ins_36([10042.0f], [10053], 7, 0, [10042.0f], [10016.0f], [10018.0f], [10019.0f]);
+    // unlifted instruction: ins_9([10018.0f], 40.0f);
+    // unlifted instruction: ins_9([10019.0f], 40.0f);
+    // unlifted instruction: ins_36([10043.0f], [10053], 7, 0, [10043.0f], [10017.0f], [10018.0f], [10019.0f]);
+    // unlifted instruction: ins_2([10053]);
+    // unlifted instruction: ins_135(0, 45);
+    +84:
+    // unlifted instruction: ins_1();
+}
+
+void Sub47()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_6([10036], 8);
+    // unlifted instruction: ins_7([10016.0f], -1.5707964f);
+    // unlifted instruction: ins_7([10018.0f], [10057.0f]);
+    // unlifted instruction: ins_27([10017.0f], [10057.0f], 0.1f);
+    // unlifted instruction: ins_27([10023.0f], [10039.0f], 0.2f);
+    // unlifted instruction: ins_15([10023.0f], 1.0f);
+    // unlifted instruction: ins_111(0, 8192, 1, 400, -1, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(1, 131072, 1, 60, -1, -1.0f, -1.0f);
+    // unlifted instruction: ins_51([10057.0f], 0.0f, 0, Sub47_296);
+    // unlifted instruction: ins_111(2, 64, 0, 60, 1, -1.5707964f, -999.0f);
+    // unlifted instruction: ins_4(0, Sub47_336);
+    Sub47_296:
+    // unlifted instruction: ins_111(2, 64, 0, 60, 1, 1.5707964f, -999.0f);
+    Sub47_336:
+    // unlifted instruction: ins_111(3, 16384, 0, 3, 0, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(4, 64, 0, 60, 1, 3.1415927f, 0.0f);
+    // unlifted instruction: ins_111(5, 16384, 0, 0, 13, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(6, 131072, 1, 40, -1, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(9, 524288, 0, 27, -1, -1.0f, -1.0f);
+    Sub47_536:
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, 1.5707964f, 1.1f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 13, -1.0f, -1.0f);
+    // object BulletEmitter source_line=1485 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, 1.5707964f, 2.0f);
+    // object BulletEmitter source_line=1487 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1488 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, 3.1415927f, 1.2f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 11, -1.0f, -1.0f);
+    +4:
+    // object BulletEmitter source_line=1494 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, 3.1415927f, 2.0f);
+    // object BulletEmitter source_line=1496 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1497 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, -1.5707964f, 1.3f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 10, -1.0f, -1.0f);
+    +4:
+    // object BulletEmitter source_line=1503 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, -1.5707964f, 2.0f);
+    // object BulletEmitter source_line=1505 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1506 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_15([10018.0f], [10017.0f]);
+    +4:
+    // unlifted instruction: ins_5(0, Sub47_536, [10036]);
+    // unlifted instruction: ins_6([10036], 8);
+    Sub47_1476:
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, 1.5707964f, 1.1f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 13, -1.0f, -1.0f);
+    // object BulletEmitter source_line=1516 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, 1.5707964f, 2.0f);
+    // object BulletEmitter source_line=1518 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1519 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, 3.1415927f, 1.2f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 11, -1.0f, -1.0f);
+    +4:
+    // object BulletEmitter source_line=1525 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, 3.1415927f, 2.0f);
+    // object BulletEmitter source_line=1527 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1528 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, -1.5707964f, 1.3f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 10, -1.0f, -1.0f);
+    +4:
+    // object BulletEmitter source_line=1534 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 60, 1, -1.5707964f, 2.0f);
+    // object BulletEmitter source_line=1536 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1537 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_16([10018.0f], [10017.0f]);
+    +4:
+    // unlifted instruction: ins_5(12, Sub47_1476, [10036]);
+    // unlifted instruction: ins_53();
+}
+
+void Sub48()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_105(0);
+    // unlifted instruction: ins_95();
+    // unlifted instruction: ins_113(-1, -1);
+    // unlifted instruction: ins_80(4);
+    // unlifted instruction: ins_110(0.0f, 0.0f);
+    // unlifted instruction: ins_134(2400, 51);
+    // unlifted instruction: ins_153();
+    // unlifted instruction: ins_132(0);
+    // unlifted instruction: ins_6([10039], 0);
+    // unlifted instruction: ins_64(90, 4, 192.0f, 128.0f);
+    !N
+    // unlifted instruction: ins_122(0, 10, 10000000, "�B峁u�i��孋��v", "���O���E�i�C�g�o�O", "����܂�邪�i���Ƃ悩���峂��O���ė�����̂ł��B", "峎g����峂ɂȂ��Ă��܂����A���O���̃��X�g�X�y���B");
+    !*
+    !H
+    // unlifted instruction: ins_122(0, 11, 10000000, "�B峁u�i��孋��v", "���O���E�i�C�g�o�O", "�u�͌��邾���ł��Ȃ���ʎ�����Ă���峂̗l�ȋC������B", "������l�Ԃ��x���e�N�j�b�N�̈�B");
+    !*
+    !L
+    // unlifted instruction: ins_122(0, 12, 10000000, "�B峁u�i��孋��v", "���O���E�i�C�g�o�O", "���̒��̌u�̗c���͗�ɂ��ꂸ��σL���C�B", "���O�����x�����ȁB");
+    !*
+    +90:
+    !*
+    // unlifted instruction: ins_81(4);
+    // unlifted instruction: ins_160(120);
+    // unlifted instruction: ins_6([10039], 6);
+    // unlifted instruction: ins_7([10020.0f], 0.03926991f);
+    // unlifted instruction: ins_7([10023.0f], 1.5707964f);
+    // unlifted instruction: ins_28([10022.0f], [10023.0f], 2.5f);
+    Sub48_1028:
+    // unlifted instruction: ins_62();
+    // unlifted instruction: ins_7([10065.0f], [10020.0f]);
+    // unlifted instruction: ins_52(49);
+    +130:
+    // unlifted instruction: ins_67(60, 4, 1.3f);
+    // unlifted instruction: ins_6([10053], 130);
+    // unlifted instruction: ins_7([10058.0f], 128.0f);
+    // unlifted instruction: ins_25([10057.0f], [10048.0f], [10023.0f]);
+    // unlifted instruction: ins_6([10036], 6);
+    // unlifted instruction: ins_62();
+    // unlifted instruction: ins_27([10023.0f], -1.0f, [10023.0f]);
+    // unlifted instruction: ins_27([10022.0f], -1.0f, [10022.0f]);
+    // unlifted instruction: ins_27([10020.0f], -1.0f, [10020.0f]);
+    // unlifted instruction: ins_30([10039]);
+    +60:
+    // unlifted instruction: ins_4(90, Sub48_1028);
+}
+
+void Sub49()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_6([10036], 8);
+    // unlifted instruction: ins_7([10016.0f], -1.5707964f);
+    // unlifted instruction: ins_7([10018.0f], [10057.0f]);
+    // unlifted instruction: ins_27([10017.0f], [10057.0f], 0.1f);
+    // unlifted instruction: ins_27([10023.0f], [10039.0f], 0.2f);
+    // unlifted instruction: ins_15([10023.0f], 1.0f);
+    // unlifted instruction: ins_111(0, 8192, 1, 400, -1, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(1, 131072, 1, 60, -1, -1.0f, -1.0f);
+    // unlifted instruction: ins_51([10057.0f], 0.0f, 0, Sub49_296);
+    // unlifted instruction: ins_111(2, 64, 0, 30, 1, -1.5707964f, -999.0f);
+    // unlifted instruction: ins_4(0, Sub49_336);
+    Sub49_296:
+    // unlifted instruction: ins_111(2, 64, 0, 30, 1, 1.5707964f, -999.0f);
+    Sub49_336:
+    // unlifted instruction: ins_111(3, 16384, 0, 3, 0, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(4, 64, 0, 60, 1, 3.1415927f, 0.0f);
+    // unlifted instruction: ins_111(5, 16384, 0, 0, 13, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(6, 131072, 1, 10, -1, -1.0f, -1.0f);
+    // unlifted instruction: ins_111(9, 524288, 0, 27, -1, -1.0f, -1.0f);
+    Sub49_536:
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, 2.0943952f, 1.8f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 13, -1.0f, -1.0f);
+    // object BulletEmitter source_line=1611 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, 2.0943952f, 2.4f);
+    // object BulletEmitter source_line=1613 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1614 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, 3.1415927f, 1.9f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 11, -1.0f, -1.0f);
+    +3:
+    // object BulletEmitter source_line=1620 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, 3.1415927f, 2.4f);
+    // object BulletEmitter source_line=1622 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1623 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, -2.0943952f, 2.0f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 10, -1.0f, -1.0f);
+    +2:
+    // object BulletEmitter source_line=1629 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, -2.0943952f, 2.6f);
+    // object BulletEmitter source_line=1631 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1632 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_15([10018.0f], [10017.0f]);
+    +2:
+    // unlifted instruction: ins_5(0, Sub49_536, [10036]);
+    // unlifted instruction: ins_6([10036], 8);
+    Sub49_1476:
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, 2.0943952f, 1.8f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 13, -1.0f, -1.0f);
+    // object BulletEmitter source_line=1642 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, 2.0943952f, 2.4f);
+    // object BulletEmitter source_line=1644 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1645 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, 3.1415927f, 1.9f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 11, -1.0f, -1.0f);
+    +2:
+    // object BulletEmitter source_line=1651 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, 3.1415927f, 2.4f);
+    // object BulletEmitter source_line=1653 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1654 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, -2.0943952f, 2.0f);
+    // unlifted instruction: ins_111(8, 16384, 0, 2, 10, -1.0f, -1.0f);
+    +3:
+    // object BulletEmitter source_line=1660 family=th08_macro
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    // unlifted instruction: ins_111(7, 64, 0, 10, 1, -2.0943952f, 2.6f);
+    // object BulletEmitter source_line=1662 family=th08_macro
+    !H
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 1);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    // object BulletEmitter source_line=1663 family=th08_macro
+    !L
+    ins_400(0);
+    ins_407(0, 3);
+    ins_402(0, 0, 0);
+    ins_406(0, [10039], 2);
+    ins_404(0, [10016.0f], 0.2617994f);
+    ins_405(0, [10023.0f], 0.5f);
+    ins_401(0);
+    !*
+    !*
+    // unlifted instruction: ins_16([10023.0f], 0.006f);
+    // unlifted instruction: ins_15([10016.0f], [10018.0f]);
+    // unlifted instruction: ins_16([10018.0f], [10017.0f]);
+    +2:
+    // unlifted instruction: ins_5(7, Sub49_1476, [10036]);
+    // unlifted instruction: ins_53();
+}
+
+void Sub50()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_184(1);
+    // unlifted instruction: ins_6([10051], 1);
+    // unlifted instruction: ins_129(0);
+    // unlifted instruction: ins_130(-1);
+    // unlifted instruction: ins_80(3);
+    // unlifted instruction: ins_7([10016.0f], [10082.0f]);
+    // unlifted instruction: ins_66(60, 4, [10016.0f], 0.15f);
+    // unlifted instruction: ins_7([10016.0f], 0.0f);
+    // unlifted instruction: ins_6([10036], 6);
+    Sub50_172:
+    +1:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -1, [10016.0f], 0, 0);
+    +1:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -1, [10016.0f], 0, 0);
+    +1:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -32640, [10016.0f], 0, 0);
+    +1:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -32640, [10016.0f], 0, 0);
+    +1:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8323200, [10016.0f], 0, 0);
+    +1:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8323200, [10016.0f], 0, 0);
+    +1:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8355585, [10016.0f], 0, 0);
+    +1:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8355585, [10016.0f], 0, 0);
+    +1:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -128, [10016.0f], 0, 0);
+    +1:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -128, [10016.0f], 0, 0);
+    // unlifted instruction: ins_124(7);
+    // unlifted instruction: ins_5(0, Sub50_172, [10036]);
+    // unlifted instruction: ins_124(18);
+    // unlifted instruction: ins_140(26, 64, -8355585, -999.0f, 0, 0);
+    // unlifted instruction: ins_123();
+    // unlifted instruction: ins_127(-1);
+    // unlifted instruction: ins_6([10051], 0);
+    +3000:
+    // unlifted instruction: ins_1();
+}
+
+void Sub51()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_184(1);
+    // unlifted instruction: ins_129(0);
+    // unlifted instruction: ins_130(-1);
+    // unlifted instruction: ins_80(3);
+    // unlifted instruction: ins_7([10016.0f], [10082.0f]);
+    // unlifted instruction: ins_66(60, 4, [10016.0f], 0.15f);
+    // unlifted instruction: ins_173(0);
+    // unlifted instruction: ins_40([10099], 0, 0, Sub51_1008);
+    // unlifted instruction: ins_7([10016.0f], 0.0f);
+    // unlifted instruction: ins_6([10036], 6);
+    // unlifted instruction: ins_124(7);
+    Sub51_212:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -1, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -1, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -32640, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -32640, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8323200, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8323200, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8355585, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8355585, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -128, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -128, [10016.0f], 0, 0);
+    // unlifted instruction: ins_5(0, Sub51_212, [10036]);
+    // unlifted instruction: ins_124(18);
+    // unlifted instruction: ins_140(26, 64, -8355585, -999.0f, 0, 0);
+    Sub51_1008:
+    // unlifted instruction: ins_123();
+    // unlifted instruction: ins_127(-1);
+    // unlifted instruction: ins_6([10051], 1);
+    +2:
+    // unlifted instruction: ins_6([10051], 0);
+    +3000:
+    // unlifted instruction: ins_1();
+}
+
+void Sub52()
+{
+    // Timeline lowering structured -> th10; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_184(1);
+    // unlifted instruction: ins_129(0);
+    // unlifted instruction: ins_130(-1);
+    // unlifted instruction: ins_80(3);
+    // unlifted instruction: ins_7([10016.0f], [10082.0f]);
+    // unlifted instruction: ins_66(60, 4, [10016.0f], 0.15f);
+    // unlifted instruction: ins_173(0);
+    // unlifted instruction: ins_6([10039], 0);
+    // unlifted instruction: ins_40([10099], 0, 0, Sub52_1048);
+    // unlifted instruction: ins_7([10016.0f], 0.0f);
+    // unlifted instruction: ins_6([10036], 6);
+    // unlifted instruction: ins_124(7);
+    Sub52_232:
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -1, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -1, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -32640, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -32640, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8323200, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8323200, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8355585, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -8355585, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -128, [10016.0f], 0, 0);
+    // unlifted instruction: ins_15([10016.0f], 0.19634955f);
+    // unlifted instruction: ins_37([10016.0f]);
+    // unlifted instruction: ins_140(26, 1, -128, [10016.0f], 0, 0);
+    // unlifted instruction: ins_5(0, Sub52_232, [10036]);
+    // unlifted instruction: ins_124(18);
+    // unlifted instruction: ins_140(26, 64, -8355585, -999.0f, 0, 0);
+    // unlifted instruction: ins_6([10039], 1);
+    Sub52_1048:
+    // unlifted instruction: ins_123();
+    // unlifted instruction: ins_40([10039], 0, 0, Sub52_1104);
+    // unlifted instruction: ins_2(120);
+    Sub52_1104:
+    // unlifted instruction: ins_127(-1);
+    // unlifted instruction: ins_6([10051], 1);
+    +2:
+    // unlifted instruction: ins_6([10051], 0);
+    +3000:
+    // unlifted instruction: ins_1();
+}

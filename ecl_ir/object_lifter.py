@@ -5,6 +5,7 @@ from typing import Iterable
 
 from .lifter import lift_program as lift_bullets
 from .model import AnimationOp, BossPattern, EnemyOp, Function, Instruction, IRObject, LaserEmitter, MovementOp, Program
+from .op_ir import op_event, op_key_for_opcode
 from .program_lifter import lift_program_adapters
 from .timeline_lifter import lift_timelines
 
@@ -18,7 +19,12 @@ def a(ins: Instruction, index: int, default: str = "") -> str:
 def make_obj(cls, program: Program, func: Function, ins: Instruction, family: str, object_id: str = "0") -> IRObject:
     obj = cls(program.game, func.name, ins.line_no, object_id, family)
     obj.raw.append(ins)
+    obj.fields.setdefault("ir_ops", []).append(op_event(program.game, ins.opcode, ins.args, ins.line_no, ins.difficulty))
     return obj
+
+
+def append_ir_op(obj: IRObject, game: str, ins: Instruction) -> None:
+    obj.fields.setdefault("ir_ops", []).append(op_event(game, ins.opcode, ins.args, ins.line_no, ins.difficulty))
 
 
 def lift_all_objects(program: Program) -> list[object]:
@@ -58,6 +64,7 @@ def lift_lasers(program: Program, func: Function) -> list[LaserEmitter]:
         obj = active.get(laser_id)
         if obj and ins.opcode in laser_ops:
             obj.raw.append(ins)
+            append_ir_op(obj, program.game, ins)
             apply_laser(obj, ins, program.game)
     return objects
 
@@ -113,6 +120,7 @@ def lift_movements(program: Program, func: Function) -> list[MovementOp]:
         obj = make_obj(MovementOp, program, func, ins, family)
         op_name = movement_names[ins.opcode]
         obj.fields["op"] = op_name
+        obj.fields["op_key"] = op_key_for_opcode(program.game, ins.opcode)
         obj.fields["args"] = ins.args
         obj.fields["difficulty"] = ins.difficulty
         obj.fields.setdefault("semantics", {})["motion"] = {"op": op_name}
@@ -159,11 +167,11 @@ def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
     for ins in func.body:
         if ins.opcode in animation:
             obj = make_obj(AnimationOp, program, func, ins, family)
-            obj.fields = {"op": animation[ins.opcode], "args": ins.args, "difficulty": ins.difficulty}
+            obj.fields.update({"op": animation[ins.opcode], "op_key": op_key_for_opcode(program.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
             objects.append(obj)
         elif ins.opcode in enemy:
             obj = make_obj(EnemyOp, program, func, ins, family)
-            obj.fields = {"op": enemy[ins.opcode], "args": ins.args, "difficulty": ins.difficulty}
+            obj.fields.update({"op": enemy[ins.opcode], "op_key": op_key_for_opcode(program.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
             objects.append(obj)
     return objects
 
@@ -186,7 +194,8 @@ def lift_boss_patterns(program: Program, func: Function) -> list[BossPattern]:
                 objects.append(current)
             else:
                 current.raw.append(ins)
-            current.fields.setdefault("ops", []).append({"op": boss_ops[ins.opcode], "opcode": ins.opcode, "args": ins.args, "line": ins.line_no})
+                append_ir_op(current, program.game, ins)
+            current.fields.setdefault("ops", []).append({"op": boss_ops[ins.opcode], "op_key": op_key_for_opcode(program.game, ins.opcode), "opcode": ins.opcode, "args": ins.args, "line": ins.line_no})
             if boss_ops[ins.opcode].startswith("spell"):
                 current.fields["spell"] = {"opcode": ins.opcode, "args": ins.args}
             elif boss_ops[ins.opcode] == "setInterrupt":

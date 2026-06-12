@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/happyelements/crack/th062/ecl_ir/cli.py", line 635, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/happyelements/crack/th062/ecl_ir/cli.py", line 631, in main
+    return args.func(args)
+           ~~~~~~~~~^^^^^^
+  File "/Users/happyelements/crack/th062/ecl_ir/cli.py", line 578, in cmd_transpile
+    output = emit_transpile(program, objects, args.target)
+  File "/Users/happyelements/crack/th062/ecl_ir/cli.py", line 85, in emit_transpile
+    body_lines = emit_function_body(function_objects, target)
+  File "/Users/happyelements/crack/th062/ecl_ir/cli.py", line 243, in emit_function_body
+    for line in compile_object(obj, target).splitlines():
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/happyelements/crack/th062/ecl_ir/backend.py", line 236, in compile_object
+    compiled = compile_bullet_emitter(obj, target)
+  File "/Users/happyelements/crack/th062/ecl_ir/backend.py", line 229, in compile_bullet_emitter
+    return compile_th08_macro(emitter, target)
+  File "/Users/happyelements/crack/th062/ecl_ir/backend.py", line 613, in compile_th08_macro
+    mode = e.aim.get("mode") or aim_mode_name(str(v(e.aim.get("mode_raw"), "1")))
+                                ^^^^^^^^^^^^^
+NameError: name 'aim_mode_name' is not defined

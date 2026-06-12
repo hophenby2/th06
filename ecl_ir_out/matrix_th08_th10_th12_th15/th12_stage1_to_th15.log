@@ -1,0 +1,5 @@
+002c:err:wineboot:process_run_key Error running cmd L"C:\\windows\\system32\\winemenubuilder.exe -a -r" (2).
+thecl.exe:th062/ecl_ir_out/matrix_th08_th10_th12_th15/th12_stage1_to_th15.decl:1374,17: instr_set_types: in sub BossCard2At: wrong argument type for parameter 1 for opcode 552 (expected: S, got: f)
+thecl.exe:th062/ecl_ir_out/matrix_th08_th10_th12_th15/th12_stage1_to_th15.decl:1430,17: instr_set_types: in sub BossCard2AtH: wrong argument type for parameter 1 for opcode 552 (expected: S, got: f)
+thecl.exe:th062/ecl_ir_out/matrix_th08_th10_th12_th15/th12_stage1_to_th15.decl:1486,17: instr_set_types: in sub BossCard2AtL: wrong argument type for parameter 1 for opcode 552 (expected: S, got: f)
+00d0:fixme:kernelbase:AppPolicyGetProcessTerminationMethod FFFFFFFA, 0022FE0C

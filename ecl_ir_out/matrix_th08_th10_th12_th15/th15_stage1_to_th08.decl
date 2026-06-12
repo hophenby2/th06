@@ -1,0 +1,1391 @@
+// source: th062/th15/st01.decl
+// source game: th15
+// target: th08
+// whole-file lowering is a structured draft; verify target-game scheduling and resources
+anim { "enemy.anm"; "st01enm.anm"; }
+ecli { "default.ecl"; "st01bs.ecl"; "st01mbs.ecl"; "st01mbs2.ecl"; }
+// top-level declarations
+void MainBossSpell();
+void MainMBossSpell();
+
+void GirlA01()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_569(1);
+    // unlifted instruction: ins_500(24.0f, 24.0f);
+    // unlifted instruction: ins_501(16.0f, 16.0f);
+    // object Movement source_line=13 family=th13plus
+    +30:
+    // object Movement source_line=15 family=th13plus
+    +60:
+    // object Movement source_line=17 family=th13plus
+    goto GirlA01_276 @ 0;
+    GirlA01_256:
+    +1000:
+    GirlA01_276:
+    if (1) goto GirlA01_256 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop GirlA01_256 lines 19..22 condition=1
+}
+
+void GirlA01_at()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(90);
+    !N
+    ins_23(90);
+    !H
+    ins_23(30);
+    !L
+    ins_23(30);
+    !*
+    // object BulletEmitter source_line=39 family=th13plus
+    ins_96(4, 6, 1, 1, 1.0f, 1.5f, 0.0f, 0.05235988f, 0);
+    unless ([-9959] == 3) goto GirlA01_at_540 @ 0;
+    GirlA01_at_540:
+    // unlifted instruction: ins_535($A, 1, 1, 4, 20);
+    goto GirlA01_at_720 @ 0;
+    GirlA01_at_600:
+    // unlifted instruction: ins_601(0);
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(30);
+    !N
+    ins_23(30);
+    !H
+    ins_23(20);
+    !L
+    ins_23(5);
+    !*
+    GirlA01_at_720:
+    if ($A--) goto GirlA01_at_600 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlA01_at_600 lines 60..73 condition=$A--
+}
+
+void GirlA01_at_l()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    +30:
+    // object BulletEmitter source_line=81 family=th13plus
+    ins_98(7, 4, 1, 1, 1.0f, 1.0f, 0.0f, 0.05235988f, 0);
+    $A = 1;
+    goto GirlA01_at_l_412 @ 0;
+    GirlA01_at_l_372:
+    // unlifted instruction: ins_601(0);
+    +30:
+    GirlA01_at_l_412:
+    if ($A--) goto GirlA01_at_l_372 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlA01_at_l_372 lines 90..94 condition=$A--
+}
+
+void GirlA02()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_500(24.0f, 24.0f);
+    // unlifted instruction: ins_501(16.0f, 16.0f);
+    // object Movement source_line=102 family=th13plus
+    +30:
+    // object Movement source_line=104 family=th13plus
+    +60:
+    // object Movement source_line=106 family=th13plus
+    goto GirlA02_256 @ 0;
+    GirlA02_236:
+    +1000:
+    GirlA02_256:
+    if (1) goto GirlA02_236 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop GirlA02_236 lines 108..111 condition=1
+}
+
+void GirlA02_at()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(90);
+    !N
+    ins_23(90);
+    !H
+    ins_23(30);
+    !L
+    ins_23(30);
+    !*
+    // object BulletEmitter source_line=128 family=th13plus
+    ins_96(4, 6, 1, 1, 1.0f, 1.5f, 0.0f, 0.05235988f, 0);
+    unless ([-9959] == 3) goto GirlA02_at_540 @ 0;
+    GirlA02_at_540:
+    // unlifted instruction: ins_535($A, 1, 1, 4, 20);
+    goto GirlA02_at_720 @ 0;
+    GirlA02_at_600:
+    // unlifted instruction: ins_601(0);
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(30);
+    !N
+    ins_23(30);
+    !H
+    ins_23(20);
+    !L
+    ins_23(5);
+    !*
+    GirlA02_at_720:
+    if ($A--) goto GirlA02_at_600 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlA02_at_600 lines 149..162 condition=$A--
+}
+
+void GirlA02_at_l()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    +30:
+    // object BulletEmitter source_line=170 family=th13plus
+    ins_98(7, 4, 1, 1, 1.0f, 1.0f, 0.0f, 0.05235988f, 0);
+    $A = 1;
+    goto GirlA02_at_l_412 @ 0;
+    GirlA02_at_l_372:
+    // unlifted instruction: ins_601(0);
+    +30:
+    GirlA02_at_l_412:
+    if ($A--) goto GirlA02_at_l_372 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlA02_at_l_372 lines 179..183 condition=$A--
+}
+
+void GirlA03()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_500(24.0f, 24.0f);
+    // unlifted instruction: ins_501(16.0f, 16.0f);
+    // object Movement source_line=191 family=th13plus
+    @GirlA03_at() async;
+    +60:
+    // object Movement source_line=194 family=th13plus
+    +120:
+    goto GirlA03_252 @ 0;
+    GirlA03_232:
+    +1000:
+    GirlA03_252:
+    if (1) goto GirlA03_232 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop GirlA03_232 lines 197..200 condition=1
+}
+
+void GirlA03_at()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(180);
+    !N
+    ins_23(90);
+    !H
+    ins_23(30);
+    !L
+    ins_23(30);
+    !*
+    // object BulletEmitter source_line=217 family=th13plus
+    ins_96(4, 6, 3, 1, 1.0f, 1.5f, 0.0f, 1.0471976f, 0);
+    // unlifted instruction: ins_535($A, 1, 1, 7, 16);
+    goto GirlA03_at_600 @ 0;
+    GirlA03_at_480:
+    // unlifted instruction: ins_601(0);
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(60);
+    !N
+    ins_23(60);
+    !H
+    ins_23(60);
+    !L
+    ins_23(20);
+    !*
+    GirlA03_at_600:
+    if ($A--) goto GirlA03_at_480 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlA03_at_480 lines 235..248 condition=$A--
+}
+
+void GirlB01()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=254 family=th13plus
+    // object Animation source_line=255 family=th13plus
+    // object Animation source_line=256 family=th13plus
+    // unlifted instruction: ins_510(1);
+    // unlifted instruction: ins_507(1, 2);
+    // unlifted instruction: ins_507(2, 1);
+    // unlifted instruction: ins_500(32.0f, 32.0f);
+    // unlifted instruction: ins_501(24.0f, 24.0f);
+    // object Movement source_line=262 family=th13plus
+    // object Movement source_line=263 family=th13plus
+    @GirlB01_at() async;
+    +180:
+    // object Movement source_line=266 family=th13plus
+    // object Movement source_line=267 family=th13plus
+    +60:
+    goto GirlB01_448 @ 0;
+    GirlB01_428:
+    +1000:
+    GirlB01_448:
+    if (1) goto GirlB01_428 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop GirlB01_428 lines 270..273 condition=1
+}
+
+void GirlB01_at()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    +60:
+    // object BulletEmitter source_line=281 family=th13plus
+    ins_97(8, 6, 1, 1, 1.0f, 1.0f, 1.5707964f, 0.34906584f, 0);
+    // unlifted instruction: ins_614(1, 0);
+    // unlifted instruction: ins_603(1, 8.0f, 0.0f);
+    // unlifted instruction: ins_535($A, 3, 8, 60, 300);
+    goto GirlB01_at_628 @ 0;
+    GirlB01_at_488:
+    // unlifted instruction: ins_601(0);
+    // unlifted instruction: ins_601(1);
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(20);
+    !N
+    ins_23(20);
+    !H
+    ins_23(10);
+    !L
+    ins_23(10);
+    !*
+    GirlB01_at_628:
+    if ($A--) goto GirlB01_at_488 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlB01_at_488 lines 294..308 condition=$A--
+}
+
+void GirlB02()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=314 family=th13plus
+    // object Animation source_line=315 family=th13plus
+    // object Animation source_line=316 family=th13plus
+    // unlifted instruction: ins_500(28.0f, 28.0f);
+    // unlifted instruction: ins_501(16.0f, 16.0f);
+    // unlifted instruction: ins_1002(5);
+    // unlifted instruction: ins_1001(140);
+    // unlifted instruction: ins_510(1);
+    // unlifted instruction: ins_507(1, 1);
+    // unlifted instruction: ins_507(2, 2);
+    @GirlB02_at() async;
+    // object Movement source_line=325 family=th13plus
+    +10:
+    // object Movement source_line=327 family=th13plus
+    +140:
+    // object Movement source_line=329 family=th13plus
+    +60:
+    goto GirlB02_444 @ 150;
+    GirlB02_424:
+    +1000:
+    GirlB02_444:
+    if (1) goto GirlB02_424 @ 150;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop GirlB02_424 lines 332..335 condition=1
+}
+
+void GirlB02_at()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object BulletEmitter source_line=342 family=th13plus
+    ins_98(5, 2, 1, 1, 1.0f, 1.0f, [-9998.0f], 0.0f, 0);
+    // dynamic wait expression collapsed for timer syntax: 60 + ([-10000] % 80)
+    +60:
+    // unlifted instruction: ins_601(0);
+    $A = 1;
+    goto GirlB02_at_1088 @ 0;
+    GirlB02_at_668:
+    // unlifted instruction: ins_548(240 + ([-10000] % 40), 120 + ([-10000] % 40), 100 + ([-10000] % 40), 70 + ([-10000] % 40));
+    // unlifted instruction: ins_601(0);
+    GirlB02_at_1088:
+    if ($A--) goto GirlB02_at_668 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlB02_at_668 lines 358..362 condition=$A--
+}
+
+void GirlBlueA01()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=368 family=th13plus
+    // object Animation source_line=369 family=th13plus
+    // unlifted instruction: ins_510(2);
+    @GirlA01();
+    // unlifted instruction: ins_1();
+}
+
+void GirlBlueA01e()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=377 family=th13plus
+    // object Animation source_line=378 family=th13plus
+    // unlifted instruction: ins_510(2);
+    !NHL
+    @GirlA01_at() async;
+    !*
+    @GirlA01();
+    // unlifted instruction: ins_1();
+}
+
+void GirlBlueA02()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=389 family=th13plus
+    // object Animation source_line=390 family=th13plus
+    // unlifted instruction: ins_510(2);
+    @GirlA02();
+    // unlifted instruction: ins_1();
+}
+
+void GirlBlueA02e()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=398 family=th13plus
+    // object Animation source_line=399 family=th13plus
+    // unlifted instruction: ins_510(2);
+    @GirlA02_at() async;
+    @GirlA02();
+    // unlifted instruction: ins_1();
+}
+
+void GirlBlueA03()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=408 family=th13plus
+    // object Animation source_line=409 family=th13plus
+    // unlifted instruction: ins_510(2);
+    @GirlA03();
+    // unlifted instruction: ins_1();
+}
+
+void GirlC01()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=417 family=th13plus
+    // object Animation source_line=418 family=th13plus
+    // object Animation source_line=419 family=th13plus
+    // unlifted instruction: ins_510(1);
+    // unlifted instruction: ins_507(1, 1);
+    // unlifted instruction: ins_507(2, 2);
+    // unlifted instruction: ins_500(32.0f, 32.0f);
+    // unlifted instruction: ins_501(24.0f, 24.0f);
+    unless ([-9997.0f] > _f(0)) goto GirlC01_320 @ 0;
+    // unlifted instruction: ins_424(1);
+    GirlC01_320:
+    // object Movement source_line=428 family=th13plus
+    // object Movement source_line=429 family=th13plus
+    @GirlC01_at() async;
+    +60:
+    goto GirlC01_472 @ 0;
+    GirlC01_452:
+    +1000:
+    GirlC01_472:
+    if (1) goto GirlC01_452 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop GirlC01_452 lines 433..436 condition=1
+}
+
+void GirlC01_at()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    +60:
+    // object BulletEmitter source_line=444 family=th13plus
+    ins_97(8, 6, 1, 1, 0.0f, %A, 1.5707964f, 0.12217305f, 0);
+    // unlifted instruction: ins_535($B, 1, 3, 6, 12);
+    goto GirlC01_at_860 @ 0;
+    GirlC01_at_396:
+    // unlifted instruction: ins_536(%A, 1.0f, 1.5f, 2.0f, 3.0f);
+    // unlifted instruction: ins_535($C, 6, 12, 12, 12);
+    goto GirlC01_at_716 @ 0;
+    GirlC01_at_492:
+    %A = %A + 0.15f;
+    // unlifted instruction: ins_601(0);
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(4);
+    !N
+    ins_23(4);
+    !H
+    ins_23(2);
+    !L
+    ins_23(1);
+    !*
+    GirlC01_at_716:
+    if ($C--) goto GirlC01_at_492 @ 0;
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(60);
+    !N
+    ins_23(60);
+    !H
+    ins_23(30);
+    !L
+    ins_23(20);
+    !*
+    GirlC01_at_860:
+    if ($B--) goto GirlC01_at_396 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlC01_at_492 lines 466..481 condition=$C--
+    // - counter_loop GirlC01_at_396 lines 462..493 condition=$B--
+}
+
+void GirlD01()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_569(6);
+    // object Animation source_line=500 family=th13plus
+    // object Animation source_line=501 family=th13plus
+    // object Animation source_line=502 family=th13plus
+    // unlifted instruction: ins_510(1);
+    // unlifted instruction: ins_507(1, 2);
+    // unlifted instruction: ins_507(2, 4);
+    // unlifted instruction: ins_500(32.0f, 32.0f);
+    // unlifted instruction: ins_501(24.0f, 24.0f);
+    // object Movement source_line=508 family=th13plus
+    // object Movement source_line=509 family=th13plus
+    @GirlD01_at() async;
+    +80:
+    // object Movement source_line=512 family=th13plus
+    +60:
+    goto GirlD01_440 @ 0;
+    GirlD01_420:
+    +1000:
+    GirlD01_440:
+    if (1) goto GirlD01_420 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop GirlD01_420 lines 515..518 condition=1
+}
+
+void GirlD01_at()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    +60:
+    // object BulletEmitter source_line=526 family=th13plus
+    ins_97(7, 4, 10, 6, 1.6f, 1.6f, 0.0f, 0.05235988f, 0);
+    unless ([-9959] == 3) goto GirlD01_at_460 @ 0;
+    GirlD01_at_460:
+    // unlifted instruction: ins_535($A, 2, 3, 6, 10);
+    goto GirlD01_at_640 @ 0;
+    GirlD01_at_520:
+    // unlifted instruction: ins_601(0);
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(120);
+    !N
+    ins_23(120);
+    !H
+    ins_23(60);
+    !L
+    ins_23(30);
+    !*
+    GirlD01_at_640:
+    if ($A--) goto GirlD01_at_520 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlD01_at_520 lines 547..560 condition=$A--
+}
+
+void GirlD01_at2()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    +60:
+    // object BulletEmitter source_line=568 family=th13plus
+    ins_97(18, 3, 1, 1, 0.0f, %B, %C, 0.08726646f, 0);
+    // unlifted instruction: ins_535($D, 2, 4, 4, 4);
+    goto GirlD01_at2_1096 @ 0;
+    GirlD01_at2_360:
+    // unlifted instruction: ins_536(%B, 1.1f, 1.1f, 1.5f, 2.1f);
+    %C = 1.570796f;
+    $A = 8;
+    // unlifted instruction: ins_535($A, 8, 8, 13, 14);
+    $E = 4;
+    goto GirlD01_at2_952 @ 0;
+    GirlD01_at2_604:
+    %B = %B + 0.07f;
+    // unlifted instruction: ins_601(1);
+    +3:
+    $F = 2;
+    goto GirlD01_at2_908 @ 0;
+    GirlD01_at2_812:
+    %B = %B + 0.07f;
+    +3:
+    GirlD01_at2_908:
+    if ($F--) goto GirlD01_at2_812 @ 0;
+    GirlD01_at2_952:
+    if ($E--) goto GirlD01_at2_604 @ 0;
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(180);
+    !N
+    ins_23(180);
+    !H
+    ins_23(130);
+    !L
+    ins_23(90);
+    !*
+    GirlD01_at2_1096:
+    if ($D--) goto GirlD01_at2_360 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlD01_at2_812 lines 593..597 condition=$F--
+    // - counter_loop GirlD01_at2_604 lines 586..599 condition=$E--
+    // - counter_loop GirlD01_at2_360 lines 578..611 condition=$D--
+}
+
+void GirlD02()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_569(6);
+    // object Animation source_line=618 family=th13plus
+    // object Animation source_line=619 family=th13plus
+    // object Animation source_line=620 family=th13plus
+    // unlifted instruction: ins_510(1);
+    // unlifted instruction: ins_507(1, 2);
+    // unlifted instruction: ins_507(2, 4);
+    // unlifted instruction: ins_500(32.0f, 32.0f);
+    // unlifted instruction: ins_501(24.0f, 24.0f);
+    // object Movement source_line=626 family=th13plus
+    // object Movement source_line=627 family=th13plus
+    @GirlD02_at() async;
+    +240:
+    // object Movement source_line=630 family=th13plus
+    +60:
+    goto GirlD02_440 @ 0;
+    GirlD02_420:
+    +1000:
+    GirlD02_440:
+    if (1) goto GirlD02_420 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop GirlD02_420 lines 633..636 condition=1
+}
+
+void GirlD02_at()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    +60:
+    // object BulletEmitter source_line=644 family=th13plus
+    ins_97(7, 2, 8, 6, 1.6f, 1.6f, 0.0f, 0.05235988f, 0);
+    // unlifted instruction: ins_535($A, 2, 5, 8, 4);
+    goto GirlD02_at_596 @ 0;
+    GirlD02_at_476:
+    // unlifted instruction: ins_601(0);
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(120);
+    !N
+    ins_23(120);
+    !H
+    ins_23(60);
+    !L
+    ins_23(30);
+    !*
+    GirlD02_at_596:
+    if ($A--) goto GirlD02_at_476 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlD02_at_476 lines 671..684 condition=$A--
+}
+
+void GirlD02_at2()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    +60:
+    // object BulletEmitter source_line=692 family=th13plus
+    ins_97(18, 3, 1, 1, 0.0f, %B, %C, 0.08726646f, 0);
+    // unlifted instruction: ins_535($D, 2, 4, 4, 4);
+    goto GirlD02_at2_1096 @ 0;
+    GirlD02_at2_360:
+    // unlifted instruction: ins_536(%B, 1.1f, 1.1f, 1.5f, 2.1f);
+    %C = 1.570796f;
+    $A = 8;
+    // unlifted instruction: ins_535($A, 8, 8, 13, 14);
+    $E = 4;
+    goto GirlD02_at2_952 @ 0;
+    GirlD02_at2_604:
+    %B = %B + 0.07f;
+    // unlifted instruction: ins_601(1);
+    +3:
+    $F = 2;
+    goto GirlD02_at2_908 @ 0;
+    GirlD02_at2_812:
+    %B = %B + 0.07f;
+    +3:
+    GirlD02_at2_908:
+    if ($F--) goto GirlD02_at2_812 @ 0;
+    GirlD02_at2_952:
+    if ($E--) goto GirlD02_at2_604 @ 0;
+    // dynamic wait preserved from difficulty literals
+    !E
+    ins_23(180);
+    !N
+    ins_23(180);
+    !H
+    ins_23(130);
+    !L
+    ins_23(90);
+    !*
+    GirlD02_at2_1096:
+    if ($D--) goto GirlD02_at2_360 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop GirlD02_at2_812 lines 717..721 condition=$F--
+    // - counter_loop GirlD02_at2_604 lines 710..723 condition=$E--
+    // - counter_loop GirlD02_at2_360 lines 702..735 condition=$D--
+}
+
+void GirlRedA01()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=741 family=th13plus
+    // object Animation source_line=742 family=th13plus
+    // unlifted instruction: ins_510(1);
+    @GirlA01();
+    // unlifted instruction: ins_1();
+}
+
+void GirlRedA01e()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=750 family=th13plus
+    // object Animation source_line=751 family=th13plus
+    // unlifted instruction: ins_510(1);
+    !NHL
+    @GirlA01_at() async;
+    !*
+    @GirlA01();
+    // unlifted instruction: ins_1();
+}
+
+void GirlRedA02()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=762 family=th13plus
+    // object Animation source_line=763 family=th13plus
+    // unlifted instruction: ins_510(1);
+    @GirlA02();
+    // unlifted instruction: ins_1();
+}
+
+void GirlRedA02e()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=771 family=th13plus
+    // object Animation source_line=772 family=th13plus
+    // unlifted instruction: ins_510(1);
+    @GirlA02_at() async;
+    @GirlA02();
+    // unlifted instruction: ins_1();
+}
+
+void GirlRedA03()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=781 family=th13plus
+    // object Animation source_line=782 family=th13plus
+    // unlifted instruction: ins_510(1);
+    @GirlA03();
+    // unlifted instruction: ins_1();
+}
+
+void LogoEnemy()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +1410:
+    // unlifted instruction: ins_554();
+    return;
+}
+
+void MainBoss()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_519();
+    // object Enemy source_line=798 family=th13plus
+    // unlifted instruction: ins_519();
+    +1:
+    // unlifted instruction: ins_520();
+    // unlifted instruction: ins_524(81);
+    +60:
+    // unlifted instruction: ins_518(1);
+    // unlifted instruction: ins_519();
+    return;
+    return;
+}
+
+void MainBossDebug()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +10:
+    // unlifted instruction: ins_518(0);
+    @MainBoss();
+    return;
+}
+
+void MainBossDebug2()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +10:
+    // unlifted instruction: ins_518(-1);
+    @MainBoss();
+    return;
+}
+
+void MainFront()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    @MainSub00();
+    +320:
+    // unlifted instruction: ins_524(1);
+    +230:
+    @MainSub01b() async;
+    @MainSub01();
+    +330:
+    @MainSub02();
+    +135:
+    @MainSub03();
+    +120:
+    return;
+}
+
+void MainLatter()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    @MainLatterB() async;
+    @MainSub04();
+    // unlifted instruction: ins_520();
+    +61:
+    @MainSub05();
+    return;
+}
+
+void MainLatter2()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    @MainLatter2B() async;
+    @MainSub06();
+    // unlifted instruction: ins_520();
+    +61:
+    @MainSub07();
+    return;
+}
+
+void MainLatter2B()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_520();
+    +60:
+    return;
+}
+
+void MainLatterB()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_520();
+    +60:
+    return;
+}
+
+void MainMBossDebug()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_524(22);
+    // object Enemy source_line=879 family=th13plus
+    goto MainMBossDebug_148 @ 0;
+    MainMBossDebug_128:
+    +1000:
+    MainMBossDebug_148:
+    if (1) goto MainMBossDebug_128 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop MainMBossDebug_128 lines 881..884 condition=1
+}
+
+void MainMsgDebug()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_630(1);
+    +10:
+    // unlifted instruction: ins_518(0);
+    // unlifted instruction: ins_519();
+    +1:
+    // unlifted instruction: ins_519();
+    +60:
+    // unlifted instruction: ins_518(1);
+    // unlifted instruction: ins_519();
+    goto MainMsgDebug_184 @ 4071;
+    MainMsgDebug_168:
+    +4000:
+    // unlifted instruction: ins_0();
+    MainMsgDebug_184:
+    if (1) goto MainMsgDebug_168 @ 71;
+    return;
+    // detected loops:
+    // - backedge_loop MainMsgDebug_168 lines 900..904 condition=1
+}
+
+void MainSub00()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %A = _f(-192);
+    $B = 8;
+    goto MainSub00_432 @ 0;
+    MainSub00_140:
+    // object Enemy source_line=915 family=th13plus
+    // object Enemy source_line=916 family=th13plus
+    // object Enemy source_line=917 family=th13plus
+    +30:
+    MainSub00_432:
+    if ($B--) goto MainSub00_140 @ 0;
+    %A = _f(192);
+    $C = 8;
+    goto MainSub00_872 @ 0;
+    MainSub00_580:
+    // object Enemy source_line=925 family=th13plus
+    // object Enemy source_line=926 family=th13plus
+    // object Enemy source_line=927 family=th13plus
+    +30:
+    MainSub00_872:
+    if ($C--) goto MainSub00_580 @ 0;
+    +100:
+    $D = 7;
+    goto MainSub00_1708 @ 0;
+    MainSub00_1000:
+    %A = _f(-192);
+    // object Enemy source_line=936 family=th13plus
+    // object Enemy source_line=937 family=th13plus
+    // object Enemy source_line=938 family=th13plus
+    +30:
+    %A = _f(192);
+    // object Enemy source_line=941 family=th13plus
+    // object Enemy source_line=943 family=th13plus
+    !NHL
+    !*
+    // object Enemy source_line=945 family=th13plus
+    !E
+    !*
+    // object Enemy source_line=947 family=th13plus
+    +30:
+    MainSub00_1708:
+    if ($D--) goto MainSub00_1000 @ 0;
+    $E = 8;
+    goto MainSub00_1816 @ 0;
+    MainSub00_1816:
+    if ($E--) goto MainSub00_1816 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop MainSub00_140 lines 914..920 condition=$B--
+    // - counter_loop MainSub00_580 lines 924..930 condition=$C--
+    // - counter_loop MainSub00_1000 lines 934..950 condition=$D--
+    // - counter_loop MainSub00_1816 lines 953..954 condition=$E--
+}
+
+void MainSub01()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Enemy source_line=960 family=th13plus
+    +60:
+    // object Enemy source_line=962 family=th13plus
+    +60:
+    // object Enemy source_line=964 family=th13plus
+    return;
+}
+
+void MainSub01b()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    %A = _f(0);
+    $B = 9;
+    goto MainSub01b_376 @ 0;
+    MainSub01b_140:
+    %A = %A + _f(16);
+    // object Enemy source_line=976 family=th13plus
+    // object Enemy source_line=977 family=th13plus
+    +30:
+    MainSub01b_376:
+    if ($B--) goto MainSub01b_140 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop MainSub01b_140 lines 974..980 condition=$B--
+}
+
+void MainSub02()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    [-9981.0f] = 0.087266f;
+    $A = 10;
+    goto MainSub02_540 @ 0;
+    MainSub02_140:
+    [-9981.0f] = [-9981.0f] - 0.003491f;
+    // object Enemy source_line=992 family=th13plus
+    // object Enemy source_line=993 family=th13plus
+    +10:
+    [-9981.0f] = [-9981.0f] - 0.003491f;
+    // object Enemy source_line=996 family=th13plus
+    // object Enemy source_line=997 family=th13plus
+    +10:
+    MainSub02_540:
+    if ($A--) goto MainSub02_140 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop MainSub02_140 lines 990..1000 condition=$A--
+}
+
+void MainSub03()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Enemy source_line=1006 family=th13plus
+    +60:
+    @MainSub01b();
+    +80:
+    // object Enemy source_line=1010 family=th13plus
+    +20:
+    @MainSub01b();
+    return;
+}
+
+void MainSub04()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    $A = 4;
+    goto MainSub04_1132 @ 0;
+    MainSub04_100:
+    unless ([-9905] == 2) goto MainSub04_320 @ 0;
+    // object Enemy source_line=1023 family=th13plus
+    MainSub04_320:
+    +80:
+    unless ([-9905] == 2) goto MainSub04_560 @ 0;
+    // object Enemy source_line=1027 family=th13plus
+    MainSub04_560:
+    +80:
+    unless ([-9905] == 2) goto MainSub04_836 @ 0;
+    // object Enemy source_line=1031 family=th13plus
+    MainSub04_836:
+    +80:
+    unless ([-9905] == 2) goto MainSub04_1112 @ 0;
+    // object Enemy source_line=1035 family=th13plus
+    MainSub04_1112:
+    +80:
+    MainSub04_1132:
+    if ($A--) goto MainSub04_100 @ 0;
+    unless ([-9905] == 2) goto MainSub04_1396 @ 0;
+    // object Enemy source_line=1041 family=th13plus
+    MainSub04_1396:
+    +19:
+    return;
+    // detected loops:
+    // - counter_loop MainSub04_100 lines 1021..1039 condition=$A--
+}
+
+void MainSub05()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %A = _f(0);
+    $B = 5;
+    goto MainSub05_376 @ 0;
+    MainSub05_140:
+    %A = %A + _f(10);
+    // object Enemy source_line=1055 family=th13plus
+    // object Enemy source_line=1056 family=th13plus
+    +30:
+    MainSub05_376:
+    if ($B--) goto MainSub05_140 @ 0;
+    %A = _f(128);
+    $C = 5;
+    goto MainSub05_760 @ 0;
+    MainSub05_524:
+    %A = %A + _f(10);
+    // object Enemy source_line=1065 family=th13plus
+    // object Enemy source_line=1066 family=th13plus
+    +30:
+    MainSub05_760:
+    if ($C--) goto MainSub05_524 @ 0;
+    %A = %A - _f(128);
+    $D = 5;
+    goto MainSub05_1180 @ 0;
+    MainSub05_944:
+    %A = %A + _f(10);
+    // object Enemy source_line=1075 family=th13plus
+    // object Enemy source_line=1076 family=th13plus
+    +30:
+    MainSub05_1180:
+    if ($D--) goto MainSub05_944 @ 0;
+    @MainSub05b() async;
+    %A = %A - _f(0);
+    $E = 9;
+    goto MainSub05_1632 @ 0;
+    MainSub05_1396:
+    %A = %A + _f(10);
+    // object Enemy source_line=1086 family=th13plus
+    // object Enemy source_line=1087 family=th13plus
+    +30:
+    MainSub05_1632:
+    if ($E--) goto MainSub05_1396 @ 0;
+    +60:
+    return;
+    // detected loops:
+    // - counter_loop MainSub05_140 lines 1053..1059 condition=$B--
+    // - counter_loop MainSub05_524 lines 1063..1069 condition=$C--
+    // - counter_loop MainSub05_944 lines 1073..1079 condition=$D--
+    // - counter_loop MainSub05_1396 lines 1084..1090 condition=$E--
+}
+
+void MainSub05b()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Enemy source_line=1097 family=th13plus
+    // object Enemy source_line=1098 family=th13plus
+    +60:
+    // object Enemy source_line=1100 family=th13plus
+    +120:
+    // object Enemy source_line=1102 family=th13plus
+    // object Enemy source_line=1103 family=th13plus
+    +60:
+    // object Enemy source_line=1105 family=th13plus
+    return;
+}
+
+void MainSub06()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    $A = 4;
+    goto MainSub06_1132 @ 0;
+    MainSub06_100:
+    unless ([-9905] == 5) goto MainSub06_320 @ 0;
+    // object Enemy source_line=1116 family=th13plus
+    MainSub06_320:
+    +80:
+    unless ([-9905] == 5) goto MainSub06_560 @ 0;
+    // object Enemy source_line=1120 family=th13plus
+    MainSub06_560:
+    +80:
+    unless ([-9905] == 5) goto MainSub06_836 @ 0;
+    // object Enemy source_line=1124 family=th13plus
+    MainSub06_836:
+    +80:
+    unless ([-9905] == 5) goto MainSub06_1112 @ 0;
+    // object Enemy source_line=1128 family=th13plus
+    MainSub06_1112:
+    +80:
+    MainSub06_1132:
+    if ($A--) goto MainSub06_100 @ 0;
+    unless ([-9905] == 5) goto MainSub06_1396 @ 0;
+    // object Enemy source_line=1134 family=th13plus
+    MainSub06_1396:
+    +19:
+    return;
+    // detected loops:
+    // - counter_loop MainSub06_100 lines 1114..1132 condition=$A--
+}
+
+void MainSub07()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Enemy source_line=1142 family=th13plus
+    // object Enemy source_line=1143 family=th13plus
+    +60:
+    @MainSub01b() async;
+    +300:
+    // object Enemy source_line=1147 family=th13plus
+    // object Enemy source_line=1148 family=th13plus
+    +60:
+    return;
+}
+
+void MapleEnemy()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_502(32);
+    $A = 60;
+    goto MapleEnemy_164 @ 0;
+    MapleEnemy_120:
+    // object Animation source_line=1160 family=th13plus
+    +4:
+    MapleEnemy_164:
+    if ($A--) goto MapleEnemy_120 @ 0;
+    goto MapleEnemy_276 @ 0;
+    MapleEnemy_232:
+    // object Animation source_line=1166 family=th13plus
+    +5:
+    MapleEnemy_276:
+    if (1) goto MapleEnemy_232 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - counter_loop MapleEnemy_120 lines 1159..1163 condition=$A--
+    // - backedge_loop MapleEnemy_232 lines 1165..1169 condition=1
+}
+
+void Phantom01()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=1175 family=th13plus
+    // object Animation source_line=1176 family=th13plus
+    // unlifted instruction: ins_500(28.0f, 28.0f);
+    // unlifted instruction: ins_501(16.0f, 16.0f);
+    // unlifted instruction: ins_502(12);
+    // unlifted instruction: ins_510(2);
+    // object Movement source_line=1181 family=th13plus
+    // object Movement source_line=1182 family=th13plus
+    // object Movement source_line=1183 family=th13plus
+    !HL
+    @Phantom01_at() async;
+    !*
+    +60:
+    // unlifted instruction: ins_503(12);
+    goto Phantom01_384 @ 0;
+    Phantom01_364:
+    +1000:
+    Phantom01_384:
+    if (1) goto Phantom01_364 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop Phantom01_364 lines 1190..1193 condition=1
+}
+
+void Phantom01_at()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object BulletEmitter source_line=1200 family=th13plus
+    ins_96(5, 4, 1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 0);
+    // unlifted instruction: ins_535($A, 1, 1, 1, 2);
+    goto Phantom01_at_504 @ 0;
+    Phantom01_at_372:
+    // dynamic wait expression collapsed for timer syntax: 60 + ([-10000] % 90)
+    +60:
+    // unlifted instruction: ins_601(0);
+    Phantom01_at_504:
+    if ($A--) goto Phantom01_at_372 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Phantom01_at_372 lines 1210..1214 condition=$A--
+}
+
+void Phantom02()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=1220 family=th13plus
+    // object Animation source_line=1221 family=th13plus
+    // unlifted instruction: ins_500(28.0f, 28.0f);
+    // unlifted instruction: ins_501(16.0f, 16.0f);
+    // unlifted instruction: ins_502(12);
+    // unlifted instruction: ins_510(2);
+    @Phantom02_at() async;
+    // object Movement source_line=1227 family=th13plus
+    +140:
+    // object Movement source_line=1229 family=th13plus
+    // object Movement source_line=1230 family=th13plus
+    // object Movement source_line=1231 family=th13plus
+    +90:
+    // object Movement source_line=1233 family=th13plus
+    // object Movement source_line=1234 family=th13plus
+    goto Phantom02_484 @ 0;
+    Phantom02_464:
+    +1000:
+    Phantom02_484:
+    if (1) goto Phantom02_464 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop Phantom02_464 lines 1236..1239 condition=1
+}
+
+void Phantom02_at()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BulletEmitter source_line=1245 family=th13plus
+    ins_96(7, 6, 1, 1, 1.0f, 1.0f, 0.0f, 0.017453292f, 0);
+    // dynamic wait expression collapsed for timer syntax: 120 + ([-10000] % 100)
+    +120:
+    // unlifted instruction: ins_601(0);
+    return;
+}
+
+void Phantom02b()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=1260 family=th13plus
+    // object Animation source_line=1261 family=th13plus
+    // unlifted instruction: ins_516(50);
+    // unlifted instruction: ins_500(28.0f, 28.0f);
+    // unlifted instruction: ins_501(16.0f, 16.0f);
+    // unlifted instruction: ins_1002(1);
+    // unlifted instruction: ins_1001(60);
+    // unlifted instruction: ins_502(12);
+    // unlifted instruction: ins_510(2);
+    // unlifted instruction: ins_507(1, 1);
+    !L
+    @Phantom02_at() async;
+    !*
+    // object Movement source_line=1273 family=th13plus
+    // object Movement source_line=1274 family=th13plus
+    +60:
+    // unlifted instruction: ins_503(12);
+    goto Phantom02b_520 @ 0;
+    Phantom02b_500:
+    +1000:
+    Phantom02b_520:
+    if (1) goto Phantom02b_500 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop Phantom02b_500 lines 1278..1281 condition=1
+}
+
+void main()
+{
+    // Timeline lowering structured -> th08; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_502(32);
+    +1:
+    // unlifted instruction: ins_524(0);
+    unless ([-9907] >= 0) goto main_440 @ 0;
+    unless ([-9907] <= 1) goto main_316 @ 0;
+    @MainMBossSpell();
+    goto main_352 @ 0;
+    main_316:
+    @MainBossSpell();
+    main_352:
+    goto main_396 @ 0;
+    main_376:
+    +1000:
+    main_396:
+    if (1) goto main_376 @ 0;
+    main_440:
+    // unlifted instruction: ins_22(1, "MainMBossDebug");
+    // unlifted instruction: ins_22(2, "MainBossDebug");
+    // unlifted instruction: ins_22(3, "MainBossDebug2");
+    // unlifted instruction: ins_22(4, "MainMsgDebug");
+    // unlifted instruction: ins_22(5, "MainLatter");
+    @LogoEnemy() async;
+    +60:
+    // unlifted instruction: ins_0();
+    @MainFront();
+    // unlifted instruction: ins_525();
+    // unlifted instruction: ins_616(640.0f);
+    // unlifted instruction: ins_524(2);
+    +2:
+    // object Enemy source_line=1316 family=th13plus
+    +160:
+    @MainLatter();
+    +120:
+    // unlifted instruction: ins_616(640.0f);
+    // unlifted instruction: ins_524(4);
+    +2:
+    // object Enemy source_line=1323 family=th13plus
+    +160:
+    @MainLatter2();
+    +300:
+    // unlifted instruction: ins_525();
+    // unlifted instruction: ins_616(640.0f);
+    // unlifted instruction: ins_524(41);
+    +160:
+    // unlifted instruction: ins_518(0);
+    @MainBoss();
+    goto main_1264 @ 60;
+    main_1244:
+    +1000:
+    main_1264:
+    if (1) goto main_1244 @ 60;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop main_376 lines 1298..1301 condition=1
+    // - backedge_loop main_1244 lines 1334..1337 condition=1
+}

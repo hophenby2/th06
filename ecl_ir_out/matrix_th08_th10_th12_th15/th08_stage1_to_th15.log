@@ -1,0 +1,5 @@
+002c:err:wineboot:process_run_key Error running cmd L"C:\\windows\\system32\\winemenubuilder.exe -a -r" (2).
+thecl.exe:th062/ecl_ir_out/matrix_th08_th10_th12_th15/th08_stage1_to_th15.decl:6,20: timelines don't exist in th10+
+thecl.exe:th062/ecl_ir_out/matrix_th08_th10_th12_th15/th08_stage1_to_th15.decl:276,20: timelines don't exist in th10+
+thecl.exe:th062/ecl_ir_out/matrix_th08_th10_th12_th15/th08_stage1_to_th15.decl:3353,12: parse_rank: in sub Sub42: Rank flags 4 and 5 are not used in TH13+. Use X for extra, and O for overdrive instead.
+00d0:fixme:kernelbase:AppPolicyGetProcessTerminationMethod FFFFFFFA, 0022FE0C

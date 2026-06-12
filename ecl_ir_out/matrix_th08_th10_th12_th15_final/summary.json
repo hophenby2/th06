@@ -1,0 +1,124 @@
+[
+  {
+    "src": "th08",
+    "target": "th10",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th08_stage1_to_th10.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th08_stage1_to_th10.ecl",
+    "transpile_rc": 0,
+    "compile_rc": 0,
+    "errors": []
+  },
+  {
+    "src": "th08",
+    "target": "th12",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th08_stage1_to_th12.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th08_stage1_to_th12.ecl",
+    "transpile_rc": 0,
+    "compile_rc": 0,
+    "errors": []
+  },
+  {
+    "src": "th08",
+    "target": "th15",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th08_stage1_to_th15.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th08_stage1_to_th15.ecl",
+    "transpile_rc": 0,
+    "compile_rc": 0,
+    "errors": []
+  },
+  {
+    "src": "th10",
+    "target": "th08",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th10_stage1_to_th08.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th10_stage1_to_th08.ecl",
+    "transpile_rc": 0,
+    "compile_rc": 0,
+    "errors": []
+  },
+  {
+    "src": "th10",
+    "target": "th12",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th10_stage1_to_th12.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th10_stage1_to_th12.ecl",
+    "transpile_rc": 0,
+    "compile_rc": 0,
+    "errors": []
+  },
+  {
+    "src": "th10",
+    "target": "th15",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th10_stage1_to_th15.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th10_stage1_to_th15.ecl",
+    "transpile_rc": 0,
+    "compile_rc": 0,
+    "errors": []
+  },
+  {
+    "src": "th12",
+    "target": "th08",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th12_stage1_to_th08.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th12_stage1_to_th08.ecl",
+    "transpile_rc": 0,
+    "compile_rc": 0,
+    "errors": []
+  },
+  {
+    "src": "th12",
+    "target": "th10",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th12_stage1_to_th10.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th12_stage1_to_th10.ecl",
+    "transpile_rc": 0,
+    "compile_rc": 0,
+    "errors": [
+      "thecl.exe:th10_instr_serialize: in sub BossCard1_at: too few arguments for opcode 408",
+      "thecl.exe:th10_instr_serialize: in sub BossCard1_atH: too few arguments for opcode 408",
+      "thecl.exe:th10_instr_serialize: in sub BossCard1_atL: too few arguments for opcode 408",
+      "thecl.exe:th10_instr_serialize: in sub Girl00Dead: too few arguments for opcode 408",
+      "thecl.exe:th10_instr_serialize: in sub MBossCard1At: too few arguments for opcode 408",
+      "thecl.exe:th10_instr_serialize: in sub MBossCard1At2: too few arguments for opcode 408",
+      "thecl.exe:th10_instr_serialize: in sub MBossCard1At2b: too few arguments for opcode 408"
+    ]
+  },
+  {
+    "src": "th12",
+    "target": "th15",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th12_stage1_to_th15.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th12_stage1_to_th15.ecl",
+    "transpile_rc": 0,
+    "compile_rc": 0,
+    "errors": []
+  },
+  {
+    "src": "th15",
+    "target": "th08",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th15_stage1_to_th08.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th15_stage1_to_th08.ecl",
+    "transpile_rc": 0,
+    "compile_rc": "timeout",
+    "errors": [
+      "compile timeout"
+    ]
+  },
+  {
+    "src": "th15",
+    "target": "th10",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th15_stage1_to_th10.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th15_stage1_to_th10.ecl",
+    "transpile_rc": 0,
+    "compile_rc": 0,
+    "errors": [
+      "thecl.exe:th10_instr_serialize: in sub GirlB02_at: too few arguments for opcode 408",
+      "thecl.exe:th10_instr_serialize: in sub Phantom01_at: too few arguments for opcode 408",
+      "thecl.exe:th10_instr_serialize: in sub Phantom02_at: too few arguments for opcode 408"
+    ]
+  },
+  {
+    "src": "th15",
+    "target": "th12",
+    "decl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th15_stage1_to_th12.decl",
+    "ecl": "th062/ecl_ir_out/matrix_th08_th10_th12_th15_final/th15_stage1_to_th12.ecl",
+    "transpile_rc": 0,
+    "compile_rc": 0,
+    "errors": []
+  }
+]

@@ -1,0 +1,13 @@
+source	target	status	size	rc	errors
+th08	th10	OK	40992	0	
+th08	th12	OK	36712	0	
+th08	th15	OK	36712	0	
+th10	th08	OK	3660	0	
+th10	th12	OK	33104	0	
+th10	th15	OK	34076	0	
+th12	th08	OK	4120	0	
+th12	th10	OK	52596	0	
+th12	th15	OK	66504	0	
+th15	th08	OK	2084	0	
+th15	th10	OK	22004	0	
+th15	th12	OK	31976	0	

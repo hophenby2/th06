@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from .model import BulletEmitter, BulletTransform, Function, Instruction, Program
+from .op_ir import op_event
 from .semantics import bullet_shape_semantic, spread_semantic
 
 TH13PLUS_GAMES = {"th13", "th14", "th15", "th16", "th17", "th18"}
@@ -13,6 +14,10 @@ TH10_GAMES = {"th10", "th11"}
 
 def arg(args: list[str], index: int, default: str = "") -> str:
     return args[index] if index < len(args) else default
+
+
+def append_emitter_op(emitter: BulletEmitter, ins: Instruction) -> None:
+    emitter.semantics.setdefault("ir_ops", []).append(op_event(emitter.game, ins.opcode, ins.args, ins.line_no, ins.difficulty))
 
 
 def difficulty_literal_group(value: str, literals: object) -> dict[str, str]:
@@ -200,6 +205,7 @@ def lift_th13plus_function(game: str, func: Function) -> list[BulletEmitter]:
             emitter = BulletEmitter(game=game, function=func.name, source_line=ins.line_no, id=emitter_id, family="th13plus")
             emitter.origin = {"mode": "enemy", "x": "0", "y": "0"}
             emitter.raw.append(ins)
+            append_emitter_op(emitter, ins)
             active[emitter_id] = emitter
             emitters.append(emitter)
             continue
@@ -207,6 +213,7 @@ def lift_th13plus_function(game: str, func: Function) -> list[BulletEmitter]:
         emitter = active.get(emitter_id)
         if emitter and ins.opcode in {601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 617, 618, 619, 620, 621, 622, 624, 625}:
             emitter.raw.append(ins)
+            append_emitter_op(emitter, ins)
             apply_th13plus(emitter, ins)
     return emitters
 
@@ -220,6 +227,7 @@ def lift_th12_function(game: str, func: Function) -> list[BulletEmitter]:
             emitter = BulletEmitter(game=game, function=func.name, source_line=ins.line_no, id=emitter_id, family="th12")
             emitter.origin = {"mode": "enemy", "x": "0", "y": "0"}
             emitter.raw.append(ins)
+            append_emitter_op(emitter, ins)
             active[emitter_id] = emitter
             emitters.append(emitter)
             continue
@@ -227,6 +235,7 @@ def lift_th12_function(game: str, func: Function) -> list[BulletEmitter]:
         emitter = active.get(emitter_id)
         if emitter and ins.opcode in {501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 517, 518, 519, 520, 521, 522, 523, 524, 525}:
             emitter.raw.append(ins)
+            append_emitter_op(emitter, ins)
             apply_th12(emitter, ins)
     return emitters
 
@@ -247,6 +256,7 @@ def lift_th08_function(game: str, func: Function) -> list[BulletEmitter]:
             emitter.transforms = pending_transforms
             emitter.fire_lines = [ins.line_no]
             emitter.raw = [*[], ins]
+            append_emitter_op(emitter, ins)
             emitters.append(emitter)
             pending_transforms = []
     return emitters
@@ -279,6 +289,7 @@ def lift_th10_function(game: str, func: Function) -> list[BulletEmitter]:
                 active[emitter_id] = emitter
                 emitters.append(emitter)
             emitter.raw.append(ins)
+            append_emitter_op(emitter, ins)
             if ins.opcode == 401:
                 emitter.fire_lines.append(ins.line_no)
             continue
@@ -288,6 +299,7 @@ def lift_th10_function(game: str, func: Function) -> list[BulletEmitter]:
             continue
         if ins.opcode in {402, 404, 405, 406, 407, 408, 409, 410, 411}:
             emitter.raw.append(ins)
+            append_emitter_op(emitter, ins)
             apply_th10(emitter, ins)
     return emitters
 

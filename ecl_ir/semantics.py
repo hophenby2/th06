@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Any
+
+from .reference import opcode_reference, opcode_signature
 
 TH13PLUS_GAMES = {"th13", "th14", "th15", "th16", "th17", "th18"}
 TH10_TH11_GAMES = {"th10", "th11"}
@@ -119,7 +122,6 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("unit.property.47", {GEN_TH13_PLUS: 547, GEN_TH12: 447}),
     SemanticOpcode("unit.property.48", {GEN_TH13_PLUS: 548, GEN_TH12: 448}),
     SemanticOpcode("unit.property.49", {GEN_TH13_PLUS: 549, GEN_TH12: 449}),
-    SemanticOpcode("unit.effect.52", {GEN_TH13_PLUS: 552, GEN_TH12: 452}),
     SemanticOpcode("unit.effect.53", {GEN_TH13_PLUS: 553, GEN_TH12: 453}),
     SemanticOpcode("unit.effect.54", {GEN_TH13_PLUS: 554, GEN_TH12: 454}),
     SemanticOpcode("unit.effect.55", {GEN_TH13_PLUS: 555, GEN_TH12: 455}),
@@ -128,15 +130,12 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
 )
 
 UNSUPPORTED_SEMANTIC_OPCODES: dict[tuple[str, int, str], str] = {
-    (GEN_TH13_PLUS, 526, GEN_TH12): "spell/boss effect opcode is not TH12 opcode 426; parameter formats differ",
     (GEN_TH13_PLUS, 569, GEN_TH12): "pointdevice/LoLK-specific unit flag, no TH12 equivalent",
     (GEN_TH13_PLUS, 610, GEN_TH12): "bullet clear/transform opcode is not TH12 opcode 510; parameter formats differ",
-    (GEN_TH13_PLUS, 613, GEN_TH12): "bullet/effect opcode is not TH12 opcode 513; parameter formats differ",
-    (GEN_TH13_PLUS, 614, GEN_TH12): "bullet difficulty/rank extension is not TH12 opcode 514; parameter formats differ",
-    (GEN_TH13_PLUS, 616, GEN_TH12): "bullet/effect opcode is not TH12 opcode 516; parameter formats differ",
-    (GEN_TH13_PLUS, 630, GEN_TH12): "bullet extension opcode, not mapped to TH12",
+    (GEN_TH13_PLUS, 630, GEN_TH12): "TH12 opcode 527 has no compile-time args in thtk format table",
     (GEN_TH13_PLUS, 1001, GEN_TH12): "game-specific opcode, no TH12 equivalent",
     (GEN_TH13_PLUS, 1002, GEN_TH12): "game-specific opcode, no TH12 equivalent",
+    (GEN_TH12, 452, GEN_TH13_PLUS): "unit effect opcode parameter formats differ",
 }
 
 def _with_th10_th11_aliases() -> tuple[SemanticOpcode, ...]:
@@ -160,6 +159,61 @@ for opcode_semantic in SEMANTIC_OPCODES:
             raw_map = opcode_semantic.map_between(source_generation, target_generation)
             if raw_map is not None:
                 OPCODE_BY_SOURCE_TARGET[(source_generation, target_generation, source_opcode)] = raw_map
+
+
+REFERENCE_GAME_BY_GENERATION = {
+    GEN_TH06_TH08: "th08",
+    GEN_TH10_TH11: "th10",
+    GEN_TH12: "th12",
+    GEN_TH13_PLUS: "th15",
+}
+
+
+def reference_semantic_name(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
+
+
+def compatible_reference_signature(source_game: str, target_game: str, source_opcode: int, target_opcode: int) -> bool:
+    source_signature = opcode_signature(source_game, source_opcode)
+    target_signature = opcode_signature(target_game, target_opcode)
+    return source_signature == target_signature
+
+
+def add_reference_name_opcode_maps() -> None:
+    reference = opcode_reference()
+    by_generation_name: dict[str, dict[str, list[int]]] = {}
+    for generation, game in REFERENCE_GAME_BY_GENERATION.items():
+        table = reference.get(game, {})
+        name_map: dict[str, list[int]] = {}
+        for opcode, info in table.items():
+            if not info.name or info.name.startswith(("unknown", "debug")):
+                continue
+            name_map.setdefault(info.name, []).append(opcode)
+        by_generation_name[generation] = name_map
+    for source_generation, source_game in REFERENCE_GAME_BY_GENERATION.items():
+        for target_generation, target_game in REFERENCE_GAME_BY_GENERATION.items():
+            if source_generation == target_generation:
+                continue
+            if target_generation == GEN_TH06_TH08 or source_generation == GEN_TH06_TH08:
+                continue
+            target_names = by_generation_name.get(target_generation, {})
+            for name, source_opcodes in by_generation_name.get(source_generation, {}).items():
+                target_opcodes = target_names.get(name)
+                if not target_opcodes:
+                    continue
+                for source_opcode in source_opcodes:
+                    for target_opcode in target_opcodes:
+                        key = (source_generation, target_generation, source_opcode)
+                        if key in OPCODE_BY_SOURCE_TARGET:
+                            continue
+                        if (source_generation, source_opcode, target_generation) in UNSUPPORTED_SEMANTIC_OPCODES:
+                            continue
+                        if not compatible_reference_signature(source_game, target_game, source_opcode, target_opcode):
+                            continue
+                        OPCODE_BY_SOURCE_TARGET[key] = RawOpcodeMap(target_opcode, None, f"ref.{reference_semantic_name(name)}")
+
+
+add_reference_name_opcode_maps()
 
 
 BULLET_SHAPES: tuple[SemanticValue, ...] = (

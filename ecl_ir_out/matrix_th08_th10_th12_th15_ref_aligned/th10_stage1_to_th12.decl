@@ -1,0 +1,2954 @@
+// source: th062/th10/stage01.decl
+// source game: th10
+// target: th12
+// whole-file lowering is a structured draft; verify target-game scheduling and resources
+anim { "enemy.anm"; "stgenm01.anm"; }
+ecli { "default.ecl"; }
+
+void BGirl00()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_330(2);
+    // object Animation source_line=8 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 45);
+    @Girl00(0);
+    // unlifted instruction: ins_1();
+}
+
+void BGirl00B()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=16 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=17 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 45);
+    // unlifted instruction: ins_330(2);
+    @Girl00B(0);
+    // unlifted instruction: ins_1();
+}
+
+void BGirl00C()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_330(2);
+    // object Animation source_line=27 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=28 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 45);
+    @Girl00C(0);
+    // unlifted instruction: ins_1();
+}
+
+void BGirl00D()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_330(2);
+    // object Animation source_line=37 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=38 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 45);
+    @Girl00D(0);
+    // unlifted instruction: ins_1();
+}
+
+void BGirl00E()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_330(2);
+    // object Animation source_line=47 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=48 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 45);
+    @Girl00E(0);
+    // unlifted instruction: ins_1();
+}
+
+void Boss()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_332(0);
+    // object Animation source_line=57 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(2);
+    // object Animation source_line=58 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(0, 5);
+    // object Movement source_line=59 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=60 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(48.0f, 48.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=61 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(32.0f, 32.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_335(60);
+    // unlifted instruction: ins_331(8200);
+    // unlifted instruction: ins_281(60, 4, 0.0f, 112.0f);
+    +60:
+    // unlifted instruction: ins_339();
+    // unlifted instruction: ins_324(0.0f, 96.0f, 280.0f, 100.0f);
+    // object Animation source_line=68 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(0);
+    // object Animation source_line=69 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetSprite; semantic verification required
+    ins_259(1, 370);
+    // object Animation source_line=70 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(2);
+    @Boss1();
+    // unlifted instruction: ins_1();
+}
+
+void Boss1()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_355($A, 90, 90, 40, 40);
+    // unlifted instruction: ins_333();
+    // unlifted instruction: ins_334(0, 2200, 2700, "BossCard1");
+    // unlifted instruction: ins_347(0, 2200.0f, -24448);
+    // unlifted instruction: ins_344(24);
+    // unlifted instruction: ins_360(1);
+    goto Boss1_428 @ 200;
+    Boss1_224:
+    // unlifted instruction: ins_292(40, 4, 6.0f);
+    +40:
+    @Boss1At1() async;
+    // unlifted instruction: ins_83($A);
+    // unlifted instruction: ins_292(40, 4, 6.0f);
+    +40:
+    @Boss1At2() async;
+    +40:
+    // unlifted instruction: ins_0();
+    +40:
+    @Boss1At3() async;
+    +40:
+    // unlifted instruction: ins_0();
+    Boss1_428:
+    if (1) goto Boss1_224 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop Boss1_224 lines 85..100 condition=1
+}
+
+void Boss1At1()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %D = 1.0f;
+    $A = 60;
+    // unlifted instruction: ins_269(0);
+    // object BulletEmitter source_line=110 family=th10_slot
+    // difficulty count.layers: EN=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: EN=1, H=3, L=5; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.0f, N=1.0f, HL=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
+    // difficulty speed.first: E=1.1f, N=1.8f, HL=2.5f; preserved as TH12 difficulty table; default preview N=1.8f
+    ins_500(0);
+    ins_507(0, 0);
+    ins_502(0, 3, 1);
+    ins_522(0, 1, 1, 3, 5, 1, 1, 1, 1);
+    !E
+    ins_504(0, 0.0f, 0.31415927f);
+    !N
+    ins_504(0, 0.0f, 0.31415927f);
+    !H
+    ins_504(0, 0.0f, 0.31415927f);
+    !L
+    ins_504(0, 0.0f, 0.31415927f);
+    !*
+    ins_521(0, 1.1f, 1.8f, 2.5f, 2.5f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 2, 0, 8192, 100, -999999, -999999.0f, -999999.0f
+    %E = [-9998.0f];
+    goto Boss1At1_1152 @ 1;
+    Boss1At1_612:
+    %D = %D + 1.5f;
+    %E = %E + 0.15708f;
+    // unlifted instruction: ins_82(%E);
+    // unlifted instruction: ins_81(%B, %C, %E, %D);
+    // unlifted instruction: ins_403(0, %B, %C);
+    +1:
+    // unlifted instruction: ins_401(0);
+    %D = -1.0f * %D;
+    // unlifted instruction: ins_81(%B, %C, %E, %D);
+    %D = -1.0f * %D;
+    // unlifted instruction: ins_403(0, %B, %C);
+    // object BulletEmitter source_line=148 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 0, 0);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.0f);
+    ins_505(0, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(0);
+    Boss1At1_1152:
+    if ($A--) goto Boss1At1_612 @ 0;
+    return;
+    return;
+    // detected loops:
+    // - counter_loop Boss1At1_612 lines 134..150 condition=$A--
+}
+
+void Boss1At2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %D = 1.0f;
+    $A = 60;
+    // unlifted instruction: ins_269(0);
+    // object BulletEmitter source_line=161 family=th10_slot
+    // difficulty count.layers: E=1, N=1, H=2, L=5; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=16, N=32, H=32, L=32; preserved as TH12 difficulty table; default preview N=32
+    // difficulty speed.step: ENH=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
+    // difficulty speed.first: ENH=1.8f, L=2.8f; preserved as TH12 difficulty table; default preview N=1.8f
+    ins_500(0);
+    ins_507(0, 2);
+    ins_502(0, 2, 6);
+    ins_522(0, 16, 32, 32, 32, 1, 1, 2, 5);
+    ins_504(0, 0.0f, 0.09817477f);
+    ins_521(0, 1.8f, 1.8f, 1.8f, 2.8f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 2, 0, 32, 40, -999999, 0.0f, 0.03926991f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unlifted instruction: ins_401(0);
+    return;
+}
+
+void Boss1At3()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %D = 1.0f;
+    $A = 60;
+    // unlifted instruction: ins_269(0);
+    // object BulletEmitter source_line=192 family=th10_slot
+    // difficulty count.layers: E=1, N=1, H=2, L=5; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=16, N=32, H=32, L=32; preserved as TH12 difficulty table; default preview N=32
+    // difficulty speed.step: ENH=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
+    // difficulty speed.first: ENH=1.8f, L=2.8f; preserved as TH12 difficulty table; default preview N=1.8f
+    ins_500(0);
+    ins_507(0, 2);
+    ins_502(0, 2, 6);
+    ins_522(0, 16, 32, 32, 32, 1, 1, 2, 5);
+    ins_504(0, 0.0f, 0.09817477f);
+    ins_521(0, 1.8f, 1.8f, 1.8f, 2.8f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 2, 0, 32, 40, -999999, 0.0f, -0.03926991f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unlifted instruction: ins_401(0);
+    return;
+}
+
+void Boss2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // unlifted instruction: ins_331(8200);
+    // unlifted instruction: ins_334(0, 2200, 2700, "BossCard2");
+    // unlifted instruction: ins_347(0, 2200.0f, -24448);
+    // unlifted instruction: ins_344(25);
+    // unlifted instruction: ins_360(0);
+    unless ([-9986] == 0) goto Boss2_292 @ 0;
+    // unlifted instruction: ins_420(640.0f);
+    goto Boss2_312 @ 0;
+    Boss2_292:
+    // unlifted instruction: ins_421(640.0f);
+    Boss2_312:
+    // unlifted instruction: ins_343();
+    // unlifted instruction: ins_21();
+    unless ([-9986] == 0) goto Boss2_548 @ 0;
+    // unlifted instruction: ins_335(60);
+    // unlifted instruction: ins_326();
+    // object Movement source_line=235 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_327(1, 5);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=236 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_327(2, 5);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_328(48.0f, 48.0f);
+    // unlifted instruction: ins_329();
+    Boss2_548:
+    // unlifted instruction: ins_336(15);
+    +60:
+    // unlifted instruction: ins_0();
+    goto Boss2_808 @ 350;
+    Boss2_608:
+    +40:
+    @Boss2At2() async;
+    +40:
+    // unlifted instruction: ins_0();
+    +40:
+    @Boss2At3() async;
+    +40:
+    // unlifted instruction: ins_0();
+    // unlifted instruction: ins_292(40, 4, 6.0f);
+    +40:
+    @Boss2At1() async;
+    +90:
+    // unlifted instruction: ins_0();
+    // unlifted instruction: ins_292(40, 4, 6.0f);
+    Boss2_808:
+    if (1) goto Boss2_608 @ 60;
+    return;
+    // detected loops:
+    // - backedge_loop Boss2_608 lines 244..260 condition=1
+}
+
+void Boss2At1()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    %D = 1.0f;
+    $A = 110;
+    // unlifted instruction: ins_269(0);
+    // object BulletEmitter source_line=270 family=th10_slot
+    // difficulty count.layers: ENH=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: ENH=3, L=6; preserved as TH12 difficulty table; default preview N=3
+    // difficulty speed.step: ENH=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
+    // difficulty speed.first: ENH=2.0f, L=4.0f; preserved as TH12 difficulty table; default preview N=2.0f
+    ins_500(0);
+    ins_507(0, 2);
+    ins_502(0, 3, 2);
+    ins_522(0, 3, 3, 3, 6, 1, 1, 1, 1);
+    ins_504(0, 0.0f, 1.0471976f);
+    ins_521(0, 2.0f, 2.0f, 2.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 2, 0, 8192, 100, -999999, -999999.0f, -999999.0f
+    // unlifted instruction: ins_411(1, 0);
+    // unlifted instruction: ins_402(1, 3, 1);
+    // unlifted instruction: ins_407(1, 4);
+    %E = [-9998.0f];
+    %F = %E;
+    goto Boss2At1_1100 @ 1;
+    Boss2At1_672:
+    %D = %D + 1.0f;
+    %E = %E - 0.15708f;
+    // unlifted instruction: ins_82(%E);
+    // unlifted instruction: ins_81(%B, %C, %E, %D);
+    // unlifted instruction: ins_403(0, %B, %C);
+    +1:
+    // unlifted instruction: ins_401(0);
+    %F = %F + 0.15708f;
+    // unlifted instruction: ins_82(%E);
+    // unlifted instruction: ins_81(%B, %C, %F, %D);
+    // unlifted instruction: ins_403(1, %B, %C);
+    // object BulletEmitter source_line=305 family=th10_slot
+    !NHL
+    ins_500(1);
+    ins_507(1, 1);
+    ins_502(1, 0, 0);
+    ins_506(1, 1, 1);
+    ins_504(1, 0.0f, 0.0f);
+    ins_505(1, 1.0f, 0.0f);
+    !*
+    !NHL
+    // unlifted instruction: ins_401(1);
+    !*
+    Boss2At1_1100:
+    if ($A--) goto Boss2At1_672 @ 0;
+    return;
+    return;
+    // detected loops:
+    // - counter_loop Boss2At1_672 lines 292..308 condition=$A--
+}
+
+void Boss2At2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %D = 1.0f;
+    $A = 60;
+    // unlifted instruction: ins_269(0);
+    // object BulletEmitter source_line=319 family=th10_slot
+    // difficulty count.layers: E=1, N=1, H=4, L=9; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=16, N=32, H=32, L=32; preserved as TH12 difficulty table; default preview N=32
+    // difficulty speed.step: EN=1.0f, H=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
+    // difficulty speed.first: EN=1.8f, H=2.6f, L=3.2f; preserved as TH12 difficulty table; default preview N=1.8f
+    ins_500(0);
+    ins_507(0, 2);
+    ins_502(0, 2, 6);
+    ins_522(0, 16, 32, 32, 32, 1, 1, 4, 9);
+    ins_504(0, 0.0f, 0.19634955f);
+    ins_521(0, 1.8f, 1.8f, 2.6f, 3.2f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 2, 0, 8192, 200, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 3, 0, 32, 50, -999999, 0.0f, -0.05235988f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unlifted instruction: ins_401(0);
+    return;
+}
+
+void Boss2At3()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %D = 1.0f;
+    $A = 60;
+    // unlifted instruction: ins_269(0);
+    // object BulletEmitter source_line=353 family=th10_slot
+    // difficulty count.layers: E=1, N=1, H=4, L=5; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=16, N=32, H=32, L=32; preserved as TH12 difficulty table; default preview N=32
+    // difficulty speed.step: EN=1.0f, H=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
+    // difficulty speed.first: EN=1.8f, H=2.6f, L=3.2f; preserved as TH12 difficulty table; default preview N=1.8f
+    ins_500(0);
+    ins_507(0, 2);
+    ins_502(0, 2, 6);
+    ins_522(0, 16, 32, 32, 32, 1, 1, 4, 5);
+    ins_504(0, 0.0f, 0.19634955f);
+    ins_521(0, 1.8f, 1.8f, 2.6f, 3.2f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 2, 0, 8192, 200, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 3, 0, 32, 50, -999999, 0.0f, 0.05235988f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unlifted instruction: ins_401(0);
+    return;
+}
+
+void BossCard1()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F, G;
+    // unlifted instruction: ins_334(0, 0, 2700, "Boss2");
+    !EN
+    // unlifted instruction: ins_357(2, 2700, 500000, "�H���u�I�[�^���X�J�C�v");
+    !*
+    !HL
+    // unlifted instruction: ins_359(4, 2700, 500000, "�H���u�H�̋�Ɖ����̐S�v");
+    !*
+    // unlifted instruction: ins_344(43);
+    // unlifted instruction: ins_21();
+    // unlifted instruction: ins_281(60, 4, 0.0f, 128.0f);
+    // unlifted instruction: ins_335(60);
+    // unlifted instruction: ins_336(7);
+    // object Enemy source_line=395 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreate; semantic verification required
+    ins_256("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    +60:
+    // object Animation source_line=397 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmPlay; semantic verification required
+    ins_263(0, 409);
+    +60:
+    // unlifted instruction: ins_269(0);
+    +30:
+    // unlifted instruction: ins_0();
+    %A = [-9998.0f];
+    // unlifted instruction: ins_355($G, 28, 38, 38, 38);
+    // object BulletEmitter source_line=404 family=th10_slot
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 3, 6);
+    ins_506(0, $G, 1);
+    ins_504(0, %A, 0.0f);
+    ins_505(0, 2.0f, 2.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 0, 64, 60, 1, 1.5707964f, -999.0f
+    // unsupported transform from ins_409: 0, 2, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 3, 0, 64, 60, 1, -1.5707964f, -999.0f
+    // unsupported transform from ins_409: 0, 4, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 5, 0, 64, 60, 1, 1.5707964f, 1.2f
+    // unsupported transform from ins_409: 0, 6, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 5, 0, 64, 60, 1, %A, %B
+    // object BulletEmitter source_line=417 family=th10_slot
+    ins_500(1);
+    ins_507(1, 3);
+    ins_502(1, 3, 6);
+    ins_506(1, $G, 1);
+    ins_504(1, %A, 0.0f);
+    ins_505(1, 2.0f, 2.0f);
+    // unsupported transform from ins_409: 1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 1, 1, 0, 64, 60, 1, -1.5707964f, -999.0f
+    // unsupported transform from ins_409: 1, 2, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 1, 3, 0, 64, 60, 1, 1.5707964f, -999.0f
+    // unsupported transform from ins_409: 1, 4, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 1, 5, 0, 64, 60, 1, -1.0471976f, 1.2f
+    // unsupported transform from ins_409: 1, 6, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 1, 5, 0, 64, 60, 1, %C, %B
+    // object BulletEmitter source_line=430 family=th10_slot
+    !NHL
+    ins_500(2);
+    ins_507(2, 3);
+    ins_502(2, 3, 6);
+    ins_506(2, $G, 1);
+    ins_504(2, %A, 0.0f);
+    ins_505(2, 2.0f, 2.0f);
+    // unsupported transform from ins_409: 2, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 2, 1, 0, 64, 60, 1, 1.5707964f, -999.0f
+    // unsupported transform from ins_409: 2, 2, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 2, 3, 0, 64, 60, 1, -1.5707964f, -999.0f
+    // unsupported transform from ins_409: 2, 4, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 2, 5, 0, 64, 60, 1, 0.8975979f, 1.2f
+    // unsupported transform from ins_409: 2, 6, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 2, 5, 0, 64, 60, 1, %D, %B
+    !*
+    // object BulletEmitter source_line=443 family=th10_slot
+    ins_500(3);
+    ins_507(3, 3);
+    ins_502(3, 3, 6);
+    ins_506(3, $G, 1);
+    ins_504(3, %A, 0.0f);
+    ins_505(3, 2.0f, 2.0f);
+    // unsupported transform from ins_409: 3, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 3, 1, 0, 64, 60, 1, -1.5707964f, -999.0f
+    // unsupported transform from ins_409: 3, 2, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 3, 3, 0, 64, 60, 1, 1.5707964f, -999.0f
+    // unsupported transform from ins_409: 3, 4, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 3, 5, 0, 64, 60, 1, -1.2566371f, 1.2f
+    // unsupported transform from ins_409: 3, 6, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 3, 5, 0, 64, 60, 1, %E, %B
+    // object BulletEmitter source_line=456 family=th10_slot
+    ins_500(4);
+    ins_507(4, 3);
+    ins_502(4, 3, 6);
+    ins_506(4, $G, 1);
+    ins_504(4, %A, 0.0f);
+    ins_505(4, 2.0f, 2.0f);
+    // unsupported transform from ins_409: 4, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 4, 1, 0, 64, 60, 1, -1.5707964f, -999.0f
+    // unsupported transform from ins_409: 4, 2, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 4, 3, 0, 64, 60, 1, 1.5707964f, -999.0f
+    // unsupported transform from ins_409: 4, 4, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 4, 5, 0, 64, 60, 1, -1.5707964f, 1.2f
+    // unsupported transform from ins_409: 4, 6, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 4, 5, 0, 64, 60, 1, %A, %B
+    // unsupported transform from ins_409: 4, 5, 0, 64, 60, 1, -1.5707964f, 1.2f
+    // object BulletEmitter source_line=469 family=th10_slot
+    ins_500(5);
+    ins_507(5, 3);
+    ins_502(5, 3, 6);
+    ins_506(5, $G, 1);
+    ins_504(5, %A, 0.0f);
+    ins_505(5, 2.0f, 2.0f);
+    // unsupported transform from ins_409: 5, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 5, 1, 0, 64, 60, 1, 1.5707964f, -999.0f
+    // unsupported transform from ins_409: 5, 2, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 5, 3, 0, 64, 60, 1, -1.5707964f, -999.0f
+    // unsupported transform from ins_409: 5, 4, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 5, 5, 0, 64, 60, 1, 1.0471976f, 1.2f
+    // unsupported transform from ins_409: 5, 6, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 5, 5, 0, 64, 60, 1, %C, %B
+    // unsupported transform from ins_409: 5, 5, 0, 64, 60, 1, 1.0471976f, 1.2f
+    // object BulletEmitter source_line=482 family=th10_slot
+    !NHL
+    ins_500(6);
+    ins_507(6, 3);
+    ins_502(6, 3, 6);
+    ins_506(6, $G, 1);
+    ins_504(6, %A, 0.0f);
+    ins_505(6, 2.0f, 2.0f);
+    // unsupported transform from ins_409: 6, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 6, 1, 0, 64, 60, 1, -1.5707964f, -999.0f
+    // unsupported transform from ins_409: 6, 2, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 6, 3, 0, 64, 60, 1, 1.5707964f, -999.0f
+    // unsupported transform from ins_409: 6, 4, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 6, 5, 0, 64, 60, 1, -0.8975979f, 1.2f
+    // unsupported transform from ins_409: 6, 6, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 6, 5, 0, 64, 60, 1, %D, %B
+    // unsupported transform from ins_409: 6, 5, 0, 64, 60, 1, -0.8975979f, 1.2f
+    !*
+    // object BulletEmitter source_line=495 family=th10_slot
+    ins_500(7);
+    ins_507(7, 3);
+    ins_502(7, 3, 6);
+    ins_506(7, $G, 1);
+    ins_504(7, %A, 0.0f);
+    ins_505(7, 2.0f, 2.0f);
+    // unsupported transform from ins_409: 7, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 7, 1, 0, 64, 60, 1, 1.5707964f, -999.0f
+    // unsupported transform from ins_409: 7, 2, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 7, 3, 0, 64, 60, 1, -1.5707964f, -999.0f
+    // unsupported transform from ins_409: 7, 4, 0, 16384, 3, 2, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 7, 5, 0, 64, 60, 1, 1.2566371f, 1.2f
+    // unsupported transform from ins_409: 7, 6, 0, 16384, 3, 6, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 7, 5, 0, 64, 60, 1, %E, %B
+    // unsupported transform from ins_409: 7, 5, 0, 64, 60, 1, 1.2566371f, 1.2f
+    goto BossCard1_7224 @ 510;
+    BossCard1_4448:
+    %A = [-9998.0f];
+    // unlifted instruction: ins_401(0);
+    // unlifted instruction: ins_401(1);
+    !NHL
+    // unlifted instruction: ins_401(2);
+    !*
+    // unlifted instruction: ins_401(3);
+    unless ([-9959] >= 2) goto BossCard1_5788 @ 330;
+    %B = 1.2f;
+    $F = 2;
+    %A = 1.570796f;
+    %C = -1.047198f;
+    %D = 0.897598f;
+    %E = -1.256637f;
+    goto BossCard1_5372 @ 150;
+    BossCard1_5024:
+    %B = %B + 0.2f;
+    // object BulletEmitter source_line=535 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 0, 0);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.0f);
+    ins_505(0, 1.0f, 0.0f);
+    // unsupported transform from ins_409: 0, 5, 0, 64, 60, 1, 1.5707964f, 1.2f
+    // unlifted instruction: ins_401(0);
+    // object BulletEmitter source_line=536 family=th10_slot
+    ins_500(1);
+    ins_507(1, 1);
+    ins_502(1, 0, 0);
+    ins_506(1, 1, 1);
+    ins_504(1, 0.0f, 0.0f);
+    ins_505(1, 1.0f, 0.0f);
+    // unsupported transform from ins_409: 1, 5, 0, 64, 60, 1, -1.0471976f, 1.2f
+    // unlifted instruction: ins_401(1);
+    // object BulletEmitter source_line=537 family=th10_slot
+    ins_500(2);
+    ins_507(2, 1);
+    ins_502(2, 0, 0);
+    ins_506(2, 1, 1);
+    ins_504(2, 0.0f, 0.0f);
+    ins_505(2, 1.0f, 0.0f);
+    // unsupported transform from ins_409: 2, 5, 0, 64, 60, 1, 0.8975979f, 1.2f
+    // unlifted instruction: ins_401(2);
+    // object BulletEmitter source_line=538 family=th10_slot
+    ins_500(3);
+    ins_507(3, 1);
+    ins_502(3, 0, 0);
+    ins_506(3, 1, 1);
+    ins_504(3, 0.0f, 0.0f);
+    ins_505(3, 1.0f, 0.0f);
+    // unsupported transform from ins_409: 3, 5, 0, 64, 60, 1, -1.2566371f, 1.2f
+    // unlifted instruction: ins_401(3);
+    BossCard1_5372:
+    if ($F--) goto BossCard1_5024 @ 150;
+    +60:
+    // unlifted instruction: ins_292(60, 4, 2.0f);
+    @BossCard1_at() async;
+    +60:
+    // unlifted instruction: ins_292(60, 4, 2.0f);
+    @BossCard1_at() async;
+    +60:
+    // unlifted instruction: ins_0();
+    @BossCard1_at() async;
+    BossCard1_5788:
+    !EN
+    // unlifted instruction: ins_292(60, 4, 2.0f);
+    !*
+    // unlifted instruction: ins_83(120);
+    %A = [-9998.0f];
+    // unlifted instruction: ins_401(4);
+    // unlifted instruction: ins_401(5);
+    !NHL
+    // unlifted instruction: ins_401(6);
+    !*
+    // unlifted instruction: ins_401(7);
+    unless ([-9959] >= 2) goto BossCard1_7176 @ 510;
+    %B = 1.2f;
+    $F = 2;
+    %A = 1.570796f;
+    %C = -1.047198f;
+    %D = 0.897598f;
+    %E = -1.256637f;
+    goto BossCard1_6760 @ 330;
+    BossCard1_6412:
+    %B = %B + 0.2f;
+    // object BulletEmitter source_line=584 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 0, 0);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.0f);
+    ins_505(0, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(0);
+    // object BulletEmitter source_line=585 family=th10_slot
+    ins_500(1);
+    ins_507(1, 1);
+    ins_502(1, 0, 0);
+    ins_506(1, 1, 1);
+    ins_504(1, 0.0f, 0.0f);
+    ins_505(1, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(1);
+    // object BulletEmitter source_line=586 family=th10_slot
+    ins_500(2);
+    ins_507(2, 1);
+    ins_502(2, 0, 0);
+    ins_506(2, 1, 1);
+    ins_504(2, 0.0f, 0.0f);
+    ins_505(2, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(2);
+    // object BulletEmitter source_line=587 family=th10_slot
+    ins_500(3);
+    ins_507(3, 1);
+    ins_502(3, 0, 0);
+    ins_506(3, 1, 1);
+    ins_504(3, 0.0f, 0.0f);
+    ins_505(3, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(3);
+    BossCard1_6760:
+    if ($F--) goto BossCard1_6412 @ 330;
+    +60:
+    // unlifted instruction: ins_292(60, 4, 2.0f);
+    @BossCard1_at() async;
+    +60:
+    // unlifted instruction: ins_292(60, 4, 2.0f);
+    @BossCard1_at() async;
+    +60:
+    // unlifted instruction: ins_0();
+    @BossCard1_at() async;
+    BossCard1_7176:
+    !EN
+    // unlifted instruction: ins_292(60, 4, 2.0f);
+    !*
+    // unlifted instruction: ins_83(120);
+    BossCard1_7224:
+    if (1) goto BossCard1_4448 @ 150;
+    return;
+    // detected loops:
+    // - counter_loop BossCard1_5024 lines 529..540 condition=$F--
+    // - counter_loop BossCard1_6412 lines 578..589 condition=$F--
+    // - backedge_loop BossCard1_4448 lines 509..609 condition=1
+}
+
+void BossCard1_at()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_355($A, 1, 1, 1, 3);
+    // object BulletEmitter source_line=617 family=th10_slot
+    !HL
+    ins_500(4);
+    ins_507(4, 2);
+    ins_502(4, 12, 6);
+    ins_506(4, 10, 1);
+    ins_504(4, 0.0f, 0.0f);
+    ins_505(4, 3.0f, 2.0f);
+    // unsupported transform from ins_409: 4, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    !*
+    goto BossCard1_at_336 @ 10;
+    BossCard1_at_300:
+    !HL
+    // unlifted instruction: ins_401(4);
+    !*
+    +10:
+    // unlifted instruction: ins_0();
+    BossCard1_at_336:
+    if ($A--) goto BossCard1_at_300 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard1_at_300 lines 625..632 condition=$A--
+}
+
+void BossCard2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_334(0, 0, 2700, "BossDead");
+    !EN
+    // unlifted instruction: ins_357(6, 2700, 500000, "�L���u�I���g�V�n�[�x�X�^�[�v");
+    !*
+    !HL
+    // unlifted instruction: ins_359(8, 2700, 500000, "�L��u�����_�̖񑩁v");
+    !*
+    // unlifted instruction: ins_21();
+    // unlifted instruction: ins_281(60, 4, 0.0f, 128.0f);
+    // unlifted instruction: ins_335(60);
+    // unlifted instruction: ins_336(7);
+    unless ([-9986] == 0) goto BossCard2_444 @ 0;
+    // object Enemy source_line=650 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreate; semantic verification required
+    ins_256("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    goto BossCard2_500 @ 0;
+    BossCard2_444:
+    // object Enemy source_line=653 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreate; semantic verification required
+    ins_256("Ecl_EtBreak_ni", 0.0f, 0.0f, 9999, 0, 0);
+    BossCard2_500:
+    // unlifted instruction: ins_344(44);
+    +60:
+    // object Animation source_line=657 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmPlay; semantic verification required
+    ins_263(0, 409);
+    +60:
+    // unlifted instruction: ins_269(0);
+    +30:
+    // unlifted instruction: ins_0();
+    goto BossCard2_836 @ 250;
+    BossCard2_604:
+    @BossCard2At1() async;
+    +60:
+    @BossCard2At2() async;
+    !EN
+    // unlifted instruction: ins_83(140);
+    !*
+    !H
+    // unlifted instruction: ins_83(90);
+    !*
+    !L
+    // unlifted instruction: ins_83(40);
+    !*
+    @BossCard2At1b() async;
+    // unlifted instruction: ins_83(40);
+    // unlifted instruction: ins_292(40, 4, 3.0f);
+    +40:
+    // unlifted instruction: ins_0();
+    BossCard2_836:
+    if (1) goto BossCard2_604 @ 150;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard2_604 lines 663..680 condition=1
+}
+
+void BossCard2At1()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    %B = [-9998.0f];
+    // unlifted instruction: ins_356(%F, 1.4f, 1.4f, 2.0f, 2.0f);
+    // unlifted instruction: ins_355($A, 8, 32, 32, 64);
+    %E = 6.2831855f / _f($A);
+    // unlifted instruction: ins_336(16);
+    goto BossCard2At1_592 @ 0;
+    BossCard2At1_268:
+    // unlifted instruction: ins_81(%C, %D, [-9998.0f], [-9987.0f] * _f(64));
+    // unlifted instruction: ins_403(0, %C, %D);
+    !EN
+    // unlifted instruction: ins_412(3, 13, %B, %F, 0.0f, 180.0f, 0, 14.0f);
+    !*
+    !HL
+    // unlifted instruction: ins_413(0, 3, 13, %B, 0.0f, 512.0f, 60, 20, 60, 20, 16.0f, 0);
+    !*
+    %B = %B + %E;
+    // unlifted instruction: ins_82(%B);
+    BossCard2At1_592:
+    if ($A--) goto BossCard2At1_268 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2At1_268 lines 693..704 condition=$A--
+}
+
+void BossCard2At1b()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    %B = [-9998.0f];
+    // unlifted instruction: ins_356(%F, 1.4f, 1.4f, 2.0f, 2.5f);
+    // unlifted instruction: ins_355($A, 16, 32, 32, 48);
+    %E = 6.2831855f / _f($A);
+    // unlifted instruction: ins_336(16);
+    goto BossCard2At1b_440 @ 0;
+    BossCard2At1b_268:
+    // unlifted instruction: ins_403(0, 0.0f, 0.0f);
+    // unlifted instruction: ins_412(3, 2, %B, %F, 0.0f, 180.0f, 0, 14.0f);
+    %B = %B + %E;
+    // unlifted instruction: ins_82(%B);
+    BossCard2At1b_440:
+    if ($A--) goto BossCard2At1b_268 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2At1b_268 lines 717..723 condition=$A--
+}
+
+void BossCard2At2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    %D = 1.0f;
+    $A = 110;
+    // unlifted instruction: ins_355($A, 60, 110, 110, 110);
+    // unlifted instruction: ins_269(0);
+    // object BulletEmitter source_line=734 family=th10_slot
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 3, 2);
+    ins_506(0, 1, 1);
+    ins_504(0, [-9998.0f], 1.0471976f);
+    ins_505(0, ([-9999.0f] * 0.7f) + 1.0f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 2, 0, 8192, 100, -999999, -999999.0f, -999999.0f
+    // unlifted instruction: ins_411(1, 0);
+    // unlifted instruction: ins_402(1, 3, 1);
+    // unlifted instruction: ins_407(1, 4);
+    %E = [-9998.0f];
+    %F = %E;
+    goto BossCard2At2_1348 @ 1;
+    BossCard2At2_624:
+    %D = %D + 1.0f;
+    %E = %E - 0.15708f;
+    // unlifted instruction: ins_82(%E);
+    // unlifted instruction: ins_81(%B, %C, %E, %D);
+    // unlifted instruction: ins_403(0, %B, %C);
+    +1:
+    // unlifted instruction: ins_401(0);
+    %F = %F + 0.15708f;
+    // unlifted instruction: ins_82(%E);
+    // unlifted instruction: ins_81(%B, %C, %F, %D);
+    // unlifted instruction: ins_405(1, ([-9999.0f] * 0.7f) + 1.0f, 1.0f);
+    // unlifted instruction: ins_404(1, [-9998.0f], 1.0471976f);
+    // unlifted instruction: ins_403(1, %B, %C);
+    // object BulletEmitter source_line=764 family=th10_slot
+    ins_500(1);
+    ins_507(1, 1);
+    ins_502(1, 0, 0);
+    ins_506(1, 1, 1);
+    ins_504(1, 0.0f, 0.0f);
+    ins_505(1, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(1);
+    BossCard2At2_1348:
+    if ($A--) goto BossCard2At2_624 @ 0;
+    return;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2At2_624 lines 748..766 condition=$A--
+}
+
+void BossDead()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Movement source_line=774 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(68);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Animation source_line=775 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmPlay; semantic verification required
+    ins_263(0, 354);
+    // unlifted instruction: ins_336(18);
+    // object Animation source_line=777 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmPlay; semantic verification required
+    ins_263(0, 419);
+    // unlifted instruction: ins_284([-9998.0f], 0.4f);
+    unless ([-9986] == 0) goto BossDead_308 @ 0;
+    // object Enemy source_line=780 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreate; semantic verification required
+    ins_256("Ecl_EtBreak2", 0.0f, 0.0f, 9999, 0, 0);
+    goto BossDead_364 @ 0;
+    BossDead_308:
+    // object Enemy source_line=783 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreate; semantic verification required
+    ins_256("Ecl_EtBreak2_ni", 0.0f, 0.0f, 9999, 0, 0);
+    BossDead_364:
+    +60:
+    // unlifted instruction: ins_410();
+    // unlifted instruction: ins_343();
+    // unlifted instruction: ins_330(0);
+    // unlifted instruction: ins_337(30, 12, 0);
+    // object Animation source_line=790 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmPlay; semantic verification required
+    ins_263(0, 354);
+    // object Animation source_line=791 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmPlay; semantic verification required
+    ins_263(0, 420);
+    // unlifted instruction: ins_336(18);
+    // unlifted instruction: ins_332(-1);
+    // unlifted instruction: ins_1();
+    // unlifted instruction: ins_1();
+}
+
+void Ecl_BGirl00()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=801 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=802 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetSprite; semantic verification required
+    ins_259(1, 45);
+    @Ecl_Girl00(0);
+    // unlifted instruction: ins_1();
+}
+
+void Ecl_GGirl00()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=810 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=811 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetSprite; semantic verification required
+    ins_259(1, 47);
+    @Ecl_Girl00(10);
+    // unlifted instruction: ins_1();
+}
+
+void Ecl_Girl00(var A)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=818 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=819 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(0, $A);
+    // object Movement source_line=820 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=821 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(24.0f, 24.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=822 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(16.0f, 16.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_284([-9989.0f], 7.0f);
+    // unlifted instruction: ins_285(60, 4, [-9989.0f], 0.0f);
+    +60:
+    // unlifted instruction: ins_0();
+    !HL
+    @Ecl_Girl00_at() async;
+    !*
+    +200:
+    // unlifted instruction: ins_0();
+    +20:
+    // unlifted instruction: ins_284([-9989.0f] + 3.1415927f, 0.0f);
+    // unlifted instruction: ins_285(-1, 7, 0.0f, 0.03f);
+    goto Ecl_Girl00_424 @ 340;
+    Ecl_Girl00_408:
+    +60:
+    // unlifted instruction: ins_0();
+    Ecl_Girl00_424:
+    if (1) goto Ecl_Girl00_408 @ 280;
+    return;
+    // detected loops:
+    // - backedge_loop Ecl_Girl00_408 lines 836..840 condition=1
+}
+
+void Ecl_Girl00_at()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BulletEmitter source_line=846 family=th10_slot
+    !L
+    // difficulty count.layers: L=1; preserved as TH12 difficulty table; default preview L=1
+    // difficulty count.ways: L=3; preserved as TH12 difficulty table; default preview L=3
+    ins_500(0);
+    ins_507(0, 0);
+    ins_502(0, 3, 6);
+    ins_522(0, 3, 3, 3, 3, 1, 1, 1, 1);
+    ins_504(0, 0.0f, 0.09817477f);
+    ins_505(0, 4.5f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    !*
+    goto Ecl_Girl00_at_428 @ 0;
+    Ecl_Girl00_at_368:
+    // unlifted instruction: ins_401(0);
+    !H
+    // unlifted instruction: ins_83(45);
+    !*
+    !L
+    // unlifted instruction: ins_83(10);
+    !*
+    Ecl_Girl00_at_428:
+    if (1) goto Ecl_Girl00_at_368 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop Ecl_Girl00_at_368 lines 859..867 condition=1
+}
+
+void Ecl_GirlInit()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=874 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=875 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetSprite; semantic verification required
+    ins_259(0, $A);
+    // object Movement source_line=876 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=877 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(24.0f, 24.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=878 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(16.0f, 16.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    return;
+    return;
+}
+
+void Ecl_RGirl00()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=886 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=887 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetSprite; semantic verification required
+    ins_259(1, 46);
+    @Ecl_Girl00(5);
+    // unlifted instruction: ins_1();
+}
+
+void Ecl_RGirl01()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=895 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=896 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(0, 5);
+    // object Animation source_line=897 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 46);
+    // object Movement source_line=898 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=899 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(24.0f, 24.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=900 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(16.0f, 16.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_284([-9989.0f], 7.0f);
+    // unlifted instruction: ins_285(60, 4, [-9989.0f], 0.0f);
+    +60:
+    // unlifted instruction: ins_0();
+    !HL
+    @Ecl_Girl00_at() async;
+    !*
+    +20:
+    // unlifted instruction: ins_284([-9989.0f] + 3.1415927f, 0.0f);
+    // unlifted instruction: ins_285(-1, 7, 0.0f, 0.03f);
+    goto Ecl_RGirl01_432 @ 140;
+    Ecl_RGirl01_416:
+    +60:
+    // unlifted instruction: ins_0();
+    Ecl_RGirl01_432:
+    if (1) goto Ecl_RGirl01_416 @ 80;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop Ecl_RGirl01_416 lines 912..916 condition=1
+}
+
+void Ecl_YGirl00()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=923 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=924 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetSprite; semantic verification required
+    ins_259(1, 48);
+    @Ecl_Girl00(15);
+    // unlifted instruction: ins_1();
+}
+
+void GGirl00()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_330(3);
+    // object Animation source_line=933 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 47);
+    @Girl00(10);
+    // unlifted instruction: ins_1();
+}
+
+void GGirl00B()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=941 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=942 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 47);
+    // unlifted instruction: ins_330(3);
+    @Girl00B(10);
+    // unlifted instruction: ins_1();
+}
+
+void GGirl00C()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_330(3);
+    // object Animation source_line=952 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=953 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 47);
+    @Girl00C(10);
+    // unlifted instruction: ins_1();
+}
+
+void GGirl00D()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_330(3);
+    // object Animation source_line=962 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=963 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 47);
+    @Girl00D(10);
+    // unlifted instruction: ins_1();
+}
+
+void GGirl00E()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_330(3);
+    // object Animation source_line=972 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=973 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 47);
+    @Girl00E(10);
+    // unlifted instruction: ins_1();
+}
+
+void Girl00(var A)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=980 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=981 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(0, $A);
+    // object Movement source_line=982 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=983 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(24.0f, 24.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=984 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(16.0f, 16.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    @RGirl00_at() async;
+    // unlifted instruction: ins_284(1.5707964f, 2.7f);
+    +60:
+    // unlifted instruction: ins_285(60, 0, 0.0f, -999999.0f);
+    +6000:
+    // unlifted instruction: ins_0();
+    return;
+}
+
+void Girl00B(var A)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=996 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=997 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(0, $A);
+    // object Movement source_line=998 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=999 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(24.0f, 24.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1000 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(16.0f, 16.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_284(1.5707964f, 2.7f);
+    !HL
+    @Girl00B_at() async;
+    !*
+    +60:
+    // unlifted instruction: ins_285(60, 0, 0.0f, -999999.0f);
+    +6000:
+    // unlifted instruction: ins_0();
+    return;
+}
+
+void Girl00B_at()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // unlifted instruction: ins_355($B, 30, 30, 10, 8);
+    // unlifted instruction: ins_356(%C, 1.0f, 1.8f, 2.5f, 3.0f);
+    // unlifted instruction: ins_355($A, 2, 2, 10, 15);
+    // object BulletEmitter source_line=1018 family=th10_slot
+    !NHL
+    ins_500(0);
+    ins_507(0, 0);
+    ins_502(0, 2, 6);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.19634955f);
+    ins_505(0, %C, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    !*
+    // unlifted instruction: ins_83([-10000] % 10);
+    goto Girl00B_at_536 @ 0;
+    Girl00B_at_496:
+    // unlifted instruction: ins_83($B);
+    !NHL
+    // unlifted instruction: ins_401(0);
+    !*
+    Girl00B_at_536:
+    if ($A--) goto Girl00B_at_496 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Girl00B_at_496 lines 1028..1034 condition=$A--
+}
+
+void Girl00C(var A)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var B;
+    // object Animation source_line=1041 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1042 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(0, $A);
+    // object Movement source_line=1043 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1044 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(24.0f, 24.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1045 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(16.0f, 16.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_284(1.5707964f, 7.0f);
+    // unlifted instruction: ins_285(60, 4, -999999.0f, 0.0f);
+    +60:
+    // object BulletEmitter source_line=1049 family=th10_slot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=1, N=1, H=3, L=9; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.0f, N=1.5f, H=2.5f, L=2.5f; preserved as TH12 difficulty table; default preview N=1.5f
+    // difficulty speed.first: E=1.0f, N=2.0f, H=2.5f, L=2.5f; preserved as TH12 difficulty table; default preview N=2.0f
+    ins_500(0);
+    ins_507(0, 0);
+    ins_502(0, 1, 6);
+    ins_522(0, 1, 1, 3, 9, 1, 1, 1, 1);
+    ins_504(0, 0.0f, 0.19634955f);
+    ins_521(0, 1.0f, 2.0f, 2.5f, 2.5f, 1.0f, 1.5f, 2.5f, 2.5f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    // unlifted instruction: ins_401(0);
+    +120:
+    // unlifted instruction: ins_0();
+    +20:
+    // unlifted instruction: ins_284([-9989.0f] + 3.1415927f, 0.0f);
+    // unlifted instruction: ins_285(-1, 7, 0.0f, 0.03f);
+    goto Girl00C_812 @ 260;
+    Girl00C_796:
+    +60:
+    // unlifted instruction: ins_0();
+    Girl00C_812:
+    if (1) goto Girl00C_796 @ 200;
+    return;
+    // detected loops:
+    // - backedge_loop Girl00C_796 lines 1079..1083 condition=1
+}
+
+void Girl00D(var A)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=1089 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1090 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(0, $A);
+    // object Movement source_line=1091 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1092 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(24.0f, 24.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1093 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(16.0f, 16.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_284(1.5707964f, 6.0f);
+    // unlifted instruction: ins_285(60, 0, 0.0f, 0.0f);
+    @RGirl00D_at() async;
+    +60:
+    // unlifted instruction: ins_284(-1.5707964f, 0.5f);
+    +6000:
+    // unlifted instruction: ins_0();
+    return;
+}
+
+void Girl00E(var A)
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=1106 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1107 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(0, $A);
+    // object Movement source_line=1108 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1109 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(24.0f, 24.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1110 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(16.0f, 16.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    !HL
+    @RGirl00E_at() async;
+    !*
+    // unlifted instruction: ins_284(1.5707964f, 1.8f);
+    +60:
+    // unlifted instruction: ins_285(60, 0, -999999.0f, -999999.0f);
+    +6000:
+    // unlifted instruction: ins_0();
+    return;
+}
+
+void Girl01()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1125 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1126 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(0, 40);
+    // object Movement source_line=1127 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1128 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(40.0f, 40.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1129 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(16.0f, 16.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_326();
+    // object Movement source_line=1131 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_327(1, 2);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1132 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_327(2, 3);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_328(32.0f, 32.0f);
+    // unlifted instruction: ins_284(1.5707964f, 5.0f);
+    // unlifted instruction: ins_285(60, 4, -999999.0f, 0.0f);
+    +60:
+    // raw: @Girl01_at() async 0;
+    // unlifted instruction: ins_284(2.7488935f, 0.0f);
+    // unlifted instruction: ins_285(180, 7, 0.0f, 0.005f);
+    +180:
+    // unlifted instruction: ins_0();
+    // unlifted instruction: ins_17(0);
+    +6000:
+    // unlifted instruction: ins_0();
+    // unlifted instruction: ins_1();
+}
+
+void Girl01_at()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D;
+    // unlifted instruction: ins_356(%D, 2.0f, 2.7f, 3.0f, 4.0f);
+    goto Girl01_at_688 @ 20;
+    Girl01_at_96:
+    // object BulletEmitter source_line=1154 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 3, 4);
+    ins_506(0, $A, 1);
+    ins_504(0, [-9989.0f], 0.049087387f);
+    ins_505(0, %D, 0.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    $A = 1;
+    // unlifted instruction: ins_355($B, 3, 5, 9, 11);
+    // unlifted instruction: ins_355($C, 10, 10, 7, 4);
+    goto Girl01_at_628 @ 0;
+    Girl01_at_484:
+    // unlifted instruction: ins_401(0);
+    // unlifted instruction: ins_83($C);
+    $A = $A + 1;
+    Girl01_at_628:
+    if ($B--) goto Girl01_at_484 @ 0;
+    +20:
+    // unlifted instruction: ins_0();
+    Girl01_at_688:
+    if (1) goto Girl01_at_96 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Girl01_at_484 lines 1166..1172 condition=$B--
+    // - backedge_loop Girl01_at_96 lines 1153..1176 condition=1
+}
+
+void Girl02()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1183 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1184 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(0, 40);
+    // object Movement source_line=1185 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1186 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(40.0f, 40.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1187 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(16.0f, 16.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_326();
+    // unlifted instruction: ins_328(32.0f, 32.0f);
+    // unlifted instruction: ins_284(1.5707964f, 5.0f);
+    // unlifted instruction: ins_285(60, 4, -999999.0f, 0.0f);
+    +60:
+    // raw: @Girl02_at() async 0;
+    // unlifted instruction: ins_284(2.7488935f, 0.0f);
+    // unlifted instruction: ins_285(180, 7, 0.0f, 0.005f);
+    +180:
+    // unlifted instruction: ins_0();
+    +6000:
+    // unlifted instruction: ins_0();
+    // unlifted instruction: ins_1();
+}
+
+void Girl02_at()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    goto Girl02_at_572 @ 40;
+    Girl02_at_60:
+    // object BulletEmitter source_line=1208 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 1, 4);
+    ins_506(0, 1, 1);
+    ins_504(0, [-9989.0f], 0.09817477f);
+    ins_505(0, 2.5f, 0.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    $A = 1;
+    $B = 5;
+    goto Girl02_at_512 @ 10;
+    Girl02_at_416:
+    // unlifted instruction: ins_401(0);
+    +10:
+    $A = $A + 1;
+    Girl02_at_512:
+    if ($B--) goto Girl02_at_416 @ 0;
+    +30:
+    // unlifted instruction: ins_0();
+    Girl02_at_572:
+    if (1) goto Girl02_at_60 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Girl02_at_416 lines 1219..1224 condition=$B--
+    // - backedge_loop Girl02_at_60 lines 1207..1228 condition=1
+}
+
+void MBoss()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_332(0);
+    // object Animation source_line=1236 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(2);
+    // object Animation source_line=1237 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(0, 0);
+    // object Movement source_line=1238 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(32);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1239 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_320(48.0f, 48.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1240 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_321(32.0f, 32.0f);
+    // movement lowering from th10 to th12 is not implemented yet
+    !EN
+    // unlifted instruction: ins_331(8400);
+    !*
+    !HL
+    // unlifted instruction: ins_331(5850);
+    !*
+    // unlifted instruction: ins_281(60, 4, 64.0f, 96.0f);
+    !EN
+    // unlifted instruction: ins_334(0, 4200, 0, "MBoss2");
+    !*
+    // unlifted instruction: ins_334(1, 0, 1560, "MBossDead");
+    // unlifted instruction: ins_341(1, "MBossEscape");
+    !HL
+    // unlifted instruction: ins_334(0, 1650, 1560, "MBossCard1");
+    !*
+    // unlifted instruction: ins_347(0, 1650.0f, -24448);
+    // unlifted instruction: ins_344(6);
+    goto MBoss_764 @ 260;
+    MBoss_476:
+    +60:
+    // unlifted instruction: ins_0();
+    @MBoss_at1();
+    // unlifted instruction: ins_281(60, 4, 0.0f, 128.0f);
+    +80:
+    @MBoss_at2();
+    // unlifted instruction: ins_281(60, 4, -64.0f, 96.0f);
+    +60:
+    @MBoss_at1();
+    @MBoss_at2() async;
+    // unlifted instruction: ins_281(60, 4, 64.0f, 96.0f);
+    +60:
+    // unlifted instruction: ins_0();
+    // unlifted instruction: ins_281(60, 4, 64.0f, 96.0f);
+    MBoss_764:
+    if (1) goto MBoss_476 @ 0;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop MBoss_476 lines 1257..1273 condition=1
+}
+
+void MBoss2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D;
+    // unlifted instruction: ins_344(7);
+    // unlifted instruction: ins_326();
+    // object Movement source_line=1282 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_327(1, 1);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1283 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_327(2, 2);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_328(48.0f, 48.0f);
+    // unlifted instruction: ins_329();
+    // unlifted instruction: ins_335(60);
+    // object Enemy source_line=1287 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreate; semantic verification required
+    ins_256("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    // unlifted instruction: ins_281(30, 4, 0.0f, 144.0f);
+    +30:
+    // unlifted instruction: ins_0();
+    // object Animation source_line=1291 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmPlay; semantic verification required
+    ins_263(0, 409);
+    +60:
+    // object BulletEmitter source_line=1293 family=th10_slot
+    ins_500(0);
+    ins_507(0, 2);
+    ins_502(0, 5, 1);
+    ins_506(0, 1, 4);
+    ins_504(0, %B, -0.040799905f);
+    ins_505(0, 2.0f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    %B = 0.0f;
+    MBoss2_492:
+    $C = 0;
+    // unlifted instruction: ins_355($D, 3, 5, 6, 7);
+    goto MBoss2_968 @ 90;
+    MBoss2_592:
+    // unlifted instruction: ins_401(0);
+    // object BulletEmitter source_line=1309 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 0, 0);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.0f);
+    ins_505(0, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(0);
+    $C = $C + 1;
+    %B = %B + ((3.1415927f * _f(2)) / _f($D));
+    MBoss2_968:
+    if ($C < $D) goto MBoss2_592 @ 90;
+    %B = %B + 0.392699f;
+    +50:
+    goto MBoss2_492 @ 90;
+    goto MBoss2_1188 @ 200;
+    MBoss2_1172:
+    +60:
+    // unlifted instruction: ins_0();
+    MBoss2_1188:
+    if (1) goto MBoss2_1172 @ 140;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - counter_loop MBoss2_592 lines 1303..1313 condition=$C < $D
+    // - backedge_loop MBoss2_1172 lines 1318..1322 condition=1
+}
+
+void MBossCard1()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_334(0, 0, 2160, "MBossDead");
+    // unlifted instruction: ins_341(0, "MBossEscape");
+    // unlifted instruction: ins_324(0.0f, 80.0f, 280.0f, 64.0f);
+    // unlifted instruction: ins_359(0, 2160, 500000, "�t���u�����̗��t�v");
+    // unlifted instruction: ins_344(15);
+    // unlifted instruction: ins_21();
+    // unlifted instruction: ins_281(60, 4, 0.0f, 112.0f);
+    // unlifted instruction: ins_335(60);
+    // unlifted instruction: ins_336(7);
+    // object Enemy source_line=1338 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreate; semantic verification required
+    ins_256("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    +60:
+    // object Animation source_line=1340 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmPlay; semantic verification required
+    ins_263(0, 409);
+    +60:
+    // unlifted instruction: ins_0();
+    +30:
+    // unlifted instruction: ins_0();
+    @MBossCard1_at() async;
+    goto MBossCard1_504 @ 270;
+    MBossCard1_476:
+    +120:
+    // unlifted instruction: ins_292(60, 4, 2.0f);
+    MBossCard1_504:
+    if (1) goto MBossCard1_476 @ 150;
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - backedge_loop MBossCard1_476 lines 1347..1351 condition=1
+}
+
+void MBossCard1_at()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object BulletEmitter source_line=1358 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 3, 13);
+    ins_506(0, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_505(0, ([-9999.0f] * 1.5f) + 0.4f, 0.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 0, 8192, 180, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 2, 0, 16, 120, -999999, 0.018f, 1.5707964f
+    // unsupported transform from ins_409: 0, 2, 0, 16, 120, -999999, 0.018f, 1.5707964f
+    // unsupported transform from ins_409: 0, 3, 0, 16, 120, -999999, 0.01f, 0.0f
+    // unsupported transform from ins_409: 0, 3, 0, 16, 120, -999999, 0.01f, 3.1415927f
+    // unsupported transform from ins_409: 0, 3, 0, 16, 120, -999999, 0.01f, 0.0f
+    // unsupported transform from ins_409: 0, 3, 0, 16, 120, -999999, 0.01f, 3.1415927f
+    // unsupported transform from ins_409: 0, 3, 0, -2147483648, -999999, -999999, -999999.0f, -999999.0f
+    unless ([-9959] == 2) goto MBossCard1_at_440 @ 0;
+    goto MBossCard1_at_488 @ 0;
+    MBossCard1_at_440:
+    MBossCard1_at_488:
+    goto MBossCard1_at_2880 @ 3;
+    MBossCard1_at_512:
+    +1:
+    // unlifted instruction: ins_0();
+    %A = [-9998.0f] / 6.0f;
+    unless (%A > 0.0f) goto MBossCard1_at_832 @ 1;
+    %A = %A - 3.1415927f;
+    goto MBossCard1_at_880 @ 1;
+    MBossCard1_at_832:
+    MBossCard1_at_880:
+    // unlifted instruction: ins_401(0);
+    +1:
+    %A = [-9998.0f] / 6.0f;
+    unless (%A > 0.0f) goto MBossCard1_at_1452 @ 2;
+    %A = (%A - (3.1415927f * _f(5))) / _f(6);
+    goto MBossCard1_at_1612 @ 2;
+    MBossCard1_at_1452:
+    %A = %A - (3.1415927f / _f(6));
+    MBossCard1_at_1612:
+    unless ([-9959] == 2) goto MBossCard1_at_1740 @ 2;
+    MBossCard1_at_1740:
+    // object BulletEmitter source_line=1404 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 3, 2);
+    ins_506(0, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_505(0, ([-9999.0f] * 1.5f) + 0.4f, 0.0f);
+    // unsupported transform from ins_409: 0, 3, 0, -2147483648, -999999, -999999, -999999.0f, -999999.0f
+    // unlifted instruction: ins_401(0);
+    +1:
+    %A = [-9998.0f] / 6.0f;
+    %A = %A - (3.1415927f / _f(2));
+    // object BulletEmitter source_line=1412 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 3, 1);
+    ins_506(0, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_505(0, ([-9999.0f] * 1.5f) + 0.4f, 0.0f);
+    // unsupported transform from ins_409: 0, 3, 0, -2147483648, -999999, -999999, -999999.0f, -999999.0f
+    // unlifted instruction: ins_401(0);
+    unless ([-9959] == 3) goto MBossCard1_at_2880 @ 3;
+    %A = [-9998.0f] / 6.0f;
+    %A = %A - (3.1415927f / _f(2));
+    // object BulletEmitter source_line=1420 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 0, 0);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.0f);
+    ins_505(0, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(0);
+    MBossCard1_at_2880:
+    if (1) goto MBossCard1_at_512 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop MBossCard1_at_512 lines 1373..1422 condition=1
+}
+
+void MBossDead()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Movement source_line=1429 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(16);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_343();
+    unless ([-9959] <= 1) goto MBossDead_388 @ 0;
+    unless ([-9986] == 0) goto MBossDead_308 @ 0;
+    // object Enemy source_line=1433 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreate; semantic verification required
+    ins_256("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    goto MBossDead_364 @ 0;
+    MBossDead_308:
+    // object Enemy source_line=1436 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreate; semantic verification required
+    ins_256("Ecl_EtBreak_ni", 0.0f, 0.0f, 9999, 0, 0);
+    MBossDead_364:
+    goto MBossDead_532 @ 0;
+    MBossDead_388:
+    unless ([-9986] == 0) goto MBossDead_512 @ 0;
+    // unlifted instruction: ins_420(640.0f);
+    goto MBossDead_532 @ 0;
+    MBossDead_512:
+    // unlifted instruction: ins_421(640.0f);
+    MBossDead_532:
+    // unlifted instruction: ins_326();
+    // object Movement source_line=1447 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_327(1, 5);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1448 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_327(4, 1);
+    // movement lowering from th10 to th12 is not implemented yet
+    // object Movement source_line=1449 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_327(2, 5);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_328(48.0f, 48.0f);
+    // unlifted instruction: ins_329();
+    // unlifted instruction: ins_332(-1);
+    // unlifted instruction: ins_337(30, 12, 0);
+    // object Animation source_line=1454 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmPlay; semantic verification required
+    ins_263(0, 354);
+    // unlifted instruction: ins_336(18);
+    // unlifted instruction: ins_344(0);
+    // unlifted instruction: ins_1();
+    // unlifted instruction: ins_1();
+}
+
+void MBossEscape()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_334(0, -1, 0, "");
+    // unlifted instruction: ins_334(1, -1, 0, "");
+    // unlifted instruction: ins_343();
+    // unlifted instruction: ins_325();
+    unless ([-9959] >= 1) goto MBossEscape_364 @ 0;
+    unless ([-9986] == 0) goto MBossEscape_344 @ 0;
+    // unlifted instruction: ins_420(640.0f);
+    goto MBossEscape_364 @ 0;
+    MBossEscape_344:
+    // unlifted instruction: ins_421(640.0f);
+    MBossEscape_364:
+    // unlifted instruction: ins_332(-1);
+    // object Movement source_line=1476 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(8);
+    // movement lowering from th10 to th12 is not implemented yet
+    // unlifted instruction: ins_281(60, 4, 0.0f, -32.0f);
+    +60:
+    // unlifted instruction: ins_344(0);
+    // unlifted instruction: ins_1();
+    // unlifted instruction: ins_1();
+}
+
+void MBoss_at1()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BulletEmitter source_line=1486 family=th10_slot
+    // difficulty count.layers: L=4; preserved as TH12 difficulty table; default preview L=4
+    // difficulty count.ways: L=14; preserved as TH12 difficulty table; default preview L=14
+    // difficulty speed.step: E=1.0f, N=1.0f, H=1.5f, L=1.3f; preserved as TH12 difficulty table; default preview N=1.0f
+    // difficulty speed.first: E=1.5f, N=2.0f, H=3.0f, L=4.0f; preserved as TH12 difficulty table; default preview N=2.0f
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 1, 14);
+    ins_522(0, 14, 14, 14, 14, 4, 4, 4, 4);
+    !E
+    ins_504(0, 1.5707964f, 0.31415927f);
+    !N
+    ins_504(0, 1.5707964f, 0.2617994f);
+    !H
+    ins_504(0, 1.5707964f, 0.2617994f);
+    !L
+    ins_504(0, 1.5707964f, 0.22439948f);
+    !*
+    ins_521(0, 1.5f, 2.0f, 3.0f, 4.0f, 1.0f, 1.0f, 1.5f, 1.3f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    !E
+    // unlifted instruction: ins_425(0, 4, 1, 6, 1, 8, 1);
+    !*
+    !N
+    // unlifted instruction: ins_425(0, 5, 2, 7, 2, 9, 2);
+    !*
+    !H
+    // unlifted instruction: ins_425(0, 7, 3, 9, 3, 11, 3);
+    !*
+    // unlifted instruction: ins_401(0);
+    +40:
+    // object BulletEmitter source_line=1517 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 1, 2);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.0f);
+    ins_505(0, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(0);
+    +40:
+    // object BulletEmitter source_line=1520 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 0, 0);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.0f);
+    ins_505(0, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(0);
+    return;
+}
+
+void MBoss_at2()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    // object BulletEmitter source_line=1527 family=th10_slot
+    // difficulty count.layers: EN=1, H=3, L=6; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: EN=16, H=16, L=24; preserved as TH12 difficulty table; default preview N=16
+    // difficulty speed.step: ENH=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
+    // difficulty speed.first: ENH=2.0f, L=3.0f; preserved as TH12 difficulty table; default preview N=2.0f
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 2);
+    ins_522(0, 16, 16, 16, 24, 1, 1, 3, 6);
+    !E
+    ins_504(0, 0.0f, -0.2617994f);
+    !N
+    ins_504(0, 0.0f, -0.2617994f);
+    !H
+    ins_504(0, 0.0f, -0.2617994f);
+    !L
+    ins_504(0, 0.0f, -0.09817477f);
+    !*
+    ins_521(0, 2.0f, 2.0f, 2.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    $A = 3;
+    // unlifted instruction: ins_355($B, 20, 20, 20, 20);
+    // unlifted instruction: ins_83($B);
+    // unlifted instruction: ins_401(0);
+    // unlifted instruction: ins_83($B);
+    // object BulletEmitter source_line=1557 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 0, 0);
+    ins_506(0, 1, 1);
+    !E
+    ins_504(0, 0.0f, 0.2617994f);
+    !N
+    ins_504(0, 0.0f, 0.2617994f);
+    !H
+    ins_504(0, 0.0f, 0.2617994f);
+    !L
+    ins_504(0, 0.0f, 0.09817477f);
+    !*
+    ins_505(0, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(0);
+    // unlifted instruction: ins_83($B);
+    // object BulletEmitter source_line=1564 family=th10_slot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 0, 0);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.0f);
+    ins_505(0, 1.0f, 0.0f);
+    // unlifted instruction: ins_401(0);
+    return;
+}
+
+void MainSub()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +20:
+    // object Enemy source_line=1571 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("GGirl00B", -144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1573 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("GGirl00B", -144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1575 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00B", -144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1577 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00B", -144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1579 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00B", -144.0f, -64.0f, 20, 1000, 3);
+    +20:
+    // object Enemy source_line=1581 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1583 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1585 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1587 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1589 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -84.0f, -64.0f, 20, 1000, 3);
+    +20:
+    // object Enemy source_line=1591 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00B", -24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1593 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00B", -24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1595 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00B", -24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1597 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00B", -24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1599 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00B", -24.0f, -64.0f, 20, 1000, 3);
+    return;
+}
+
+void MapleEnemy()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Movement source_line=1606 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(16);
+    // movement lowering from th10 to th12 is not implemented yet
+    MapleEnemy_56:
+    // object Animation source_line=1608 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmPlayAbs; semantic verification required
+    ins_264(0, 410);
+    +3:
+    goto MapleEnemy_56 @ 0;
+    // unlifted instruction: ins_1();
+}
+
+void RGirl00()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1617 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1618 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 46);
+    // unlifted instruction: ins_330(1);
+    @Girl00(5);
+    // unlifted instruction: ins_1();
+}
+
+void RGirl00B()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1627 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1628 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 46);
+    // unlifted instruction: ins_330(1);
+    @Girl00B(5);
+    // unlifted instruction: ins_1();
+}
+
+void RGirl00C()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_330(1);
+    // object Animation source_line=1638 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1639 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 46);
+    @Girl00C(5);
+    // unlifted instruction: ins_1();
+}
+
+void RGirl00D()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_330(1);
+    // object Animation source_line=1648 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1649 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 46);
+    @Girl00D(5);
+    // unlifted instruction: ins_1();
+}
+
+void RGirl00D_at()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    $A = 2;
+    // object BulletEmitter source_line=1658 family=th10_slot
+    ins_500(0);
+    ins_507(0, 2);
+    ins_502(0, 0, 6);
+    ins_506(0, 20, 1);
+    ins_504(0, 0.0f, 0.19634955f);
+    ins_505(0, 1.0f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    goto RGirl00D_at_372 @ 60;
+    RGirl00D_at_352:
+    +60:
+    // unlifted instruction: ins_401(0);
+    RGirl00D_at_372:
+    if ($A--) goto RGirl00D_at_352 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop RGirl00D_at_352 lines 1667..1671 condition=$A--
+}
+
+void RGirl00E()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // unlifted instruction: ins_330(1);
+    // object Animation source_line=1679 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1680 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 46);
+    @Girl00E(5);
+    // unlifted instruction: ins_1();
+}
+
+void RGirl00E_at()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    // unlifted instruction: ins_355($B, 50, 50, 20, 10);
+    // unlifted instruction: ins_355($A, 1, 1, 5, 9);
+    // object BulletEmitter source_line=1690 family=th10_slot
+    ins_500(0);
+    ins_507(0, 0);
+    ins_502(0, 2, 6);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.19634955f);
+    ins_505(0, 1.0f, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    goto RGirl00E_at_424 @ 0;
+    RGirl00E_at_384:
+    // unlifted instruction: ins_83($B);
+    // unlifted instruction: ins_401(0);
+    RGirl00E_at_424:
+    if ($A--) goto RGirl00E_at_384 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop RGirl00E_at_384 lines 1699..1703 condition=$A--
+}
+
+void RGirl00_at()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // unlifted instruction: ins_355($B, 30, 30, 10, 3);
+    // unlifted instruction: ins_356(%C, 1.5f, 2.2f, 2.5f, 4.0f);
+    // unlifted instruction: ins_355($A, 2, 2, 10, 20);
+    // object BulletEmitter source_line=1713 family=th10_slot
+    !NHL
+    ins_500(0);
+    ins_507(0, 0);
+    ins_502(0, 2, 6);
+    ins_506(0, 1, 1);
+    ins_504(0, 0.0f, 0.19634955f);
+    ins_505(0, %C, 1.0f);
+    // unsupported transform from ins_409: 0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f
+    // unsupported transform from ins_409: 0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    !*
+    goto RGirl00_at_460 @ 0;
+    RGirl00_at_420:
+    // unlifted instruction: ins_83($B);
+    !NHL
+    // unlifted instruction: ins_401(0);
+    !*
+    RGirl00_at_460:
+    if ($A--) goto RGirl00_at_420 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop RGirl00_at_420 lines 1722..1728 condition=$A--
+}
+
+void YGirl00()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1735 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 48);
+    @Girl00(15);
+    // unlifted instruction: ins_1();
+}
+
+void YGirl00B()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1743 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1744 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 48);
+    @Girl00B(15);
+    // unlifted instruction: ins_1();
+}
+
+void YGirl00C()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1752 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1753 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 48);
+    @Girl00C(15);
+    // unlifted instruction: ins_1();
+}
+
+void YGirl00D()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1761 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1762 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 48);
+    @Girl00D(15);
+    // unlifted instruction: ins_1();
+}
+
+void YGirl00E()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1770 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSelect; semantic verification required
+    ins_258(1);
+    // object Animation source_line=1771 family=th10_th11
+    // Animation lowering th10_th11 -> th12: anmSetMain; semantic verification required
+    ins_262(1, 48);
+    @Girl00E(15);
+    // unlifted instruction: ins_1();
+}
+
+void main()
+{
+    // Timeline lowering structured -> th12; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // object Movement source_line=1779 family=th10
+    // no safe lowering implemented for Movement family=th10 to th12
+    // ins_322(16);
+    // movement lowering from th10 to th12 is not implemented yet
+    +160:
+    // unlifted instruction: ins_0();
+    %B = _f(-144);
+    $C = 0;
+    goto main_572 @ 180;
+    main_176:
+    unless (($C % 2) == 0) goto main_368 @ 160;
+    // object Enemy source_line=1787 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("Ecl_BGirl00", %B, -16.0f, 20, 1000, 2);
+    goto main_420 @ 160;
+    main_368:
+    // object Enemy source_line=1790 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("Ecl_RGirl00", %B, -16.0f, 20, 1000, 1);
+    main_420:
+    // raw: %B;
+    +20:
+    // raw: 32;
+    // unlifted instruction: ins_51();
+    // unlifted instruction: ins_45(%B);
+    $C = $C + 1;
+    main_572:
+    if ($C < 9) goto main_176 @ 160;
+    // object Enemy source_line=1800 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("Ecl_GGirl00", %B, -16.0f, 20, 1000, 3);
+    +300:
+    // unlifted instruction: ins_0();
+    // object Enemy source_line=1803 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    +20:
+    // object Enemy source_line=1805 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    +20:
+    // object Enemy source_line=1807 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    +20:
+    // object Enemy source_line=1809 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +80:
+    // object Enemy source_line=1811 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    +20:
+    // object Enemy source_line=1813 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    +20:
+    // object Enemy source_line=1815 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1817 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1819 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("GGirl00", 144.0f, -64.0f, 20, 1000, 3);
+    +60:
+    // object Enemy source_line=1821 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("Girl01", 64.0f, -16.0f, 300, 1000, 4);
+    +100:
+    // object Enemy source_line=1823 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    +10:
+    // object Enemy source_line=1825 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    +10:
+    // object Enemy source_line=1827 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    +10:
+    // object Enemy source_line=1829 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1831 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("GGirl00", 144.0f, -64.0f, 20, 1000, 3);
+    +60:
+    // object Enemy source_line=1833 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1835 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1837 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1839 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1841 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("GGirl00", -144.0f, -64.0f, 20, 1000, 3);
+    +60:
+    // object Enemy source_line=1843 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("Girl01", -64.0f, -16.0f, 300, 1000, 3);
+    +120:
+    %B = _f(144);
+    $C = 0;
+    goto main_2228 @ 1200;
+    main_1832:
+    unless (($C % 2) == 0) goto main_2024 @ 1180;
+    // object Enemy source_line=1850 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("Ecl_BGirl00", %B, -16.0f, 20, 1000, 2);
+    goto main_2076 @ 1180;
+    main_2024:
+    // object Enemy source_line=1853 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("Ecl_RGirl00", %B, -16.0f, 20, 1000, 1);
+    main_2076:
+    // raw: %B;
+    +20:
+    // raw: 32;
+    // unlifted instruction: ins_53();
+    // unlifted instruction: ins_45(%B);
+    $C = $C + 1;
+    main_2228:
+    if ($C < 9) goto main_1832 @ 1180;
+    // object Enemy source_line=1863 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("Ecl_GGirl00", %B, -16.0f, 20, 1000, 3);
+    +80:
+    // object Enemy source_line=1865 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("GGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1867 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("GGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1869 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1871 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1873 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00", 144.0f, -64.0f, 20, 1000, 3);
+    @MainSub() async;
+    +20:
+    // object Enemy source_line=1876 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1878 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1880 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1882 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1884 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00B", 84.0f, -64.0f, 20, 1000, 3);
+    +20:
+    // object Enemy source_line=1886 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00", 24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1888 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00", 24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1890 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00", 24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1892 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00", 24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1894 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00", 24.0f, -64.0f, 20, 1000, 3);
+    +200:
+    // object Enemy source_line=1896 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("Girl01", 64.0f, -16.0f, 300, 1000, 0);
+    +10:
+    // object Enemy source_line=1898 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1900 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1902 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1904 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1906 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("GGirl00", -144.0f, -64.0f, 20, 1000, 3);
+    +10:
+    // object Enemy source_line=1908 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1910 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1912 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1914 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1916 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("GGirl00", 144.0f, -64.0f, 20, 1000, 3);
+    +80:
+    // object Enemy source_line=1918 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", -48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1919 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", 0.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1920 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", 48.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=1922 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", -72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1923 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", -24.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1924 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", 24.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1925 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", 72.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=1927 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", -96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1928 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", -48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1929 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", 48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1930 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", 96.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=1932 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1933 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1934 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1935 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 120.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=1937 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -144.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1938 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1939 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1940 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 144.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=1942 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -168.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1943 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1944 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1945 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 168.0f, -16.0f, 30, 1000, 2);
+    +160:
+    // object Enemy source_line=1947 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("MapleEnemy", 0.0f, -16.0f, 20, 1000, 2);
+    // object Enemy source_line=1948 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("MBoss", -64.0f, -16.0f, 6000, 10000, 1);
+    +400:
+    // object Enemy source_line=1950 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAF; semantic verification required
+    ins_266("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1952 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAMF; semantic verification required
+    ins_268("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1954 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAF; semantic verification required
+    ins_266("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1956 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAMF; semantic verification required
+    ins_268("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1958 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAF; semantic verification required
+    ins_266("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1960 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAMF; semantic verification required
+    ins_268("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1962 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAF; semantic verification required
+    ins_266("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1964 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAMF; semantic verification required
+    ins_268("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1966 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAF; semantic verification required
+    ins_266("RGirl00D", -144.0f, -16.0f, 160, 1000, 2);
+    +80:
+    // object Enemy source_line=1968 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAMF; semantic verification required
+    ins_268("RGirl00D", 144.0f, -16.0f, 160, 1000, 2);
+    !HL
+    // unlifted instruction: ins_340();
+    !*
+    +100:
+    // object Enemy source_line=1973 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("Girl01", 64.0f, -16.0f, 300, 1000, 3);
+    // object Enemy source_line=1974 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("Girl01", -64.0f, -16.0f, 300, 1000, 3);
+    +160:
+    $C = 0;
+    goto main_6044 @ 3590;
+    main_5648:
+    %B = [-9987.0f] * _f(128);
+    unless (($C % 2) == 0) goto main_5916 @ 3580;
+    // object Enemy source_line=1981 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00E", %B, -16.0f, 20, 1000, 2);
+    goto main_5968 @ 3580;
+    main_5916:
+    // object Enemy source_line=1984 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00E", %B, -16.0f, 20, 1000, 1);
+    main_5968:
+    +10:
+    $C = $C + 1;
+    main_6044:
+    if ($C < 20) goto main_5648 @ 3580;
+    +60:
+    // object Enemy source_line=1991 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("Girl01", 128.0f, -16.0f, 300, 1000, 0);
+    // object Enemy source_line=1992 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("Girl01", -128.0f, -16.0f, 300, 1000, 0);
+    +80:
+    // object Enemy source_line=1994 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1996 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1998 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=2000 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=2002 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateAM; semantic verification required
+    ins_261("BGirl00B", 84.0f, -64.0f, 20, 1000, 3);
+    // unlifted instruction: ins_340();
+    +100:
+    // object Enemy source_line=2005 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", -48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2006 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", 0.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2007 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", 48.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=2009 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("RGirl00C", -72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2010 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -24.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2011 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 24.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2012 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 72.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=2014 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2015 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2016 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2017 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 96.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=2019 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2020 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2021 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2022 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 120.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=2024 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -144.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2025 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2026 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2027 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 144.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=2029 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -168.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2030 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", -120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2031 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2032 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("BGirl00C", 168.0f, -16.0f, 30, 1000, 2);
+    +400:
+    // unlifted instruction: ins_338(0);
+    // unlifted instruction: ins_339();
+    // object Enemy source_line=2036 family=th10_th11
+    // Enemy lowering th10_th11 -> th12: enmCreateA; semantic verification required
+    ins_257("Boss", -144.0f, -16.0f, 40, 10000, 1);
+    // unlifted instruction: ins_339();
+    // unlifted instruction: ins_340();
+    // unlifted instruction: ins_338(1);
+    // unlifted instruction: ins_339();
+    // unlifted instruction: ins_1();
+    // detected loops:
+    // - counter_loop main_176 lines 1785..1799 condition=$C < 9
+    // - counter_loop main_1832 lines 1848..1862 condition=$C < 9
+    // - counter_loop main_5648 lines 1978..1989 condition=$C < 20
+}

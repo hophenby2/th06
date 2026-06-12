@@ -4,6 +4,7 @@ import re
 from collections import Counter
 
 from .model import Function, Program, Statement, TimelineOp
+from .op_ir import op_event
 
 WAIT_OPS = {23, 24}
 
@@ -17,7 +18,7 @@ def lift_timelines(program: Program) -> list[TimelineOp]:
         timeline.source = program.source
         timeline.fields = {
             "source": program.source,
-            "statements": [statement_to_event(stmt) for stmt in func.statements],
+            "statements": [statement_to_event(stmt, program.game) for stmt in func.statements],
             "labels": collect_labels(func),
             "calls": collect_calls(func),
             "variables": collect_variables(func),
@@ -30,7 +31,7 @@ def lift_timelines(program: Program) -> list[TimelineOp]:
     return objects
 
 
-def statement_to_event(stmt: Statement) -> dict[str, object]:
+def statement_to_event(stmt: Statement, game: str) -> dict[str, object]:
     event = {
         "kind": stmt.kind,
         "line": stmt.line_no,
@@ -38,6 +39,8 @@ def statement_to_event(stmt: Statement) -> dict[str, object]:
         "difficulty": stmt.difficulty,
     }
     event.update(stmt.attrs)
+    if stmt.kind == "instruction" and "opcode" in stmt.attrs:
+        event["ir_op"] = op_event(game, int(stmt.attrs.get("opcode", -1)), [str(arg) for arg in stmt.attrs.get("args", [])], stmt.line_no, stmt.difficulty)
     return event
 
 

@@ -1,0 +1,5 @@
+002c:err:wineboot:process_run_key Error running cmd L"C:\\windows\\system32\\winemenubuilder.exe -a -r" (2).
+thecl.exe:th10_instr_serialize: in sub GirlB02_at: too few arguments for opcode 408
+thecl.exe:th10_instr_serialize: in sub Phantom01_at: too few arguments for opcode 408
+thecl.exe:th10_instr_serialize: in sub Phantom02_at: too few arguments for opcode 408
+00d0:fixme:kernelbase:AppPolicyGetProcessTerminationMethod FFFFFFFA, 0022FE0C

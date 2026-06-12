@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import re
+from .arg_adapter import adapt_args_for_op_key
 from .model import BulletEmitter
-from .semantics import encode_bullet_shape, encode_spread_style, th12_double_flower_pair
+from .op_ir import target_opcode_for_op_key
+from .reference import is_opcode_supported, validate_opcode_args
+from .semantics import encode_bullet_shape, encode_spread_style, remap_raw_arg_by_semantic, th12_double_flower_pair
 
 INT_SENTINEL = "-999999"
 FLOAT_SENTINEL = "-999999.0f"
@@ -26,6 +29,20 @@ def v(value, default):
         chosen, _ = choose_difficulty(difficulty, value.get("placeholder", default))
         return chosen
     return value if value not in (None, "") else default
+
+
+def aim_mode_name(raw: str) -> str:
+    return {
+        "0": "aimed_fan",
+        "1": "fan",
+        "2": "aimed_ring",
+        "3": "ring",
+        "4": "offset_aimed_ring",
+        "5": "offset_ring",
+        "6": "random_angle",
+        "7": "random_speed",
+        "8": "random_angle_speed",
+    }.get(str(raw), "custom")
 
 
 def difficulty_comment(field: str, value) -> str | None:
@@ -81,6 +98,8 @@ def normalized_rank_marker(marker: str | None, target: str = "") -> str | None:
             if mapped not in out:
                 out.append(mapped)
         elif mapped in "01234567X":
+            if target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+                continue
             out.append(mapped)
     return "".join(out) or None
 
@@ -93,6 +112,70 @@ def wrap_ranked_lines(lines: list[str], difficulty: str | None, target: str = ""
         return lines if lines and lines[0] == "!*" else ["!*", *lines]
     return [f"!{marker}", *lines, "!*"]
 
+
+
+def emit_checked_instruction(target: str, opcode: int, args: list[object]) -> str:
+    rendered = [str(arg) for arg in args]
+    error = validate_opcode_args(target, opcode, rendered)
+    if error:
+        return f"// skipped invalid instruction from reference table: {error}; ins_{opcode}({', '.join(rendered)})"
+    return f"ins_{opcode}({', '.join(rendered)});"
+
+
+def normalize_target_args_for_op_key(op_key: str, target: str, args: list[str]) -> list[str]:
+    normalized = [str(arg) for arg in args]
+    if target == "th12" and op_key in {
+        "movement.position.tween", "movement.position_rel.tween",
+        "movement.velocity.tween", "movement.velocity_rel.tween",
+        "movement.ellipse.tween", "movement.ellipse_rel.tween",
+        "movement.bezier", "movement.bezier_rel",
+    }:
+        if len(normalized) > 1 and normalized[1] not in {"0", "1", "4", "9"}:
+            normalized[1] = "0"
+    return normalized
+
+
+def compile_ir_op_event(event: dict[str, object], target: str, comment: str | None = None) -> str | None:
+    op_key = str(event.get("op_key") or "")
+    if not op_key:
+        return None
+    opcode = target_opcode_for_op_key(op_key, target)
+    if opcode is None or not is_opcode_supported(target, opcode):
+        return None
+    source_game = str(event.get("source_game") or "")
+    source_opcode = int(event.get("source_opcode") or -1)
+    args = [str(arg) for arg in event.get("args", [])]
+    if source_game and source_opcode >= 0:
+        args = remap_raw_arg_by_semantic(source_game, target, source_opcode, opcode, args)
+    adapted_args = adapt_args_for_op_key(op_key, source_game, source_opcode, target, opcode, args)
+    if adapted_args is None:
+        return None
+    args = normalize_target_args_for_op_key(op_key, target, adapted_args)
+    error = validate_opcode_args(target, opcode, args)
+    if error:
+        return None
+    line = emit_checked_instruction(target, opcode, args)
+    if comment:
+        return f"// {comment}: {op_key} -> ins_{opcode}\n{line}"
+    return line
+
+
+def compile_unsupported_ir_op(event: dict[str, object], target: str) -> str:
+    op_key = event.get("op_key") or "unknown"
+    opcode = event.get("source_opcode")
+    args = ", ".join(str(arg) for arg in event.get("args", []))
+    return f"// unsupported semantic op for {target}: {op_key}; source ins_{opcode}({args})"
+
+
+
+def sound_args(e: BulletEmitter, emitter_id: str, default_mode: str = "-1") -> list[str] | None:
+    sound = e.sound.get("id")
+    if sound in (None, ""):
+        return None
+    mode = e.sound.get("mode", default_mode)
+    if mode in (None, ""):
+        mode = default_mode
+    return [emitter_id, str(sound), str(mode)]
 
 def emit_ranked_instruction(opcode: int, args: list[str], difficulty: dict[str, str], replace_index: int) -> list[str]:
     lines: list[str] = []
@@ -200,6 +283,15 @@ def emit_th12_bullet_setup_lines(
     return lines
 
 
+def append_sound_lines(lines: list[str], target: str, e: BulletEmitter, emitter_id: str) -> None:
+    opcode = {"th10": 408, "th11": 408, "th12": 508, "th13": 608, "th14": 608, "th15": 608, "th16": 608, "th17": 608, "th18": 608}.get(target)
+    if opcode is None:
+        return
+    args = sound_args(e, emitter_id)
+    if args:
+        lines.append(emit_checked_instruction(target, opcode, args))
+
+
 def th12_aux_emitter_id(emitter_id: str) -> str | None:
     stripped = str(emitter_id).strip()
     if not re.fullmatch(r"\d+", stripped):
@@ -303,13 +395,24 @@ def target_family(target: str) -> str:
 
 
 def compile_named_op(obj, target: str, table_by_family: dict[str, dict[str, int]]) -> str:
+    event = {
+        "op_key": obj.fields.get("op_key"),
+        "source_game": getattr(obj, "game", ""),
+        "source_opcode": getattr(obj.raw[0], "opcode", -1) if getattr(obj, "raw", None) else -1,
+        "args": obj.fields.get("args", []),
+    }
+    lowered = compile_ir_op_event(event, target, f"{obj.kind} lowering {obj.family} -> {target}")
+    if lowered:
+        return lowered
+    if event.get("op_key"):
+        return compile_raw_comment(obj, target) + f"\n// unsupported semantic op_key for {target}: {event.get('op_key')}"
     family = target_family(target)
     semantic = obj.fields.get("op")
     opcode = table_by_family.get(family, {}).get(semantic)
     if opcode is None:
-        return compile_raw_comment(obj, target) + f"\n// unsupported semantic op for {target}: {semantic}"
+        return compile_raw_comment(obj, target) + f"\n// unsupported legacy semantic op for {target}: {semantic}"
     args = remap_named_args(obj, target, semantic, obj.fields.get("args", []))
-    return f"// {obj.kind} lowering {obj.family} -> {target}: {semantic}; semantic verification required\nins_{opcode}({', '.join(args)});"
+    return f"// legacy {obj.kind} lowering without op_key {obj.family} -> {target}: {semantic}\n" + emit_checked_instruction(target, opcode, args)
 
 
 def remap_named_args(obj, target: str, semantic: str, args: list[str]) -> list[str]:
@@ -330,16 +433,19 @@ def remap_named_args(obj, target: str, semantic: str, args: list[str]) -> list[s
 
 
 def compile_boss_pattern(obj, target: str) -> str:
-    family = target_family(target)
-    table = BOSS_OPS[family]
-    lines = [f"// BossPattern lowering {obj.family} -> {target}; semantic verification required"]
+    lines = [f"// BossPattern lowering {obj.family} -> {target}; semantic op_key backend"]
     for item in obj.fields.get("ops", []):
-        semantic = item.get("op")
-        opcode = table.get(semantic)
-        if opcode is None:
-            lines.append(f"// unsupported boss op {semantic}: ins_{item.get('opcode')}({', '.join(item.get('args', []))});")
+        event = {
+            "op_key": item.get("op_key"),
+            "source_game": getattr(obj, "game", ""),
+            "source_opcode": item.get("opcode", -1),
+            "args": item.get("args", []),
+        }
+        lowered = compile_ir_op_event(event, target)
+        if lowered:
+            lines.extend(lowered.splitlines())
         else:
-            lines.append(f"ins_{opcode}({', '.join(item.get('args', []))});")
+            lines.append(compile_unsupported_ir_op(event, target))
     return "\n".join(lines)
 
 
@@ -375,15 +481,24 @@ def compile_laser(obj, target: str) -> str:
         return compile_raw_comment(obj, target) + f"\n// laser lowering to {target} is not implemented yet"
     if target not in {"th12", "th13", "th14", "th15", "th16", "th17", "th18"}:
         raise ValueError(f"unsupported laser target: {target}")
-    to_th13 = target != "th12"
-    offset = 100 if to_th13 and obj.family == "th12" else -100 if target == "th12" and obj.family == "th13plus" else 0
-    lines = [f"// laser lowering {obj.family} -> {target}; semantic verification required"]
-    for ins in obj.raw:
-        opcode = ins.opcode + offset
-        if target == "th12" and opcode < 600:
-            lines.append(f"// unsupported laser opcode for th12: {ins.raw.strip()}")
+    lines = [f"// laser lowering {obj.family} -> {target}; semantic op_key backend"]
+    events = obj.fields.get("ir_ops") or []
+    if not events:
+        events = [
+            {
+                "op_key": None,
+                "source_game": getattr(obj, "game", ""),
+                "source_opcode": ins.opcode,
+                "args": ins.args,
+            }
+            for ins in getattr(obj, "raw", [])
+        ]
+    for event in events:
+        lowered = compile_ir_op_event(event, target)
+        if lowered:
+            lines.extend(lowered.splitlines())
         else:
-            lines.append(f"ins_{opcode}({', '.join(ins.args)});")
+            lines.append(compile_unsupported_ir_op(event, target))
     return "\n".join(lines)
 
 
@@ -457,37 +572,21 @@ def compile_split_motion_semantic(obj, target: str) -> str | None:
 
 
 def compile_movement(obj, target: str) -> str:
-    if target in {"th06", "th07", "th08"}:
-        return compile_raw_comment(obj, target) + f"\n// movement lowering to {target} macro generation is not implemented yet"
-    if target not in {"th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"}:
+    if target not in {"th06", "th07", "th08", "th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"}:
         raise ValueError(f"unsupported movement target: {target}")
     semantic = compile_split_motion_semantic(obj, target)
     if semantic is not None:
         return semantic
-    movement = obj.fields.get("op")
-    args = obj.fields.get("args", [])
-    th13 = {
-        "movePos": 400, "movePosTime": 401, "movePosRel": 402, "movePosRelTime": 403,
-        "moveVel": 404, "moveVelTime": 405, "moveVelRel": 406, "moveVelRelTime": 407,
-        "moveEllipse": 420, "moveEllipseTime": 421, "moveEllipseRel": 422, "moveEllipseRelTime": 423,
-        "moveBezier": 425, "moveBezierRel": 426, "moveReset": 427,
+    event = {
+        "op_key": obj.fields.get("op_key"),
+        "source_game": getattr(obj, "game", ""),
+        "source_opcode": getattr(obj.raw[0], "opcode", -1) if getattr(obj, "raw", None) else -1,
+        "args": obj.fields.get("args", []),
     }
-    th12 = {
-        "movePos": 300, "movePosTime": 301, "movePosRel": 302, "movePosRelTime": 303,
-        "moveVel": 304, "moveVelTime": 305, "moveVelRel": 306, "moveVelRelTime": 307,
-        "moveEllipse": 320, "moveEllipseTime": 321, "moveEllipseRel": 322, "moveEllipseRelTime": 323,
-        "moveBezier": 325, "moveBezierRel": 326, "moveReset": 327,
-    }
-    th10 = {
-        "movePos": 320, "movePosTime": 321, "moveVel": 322, "moveVelTime": 323,
-        "moveEllipse": 300, "moveEllipseTime": 300, "moveReset": 327,
-    }
-    table = th10 if target in {"th10", "th11"} else th12 if target == "th12" else th13
-    opcode = table.get(movement)
-    if opcode is None:
-        return compile_raw_comment(obj, target) + f"\n// unsupported movement semantic: {movement}"
-    lowered_args = normalize_th12_move_args(movement, args) if target == "th12" else args
-    return f"// movement lowering {obj.family} -> {target}: {movement}\nins_{opcode}({', '.join(lowered_args)});"
+    lowered = compile_ir_op_event(event, target, f"movement lowering {obj.family} -> {target}")
+    if lowered:
+        return lowered
+    return compile_raw_comment(obj, target) + f"\n// unsupported movement semantic op_key for {target}: {obj.fields.get('op_key') or obj.fields.get('op')}"
 
 
 def compile_th13plus(e: BulletEmitter) -> str:
@@ -501,12 +600,14 @@ def compile_th13plus(e: BulletEmitter) -> str:
     angle_step_value = e.aim.get("angle_step")
     speed_value = e.speed.get("first")
     speed_step_value = e.speed.get("step")
-    lines = [f"ins_600({emitter_id});"]
+    lines = [emit_checked_instruction("th15", 600, [emitter_id])]
     lines.extend(emit_instruction_with_ranked_args(607, [emitter_id, aim_raw_value], ["0", "1"]))
     lines.extend(emit_instruction_with_ranked_args(602, [emitter_id, style_value, color_value], ["0", "0", "0"]))
     lines.extend(emit_instruction_with_ranked_args(606, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
     lines.extend(emit_instruction_with_ranked_args(604, [emitter_id, angle_value, angle_step_value], ["0", "0.0f", "0.0f"]))
     lines.extend(emit_instruction_with_ranked_args(605, [emitter_id, speed_value, speed_step_value if speed_step_value is not None else e.speed.get("last_or_step")], ["0", "1.0f", e.speed.get("last_or_step", "0.0f")]))
+    if args := sound_args(e, emitter_id):
+        lines.append(emit_checked_instruction("th15", 608, args))
     for field, value in (("speed.first", e.speed.get("first")), ("count.ways", e.count.get("ways"))):
         comment = difficulty_comment(field, value)
         if comment:
@@ -567,6 +668,10 @@ def compile_th12(e: BulletEmitter) -> str:
     else:
         lines = emit_th12_bullet_setup_lines(emitter_id, aim_raw_value, style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step)
 
+    append_sound_lines(lines, "th12", e, str(emitter_id))
+    if aux_emitter_id:
+        append_sound_lines(lines, "th12", e, str(aux_emitter_id))
+
     for field, value in (("speed.first", speed_value), ("speed.step", speed_step_value), ("count.ways", ways_value), ("count.layers", layers_value)):
         comment = difficulty_comment(field, value)
         if comment:
@@ -600,6 +705,28 @@ def compile_th12(e: BulletEmitter) -> str:
 
 
 
+
+def old_macro_arg(value: object, default: str, numeric: str = "float") -> str:
+    text = str(v(value, default)).strip()
+    if isinstance(value, dict):
+        text = str(v(value, default)).strip()
+    if re.fullmatch(r"[-+]?\d+(?:\.\d+)?f?", text):
+        return text
+    if re.fullmatch(r"\[-?\d+(?:\.0f)?\]", text):
+        return text
+    if numeric == "int":
+        return default
+    return default
+
+
+def old_macro_int(value: object, default: str) -> str:
+    return old_macro_arg(value, default, "int")
+
+
+def old_macro_float(value: object, default: str) -> str:
+    return old_macro_arg(value, default, "float")
+
+
 def clamp_old_shape(shape: object, target: str) -> str:
     value = str(v(shape, "0"))
     if not re.fullmatch(r"-?\d+", value):
@@ -622,15 +749,15 @@ def compile_th08_macro(e: BulletEmitter, target: str) -> str:
         "random_speed": 103,
         "random_angle_speed": 104,
     }.get(mode, 97)
-    style = clamp_old_shape(e.appearance.get("style"), target)
-    color = str(v(e.appearance.get("color"), "0"))
-    ways = str(v(e.count.get("ways"), "1"))
-    layers = str(v(e.count.get("layers"), "1"))
-    speed_max = str(v(e.speed.get("first"), "1.0f"))
-    speed_min = str(v(e.speed.get("step", e.speed.get("last_or_step")), speed_max))
-    angle = str(v(e.aim.get("base_angle"), "0.0f"))
-    angle_step = str(v(e.aim.get("angle_step"), "0.0f"))
-    flags = str(v(e.flags.get("raw"), "0"))
+    style = clamp_old_shape(old_macro_int(e.appearance.get("style"), "0"), target)
+    color = old_macro_int(e.appearance.get("color"), "0")
+    ways = old_macro_int(e.count.get("ways"), "1")
+    layers = old_macro_int(e.count.get("layers"), "1")
+    speed_max = old_macro_float(e.speed.get("first"), "1.0f")
+    speed_min = old_macro_float(e.speed.get("step", e.speed.get("last_or_step")), speed_max)
+    angle = old_macro_float(e.aim.get("base_angle"), "0.0f")
+    angle_step = old_macro_float(e.aim.get("angle_step"), "0.0f")
+    flags = old_macro_int(e.flags.get("raw"), "0")
     lines = [f"// bullet lowering {e.family} -> {target}: macro opcode ins_{opcode}; semantic verification required"]
     for transform in e.transforms:
         if transform.raw_opcode == 111 and len(transform.raw_args) == 7:
@@ -661,9 +788,7 @@ def compile_th10_slot(e: BulletEmitter, target: str) -> str:
     lines.extend(emit_instruction_with_ranked_args(406, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
     lines.extend(emit_instruction_with_ranked_args(404, [emitter_id, angle_value, angle_step_value], ["0", "0.0f", "0.0f"]))
     lines.extend(emit_instruction_with_ranked_args(405, [emitter_id, speed_value, speed_step_value], ["0", "1.0f", "0.0f"]))
-    sound = e.sound.get("id")
-    if sound not in (None, ""):
-        lines.append(f"ins_408({emitter_id}, {sound});")
+    append_sound_lines(lines, target, e, str(emitter_id))
     for transform in e.transforms:
         if transform.raw_opcode == 409 and len(transform.raw_args) == 8:
             lines.append(f"ins_409({', '.join(str(arg) for arg in transform.raw_args)});")
