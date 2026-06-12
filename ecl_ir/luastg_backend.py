@@ -37,6 +37,23 @@ def lua_string(value: object) -> str:
 
 
 @dataclass
+class LaserState:
+    laser_id: str
+    style: str = "1"
+    start_offset: str = "0"
+    length: str = "512"
+    tail_offset: str = "0"
+    width: str = "16"
+    warn_time: str = "0"
+    in_time: str = "0"
+    active_time: str = "60"
+    out_time: str = "15"
+    angle: str = "0"
+    x: str = "self.x"
+    y: str = "self.y"
+
+
+@dataclass
 class EmitterState:
     et_id: str
     style: str = "1"
@@ -76,9 +93,11 @@ def bullet_class_name(prefix: str, style: str, color: str) -> str:
 
 
 class LuaSTGEmitter:
-    def __init__(self, prefix: str):
+    def __init__(self, prefix: str, runtime: str = "liu_10_mc"):
         self.prefix = prefix
+        self.runtime = runtime
         self.states: dict[str, EmitterState] = {}
+        self.lasers: dict[str, LaserState] = {}
         self.classes: set[tuple[str, str, str]] = set()
 
     def rank_pick(self, values: list[str]) -> str:
@@ -92,6 +111,44 @@ class LuaSTGEmitter:
         if key not in self.states:
             self.states[key] = EmitterState(et_id=key)
         return self.states[key]
+
+    def laser_state(self, laser_id: object) -> LaserState:
+        key = clean_num(laser_id, "0")
+        if key not in self.lasers:
+            self.lasers[key] = LaserState(laser_id=key)
+        return self.lasers[key]
+
+    def handle_laser_instruction(self, opcode: int, args: list[str]) -> list[str] | None:
+        if opcode == 600 and len(args) >= 5:
+            laser = self.laser_state(args[0])
+            laser.start_offset = clean_num(args[1])
+            laser.length = clean_num(args[2])
+            laser.tail_offset = clean_num(args[3])
+            laser.width = clean_num(args[4])
+            return [f"-- laserShape id={laser.laser_id} length={laser.length} width={laser.width}"]
+        if opcode == 601 and len(args) >= 6:
+            laser = self.laser_state(args[0])
+            laser.warn_time = clean_num(args[1])
+            laser.in_time = clean_num(args[2])
+            laser.active_time = clean_num(args[3])
+            laser.out_time = clean_num(args[4])
+            return [f"-- laserTiming id={laser.laser_id} warn={laser.warn_time} active={laser.active_time}"]
+        if opcode in {602, 603, 611} and args:
+            laser = self.laser_state(args[0])
+            style = clean_num(args[1]) if opcode == 603 and len(args) >= 2 else laser.laser_id
+            laser.style = style
+            kind = "curve" if opcode == 611 else "line"
+            return [f"ecl_laser({laser.style}, self.x, self.y, {laser.angle}, {laser.length}, {laser.width}, {laser.warn_time}, {laser.in_time}, {laser.active_time}, {laser.out_time}, {lua_string(kind)})"]
+        if opcode == 604 and len(args) >= 3:
+            laser = self.laser_state(args[0])
+            laser.x = clean_num(args[1])
+            laser.y = clean_num(args[2])
+            return [f"-- laserOrigin id={laser.laser_id} x={laser.x} y={laser.y}"]
+        if opcode == 608 and len(args) >= 2:
+            laser = self.laser_state(args[0])
+            laser.angle = self.angle(args[1])
+            return [f"-- laserAngle id={laser.laser_id} angle={laser.angle}"]
+        return None
 
     def handle_instruction(self, opcode: int, args: list[str]) -> list[str] | None:
         if opcode == 500:
@@ -133,12 +190,16 @@ class LuaSTGEmitter:
         if opcode == 501:
             et = args[0] if args else "0"
             st = self.state(et)
-            cls = bullet_class_name(self.prefix, st.style, st.color)
-            self.classes.add((cls, st.style, st.color))
             mode = shot_mode_for_aim(st.aim_mode)
             param = "{" + ", ".join(st.transforms[-1:]) + "}" if st.transforms else "nil"
+            if self.runtime == "liu_10_mc":
+                cls = bullet_class_name(self.prefix, st.style, st.color)
+                self.classes.add((cls, st.style, st.color))
+                return [
+                    f"liu_10_mc.bullet.ShotBulletMode({mode}, {st.et_id}, _editor_class[{lua_string(cls)}], self.x, self.y, {st.offset_x}, {st.offset_y}, {st.distance}, 0, 0, math.max(1, math.floor({st.ways})), math.max(1, math.floor({st.layers})), {st.speed}, {st.speed_step}, {st.angle}, {st.angle_step}, {param})"
+                ]
             return [
-                f"liu_10_mc.bullet.ShotBulletMode({mode}, {st.et_id}, _editor_class[{lua_string(cls)}], self.x, self.y, {st.offset_x}, {st.offset_y}, {st.distance}, 0, 0, math.max(1, math.floor({st.ways})), math.max(1, math.floor({st.layers})), {st.speed}, {st.speed_step}, {st.angle}, {st.angle_step}, {param})"
+                f"ecl_shot({mode}, {st.et_id}, {st.style}, {st.color}, self.x, self.y, {st.offset_x}, {st.offset_y}, {st.distance}, 0, 0, math.max(1, math.floor({st.ways})), math.max(1, math.floor({st.layers})), {st.speed}, {st.speed_step}, {st.angle}, {st.angle_step}, {param})"
             ]
         return None
 
@@ -175,11 +236,13 @@ def lower_instruction(opcode: int, args: list[str], emit: LuaSTGEmitter) -> list
     if opcode in {301, 401} and len(args) >= 4:
         return [f"task.MoveTo({clean_num(args[2])}, {clean_num(args[3])}, {clean_num(args[0])}, {clean_num(args[1])})", "ecl_sync_self(self)"]
     if opcode in {304, 404} and len(args) >= 2:
-        return [f"SetV2(self, {clean_num(args[1])}, {clean_num(args[0])}, true, false)"]
+        return [f"SetV2(self, {clean_num(args[1])}, ecl_rad({clean_num(args[0])}), true, false)"]
     if opcode in {305, 405} and len(args) >= 4:
-        return [f"task.New(self, function() SetV2(self, {clean_num(args[3])}, {clean_num(args[2])}, true, false); task._Wait({clean_num(args[0])}) end)"]
+        return [f"task.New(self, function() SetV2(self, {clean_num(args[3])}, ecl_rad({clean_num(args[2])}), true, false); task._Wait({clean_num(args[0])}) end)"]
     if opcode == 312 and len(args) >= 3:
-        return [f"task.New(self, _editor_tasks[{lua_string('liu_10_mc_moveRand')}]({clean_num(args[0])}, {clean_num(args[1])}, {clean_num(args[2])}))"]
+        if emit.runtime == "liu_10_mc":
+            return [f"task.New(self, _editor_tasks[{lua_string('liu_10_mc_moveRand')}]({clean_num(args[0])}, {clean_num(args[1])}, {clean_num(args[2])}))"]
+        return [f"ecl_move_rand(self, {clean_num(args[0])}, {clean_num(args[1])}, {clean_num(args[2])})"]
     if opcode == 414 and len(args) >= 4:
         return [f"-- setInterrupt phase={clean_num(args[0])} life={clean_num(args[1])} time={clean_num(args[2])} sub={args[3]}"]
     if opcode == 411 and args:
@@ -189,7 +252,10 @@ def lower_instruction(opcode: int, args: list[str], emit: LuaSTGEmitter) -> list
     if opcode in {423, 424, 425, 427, 437, 438, 439, 421, 422}:
         return [f"-- boss/meta ins_{opcode}({', '.join(args)})"]
     if opcode in {600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611}:
-        return [f"-- laser ins_{opcode}({', '.join(args)}) TODO: map to liu_10_mc.bullet.LineLaser/InfLaser"]
+        laser = emit.handle_laser_instruction(opcode, args)
+        if laser is not None:
+            return laser
+        return [f"-- laser ins_{opcode}({', '.join(args)}) TODO: map to THlib laser object"]
     if opcode in {258, 259, 262, 263, 269, 272, 273, 274, 277, 416, 440, 445, 529}:
         return [f"-- visual/helper ins_{opcode}({', '.join(args)})"]
     return [f"-- unsupported ins_{opcode}({', '.join(args)})"]
@@ -292,6 +358,62 @@ def lower_statement(stmt: Statement, emit: LuaSTGEmitter, include_labels: bool =
     return ["-- raw " + stmt.text] if stmt.text else []
 
 
+
+def thlib_runtime_helpers() -> list[str]:
+    return [
+        "local function ecl_new_bullet(style, color, x, y, speed, angle, delay, param)",
+        "    param = param or {}",
+        "    local obj = New(_straight, style, color, x, y, speed, angle, false, 0, true, true, delay or 0, false)",
+        "    obj.ecl_param = param",
+        "    return obj",
+        "end",
+        "local function ecl_shot(mode, num, style, color, x, y, dx, dy, dis, o, r, way, layer, spd1, spd2, ang1, ang2, param)",
+        "    local result = {}",
+        "    local sx, sy = x + dx + r * cos(o), y + dy + r * sin(o)",
+        "    way, layer = math.max(1, math.floor(way or 1)), math.max(1, math.floor(layer or 1))",
+        "    for i = 1, layer do",
+        "        local speed = spd1 + ((spd2 or spd1) - spd1) * ((layer == 1) and 0 or ((i - 1) / (layer - 1)))",
+        "        for j = 1, way do",
+        "            local angle",
+        "            if mode == 0 then",
+        "                angle = Angle(sx, sy, player.x, player.y) + ang1 + (j - (way + 1) / 2) * ang2",
+        "            elseif mode == 1 then",
+        "                angle = ang1 + (j - (way + 1) / 2) * ang2",
+        "            elseif mode == 2 then",
+        "                angle = Angle(sx, sy, player.x, player.y) + ang1 + (j - 1) * 360 / way - (i - 1) * ang2",
+        "            elseif mode == 3 then",
+        "                angle = ang1 + (j - 1) * 360 / way - (i - 1) * ang2",
+        "            else",
+        "                angle = ang1 + (j - 1) * 360 / way - (i - 1) * ang2",
+        "            end",
+        "            local bullet_obj = ecl_new_bullet(style, color, sx + dis * cos(angle), sy + dis * sin(angle), speed, angle, 0, param)",
+        "            bullet_obj.layer = bullet_obj.layer - 0.000001 * i + 0.0000001 * j + 0.0005 * (num or 0)",
+        "            table.insert(result, bullet_obj)",
+        "        end",
+        "    end",
+        "    return result",
+        "end",
+        "local function ecl_laser(style, x, y, angle, length, width, warn_time, in_time, active_time, out_time, kind)",
+        "    local obj = New(laser, style or 1, x or 0, y or 0, angle or 0, 0, length or 512, 0, width or 16, 0, 0)",
+        "    obj.ecl_timing = {warn = warn_time or 0, fade_in = in_time or 0, active = active_time or 60, fade_out = out_time or 15, kind = kind or 'line'}",
+        "    task.New(obj, function()",
+        "        if warn_time and warn_time > 0 then task._Wait(warn_time) end",
+        "        obj.colli = true",
+        "        obj.alpha = 1",
+        "        obj.w = width or obj.w0 or 16",
+        "        task._Wait(active_time or 60)",
+        "        Del(obj)",
+        "    end)",
+        "    return obj",
+        "end",
+        "local function ecl_move_rand(self, time, mode, radius)",
+        "    local cx, cy = self.x or 0, self.y or 0",
+        "    local angle = ran:Float(0, 360)",
+        "    local dist = radius or 0",
+        "    task.New(self, function() task.MoveTo(cx + dist * cos(angle), cy + dist * sin(angle), time or 1, mode or 4); ecl_sync_self(self) end)",
+        "end",
+    ]
+
 def selected_boss_functions(program: Program, names: Iterable[str] | None = None) -> list[Function]:
     wanted = set(names or [])
     funcs = []
@@ -303,8 +425,8 @@ def selected_boss_functions(program: Program, names: Iterable[str] | None = None
     return funcs
 
 
-def emit_luastg(program: Program, module_name: str = "ecl_stage06_boss", names: Iterable[str] | None = None) -> str:
-    emit = LuaSTGEmitter(module_name)
+def emit_luastg(program: Program, module_name: str = "ecl_stage06_boss", names: Iterable[str] | None = None, runtime: str = "liu_10_mc") -> str:
+    emit = LuaSTGEmitter(module_name, runtime)
     funcs = selected_boss_functions(program, names)
     lines: list[str] = []
     lines.append("-- Auto-generated LuaSTG approximation from ECL IR")
@@ -316,6 +438,10 @@ def emit_luastg(program: Program, module_name: str = "ecl_stage06_boss", names: 
     lines.append("local function ecl_sync_self(self)")
     lines.append("    if self then ecl_var[-9997], ecl_var[-9996] = self.x or 0, self.y or 0 end")
     lines.append("end")
+    if runtime == "thlib":
+        lines.extend(thlib_runtime_helpers())
+    if runtime != "thlib":
+        lines.append("local function ecl_laser(...) return nil end")
     lines.append("local function ecl_pick_rank(easy, normal, hard, lunatic)")
     lines.append("    local rank = _G.difficulty or (lstg and lstg.var and (lstg.var.difficulty or lstg.var.rank)) or 2")
     lines.append("    if type(rank) == 'string' then")
@@ -343,7 +469,8 @@ def emit_luastg(program: Program, module_name: str = "ecl_stage06_boss", names: 
         lines.append("end")
         lines.append(f"M.{lua_ident(func.name)} = ecl_{lua_ident(func.name)}")
         lines.append("")
-    lines.append("-- Bullet classes synthesized from ECL etSprite state")
+    if emit.classes:
+        lines.append("-- Bullet classes synthesized from ECL etSprite state")
     for cls, style, color in sorted(emit.classes):
         lines.append(f"_editor_class[{lua_string(cls)}] = _editor_class[{lua_string(cls)}] or Class(bullet)")
         lines.append("do")
@@ -366,6 +493,6 @@ def emit_luastg(program: Program, module_name: str = "ecl_stage06_boss", names: 
     return "\n".join(lines)
 
 
-def emit_luastg_file(input_path: str, output_path: str, module_name: str = "ecl_stage06_boss", names: Iterable[str] | None = None) -> None:
+def emit_luastg_file(input_path: str, output_path: str, module_name: str = "ecl_stage06_boss", names: Iterable[str] | None = None, runtime: str = "liu_10_mc") -> None:
     program = parse_decl(input_path)
-    Path(output_path).write_text(emit_luastg(program, module_name, names))
+    Path(output_path).write_text(emit_luastg(program, module_name, names, runtime))

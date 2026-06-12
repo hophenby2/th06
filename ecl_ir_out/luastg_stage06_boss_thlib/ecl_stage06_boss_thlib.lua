@@ -7,7 +7,57 @@ local function ecl_rad(value) return (value or 0) * 180 / math.pi end
 local function ecl_sync_self(self)
     if self then ecl_var[-9997], ecl_var[-9996] = self.x or 0, self.y or 0 end
 end
-local function ecl_laser(...) return nil end
+local function ecl_new_bullet(style, color, x, y, speed, angle, delay, param)
+    param = param or {}
+    local obj = New(_straight, style, color, x, y, speed, angle, false, 0, true, true, delay or 0, false)
+    obj.ecl_param = param
+    return obj
+end
+local function ecl_shot(mode, num, style, color, x, y, dx, dy, dis, o, r, way, layer, spd1, spd2, ang1, ang2, param)
+    local result = {}
+    local sx, sy = x + dx + r * cos(o), y + dy + r * sin(o)
+    way, layer = math.max(1, math.floor(way or 1)), math.max(1, math.floor(layer or 1))
+    for i = 1, layer do
+        local speed = spd1 + ((spd2 or spd1) - spd1) * ((layer == 1) and 0 or ((i - 1) / (layer - 1)))
+        for j = 1, way do
+            local angle
+            if mode == 0 then
+                angle = Angle(sx, sy, player.x, player.y) + ang1 + (j - (way + 1) / 2) * ang2
+            elseif mode == 1 then
+                angle = ang1 + (j - (way + 1) / 2) * ang2
+            elseif mode == 2 then
+                angle = Angle(sx, sy, player.x, player.y) + ang1 + (j - 1) * 360 / way - (i - 1) * ang2
+            elseif mode == 3 then
+                angle = ang1 + (j - 1) * 360 / way - (i - 1) * ang2
+            else
+                angle = ang1 + (j - 1) * 360 / way - (i - 1) * ang2
+            end
+            local bullet_obj = ecl_new_bullet(style, color, sx + dis * cos(angle), sy + dis * sin(angle), speed, angle, 0, param)
+            bullet_obj.layer = bullet_obj.layer - 0.000001 * i + 0.0000001 * j + 0.0005 * (num or 0)
+            table.insert(result, bullet_obj)
+        end
+    end
+    return result
+end
+local function ecl_laser(style, x, y, angle, length, width, warn_time, in_time, active_time, out_time, kind)
+    local obj = New(laser, style or 1, x or 0, y or 0, angle or 0, 0, length or 512, 0, width or 16, 0, 0)
+    obj.ecl_timing = {warn = warn_time or 0, fade_in = in_time or 0, active = active_time or 60, fade_out = out_time or 15, kind = kind or 'line'}
+    task.New(obj, function()
+        if warn_time and warn_time > 0 then task._Wait(warn_time) end
+        obj.colli = true
+        obj.alpha = 1
+        obj.w = width or obj.w0 or 16
+        task._Wait(active_time or 60)
+        Del(obj)
+    end)
+    return obj
+end
+local function ecl_move_rand(self, time, mode, radius)
+    local cx, cy = self.x or 0, self.y or 0
+    local angle = ran:Float(0, 360)
+    local dist = radius or 0
+    task.New(self, function() task.MoveTo(cx + dist * cos(angle), cy + dist * sin(angle), time or 1, mode or 4); ecl_sync_self(self) end)
+end
 local function ecl_pick_rank(easy, normal, hard, lunatic)
     local rank = _G.difficulty or (lstg and lstg.var and (lstg.var.difficulty or lstg.var.rank)) or 2
     if type(rank) == 'string' then
@@ -64,14 +114,14 @@ function ecl_Boss1(self)
         task._Wait(60)
         task.New(self, function() ecl_Boss1_at1(self) end)
         -- unsupported ins_448(100, 100, 80, 60)
-        task.New(self, _editor_tasks["liu_10_mc_moveRand"](60, 4, 3.0))
+        ecl_move_rand(self, 60, 4, 3.0)
         task._Wait(70)
         -- visual/helper ins_269(0)
         -- visual/helper ins_416(31)
         task._Wait(60)
         task.New(self, function() ecl_Boss1_at1b(self) end)
         -- unsupported ins_448(100, 100, 80, 60)
-        task.New(self, _editor_tasks["liu_10_mc_moveRand"](60, 4, 3.0))
+        ecl_move_rand(self, 60, 4, 3.0)
         task._Wait(70)
     end
     do return end
@@ -115,13 +165,13 @@ function ecl_Boss1_at1(self)
         v_A = v_C
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A + 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A + 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A + 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=1 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A + 0.060415
         v_B = v_A
@@ -129,30 +179,30 @@ function ecl_Boss1_at1(self)
         v_A = v_A + 0.060415
         -- etAngle et=3 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A + 0.060415
-        liu_10_mc.bullet.ShotBulletMode(3, 1, _editor_class["ecl_stage06_boss_Bullet_3_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
-        liu_10_mc.bullet.ShotBulletMode(3, 2, _editor_class["ecl_stage06_boss_Bullet_17_3"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
-        liu_10_mc.bullet.ShotBulletMode(3, 3, _editor_class["ecl_stage06_boss_Bullet_26_1"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(1.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 1, 3, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 2, 17, 3, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 3, 26, 1, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(1.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- unsupported ins_448(20, 20, 15, 11)
         v_A = v_B
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A - 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A - 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A - 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=1 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A - 0.060415
         -- etAngle et=2 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A - 0.060415
         -- etAngle et=3 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A - 0.060415
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
-        liu_10_mc.bullet.ShotBulletMode(3, 1, _editor_class["ecl_stage06_boss_Bullet_3_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
-        liu_10_mc.bullet.ShotBulletMode(3, 2, _editor_class["ecl_stage06_boss_Bullet_17_3"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
-        liu_10_mc.bullet.ShotBulletMode(3, 3, _editor_class["ecl_stage06_boss_Bullet_26_1"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(1.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 1, 3, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 2, 17, 3, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 3, 26, 1, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(1.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- unsupported ins_448(20, 20, 15, 11)
         v_C = v_C - 0.15708
         v_C = v_C - 0.392699
@@ -200,13 +250,13 @@ function ecl_Boss1_at1b(self)
         v_A = v_C
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A - 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A - 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A - 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=1 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A - 0.060415
         v_B = v_A
@@ -214,30 +264,30 @@ function ecl_Boss1_at1b(self)
         v_A = v_A - 0.060415
         -- etAngle et=3 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A - 0.060415
-        liu_10_mc.bullet.ShotBulletMode(3, 1, _editor_class["ecl_stage06_boss_Bullet_3_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
-        liu_10_mc.bullet.ShotBulletMode(3, 2, _editor_class["ecl_stage06_boss_Bullet_17_3"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
-        liu_10_mc.bullet.ShotBulletMode(3, 3, _editor_class["ecl_stage06_boss_Bullet_26_1"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(1.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 1, 3, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 2, 17, 3, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 3, 26, 1, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(1.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- unsupported ins_448(20, 20, 15, 11)
         v_A = v_B
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A + 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A + 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A + 0.03927
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- etAngle et=1 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A + 0.060415
         -- etAngle et=2 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A + 0.060415
         -- etAngle et=3 angle=ecl_rad(v_A) step=ecl_rad(0.0)
         v_A = v_A + 0.060415
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_0_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
-        liu_10_mc.bullet.ShotBulletMode(3, 1, _editor_class["ecl_stage06_boss_Bullet_3_6"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
-        liu_10_mc.bullet.ShotBulletMode(3, 2, _editor_class["ecl_stage06_boss_Bullet_17_3"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
-        liu_10_mc.bullet.ShotBulletMode(3, 3, _editor_class["ecl_stage06_boss_Bullet_26_1"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(1.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 0, 0, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 1, 3, 6, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 2, 17, 3, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(3.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
+        ecl_shot(3, 3, 26, 1, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(6, 12, 14, 14))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(3.0, 3.0, 4.0, 4.4), ecl_pick_rank(1.5, 1.5, 1.5, 1.5), ecl_rad(v_A), ecl_rad(0.0), nil)
         -- unsupported ins_448(20, 20, 15, 11)
         v_C = v_C + 0.15708
         v_C = v_C + 0.392699
@@ -440,7 +490,7 @@ function ecl_Boss2_at2(self)
     for _ecl_loop = 1, math.max(0, math.floor(i_F)) do
         -- etEx et=1 params preserved
         -- etAngle et=1 angle=ecl_rad(0 / (5)) step=ecl_rad(3.1415927 / (i_D))
-        liu_10_mc.bullet.ShotBulletMode(0, 1, _editor_class["ecl_stage06_boss_Bullet_29_0"], self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(i_D)), math.max(1, math.floor(1)), 5.0, 3.5, ecl_rad(0 / (5)), ecl_rad(3.1415927 / (i_D)), {{2, 0, 64, 60, 1, ecl_var[-9989], v_E}})
+        ecl_shot(0, 1, 29, 0, self.x, self.y, (ecl_var[-9997]) - self.x, (ecl_var[-9996] - (32)) - self.y, 0, 0, 0, math.max(1, math.floor(i_D)), math.max(1, math.floor(1)), 5.0, 3.5, ecl_rad(0 / (5)), ecl_rad(3.1415927 / (i_D)), {{2, 0, 64, 60, 1, ecl_var[-9989], v_E}})
         -- unsupported ins_448(20, 20, 20, 17)
         v_C = v_C - 0.15708
     end
@@ -568,7 +618,7 @@ function ecl_Boss3(self)
         task.New(self, function() ecl_Boss3_at1e3(self) end)
         task.New(self, function() ecl_Boss3_at1e4(self) end)
         task._Wait(20)
-        task.New(self, _editor_tasks["liu_10_mc_moveRand"](60, 4, 0.5))
+        ecl_move_rand(self, 60, 4, 0.5)
         -- unsupported ins_448(90, 90, 80, 80)
     end
     do return end
@@ -593,7 +643,7 @@ function ecl_Boss3_at1(self)
         v_C = math.sin(v_A + 1.5707964) * (32.0)
         -- etOffset et=0 x=v_B y=v_C
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(v_A)
-        liu_10_mc.bullet.ShotBulletMode(1, 0, _editor_class["ecl_stage06_boss_Bullet_7_4"], self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(5)), 3.0, 2.7, ecl_rad(v_A), ecl_rad(v_A), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+        ecl_shot(1, 0, 7, 4, self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(5)), 3.0, 2.7, ecl_rad(v_A), ecl_rad(v_A), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
         v_A = v_A + 0.19635
         task._Wait(1)
     end
@@ -621,7 +671,7 @@ function ecl_Boss3_at1e1(self)
         v_C = math.sin(v_A + 1.5707964) * (16.0)
         -- etOffset et=1 x=v_B y=v_C
         -- etAngle et=1 angle=ecl_rad(v_A) step=ecl_rad(v_A)
-        liu_10_mc.bullet.ShotBulletMode(1, 1, _editor_class["ecl_stage06_boss_Bullet_7_13"], self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(5)), 1.0, 0.7, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
+        ecl_shot(1, 1, 7, 13, self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(5)), 1.0, 0.7, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
         v_A = v_A + 0.19635
         v_A = v_A + 0.19635
         -- unsupported ins_448(2, 1, 1, 1)
@@ -650,7 +700,7 @@ function ecl_Boss3_at1e2(self)
         v_C = math.sin(v_A + 1.5707964) * (16.0)
         -- etOffset et=2 x=v_B y=v_C
         -- etAngle et=2 angle=ecl_rad(v_A) step=ecl_rad(v_A)
-        liu_10_mc.bullet.ShotBulletMode(1, 2, _editor_class["ecl_stage06_boss_Bullet_7_13"], self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(5)), 1.0, 0.7, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
+        ecl_shot(1, 2, 7, 13, self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(5)), 1.0, 0.7, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
         v_A = v_A - 0.19635
         v_A = v_A - 0.19635
         -- unsupported ins_448(2, 1, 1, 1)
@@ -679,7 +729,7 @@ function ecl_Boss3_at1e3(self)
         v_C = math.sin(v_A + 1.5707964) * (16.0)
         -- etOffset et=3 x=v_B y=v_C
         -- etAngle et=3 angle=ecl_rad(v_A) step=ecl_rad(v_A)
-        liu_10_mc.bullet.ShotBulletMode(1, 3, _editor_class["ecl_stage06_boss_Bullet_7_2"], self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(5)), 1.0, 0.7, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
+        ecl_shot(1, 3, 7, 2, self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(5)), 1.0, 0.7, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
         v_A = v_A - 0.19635
         v_A = v_A - 0.19635
         v_A = v_A - 0.098175
@@ -709,7 +759,7 @@ function ecl_Boss3_at1e4(self)
         v_C = math.sin(v_A + 1.5707964) * (16.0)
         -- etOffset et=4 x=v_B y=v_C
         -- etAngle et=4 angle=ecl_rad(v_A) step=ecl_rad(v_A)
-        liu_10_mc.bullet.ShotBulletMode(1, 4, _editor_class["ecl_stage06_boss_Bullet_7_2"], self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(5)), 1.0, 0.7, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
+        ecl_shot(1, 4, 7, 2, self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(5)), 1.0, 0.7, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
         v_A = v_A + 0.19635
         v_A = v_A + 0.19635
         v_A = v_A + 0.098175
@@ -880,7 +930,7 @@ function ecl_Boss4_at1(self)
         v_C = math.sin(v_A + 1.5707964) * (32.0)
         -- etOffset et=0 x=v_B y=v_C
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(v_A)
-        liu_10_mc.bullet.ShotBulletMode(1, 0, _editor_class["ecl_stage06_boss_Bullet_7_4"], self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 3.0, 2.7, ecl_rad(v_A), ecl_rad(v_A), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+        ecl_shot(1, 0, 7, 4, self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 3.0, 2.7, ecl_rad(v_A), ecl_rad(v_A), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
         v_A = v_A + 0.19635
         task._Wait(1)
     end
@@ -910,7 +960,7 @@ function ecl_Boss4_at1e1(self)
         -- etOffset et=1 x=v_B y=v_C
         -- etAngle et=1 angle=ecl_rad(v_A) step=ecl_rad(v_A)
         -- control-flow not structurally lowered: unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e1_1080 @ 0;
-        liu_10_mc.bullet.ShotBulletMode(1, 1, _editor_class["ecl_stage06_boss_Bullet_7_13"], self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(3)), 1.2, 1.0, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
+        ecl_shot(1, 1, 7, 13, self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(3)), 1.2, 1.0, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
         -- label Boss4_at1e1_1080
         v_A = v_A + 0.19635
         task._Wait(1)
@@ -925,7 +975,7 @@ function ecl_Boss4_at1e1(self)
     -- etEx et=1 params preserved
     -- etEx et=1 params preserved
     -- etOffsetAbs et=1 x=(-114) + ecl_var[-9997] y=(54) + ecl_var[-9996]
-    liu_10_mc.bullet.ShotBulletMode(0, 1, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+    ecl_shot(0, 1, 17, 1, self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
     do return end
 end
 M.Boss4_at1e1 = ecl_Boss4_at1e1
@@ -952,7 +1002,7 @@ function ecl_Boss4_at1e2(self)
         -- etOffset et=2 x=v_B y=v_C
         -- etAngle et=2 angle=ecl_rad(v_A) step=ecl_rad(v_A)
         -- control-flow not structurally lowered: unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e2_1080 @ 0;
-        liu_10_mc.bullet.ShotBulletMode(1, 2, _editor_class["ecl_stage06_boss_Bullet_7_13"], self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(3)), 1.2, 1.0, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
+        ecl_shot(1, 2, 7, 13, self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(3)), 1.2, 1.0, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
         -- label Boss4_at1e2_1080
         v_A = v_A - 0.19635
         task._Wait(1)
@@ -967,7 +1017,7 @@ function ecl_Boss4_at1e2(self)
     -- etEx et=2 params preserved
     -- etEx et=2 params preserved
     -- etOffsetAbs et=2 x=(114) + ecl_var[-9997] y=(54) + ecl_var[-9996]
-    liu_10_mc.bullet.ShotBulletMode(0, 2, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, ((114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+    ecl_shot(0, 2, 17, 1, self.x, self.y, ((114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
     do return end
 end
 M.Boss4_at1e2 = ecl_Boss4_at1e2
@@ -994,7 +1044,7 @@ function ecl_Boss4_at1e3(self)
         -- etOffset et=3 x=v_B y=v_C
         -- etAngle et=3 angle=ecl_rad(v_A) step=ecl_rad(v_A)
         -- control-flow not structurally lowered: unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e3_1080 @ 0;
-        liu_10_mc.bullet.ShotBulletMode(1, 3, _editor_class["ecl_stage06_boss_Bullet_7_2"], self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(3)), 1.2, 1.0, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
+        ecl_shot(1, 3, 7, 2, self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(3)), 1.2, 1.0, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
         -- label Boss4_at1e3_1080
         v_A = v_A - 0.19635
         task._Wait(1)
@@ -1009,7 +1059,7 @@ function ecl_Boss4_at1e3(self)
     -- etEx et=3 params preserved
     -- etEx et=3 params preserved
     -- etOffsetAbs et=3 x=(-64) + ecl_var[-9997] y=(-80) + ecl_var[-9996]
-    liu_10_mc.bullet.ShotBulletMode(0, 3, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, ((-64) + ecl_var[-9997]) - self.x, ((-80) + ecl_var[-9996]) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+    ecl_shot(0, 3, 17, 1, self.x, self.y, ((-64) + ecl_var[-9997]) - self.x, ((-80) + ecl_var[-9996]) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
     do return end
 end
 M.Boss4_at1e3 = ecl_Boss4_at1e3
@@ -1036,7 +1086,7 @@ function ecl_Boss4_at1e4(self)
         -- etOffset et=4 x=v_B y=v_C
         -- etAngle et=4 angle=ecl_rad(v_A) step=ecl_rad(v_A)
         -- control-flow not structurally lowered: unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e4_1080 @ 0;
-        liu_10_mc.bullet.ShotBulletMode(1, 4, _editor_class["ecl_stage06_boss_Bullet_7_2"], self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(3)), 1.2, 1.0, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
+        ecl_shot(1, 4, 7, 2, self.x, self.y, v_B, v_C, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(3)), 1.2, 1.0, ecl_rad(v_A), ecl_rad(v_A), {{2, 1, 4, 60, -999999, 0.033333335, -999.0}})
         -- label Boss4_at1e4_1080
         v_A = v_A + 0.19635
         task._Wait(1)
@@ -1051,7 +1101,7 @@ function ecl_Boss4_at1e4(self)
     -- etEx et=4 params preserved
     -- etEx et=4 params preserved
     -- etOffsetAbs et=4 x=(64) + ecl_var[-9997] y=(-80) + ecl_var[-9996]
-    liu_10_mc.bullet.ShotBulletMode(0, 4, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, ((64) + ecl_var[-9997]) - self.x, ((-80) + ecl_var[-9996]) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+    ecl_shot(0, 4, 17, 1, self.x, self.y, ((64) + ecl_var[-9997]) - self.x, ((-80) + ecl_var[-9996]) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
     do return end
 end
 M.Boss4_at1e4 = ecl_Boss4_at1e4
@@ -1242,7 +1292,7 @@ function ecl_BossCard1(self)
         task.New(self, function() ecl_BossCard1_at1h(self) end)
         task.New(self, function() ecl_BossCard1_at2h(self) end)
         task._Wait(230)
-        task.New(self, _editor_tasks["liu_10_mc_moveRand"](60, 4, 3.0))
+        ecl_move_rand(self, 60, 4, 3.0)
         task._Wait(70)
     end
     while true do
@@ -1269,7 +1319,7 @@ function ecl_BossCard1_at1(self)
     for _ecl_loop = 1, math.max(0, math.floor(i_C)) do
         -- etDist et=0 distance=v_B
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.18479957)
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_29_0"], self.x, self.y, v_B, v_C, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(2.0, 2.2, 2.5, 2.5), ecl_pick_rank(1.2, 1.0, 1.0, 1.0), ecl_rad(v_A), ecl_rad(0.18479957), {{1, 0, 4, 60, -999999, 0.016666668, -999.0}})
+        ecl_shot(3, 0, 29, 0, self.x, self.y, v_B, v_C, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(2.0, 2.2, 2.5, 2.5), ecl_pick_rank(1.2, 1.0, 1.0, 1.0), ecl_rad(v_A), ecl_rad(0.18479957), {{1, 0, 4, 60, -999999, 0.016666668, -999.0}})
         v_B = v_B - (1)
         v_A = v_A - 0.15708
         task._Wait(2)
@@ -1278,7 +1328,7 @@ function ecl_BossCard1_at1(self)
     for _ecl_loop = 1, math.max(0, math.floor(i_D)) do
         -- etDist et=0 distance=v_B
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.18479957)
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_29_0"], self.x, self.y, v_B, v_C, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(2.0, 2.2, 2.5, 2.5), ecl_pick_rank(1.2, 1.0, 1.0, 1.0), ecl_rad(v_A), ecl_rad(0.18479957), {{1, 0, 4, 60, -999999, 0.016666668, -999.0}})
+        ecl_shot(3, 0, 29, 0, self.x, self.y, v_B, v_C, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(2.0, 2.2, 2.5, 2.5), ecl_pick_rank(1.2, 1.0, 1.0, 1.0), ecl_rad(v_A), ecl_rad(0.18479957), {{1, 0, 4, 60, -999999, 0.016666668, -999.0}})
         v_B = v_B - (1)
         v_A = v_A - 0.15708
         task._Wait(1)
@@ -1304,7 +1354,7 @@ function ecl_BossCard1_at1h(self)
     for _ecl_loop = 1, math.max(0, math.floor(i_C)) do
         -- etDist et=0 distance=v_B
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.007853982)
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_29_0"], self.x, self.y, v_B, v_C, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(2.0, 2.5, 2.5, 2.5), ecl_pick_rank(1.2, 1.0, 1.0, 1.0), ecl_rad(v_A), ecl_rad(0.007853982), {{1, 0, 4, 60, -999999, 0.016666668, -999.0}})
+        ecl_shot(3, 0, 29, 0, self.x, self.y, v_B, v_C, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(2.0, 2.5, 2.5, 2.5), ecl_pick_rank(1.2, 1.0, 1.0, 1.0), ecl_rad(v_A), ecl_rad(0.007853982), {{1, 0, 4, 60, -999999, 0.016666668, -999.0}})
         v_B = v_B - (1)
         v_A = v_A + 0.15708
         task._Wait(2)
@@ -1313,7 +1363,7 @@ function ecl_BossCard1_at1h(self)
     for _ecl_loop = 1, math.max(0, math.floor(i_D)) do
         -- etDist et=0 distance=v_B
         -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.007853982)
-        liu_10_mc.bullet.ShotBulletMode(3, 0, _editor_class["ecl_stage06_boss_Bullet_29_0"], self.x, self.y, v_B, v_C, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(2.0, 2.5, 2.5, 2.5), ecl_pick_rank(1.2, 1.0, 1.0, 1.0), ecl_rad(v_A), ecl_rad(0.007853982), {{1, 0, 4, 60, -999999, 0.016666668, -999.0}})
+        ecl_shot(3, 0, 29, 0, self.x, self.y, v_B, v_C, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(2.0, 2.5, 2.5, 2.5), ecl_pick_rank(1.2, 1.0, 1.0, 1.0), ecl_rad(v_A), ecl_rad(0.007853982), {{1, 0, 4, 60, -999999, 0.016666668, -999.0}})
         v_B = v_B - (1)
         v_A = v_A + 0.15708
         task._Wait(1)
@@ -1338,7 +1388,7 @@ function ecl_BossCard1_at2(self)
     for _ecl_loop = 1, math.max(0, math.floor(i_C)) do
         -- etDist et=1 distance=v_B
         -- etAngle et=1 angle=ecl_rad(v_A) step=ecl_rad(0.14279966)
-        liu_10_mc.bullet.ShotBulletMode(3, 1, _editor_class["ecl_stage06_boss_Bullet_28_4"], self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(1.3, 1.3, 1.6, 1.6), ecl_pick_rank(0.6, 0.5, 0.5, 0.5), ecl_rad(v_A), ecl_rad(0.14279966), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(3, 1, 28, 4, self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(1.3, 1.3, 1.6, 1.6), ecl_pick_rank(0.6, 0.5, 0.5, 0.5), ecl_rad(v_A), ecl_rad(0.14279966), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
         v_B = v_B - (1)
         v_A = v_A - 0.15708
         task._Wait(2)
@@ -1347,7 +1397,7 @@ function ecl_BossCard1_at2(self)
     for _ecl_loop = 1, math.max(0, math.floor(i_D)) do
         -- etDist et=1 distance=v_B
         -- etAngle et=1 angle=ecl_rad(v_A) step=ecl_rad(0.1308997)
-        liu_10_mc.bullet.ShotBulletMode(3, 1, _editor_class["ecl_stage06_boss_Bullet_28_4"], self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(1.3, 1.3, 1.6, 1.6), ecl_pick_rank(0.6, 0.5, 0.5, 0.5), ecl_rad(v_A), ecl_rad(0.1308997), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(3, 1, 28, 4, self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(1.3, 1.3, 1.6, 1.6), ecl_pick_rank(0.6, 0.5, 0.5, 0.5), ecl_rad(v_A), ecl_rad(0.1308997), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
         v_B = v_B - (1)
         v_A = v_A + 0.15708
         task._Wait(1)
@@ -1372,7 +1422,7 @@ function ecl_BossCard1_at2h(self)
     for _ecl_loop = 1, math.max(0, math.floor(i_C)) do
         -- etDist et=1 distance=v_B
         -- etAngle et=1 angle=ecl_rad(v_A) step=ecl_rad(0.14279966)
-        liu_10_mc.bullet.ShotBulletMode(3, 1, _editor_class["ecl_stage06_boss_Bullet_28_4"], self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(1.3, 1.6, 1.6, 1.6), ecl_pick_rank(0.6, 0.5, 0.5, 0.5), ecl_rad(v_A), ecl_rad(0.14279966), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(3, 1, 28, 4, self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(1.3, 1.6, 1.6, 1.6), ecl_pick_rank(0.6, 0.5, 0.5, 0.5), ecl_rad(v_A), ecl_rad(0.14279966), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
         v_B = v_B - (1)
         v_A = v_A + 0.15708
         task._Wait(2)
@@ -1381,7 +1431,7 @@ function ecl_BossCard1_at2h(self)
     for _ecl_loop = 1, math.max(0, math.floor(i_D)) do
         -- etDist et=1 distance=v_B
         -- etAngle et=1 angle=ecl_rad(v_A) step=ecl_rad(0.1308997)
-        liu_10_mc.bullet.ShotBulletMode(3, 1, _editor_class["ecl_stage06_boss_Bullet_28_4"], self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(1.3, 1.6, 1.6, 1.6), ecl_pick_rank(0.6, 0.5, 0.5, 0.5), ecl_rad(v_A), ecl_rad(0.1308997), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(3, 1, 28, 4, self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(2, 4, 4, 4))), ecl_pick_rank(1.3, 1.6, 1.6, 1.6), ecl_pick_rank(0.6, 0.5, 0.5, 0.5), ecl_rad(v_A), ecl_rad(0.1308997), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
         v_B = v_B - (1)
         v_A = v_A - 0.15708
         task._Wait(1)
@@ -1447,7 +1497,7 @@ function ecl_BossCard2_at1(self, v_A, v_B, v_C)
     -- etEx et=0 params preserved
     -- etDist et=0 distance=16.0
     -- etOffsetAbs et=0 x=v_B y=v_C
-    liu_10_mc.bullet.ShotBulletMode(1, 0, _editor_class["ecl_stage06_boss_Bullet_21_3"], self.x, self.y, (v_B) - self.x, (v_C) - self.y, 16.0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 3, 3, 3))), ecl_pick_rank(2.0, 2.0, 2.8, 2.8), ecl_pick_rank(1.0, 1.0, 1.0, 1.0), ecl_rad(v_A), ecl_rad(0.28559932), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
+    ecl_shot(1, 0, 21, 3, self.x, self.y, (v_B) - self.x, (v_C) - self.y, 16.0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 3, 3, 3))), ecl_pick_rank(2.0, 2.0, 2.8, 2.8), ecl_pick_rank(1.0, 1.0, 1.0, 1.0), ecl_rad(v_A), ecl_rad(0.28559932), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
     do return end
 end
 M.BossCard2_at1 = ecl_BossCard2_at1
@@ -1534,10 +1584,10 @@ function ecl_BossCard3_at(self)
     -- etOffsetAbs et=5 x=ecl_var[-9997] + (64) y=ecl_var[-9996] + (-80)
     -- unsupported ins_435($A, 200, 200, 200, 100)
     while true do
-        liu_10_mc.bullet.ShotBulletMode(0, 2, _editor_class["ecl_stage06_boss_Bullet_15_6"], self.x, self.y, (ecl_var[-9997] + (-114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 2.5, 1.0, ecl_rad(0.0), ecl_rad(0.28559932), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
-        liu_10_mc.bullet.ShotBulletMode(0, 3, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, (ecl_var[-9997] + (114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
-        liu_10_mc.bullet.ShotBulletMode(0, 4, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, (ecl_var[-9997] + (-64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
-        liu_10_mc.bullet.ShotBulletMode(3, 5, _editor_class["ecl_stage06_boss_Bullet_1_0"], self.x, self.y, (ecl_var[-9997] + (64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 1.0, 0.0, 0, 0, nil)
+        ecl_shot(0, 2, 15, 6, self.x, self.y, (ecl_var[-9997] + (-114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 2.5, 1.0, ecl_rad(0.0), ecl_rad(0.28559932), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(0, 3, 17, 1, self.x, self.y, (ecl_var[-9997] + (114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+        ecl_shot(0, 4, 17, 1, self.x, self.y, (ecl_var[-9997] + (-64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(0.0), ecl_rad(0.0), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+        ecl_shot(3, 5, 1, 0, self.x, self.y, (ecl_var[-9997] + (64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 1.0, 0.0, 0, 0, nil)
         task._Wait(i_A)
         -- control-flow not structurally lowered: unless ($A >= 60) goto BossCard3_at_1208 @ 0;
         i_A = i_A - 5
@@ -1734,10 +1784,10 @@ function ecl_BossCard4_at(self)
         -- etAngle et=3 angle=ecl_rad(v_B) step=ecl_rad(v_C)
         -- etAngle et=5 angle=ecl_rad(v_B) step=ecl_rad(v_C)
         v_C = v_C - 0.083776
-        liu_10_mc.bullet.ShotBulletMode(1, 2, _editor_class["ecl_stage06_boss_Bullet_11_6"], self.x, self.y, (ecl_var[-9997] + (-114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(2)), math.max(1, math.floor(1)), 6.5, 1.0, ecl_rad(v_A), ecl_rad(v_C), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
-        liu_10_mc.bullet.ShotBulletMode(0, 3, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, (ecl_var[-9997] + (114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(v_B), ecl_rad(v_C), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
-        liu_10_mc.bullet.ShotBulletMode(0, 4, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, (ecl_var[-9997] + (-64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(v_A), ecl_rad(v_C), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
-        liu_10_mc.bullet.ShotBulletMode(3, 5, _editor_class["ecl_stage06_boss_Bullet_1_0"], self.x, self.y, (ecl_var[-9997] + (64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 1.0, 0.0, ecl_rad(v_B), ecl_rad(v_C), nil)
+        ecl_shot(1, 2, 11, 6, self.x, self.y, (ecl_var[-9997] + (-114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(2)), math.max(1, math.floor(1)), 6.5, 1.0, ecl_rad(v_A), ecl_rad(v_C), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(0, 3, 17, 1, self.x, self.y, (ecl_var[-9997] + (114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(v_B), ecl_rad(v_C), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+        ecl_shot(0, 4, 17, 1, self.x, self.y, (ecl_var[-9997] + (-64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), math.max(1, math.floor(ecl_pick_rank(1, 1, 5, 7))), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(v_A), ecl_rad(v_C), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+        ecl_shot(3, 5, 1, 0, self.x, self.y, (ecl_var[-9997] + (64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 1.0, 0.0, ecl_rad(v_B), ecl_rad(v_C), nil)
         task._Wait(3)
     end
     i_E = 0
@@ -1768,10 +1818,10 @@ function ecl_BossCard4_at(self)
         -- control-flow not structurally lowered: unless (%A > (1.5707964f + (3.1415927f / _f(28)))) goto BossCard4_at_3068 @ 0;
         i_E = 0
         -- label BossCard4_at_3068
-        liu_10_mc.bullet.ShotBulletMode(1, 2, _editor_class["ecl_stage06_boss_Bullet_11_6"], self.x, self.y, (ecl_var[-9997] + (-114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(3)), math.max(1, math.floor(1)), 6.5, 1.0, ecl_rad(v_A), ecl_rad(1.0471976), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
-        liu_10_mc.bullet.ShotBulletMode(0, 3, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, (ecl_var[-9997] + (114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(3)), math.max(1, math.floor(1)), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(v_B), ecl_rad(1.0471976), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
-        liu_10_mc.bullet.ShotBulletMode(0, 4, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, (ecl_var[-9997] + (-64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(3)), math.max(1, math.floor(1)), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(v_B), ecl_rad(1.0471976), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
-        liu_10_mc.bullet.ShotBulletMode(3, 5, _editor_class["ecl_stage06_boss_Bullet_1_0"], self.x, self.y, (ecl_var[-9997] + (64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(3)), math.max(1, math.floor(1)), 1.0, 0.0, ecl_rad(v_A), ecl_rad(1.0471976), nil)
+        ecl_shot(1, 2, 11, 6, self.x, self.y, (ecl_var[-9997] + (-114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(3)), math.max(1, math.floor(1)), 6.5, 1.0, ecl_rad(v_A), ecl_rad(1.0471976), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(0, 3, 17, 1, self.x, self.y, (ecl_var[-9997] + (114)) - self.x, (ecl_var[-9996] + (54)) - self.y, 0, 0, 0, math.max(1, math.floor(3)), math.max(1, math.floor(1)), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(v_B), ecl_rad(1.0471976), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+        ecl_shot(0, 4, 17, 1, self.x, self.y, (ecl_var[-9997] + (-64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(3)), math.max(1, math.floor(1)), ecl_pick_rank(3.0, 3.0, 3.0, 5.0), ecl_pick_rank(1.2, 1.2, 1.2, 1.2), ecl_rad(v_B), ecl_rad(1.0471976), {{1, 0, 1024, 100, 0, -999999.0, -999999.0}})
+        ecl_shot(3, 5, 1, 0, self.x, self.y, (ecl_var[-9997] + (64)) - self.x, (ecl_var[-9996] + (-80)) - self.y, 0, 0, 0, math.max(1, math.floor(3)), math.max(1, math.floor(1)), 1.0, 0.0, ecl_rad(v_A), ecl_rad(1.0471976), nil)
         task._Wait(3)
     end
     do return end
@@ -1801,7 +1851,7 @@ function ecl_BossCard4_at2(self)
         for _ecl_loop = 1, math.max(0, math.floor(i_C)) do
             -- etEx et=0 params preserved
             -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
-            liu_10_mc.bullet.ShotBulletMode(1, 0, _editor_class["ecl_stage06_boss_Bullet_17_2"], self.x, self.y, (v_B) - self.x, (v_C) - self.y, 16.0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 2.5, 1.0, ecl_rad(v_A), ecl_rad(0.0), {{3, 0, 32, 1, 1, 0 / (16), ecl_var[-9999] * 1.0}})
+            ecl_shot(1, 0, 17, 2, self.x, self.y, (v_B) - self.x, (v_C) - self.y, 16.0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 2.5, 1.0, ecl_rad(v_A), ecl_rad(0.0), {{3, 0, 32, 1, 1, 0 / (16), ecl_var[-9999] * 1.0}})
             v_A = v_A + 3.141593
             v_A = v_A + 0.628319
             v_A = v_A + 0.523599
@@ -1816,7 +1866,7 @@ function ecl_BossCard4_at2(self)
         for _ecl_loop = 1, math.max(0, math.floor(i_D)) do
             -- etEx et=0 params preserved
             -- etAngle et=0 angle=ecl_rad(v_A) step=ecl_rad(0.0)
-            liu_10_mc.bullet.ShotBulletMode(1, 0, _editor_class["ecl_stage06_boss_Bullet_17_2"], self.x, self.y, (v_B) - self.x, (v_C) - self.y, 16.0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 2.5, 1.0, ecl_rad(v_A), ecl_rad(0.0), {{3, 0, 32, 1, 1, 0 / (16), ecl_var[-9999] * 1.0}})
+            ecl_shot(1, 0, 17, 2, self.x, self.y, (v_B) - self.x, (v_C) - self.y, 16.0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 2.5, 1.0, ecl_rad(v_A), ecl_rad(0.0), {{3, 0, 32, 1, 1, 0 / (16), ecl_var[-9999] * 1.0}})
             v_A = v_A - 3.141593
             v_A = v_A - 0.628319
             v_A = v_A - 0.523599
@@ -1843,7 +1893,7 @@ function ecl_BossCard4_at3(self)
     -- etSpeedD et=1 speed=ecl_pick_rank(2.0, 2.0, 2.5, 3.0) step=ecl_pick_rank(1.0, 1.0, 1.0, 1.0)
     -- etEx et=1 params preserved
     while true do
-        liu_10_mc.bullet.ShotBulletMode(0, 1, _editor_class["ecl_stage06_boss_Bullet_26_0"], self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 3, 3))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(2.0, 2.0, 2.5, 3.0), ecl_pick_rank(1.0, 1.0, 1.0, 1.0), ecl_rad(0.0), ecl_rad(0.7853982), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(0, 1, 26, 0, self.x, self.y, ((-114) + ecl_var[-9997]) - self.x, ((54) + ecl_var[-9996]) - self.y, v_B, 0, 0, math.max(1, math.floor(ecl_pick_rank(1, 1, 3, 3))), math.max(1, math.floor(ecl_pick_rank(1, 1, 1, 1))), ecl_pick_rank(2.0, 2.0, 2.5, 3.0), ecl_pick_rank(1.0, 1.0, 1.0, 1.0), ecl_rad(0.0), ecl_rad(0.7853982), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
         -- unsupported ins_448(240, 120, 100, 60)
         task._Wait(1)
     end
@@ -1915,7 +1965,7 @@ function ecl_BossCard4_at5(self)
         -- control-flow not structurally lowered: unless (%A <= -1.5707964f) goto BossCard4_at5_1284 @ 0;
         i_B = 0
         -- label BossCard4_at5_1284
-        liu_10_mc.bullet.ShotBulletMode(0, 6, _editor_class["ecl_stage06_boss_Bullet_17_3"], self.x, self.y, 0, 0, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 2.5, 1.0, ecl_rad(v_A), ecl_rad(0.0), {{1, 0, 268435456, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(0, 6, 17, 3, self.x, self.y, 0, 0, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 2.5, 1.0, ecl_rad(v_A), ecl_rad(0.0), {{1, 0, 268435456, 1, -999999, -999999.0, -999999.0}})
         -- unsupported ins_448(6, 4, 2, 2)
         task._Wait(1)
     end
@@ -1936,7 +1986,7 @@ function ecl_BossCard4_at6(self)
         -- etAngle et=7 angle=ecl_rad(0) step=ecl_rad(0.28559932)
         -- etSpeed et=7 speed=3.0 step=1.0
         -- etEx et=7 params preserved
-        liu_10_mc.bullet.ShotBulletMode(3, 7, _editor_class["ecl_stage06_boss_Bullet_3_1"], self.x, self.y, 0, 0, 0, 0, 0, math.max(1, math.floor(16)), math.max(1, math.floor(1)), 3.0, 1.0, ecl_rad(0), ecl_rad(0.28559932), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(3, 7, 3, 1, self.x, self.y, 0, 0, 0, 0, 0, math.max(1, math.floor(16)), math.max(1, math.floor(1)), 3.0, 1.0, ecl_rad(0), ecl_rad(0.28559932), {{0, 1, 2, 1, -999999, -999999.0, -999999.0}})
         task._Wait(20)
     end
     do return end
@@ -1966,7 +2016,7 @@ function ecl_BossCard4_at7(self)
         v_B = (ecl_var[-9999] * (128)) + (64)
         -- etSpeed et=7 speed=(v_B / 64.0) + (ecl_var[-9999] * 0.5) step=0.0
         -- etOffsetAbs et=7 x=v_B y=ecl_var[-9999] * (192)
-        liu_10_mc.bullet.ShotBulletMode(1, 7, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, (v_B) - self.x, (ecl_var[-9999] * (192)) - self.y, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), (v_B / 64.0) + (ecl_var[-9999] * 0.5), 0.0, ecl_rad(1.5707964), ecl_rad(0.28559932), {{1, 0, 268435456, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(1, 7, 17, 1, self.x, self.y, (v_B) - self.x, (ecl_var[-9999] * (192)) - self.y, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), (v_B / 64.0) + (ecl_var[-9999] * 0.5), 0.0, ecl_rad(1.5707964), ecl_rad(0.28559932), {{1, 0, 268435456, 1, -999999, -999999.0, -999999.0}})
         task._Wait(10)
         -- etNew(7)
         -- etAim et=7 mode=1
@@ -1980,7 +2030,7 @@ function ecl_BossCard4_at7(self)
         -- etSpeed et=7 speed=(v_B / 64.0) + (ecl_var[-9999] * 0.5) step=0.0
         v_B = v_B * (-1)
         -- etOffsetAbs et=7 x=v_B y=ecl_var[-9999] * (192)
-        liu_10_mc.bullet.ShotBulletMode(1, 7, _editor_class["ecl_stage06_boss_Bullet_17_1"], self.x, self.y, (v_B) - self.x, (ecl_var[-9999] * (192)) - self.y, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), (v_B / 64.0) + (ecl_var[-9999] * 0.5), 0.0, ecl_rad(1.5707964), ecl_rad(0.28559932), {{1, 0, 268435456, 1, -999999, -999999.0, -999999.0}})
+        ecl_shot(1, 7, 17, 1, self.x, self.y, (v_B) - self.x, (ecl_var[-9999] * (192)) - self.y, 0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), (v_B / 64.0) + (ecl_var[-9999] * 0.5), 0.0, ecl_rad(1.5707964), ecl_rad(0.28559932), {{1, 0, 268435456, 1, -999999, -999999.0, -999999.0}})
         task._Wait(10)
     end
     do return end
@@ -2173,7 +2223,7 @@ function ecl_BossCard5_at(self, v_A, v_B, v_C, v_D)
         -- etAngle et=0 angle=ecl_rad(v_K) step=ecl_rad(0.0)
         -- etEx et=0 params preserved
         -- etOffsetAbs et=0 x=v_A y=v_B
-        liu_10_mc.bullet.ShotBulletMode(0, 0, _editor_class["ecl_stage06_boss_Bullet_3_6"], self.x, self.y, (v_A) - self.x, (v_B) - self.y, 16.0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 0.0, 1.0, ecl_rad(v_K), ecl_rad(0.0), {{3, 0, 4, 60, -999999, 0.023333333, -999.0}})
+        ecl_shot(0, 0, 3, 6, self.x, self.y, (v_A) - self.x, (v_B) - self.y, 16.0, 0, 0, math.max(1, math.floor(1)), math.max(1, math.floor(1)), 0.0, 1.0, ecl_rad(v_K), ecl_rad(0.0), {{3, 0, 4, 60, -999999, 0.023333333, -999.0}})
         v_A = v_A + v_E
         v_B = v_B + v_F
         v_K = v_K + v_I
@@ -2359,7 +2409,7 @@ function ecl_BossCard6_at(self, v_A, v_B, v_C, v_D, v_E, v_F, v_G)
     -- etEx et=i_A params preserved
     -- etEx et=i_A params preserved
     -- etOffsetAbs et=i_A x=v_B y=v_C
-    liu_10_mc.bullet.ShotBulletMode(3, i_A, _editor_class["ecl_stage06_boss_Bullet_10_ecl_var_9985"], self.x, self.y, (v_B) - self.x, (v_C) - self.y, 0, 0, 0, math.max(1, math.floor(i_E)), math.max(1, math.floor(1)), ecl_pick_rank(1.5, 1.5, 1.7, 1.8), ecl_pick_rank(1.0, 1.0, 1.0, 1.0), ecl_rad(0), ecl_rad(0.62831855), {{7, 1, 8, 60000, -999999, 0.0, v_D / 4.8}})
+    ecl_shot(3, i_A, 10, ecl_var[-9985], self.x, self.y, (v_B) - self.x, (v_C) - self.y, 0, 0, 0, math.max(1, math.floor(i_E)), math.max(1, math.floor(1)), ecl_pick_rank(1.5, 1.5, 1.7, 1.8), ecl_pick_rank(1.0, 1.0, 1.0, 1.0), ecl_rad(0), ecl_rad(0.62831855), {{7, 1, 8, 60000, -999999, 0.0, v_D / 4.8}})
     ecl_var[-9983] = i_G
     -- unsupported ins_257("BossCard6_atLine", %B, %C, 100, 100, 0)
     do return end
@@ -2494,205 +2544,6 @@ function ecl_HPWait(self, v_A, v_B)
     do return end
 end
 M.HPWait = ecl_HPWait
-
--- Bullet classes synthesized from ECL etSprite state
-_editor_class["ecl_stage06_boss_Bullet_0_6"] = _editor_class["ecl_stage06_boss_Bullet_0_6"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_0_6"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 0, 6)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_10_ecl_var_9985"] = _editor_class["ecl_stage06_boss_Bullet_10_ecl_var_9985"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_10_ecl_var_9985"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 10, ecl_var[-9985])
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_11_6"] = _editor_class["ecl_stage06_boss_Bullet_11_6"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_11_6"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 11, 6)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_15_6"] = _editor_class["ecl_stage06_boss_Bullet_15_6"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_15_6"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 15, 6)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_17_1"] = _editor_class["ecl_stage06_boss_Bullet_17_1"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_17_1"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 17, 1)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_17_2"] = _editor_class["ecl_stage06_boss_Bullet_17_2"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_17_2"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 17, 2)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_17_3"] = _editor_class["ecl_stage06_boss_Bullet_17_3"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_17_3"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 17, 3)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_1_0"] = _editor_class["ecl_stage06_boss_Bullet_1_0"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_1_0"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 1, 0)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_21_3"] = _editor_class["ecl_stage06_boss_Bullet_21_3"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_21_3"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 21, 3)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_26_0"] = _editor_class["ecl_stage06_boss_Bullet_26_0"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_26_0"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 26, 0)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_26_1"] = _editor_class["ecl_stage06_boss_Bullet_26_1"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_26_1"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 26, 1)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_28_4"] = _editor_class["ecl_stage06_boss_Bullet_28_4"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_28_4"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 28, 4)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_29_0"] = _editor_class["ecl_stage06_boss_Bullet_29_0"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_29_0"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 29, 0)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_3_1"] = _editor_class["ecl_stage06_boss_Bullet_3_1"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_3_1"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 3, 1)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_3_6"] = _editor_class["ecl_stage06_boss_Bullet_3_6"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_3_6"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 3, 6)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_7_13"] = _editor_class["ecl_stage06_boss_Bullet_7_13"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_7_13"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 7, 13)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_7_2"] = _editor_class["ecl_stage06_boss_Bullet_7_2"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_7_2"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 7, 2)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
-
-_editor_class["ecl_stage06_boss_Bullet_7_4"] = _editor_class["ecl_stage06_boss_Bullet_7_4"] or Class(bullet)
-do
-    local bullet_class = _editor_class["ecl_stage06_boss_Bullet_7_4"]
-    function bullet_class:init(x, y, ...)
-        bullet.init(self, liu_10_mc.bullet.bullet_class, COLOR_RED, true, true)
-        self.x, self.y = x, y
-        liu_10_mc.bullet.BulletClassInit(self, 7, 4)
-        liu_10_mc.bullet.SetBulletPreimg(self, 1, true)
-    end
-end
 
 function M.attach_to_boss_card(card)
     task.New(card, function()

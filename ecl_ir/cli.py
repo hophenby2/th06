@@ -12,6 +12,8 @@ from .parser import parse_decl
 from .reference import validate_opcode_args
 from .semantics import generation_for_game
 from .luastg_backend import emit_luastg_file
+from .luastg_lifter import emit_luastg_ir_json
+from .luastg_normalizer import emit_normalized_json, normalize_luastg_file
 
 
 def load_objects(path: str):
@@ -792,9 +794,189 @@ def cmd_scan(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_luastg_lift(args: argparse.Namespace) -> int:
+    output = emit_luastg_ir_json(args.input)
+    if args.output:
+        Path(args.output).write_text(output)
+    else:
+        print(output)
+    return 0
+
+
+def cmd_luastg_normalize(args: argparse.Namespace) -> int:
+    output = emit_normalized_json(args.input)
+    if args.output:
+        Path(args.output).write_text(output)
+    else:
+        print(output)
+    return 0
+
+
+def cmd_luastg_compile(args: argparse.Namespace) -> int:
+    objects = normalize_luastg_file(args.input)
+    kinds = [item.strip() for item in args.kind.split(",") if item.strip()]
+    if "all" in kinds:
+        kinds = ["Timeline", "Movement", "BulletEmitter", "LaserEmitter", "BossPattern"]
+    selected = [obj for obj in objects if getattr(obj, "kind", None) in kinds]
+    if args.limit is not None:
+        selected = selected[:args.limit]
+    lines = [f"// source LuaSTG: {args.input}", f"// target: {args.target}", f"// selected kinds {','.join(kinds)}: {len(selected)}"]
+    for obj in selected:
+        lines.append(f"// object {obj.kind} {obj.function}:{obj.source_line} family={obj.family}")
+        lines.extend(compile_object(obj, args.target).splitlines())
+    output = "\n".join(lines)
+    if args.output:
+        Path(args.output).write_text(output)
+    else:
+        print(output)
+    return 0
+
+
+DEFAULT_LUASTG_EXPORT_KINDS = ["Timeline", "Movement", "BulletEmitter", "LaserEmitter", "BossPattern"]
+LUASTG_EXPORT_HELPER_FUNCTIONS = {
+    "ecl_new_bullet", "ecl_shot", "ecl_laser", "ecl_move_rand",
+    "ecl_pick_rank", "ecl_rad", "ecl_sync_self",
+}
+
+
+def parse_kind_list(raw: str) -> list[str]:
+    kinds = [item.strip() for item in raw.split(",") if item.strip()]
+    if "all" in kinds:
+        return list(DEFAULT_LUASTG_EXPORT_KINDS)
+    return kinds
+
+
+def safe_ecl_function_name(name: str) -> str:
+    cleaned = re.sub(r"\W+", "_", name.strip())
+    cleaned = cleaned.strip("_") or "luastg_main"
+    if re.match(r"^\d", cleaned):
+        cleaned = f"luastg_{cleaned}"
+    return cleaned
+
+
+def lua_param_to_ecl_var(param: str) -> str | None:
+    param = param.strip()
+    match = re.fullmatch(r"[vi]_([A-Za-z][A-Za-z0-9_]*)", param)
+    if match:
+        return match.group(1)
+    return None
+
+
+def collect_luastg_function_params(path: str) -> dict[str, list[str]]:
+    params: dict[str, list[str]] = {}
+    pattern = re.compile(r"^\s*function\s+([A-Za-z_][\w\.]*)\s*\(([^)]*)\)")
+    try:
+        lines = Path(path).read_text(errors="replace").splitlines()
+    except OSError:
+        return params
+    for raw in lines:
+        match = pattern.match(raw)
+        if not match:
+            continue
+        function = match.group(1).replace(".", "_")
+        names: list[str] = []
+        for raw_param in match.group(2).split(","):
+            raw_param = raw_param.strip()
+            if raw_param == "self" or not raw_param:
+                continue
+            ecl_var = lua_param_to_ecl_var(raw_param)
+            if ecl_var and ecl_var not in names:
+                names.append(ecl_var)
+        params[function] = names
+    return params
+
+
+def used_ecl_vars(lines: list[str]) -> list[str]:
+    found: list[str] = []
+    for line in lines:
+        for name in re.findall(r"[%$]([A-Za-z][A-Za-z0-9_]*)", line):
+            if name not in found:
+                found.append(name)
+    return found
+
+
+def compile_luastg_function_body(objects: list[object], target: str, params: list[str] | None = None) -> list[str]:
+    body_lines: list[str] = []
+    for obj in sorted(objects, key=lambda item: (getattr(item, "source_line", 0), getattr(item, "kind", ""))):
+        body_lines.append(f"    // object {obj.kind} source_line={obj.source_line} family={obj.family}")
+        compiled = compile_object(obj, target)
+        for line in compiled.splitlines():
+            body_lines.append(f"    {line}" if line else "")
+    if not body_lines:
+        body_lines.append("    // no liftable LuaSTG semantic operations in this function")
+        return body_lines
+    declared_params = set(params or [])
+    locals_needed = [name for name in used_ecl_vars(body_lines) if name not in declared_params]
+    if locals_needed and generation_for_game(target) != "th06_th08":
+        return [f"    var {', '.join(locals_needed)};"] + body_lines
+    return body_lines
+
+
+def emit_luastg_export(input_path: str, target: str, kinds: list[str], functions: list[str] | None = None, limit: int | None = None) -> str:
+    objects = normalize_luastg_file(input_path)
+    function_params = collect_luastg_function_params(input_path)
+    allowed_functions = set(functions or [])
+    by_function: dict[str, list[object]] = {}
+    for obj in objects:
+        function = str(getattr(obj, "function", "") or "luastg_main")
+        if function in LUASTG_EXPORT_HELPER_FUNCTIONS:
+            continue
+        if allowed_functions and function not in allowed_functions:
+            continue
+        if getattr(obj, "kind", None) not in kinds:
+            continue
+        by_function.setdefault(function, []).append(obj)
+
+    function_names = sorted(by_function, key=lambda name: min(getattr(obj, "source_line", 0) for obj in by_function[name]))
+    if limit is not None:
+        remaining = max(limit, 0)
+        limited: dict[str, list[object]] = {}
+        for name in function_names:
+            if remaining <= 0:
+                break
+            items = by_function[name][:remaining]
+            limited[name] = items
+            remaining -= len(items)
+        by_function = limited
+        function_names = [name for name in function_names if name in by_function]
+
+    lines = [
+        f"// source LuaSTG: {input_path}",
+        f"// target: {target}",
+        "// grouped semantic export: LuaSTG -> shared IR -> ECL draft",
+        f"// selected kinds {','.join(kinds)}; functions={len(function_names)}",
+    ]
+    used_names: dict[str, int] = {}
+    for function in function_names:
+        safe_name = safe_ecl_function_name(function)
+        count = used_names.get(safe_name, 0)
+        used_names[safe_name] = count + 1
+        if count:
+            safe_name = f"{safe_name}_{count + 1}"
+        lines.append("")
+        params = function_params.get(function, [])
+        param_text = ", ".join(f"var {name}" for name in params)
+        lines.append(f"// LuaSTG function: {function}")
+        lines.append(target_function_header(safe_name, param_text, target))
+        lines.append("{")
+        lines.extend(compile_luastg_function_body(by_function[function], target, params))
+        lines.append("}")
+    return "\n".join(lines) + "\n"
+
+
+def cmd_luastg_export(args: argparse.Namespace) -> int:
+    functions = [item.strip() for item in args.functions.split(",") if item.strip()] if args.functions else None
+    output = emit_luastg_export(args.input, args.target, parse_kind_list(args.kind), functions, args.limit)
+    if args.output:
+        Path(args.output).write_text(output)
+    else:
+        print(output, end="")
+    return 0
+
+
 def cmd_luastg(args: argparse.Namespace) -> int:
     names = args.functions.split(",") if args.functions else None
-    emit_luastg_file(args.input, args.output, args.module_name, names)
+    emit_luastg_file(args.input, args.output, args.module_name, names, args.runtime)
     return 0
 
 
@@ -830,7 +1012,35 @@ def main(argv: list[str] | None = None) -> int:
     luastg.add_argument("--output", required=True)
     luastg.add_argument("--module-name", default="ecl_stage06_boss")
     luastg.add_argument("--functions", help="comma-separated ECL function names to emit; default emits Boss* functions")
+    luastg.add_argument("--runtime", choices=["thlib", "liu_10_mc"], default="liu_10_mc", help="LuaSTG runtime helper backend")
     luastg.set_defaults(func=cmd_luastg)
+
+    luastg_lift = sub.add_parser("luastg-lift", help="lift LuaSTG/THlib script patterns to semantic JSON IR")
+    luastg_lift.add_argument("input")
+    luastg_lift.add_argument("--output", help="write JSON output to file instead of stdout")
+    luastg_lift.set_defaults(func=cmd_luastg_lift)
+
+    luastg_norm = sub.add_parser("luastg-normalize", help="lift LuaSTG/THlib script and normalize to shared semantic IR JSON")
+    luastg_norm.add_argument("input")
+    luastg_norm.add_argument("--output", help="write JSON output to file instead of stdout")
+    luastg_norm.set_defaults(func=cmd_luastg_normalize)
+
+    luastg_compile = sub.add_parser("luastg-compile", help="compile normalized LuaSTG semantic objects to an ECL target draft")
+    luastg_compile.add_argument("input")
+    luastg_compile.add_argument("--target", required=True, choices=["th06", "th07", "th08", "th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"])
+    luastg_compile.add_argument("--kind", default="BulletEmitter", help="object kind, comma-separated kinds, or all")
+    luastg_compile.add_argument("--limit", type=int, help="compile only first N objects of the selected kind")
+    luastg_compile.add_argument("--output", help="write output to file instead of stdout")
+    luastg_compile.set_defaults(func=cmd_luastg_compile)
+
+    luastg_export = sub.add_parser("luastg-export", help="compile LuaSTG semantic IR to function-grouped ECL target draft")
+    luastg_export.add_argument("input")
+    luastg_export.add_argument("--target", required=True, choices=["th06", "th07", "th08", "th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"])
+    luastg_export.add_argument("--kind", default="all", help="object kind, comma-separated kinds, or all")
+    luastg_export.add_argument("--functions", help="comma-separated LuaSTG function names to export")
+    luastg_export.add_argument("--limit", type=int, help="compile only first N selected objects across exported functions")
+    luastg_export.add_argument("--output", help="write grouped ECL draft to file instead of stdout")
+    luastg_export.set_defaults(func=cmd_luastg_export)
 
     args = parser.parse_args(argv)
     return args.func(args)

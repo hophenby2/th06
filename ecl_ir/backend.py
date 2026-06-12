@@ -122,6 +122,33 @@ def emit_checked_instruction(target: str, opcode: int, args: list[object]) -> st
     return f"ins_{opcode}({', '.join(rendered)});"
 
 
+def as_float_expr(value: object) -> str:
+    text = str(value).strip()
+    if re.fullmatch(r"[-+]?\d+", text):
+        return f"{text}.0f"
+    text = re.sub(r"(?<![\w.])([-+]?\d+)(?![\w.])\s*/", lambda m: f"{m.group(1)}.0f /", text)
+    text = re.sub(r"/\s*\(?([-+]?\d+)\)?(?![\w.])", lambda m: f"/ _f({m.group(1)})", text)
+    text = re.sub(r"(?<![\w.])([-+]?\d+\.\d+)(?![\w.])", lambda m: m.group(1) + ("" if m.group(1).endswith("f") else "f"), text)
+    return text
+
+
+def as_int_expr(value: object):
+    if isinstance(value, dict):
+        result = dict(value)
+        difficulty = result.get("difficulty")
+        if isinstance(difficulty, dict):
+            result["difficulty"] = {rank: as_int_expr(item) for rank, item in difficulty.items()}
+        if "placeholder" in result:
+            result["placeholder"] = as_int_expr(result["placeholder"])
+        return result
+    text = str(value).strip()
+    text = re.sub(r"\[(-?\d+)\.0f\]", r"[\1]", text)
+    text = re.sub(r"%([A-Za-z][A-Za-z0-9_]*)", r"$\1", text)
+    if re.fullmatch(r"[-+]?\d+\.0f?", text):
+        return text.split(".")[0]
+    return text
+
+
 def normalize_target_args_for_op_key(op_key: str, target: str, args: list[str]) -> list[str]:
     normalized = [str(arg) for arg in args]
     if target == "th12" and op_key in {
@@ -451,6 +478,14 @@ def emit_th12_bullet_setup_lines(
     speed_step_value,
     speed_step: str,
 ) -> list[str]:
+    emitter_id = as_int_expr(emitter_id)
+    aim_raw_value = as_int_expr(aim_raw_value)
+    style_value = as_int_expr(style_value)
+    color_value = as_int_expr(color_value)
+    ways_value = as_int_expr(ways_value)
+    layers_value = as_int_expr(layers_value)
+    ways = as_int_expr(ways)
+    layers = as_int_expr(layers)
     lines: list[str] = [f"ins_500({emitter_id});"]
     lines.extend(emit_instruction_with_ranked_args(507, [emitter_id, aim_raw_value], ["0", "1"]))
     lines.extend(emit_instruction_with_ranked_args(502, [emitter_id, style_value, color_value], ["0", "0", "0"]))
@@ -459,7 +494,7 @@ def emit_th12_bullet_setup_lines(
         lines.append(f"ins_522({', '.join(count_args)});")
     else:
         lines.extend(emit_instruction_with_ranked_args(506, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
-    lines.extend(emit_instruction_with_ranked_args(504, [emitter_id, angle_value, angle_step_value], ["0", "0.0f", "0.0f"]))
+    lines.extend(emit_instruction_with_ranked_args(504, [emitter_id, as_float_expr(angle_value if angle_value is not None else "0.0f"), as_float_expr(angle_step_value if angle_step_value is not None else "0.0f")], ["0", "0.0f", "0.0f"]))
     speed_args = th12_difficulty_speed_args(emitter_id, speed_value, speed, speed_step_value, speed_step)
     if speed_args:
         lines.append(f"ins_521({', '.join(speed_args)});")
@@ -495,16 +530,43 @@ def target_flower_pair_from_semantics(e: BulletEmitter) -> tuple[str, str] | Non
     return th12_double_flower_pair(spread_semantics(e))
 
 
+def fire_at_definition(emitter: BulletEmitter) -> bool:
+    return bool(getattr(emitter, "semantics", {}).get("bullet", {}).get("fire_at_definition"))
+
+
+def append_definition_fire(text: str, emitter: BulletEmitter, target: str) -> str:
+    if not fire_at_definition(emitter):
+        return text
+    emitter_id = v(emitter.id, "0")
+    fire_opcode = {
+        "th10": 401, "th11": 401, "th12": 501,
+        "th13": 601, "th14": 601, "th15": 601, "th16": 601, "th17": 601, "th18": 601,
+    }.get(target)
+    if fire_opcode is None:
+        return text
+    lines = text.splitlines()
+    if any(re.search(rf"\bins_{fire_opcode}\s*\(\s*{re.escape(str(emitter_id))}\s*\)", line) for line in lines):
+        return text
+    lines.append(f"// LuaSTG direct bullet call lowered to target fire")
+    lines.append(f"ins_{fire_opcode}({emitter_id});")
+    aux_id = th12_aux_emitter_id(str(emitter_id)) if target == "th12" and target_flower_pair_from_semantics(emitter) else None
+    if aux_id:
+        lines.append(f"ins_{fire_opcode}({aux_id});")
+    return "\n".join(lines)
+
+
 def compile_bullet_emitter(emitter: BulletEmitter, target: str) -> str:
     if target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
-        return compile_th13plus(emitter)
-    if target == "th12":
-        return compile_th12(emitter)
-    if target in {"th10", "th11"}:
-        return compile_th10_slot(emitter, target)
-    if target in {"th06", "th07", "th08"}:
-        return compile_th08_macro(emitter, target)
-    raise ValueError(f"unsupported target backend: {target}")
+        compiled = compile_th13plus(emitter)
+    elif target == "th12":
+        compiled = compile_th12(emitter)
+    elif target in {"th10", "th11"}:
+        compiled = compile_th10_slot(emitter, target)
+    elif target in {"th06", "th07", "th08"}:
+        compiled = compile_th08_macro(emitter, target)
+    else:
+        raise ValueError(f"unsupported target backend: {target}")
+    return append_definition_fire(compiled, emitter, target)
 
 
 def compile_object(obj, target: str) -> str:
@@ -650,6 +712,12 @@ def compile_boss_pattern(obj, target: str) -> str:
 
 
 def compile_timeline(obj, target: str) -> str:
+    fields = getattr(obj, "fields", {}) or {}
+    if getattr(obj, "game", "") == "luastg" and fields.get("op") == "wait":
+        frames = str(fields.get("frames", "1"))
+        if target in {"th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"}:
+            return f"// LuaSTG wait lowering -> {target}\nins_83({frames});"
+        return f"// LuaSTG wait lowering -> {target}; old target wait syntax requires manual placement\n// wait {frames} frames"
     lines = [f"// Timeline lowering {obj.family} -> {target}; structure-preserving draft"]
     lines.append("// control-flow, async scheduling, and expression semantics require target-game verification")
     for event in obj.fields.get("statements", []):
@@ -931,7 +999,41 @@ def compile_motion_modifier(obj, target: str) -> str:
     return "\n".join(lines + compile_structured_preserve(obj, target, "motion modifier needs runtime state unavailable in target opcode").splitlines())
 
 
+def compile_luastg_laser(obj, target: str) -> str | None:
+    if getattr(obj, "game", "") != "luastg":
+        return None
+    params = (getattr(obj, "fields", {}) or {}).get("params", {}) or {}
+    laser_id = str(getattr(obj, "id", "0"))
+    style = str(params.get("style", laser_id)).strip()
+    length = str(params.get("length", "512.0f")).strip()
+    width = str(params.get("width", "16.0f")).strip()
+    warn = str(params.get("warn_time", "0")).strip()
+    fade_in = str(params.get("fade_in", "0")).strip()
+    active = str(params.get("active_time", "60")).strip()
+    fade_out = str(params.get("fade_out", "15")).strip()
+    angle = as_float_expr(params.get("angle", "0.0f"))
+    kind = str(params.get("kind", "line")).strip().strip('"\'')
+    if target == "th12":
+        fire_opcode = 611 if kind == "curve" else 602
+        return "\n".join([
+            f"// LuaSTG laser semantic lowering -> th12: {kind}",
+            f"ins_600({laser_id}, 0.0f, {length}, 0.0f, {width});",
+            f"ins_601({laser_id}, {warn}, {fade_in}, {active}, {fade_out}, 0);",
+            f"ins_608({laser_id}, {angle});",
+            f"ins_{fire_opcode}({laser_id});",
+        ])
+    if target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+        return "\n".join([
+            f"// LuaSTG laser semantic lowering -> {target}: preserved draft, opcode mapping incomplete",
+            f"// style={style} id={laser_id} length={length} width={width} angle={angle} timing={warn},{fade_in},{active},{fade_out} kind={kind}",
+        ])
+    return compile_raw_comment(obj, target) + f"\n// LuaSTG laser lowering to {target} is not implemented"
+
+
 def compile_laser(obj, target: str) -> str:
+    luastg_lowered = compile_luastg_laser(obj, target)
+    if luastg_lowered is not None:
+        return luastg_lowered
     if target in {"th06", "th07", "th08", "th10", "th11"}:
         return compile_raw_comment(obj, target) + f"\n// laser lowering to {target} is not implemented yet"
     if target not in {"th12", "th13", "th14", "th15", "th16", "th17", "th18"}:
@@ -1059,7 +1161,7 @@ def compile_th13plus(e: BulletEmitter) -> str:
     lines.extend(emit_instruction_with_ranked_args(607, [emitter_id, aim_raw_value], ["0", "1"]))
     lines.extend(emit_instruction_with_ranked_args(602, [emitter_id, style_value, color_value], ["0", "0", "0"]))
     lines.extend(emit_instruction_with_ranked_args(606, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
-    lines.extend(emit_instruction_with_ranked_args(604, [emitter_id, angle_value, angle_step_value], ["0", "0.0f", "0.0f"]))
+    lines.extend(emit_instruction_with_ranked_args(604, [emitter_id, as_float_expr(angle_value if angle_value is not None else "0.0f"), as_float_expr(angle_step_value if angle_step_value is not None else "0.0f")], ["0", "0.0f", "0.0f"]))
     lines.extend(emit_instruction_with_ranked_args(605, [emitter_id, speed_value, speed_step_value if speed_step_value is not None else e.speed.get("last_or_step")], ["0", "1.0f", e.speed.get("last_or_step", "0.0f")]))
     if args := sound_args(e, emitter_id):
         lines.append(emit_checked_instruction("th15", 608, args))
@@ -1241,7 +1343,7 @@ def compile_th10_slot(e: BulletEmitter, target: str) -> str:
     lines.extend(emit_instruction_with_ranked_args(407, [emitter_id, aim_raw_value], ["0", "1"]))
     lines.extend(emit_instruction_with_ranked_args(402, [emitter_id, style_value, color_value], ["0", "0", "0"]))
     lines.extend(emit_instruction_with_ranked_args(406, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
-    lines.extend(emit_instruction_with_ranked_args(404, [emitter_id, angle_value, angle_step_value], ["0", "0.0f", "0.0f"]))
+    lines.extend(emit_instruction_with_ranked_args(404, [emitter_id, as_float_expr(angle_value if angle_value is not None else "0.0f"), as_float_expr(angle_step_value if angle_step_value is not None else "0.0f")], ["0", "0.0f", "0.0f"]))
     lines.extend(emit_instruction_with_ranked_args(405, [emitter_id, speed_value, speed_step_value], ["0", "1.0f", "0.0f"]))
     append_sound_lines(lines, target, e, str(emitter_id))
     for transform in e.transforms:

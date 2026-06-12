@@ -1,0 +1,1586 @@
+// source LuaSTG: th062/ecl_ir_out/luastg_stage06_boss_thlib/ecl_stage06_boss_thlib.lua
+// target: th12
+// grouped semantic export: LuaSTG -> shared IR -> ECL draft
+// selected kinds Timeline,Movement,BulletEmitter,LaserEmitter,BossPattern; functions=50
+
+// LuaSTG function: ecl_Boss
+void ecl_Boss()
+{
+    // object Movement source_line=85 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(60, 4, 0.0, 112.0);
+    // object Movement source_line=89 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 112.0);
+}
+
+// LuaSTG function: ecl_Boss1
+void ecl_Boss1()
+{
+    // object Timeline source_line=109 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(10);
+    // object Timeline source_line=114 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Timeline source_line=118 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(70);
+    // object Timeline source_line=121 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Timeline source_line=125 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(70);
+}
+
+// LuaSTG function: ecl_Boss1_at1
+void ecl_Boss1_at1()
+{
+    var A;
+    // object BulletEmitter source_line=168 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=171 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=174 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=182 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(1);
+    ins_507(1, 3);
+    ins_502(1, 3, 6);
+    ins_522(1, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(1, %A, 0.0f);
+    ins_521(1, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+    // object BulletEmitter source_line=183 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(2);
+    ins_507(2, 3);
+    ins_502(2, 17, 3);
+    ins_522(2, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(2, %A, 0.0f);
+    ins_521(2, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(2);
+    // object BulletEmitter source_line=184 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=1.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(3);
+    ins_507(3, 3);
+    ins_502(3, 26, 1);
+    ins_522(3, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(3, %A, 0.0f);
+    ins_521(3, 3.0, 3.0, 4.0, 4.4, 1.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(3);
+    // object BulletEmitter source_line=189 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=192 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=195 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=202 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=203 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(1);
+    ins_507(1, 3);
+    ins_502(1, 3, 6);
+    ins_522(1, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(1, %A, 0.0f);
+    ins_521(1, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+    // object BulletEmitter source_line=204 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(2);
+    ins_507(2, 3);
+    ins_502(2, 17, 3);
+    ins_522(2, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(2, %A, 0.0f);
+    ins_521(2, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(2);
+    // object BulletEmitter source_line=205 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=1.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(3);
+    ins_507(3, 3);
+    ins_502(3, 26, 1);
+    ins_522(3, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(3, %A, 0.0f);
+    ins_521(3, 3.0, 3.0, 4.0, 4.4, 1.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(3);
+}
+
+// LuaSTG function: ecl_Boss1_at1b
+void ecl_Boss1_at1b()
+{
+    var A;
+    // object BulletEmitter source_line=253 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=256 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=259 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=267 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(1);
+    ins_507(1, 3);
+    ins_502(1, 3, 6);
+    ins_522(1, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(1, %A, 0.0f);
+    ins_521(1, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+    // object BulletEmitter source_line=268 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(2);
+    ins_507(2, 3);
+    ins_502(2, 17, 3);
+    ins_522(2, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(2, %A, 0.0f);
+    ins_521(2, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(2);
+    // object BulletEmitter source_line=269 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=1.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(3);
+    ins_507(3, 3);
+    ins_502(3, 26, 1);
+    ins_522(3, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(3, %A, 0.0f);
+    ins_521(3, 3.0, 3.0, 4.0, 4.4, 1.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(3);
+    // object BulletEmitter source_line=274 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=277 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=280 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=287 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 0, 6);
+    ins_522(0, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_521(0, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object BulletEmitter source_line=288 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(1);
+    ins_507(1, 3);
+    ins_502(1, 3, 6);
+    ins_522(1, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(1, %A, 0.0f);
+    ins_521(1, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+    // object BulletEmitter source_line=289 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=3.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(2);
+    ins_507(2, 3);
+    ins_502(2, 17, 3);
+    ins_522(2, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(2, %A, 0.0f);
+    ins_521(2, 3.0, 3.0, 4.0, 4.4, 3.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(2);
+    // object BulletEmitter source_line=290 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=6, N=12, H=14, L=14; preserved as TH12 difficulty table; default preview N=12
+    // difficulty speed.step: E=1.5, N=1.5, H=1.5, L=1.5; preserved as TH12 difficulty table; default preview N=1.5
+    // difficulty speed.first: E=3.0, N=3.0, H=4.0, L=4.4; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(3);
+    ins_507(3, 3);
+    ins_502(3, 26, 1);
+    ins_522(3, 6, 12, 14, 14, 1, 1, 1, 1);
+    ins_504(3, %A, 0.0f);
+    ins_521(3, 3.0, 3.0, 4.0, 4.4, 1.5, 1.5, 1.5, 1.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(3);
+}
+
+// LuaSTG function: ecl_Boss2
+void ecl_Boss2()
+{
+    // object Movement source_line=316 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 0.0);
+    // object Movement source_line=318 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(0, 0, 0.0, 0.0);
+    // object Movement source_line=336 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 112.0);
+    // object Movement source_line=337 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(60, 0, 0.0, 128.0);
+    // object Timeline source_line=339 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(90);
+    // object Timeline source_line=342 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(90);
+    // object Timeline source_line=365 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Timeline source_line=367 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(20);
+    // object Timeline source_line=372 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Timeline source_line=375 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(20);
+    // object Timeline source_line=377 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(20);
+    // object Timeline source_line=379 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(20);
+    // object Timeline source_line=381 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(20);
+    // object Timeline source_line=383 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Timeline source_line=386 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(100);
+    // object Timeline source_line=387 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(70);
+}
+
+// LuaSTG function: ecl_Boss2_at1
+void ecl_Boss2_at1()
+{
+    // object LaserEmitter source_line=408 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: line
+    ins_600(0, 0.0f, 512.0, 0.0f, 16.0);
+    ins_601(0, 60, 16, 60, 15, 0);
+    ins_608(0, 0.0f);
+    ins_602(0);
+    // object LaserEmitter source_line=414 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: line
+    ins_600(0, 0.0f, 512.0, 0.0f, 16.0);
+    ins_601(0, 60, 16, 60, 15, 0);
+    ins_608(0, 0.0f);
+    ins_602(0);
+    // object LaserEmitter source_line=420 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: line
+    ins_600(0, 0.0f, 512.0, 0.0f, 16.0);
+    ins_601(0, 60, 16, 60, 15, 0);
+    ins_608(0, 0.0f);
+    ins_602(0);
+    // object LaserEmitter source_line=426 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: line
+    ins_600(0, 0.0f, 512.0, 0.0f, 16.0);
+    ins_601(0, 60, 16, 60, 15, 0);
+    ins_608(0, 0.0f);
+    ins_602(0);
+}
+
+// LuaSTG function: ecl_Boss2_at1h
+void ecl_Boss2_at1h(var A)
+{
+    // object LaserEmitter source_line=448 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: line
+    ins_600(0, 0.0f, 512.0, 0.0f, 16.0);
+    ins_601(0, 60, 16, 60, 15, 0);
+    ins_608(0, 0.0f);
+    ins_602(0);
+    // object LaserEmitter source_line=455 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: line
+    ins_600(0, 0.0f, 512.0, 0.0f, 16.0);
+    ins_601(0, 60, 16, 60, 15, 0);
+    ins_608(0, 0.0f);
+    ins_602(0);
+    // object LaserEmitter source_line=462 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: line
+    ins_600(0, 0.0f, 512.0, 0.0f, 16.0);
+    ins_601(0, 60, 16, 60, 15, 0);
+    ins_608(0, 0.0f);
+    ins_602(0);
+    // object LaserEmitter source_line=469 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: line
+    ins_600(0, 0.0f, 512.0, 0.0f, 16.0);
+    ins_601(0, 60, 16, 60, 15, 0);
+    ins_608(0, 0.0f);
+    ins_602(0);
+}
+
+// LuaSTG function: ecl_Boss2_at2
+void ecl_Boss2_at2()
+{
+    var D;
+    // object Timeline source_line=477 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object BulletEmitter source_line=493 family=ecl_shot
+    ins_500(1);
+    ins_507(1, 0);
+    ins_502(1, 29, 0);
+    ins_506(1, $D, 1);
+    ins_504(1, 0.0f / _f(5), 3.1415927f / _f($D));
+    ins_505(1, 5.0, 3.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+}
+
+// LuaSTG function: ecl_Boss3
+void ecl_Boss3()
+{
+    // object Movement source_line=526 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 0.0);
+    // object Movement source_line=528 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(0, 0, 0.0, 0.0);
+    // object Timeline source_line=581 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(120);
+    // object Movement source_line=604 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(60, 0, 0.0, 128.0);
+    // object Timeline source_line=606 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Movement source_line=608 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 96.0);
+    // object Timeline source_line=613 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Timeline source_line=620 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(20);
+}
+
+// LuaSTG function: ecl_Boss3_at1
+void ecl_Boss3_at1()
+{
+    var A;
+    // object BulletEmitter source_line=646 family=ecl_shot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 7, 4);
+    ins_506(0, 1, 5);
+    ins_504(0, %A, %A);
+    ins_505(0, 3.0, 2.7);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object Timeline source_line=648 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+}
+
+// LuaSTG function: ecl_Boss3_at1e1
+void ecl_Boss3_at1e1()
+{
+    var A;
+    // object BulletEmitter source_line=674 family=ecl_shot
+    ins_500(1);
+    ins_507(1, 1);
+    ins_502(1, 7, 13);
+    ins_506(1, 1, 5);
+    ins_504(1, %A, %A);
+    ins_505(1, 1.0, 0.7);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+}
+
+// LuaSTG function: ecl_Boss3_at1e2
+void ecl_Boss3_at1e2()
+{
+    var A;
+    // object BulletEmitter source_line=703 family=ecl_shot
+    ins_500(2);
+    ins_507(2, 1);
+    ins_502(2, 7, 13);
+    ins_506(2, 1, 5);
+    ins_504(2, %A, %A);
+    ins_505(2, 1.0, 0.7);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(2);
+}
+
+// LuaSTG function: ecl_Boss3_at1e3
+void ecl_Boss3_at1e3()
+{
+    var A;
+    // object BulletEmitter source_line=732 family=ecl_shot
+    ins_500(3);
+    ins_507(3, 1);
+    ins_502(3, 7, 2);
+    ins_506(3, 1, 5);
+    ins_504(3, %A, %A);
+    ins_505(3, 1.0, 0.7);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(3);
+}
+
+// LuaSTG function: ecl_Boss3_at1e4
+void ecl_Boss3_at1e4()
+{
+    var A;
+    // object BulletEmitter source_line=762 family=ecl_shot
+    ins_500(4);
+    ins_507(4, 1);
+    ins_502(4, 7, 2);
+    ins_506(4, 1, 5);
+    ins_504(4, %A, %A);
+    ins_505(4, 1.0, 0.7);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(4);
+}
+
+// LuaSTG function: ecl_Boss4
+void ecl_Boss4()
+{
+    // object Movement source_line=798 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 0.0);
+    // object Movement source_line=800 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(0, 0, 0.0, 0.0);
+    // object Timeline source_line=853 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(120);
+    // object Movement source_line=876 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(120, 0, 0.0, 96.0);
+    // object Timeline source_line=878 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Timeline source_line=884 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Timeline source_line=885 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Timeline source_line=892 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(40);
+    // object Timeline source_line=894 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(40);
+    // object Timeline source_line=896 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(40);
+    // object Timeline source_line=898 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(40);
+    // object Timeline source_line=903 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(40);
+    // object Timeline source_line=905 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(40);
+    // object Timeline source_line=907 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(40);
+    // object Timeline source_line=909 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(40);
+}
+
+// LuaSTG function: ecl_Boss4_at1
+void ecl_Boss4_at1()
+{
+    var A;
+    // object BulletEmitter source_line=933 family=ecl_shot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 7, 4);
+    ins_506(0, 1, 1);
+    ins_504(0, %A, %A);
+    ins_505(0, 3.0, 2.7);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object Timeline source_line=935 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+}
+
+// LuaSTG function: ecl_Boss4_at1e1
+void ecl_Boss4_at1e1()
+{
+    var A;
+    // object BulletEmitter source_line=963 family=ecl_shot
+    ins_500(1);
+    ins_507(1, 1);
+    ins_502(1, 7, 13);
+    ins_506(1, 1, 3);
+    ins_504(1, %A, %A);
+    ins_505(1, 1.2, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+    // object Timeline source_line=966 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+    // object BulletEmitter source_line=978 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=5, L=7; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.2, H=1.2, L=1.2; preserved as TH12 difficulty table; default preview N=1.2
+    // difficulty speed.first: E=3.0, N=3.0, H=3.0, L=5.0; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(1);
+    ins_507(1, 0);
+    ins_502(1, 17, 1);
+    ins_522(1, 1, 1, 1, 1, 1, 1, 5, 7);
+    ins_504(1, 0.0f, 0.0f);
+    ins_521(1, 3.0, 3.0, 3.0, 5.0, 1.2, 1.2, 1.2, 1.2);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+}
+
+// LuaSTG function: ecl_Boss4_at1e2
+void ecl_Boss4_at1e2()
+{
+    var A;
+    // object BulletEmitter source_line=1005 family=ecl_shot
+    ins_500(2);
+    ins_507(2, 1);
+    ins_502(2, 7, 13);
+    ins_506(2, 1, 3);
+    ins_504(2, %A, %A);
+    ins_505(2, 1.2, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(2);
+    // object Timeline source_line=1008 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+    // object BulletEmitter source_line=1020 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=5, L=7; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.2, H=1.2, L=1.2; preserved as TH12 difficulty table; default preview N=1.2
+    // difficulty speed.first: E=3.0, N=3.0, H=3.0, L=5.0; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(2);
+    ins_507(2, 0);
+    ins_502(2, 17, 1);
+    ins_522(2, 1, 1, 1, 1, 1, 1, 5, 7);
+    ins_504(2, 0.0f, 0.0f);
+    ins_521(2, 3.0, 3.0, 3.0, 5.0, 1.2, 1.2, 1.2, 1.2);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(2);
+}
+
+// LuaSTG function: ecl_Boss4_at1e3
+void ecl_Boss4_at1e3()
+{
+    var A;
+    // object BulletEmitter source_line=1047 family=ecl_shot
+    ins_500(3);
+    ins_507(3, 1);
+    ins_502(3, 7, 2);
+    ins_506(3, 1, 3);
+    ins_504(3, %A, %A);
+    ins_505(3, 1.2, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(3);
+    // object Timeline source_line=1050 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+    // object BulletEmitter source_line=1062 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=5, L=7; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.2, H=1.2, L=1.2; preserved as TH12 difficulty table; default preview N=1.2
+    // difficulty speed.first: E=3.0, N=3.0, H=3.0, L=5.0; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(3);
+    ins_507(3, 0);
+    ins_502(3, 17, 1);
+    ins_522(3, 1, 1, 1, 1, 1, 1, 5, 7);
+    ins_504(3, 0.0f, 0.0f);
+    ins_521(3, 3.0, 3.0, 3.0, 5.0, 1.2, 1.2, 1.2, 1.2);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(3);
+}
+
+// LuaSTG function: ecl_Boss4_at1e4
+void ecl_Boss4_at1e4()
+{
+    var A;
+    // object BulletEmitter source_line=1089 family=ecl_shot
+    ins_500(4);
+    ins_507(4, 1);
+    ins_502(4, 7, 2);
+    ins_506(4, 1, 3);
+    ins_504(4, %A, %A);
+    ins_505(4, 1.2, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(4);
+    // object Timeline source_line=1092 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+    // object BulletEmitter source_line=1104 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=5, L=7; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.2, H=1.2, L=1.2; preserved as TH12 difficulty table; default preview N=1.2
+    // difficulty speed.first: E=3.0, N=3.0, H=3.0, L=5.0; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(4);
+    ins_507(4, 0);
+    ins_502(4, 17, 1);
+    ins_522(4, 1, 1, 1, 1, 1, 1, 5, 7);
+    ins_504(4, 0.0f, 0.0f);
+    ins_521(4, 3.0, 3.0, 3.0, 5.0, 1.2, 1.2, 1.2, 1.2);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(4);
+}
+
+// LuaSTG function: ecl_Boss5
+void ecl_Boss5()
+{
+    // object Movement source_line=1137 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 0.0);
+    // object Movement source_line=1139 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(0, 0, 0.0, 0.0);
+    // object Movement source_line=1191 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(60, 0, 0.0, 128.0);
+    // object Timeline source_line=1193 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(120);
+    // object Movement source_line=1194 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 112.0);
+}
+
+// LuaSTG function: ecl_Boss6
+void ecl_Boss6()
+{
+    // object Movement source_line=1226 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 0.0);
+    // object Movement source_line=1228 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(0, 0, 0.0, 0.0);
+    // object Movement source_line=1247 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(60, 0, 0.0, 128.0);
+    // object Timeline source_line=1249 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(120);
+    // object Movement source_line=1250 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 112.0);
+}
+
+// LuaSTG function: ecl_BossCard1
+void ecl_BossCard1()
+{
+    // object Movement source_line=1267 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 0.0);
+    // object Movement source_line=1269 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(0, 0, 0.0, 0.0);
+    // object Movement source_line=1279 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(60, 4, 0.0, 160.0);
+    // object Movement source_line=1281 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 128.0);
+    // object Timeline source_line=1285 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Movement source_line=1286 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(200, 4, 0.0, 128.0);
+    // object Timeline source_line=1294 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(230);
+    // object Timeline source_line=1296 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(70);
+    // object Timeline source_line=1299 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1000);
+}
+
+// LuaSTG function: ecl_BossCard1_at1
+void ecl_BossCard1_at1()
+{
+    var A;
+    // object BulletEmitter source_line=1322 family=ecl_shot
+    // difficulty count.layers: E=2, N=4, H=4, L=4; preserved as TH12 difficulty table; default preview N=4
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.0, H=1.0, L=1.0; preserved as TH12 difficulty table; default preview N=1.0
+    // difficulty speed.first: E=2.0, N=2.2, H=2.5, L=2.5; preserved as TH12 difficulty table; default preview N=2.2
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 29, 0);
+    ins_522(0, 1, 1, 1, 1, 2, 4, 4, 4);
+    ins_504(0, %A, 0.18479957f);
+    ins_521(0, 2.0, 2.2, 2.5, 2.5, 1.2, 1.0, 1.0, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object Timeline source_line=1325 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(2);
+    // object BulletEmitter source_line=1331 family=ecl_shot
+    // difficulty count.layers: E=2, N=4, H=4, L=4; preserved as TH12 difficulty table; default preview N=4
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.0, H=1.0, L=1.0; preserved as TH12 difficulty table; default preview N=1.0
+    // difficulty speed.first: E=2.0, N=2.2, H=2.5, L=2.5; preserved as TH12 difficulty table; default preview N=2.2
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 29, 0);
+    ins_522(0, 1, 1, 1, 1, 2, 4, 4, 4);
+    ins_504(0, %A, 0.18479957f);
+    ins_521(0, 2.0, 2.2, 2.5, 2.5, 1.2, 1.0, 1.0, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object Timeline source_line=1334 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+}
+
+// LuaSTG function: ecl_BossCard1_at1h
+void ecl_BossCard1_at1h()
+{
+    var A;
+    // object BulletEmitter source_line=1357 family=ecl_shot
+    // difficulty count.layers: E=2, N=4, H=4, L=4; preserved as TH12 difficulty table; default preview N=4
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.0, H=1.0, L=1.0; preserved as TH12 difficulty table; default preview N=1.0
+    // difficulty speed.first: E=2.0, N=2.5, H=2.5, L=2.5; preserved as TH12 difficulty table; default preview N=2.5
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 29, 0);
+    ins_522(0, 1, 1, 1, 1, 2, 4, 4, 4);
+    ins_504(0, %A, 0.007853982f);
+    ins_521(0, 2.0, 2.5, 2.5, 2.5, 1.2, 1.0, 1.0, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object Timeline source_line=1360 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(2);
+    // object BulletEmitter source_line=1366 family=ecl_shot
+    // difficulty count.layers: E=2, N=4, H=4, L=4; preserved as TH12 difficulty table; default preview N=4
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.0, H=1.0, L=1.0; preserved as TH12 difficulty table; default preview N=1.0
+    // difficulty speed.first: E=2.0, N=2.5, H=2.5, L=2.5; preserved as TH12 difficulty table; default preview N=2.5
+    ins_500(0);
+    ins_507(0, 3);
+    ins_502(0, 29, 0);
+    ins_522(0, 1, 1, 1, 1, 2, 4, 4, 4);
+    ins_504(0, %A, 0.007853982f);
+    ins_521(0, 2.0, 2.5, 2.5, 2.5, 1.2, 1.0, 1.0, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object Timeline source_line=1369 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+}
+
+// LuaSTG function: ecl_BossCard1_at2
+void ecl_BossCard1_at2()
+{
+    var A;
+    // object BulletEmitter source_line=1391 family=ecl_shot
+    // difficulty count.layers: E=2, N=4, H=4, L=4; preserved as TH12 difficulty table; default preview N=4
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=0.6, N=0.5, H=0.5, L=0.5; preserved as TH12 difficulty table; default preview N=0.5
+    // difficulty speed.first: E=1.3, N=1.3, H=1.6, L=1.6; preserved as TH12 difficulty table; default preview N=1.3
+    ins_500(1);
+    ins_507(1, 3);
+    ins_502(1, 28, 4);
+    ins_522(1, 1, 1, 1, 1, 2, 4, 4, 4);
+    ins_504(1, %A, 0.14279966f);
+    ins_521(1, 1.3, 1.3, 1.6, 1.6, 0.6, 0.5, 0.5, 0.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+    // object Timeline source_line=1394 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(2);
+    // object BulletEmitter source_line=1400 family=ecl_shot
+    // difficulty count.layers: E=2, N=4, H=4, L=4; preserved as TH12 difficulty table; default preview N=4
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=0.6, N=0.5, H=0.5, L=0.5; preserved as TH12 difficulty table; default preview N=0.5
+    // difficulty speed.first: E=1.3, N=1.3, H=1.6, L=1.6; preserved as TH12 difficulty table; default preview N=1.3
+    ins_500(1);
+    ins_507(1, 3);
+    ins_502(1, 28, 4);
+    ins_522(1, 1, 1, 1, 1, 2, 4, 4, 4);
+    ins_504(1, %A, 0.1308997f);
+    ins_521(1, 1.3, 1.3, 1.6, 1.6, 0.6, 0.5, 0.5, 0.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+    // object Timeline source_line=1403 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+}
+
+// LuaSTG function: ecl_BossCard1_at2h
+void ecl_BossCard1_at2h()
+{
+    var A;
+    // object BulletEmitter source_line=1425 family=ecl_shot
+    // difficulty count.layers: E=2, N=4, H=4, L=4; preserved as TH12 difficulty table; default preview N=4
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=0.6, N=0.5, H=0.5, L=0.5; preserved as TH12 difficulty table; default preview N=0.5
+    // difficulty speed.first: E=1.3, N=1.6, H=1.6, L=1.6; preserved as TH12 difficulty table; default preview N=1.6
+    ins_500(1);
+    ins_507(1, 3);
+    ins_502(1, 28, 4);
+    ins_522(1, 1, 1, 1, 1, 2, 4, 4, 4);
+    ins_504(1, %A, 0.14279966f);
+    ins_521(1, 1.3, 1.6, 1.6, 1.6, 0.6, 0.5, 0.5, 0.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+    // object Timeline source_line=1428 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(2);
+    // object BulletEmitter source_line=1434 family=ecl_shot
+    // difficulty count.layers: E=2, N=4, H=4, L=4; preserved as TH12 difficulty table; default preview N=4
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=0.6, N=0.5, H=0.5, L=0.5; preserved as TH12 difficulty table; default preview N=0.5
+    // difficulty speed.first: E=1.3, N=1.6, H=1.6, L=1.6; preserved as TH12 difficulty table; default preview N=1.6
+    ins_500(1);
+    ins_507(1, 3);
+    ins_502(1, 28, 4);
+    ins_522(1, 1, 1, 1, 1, 2, 4, 4, 4);
+    ins_504(1, %A, 0.1308997f);
+    ins_521(1, 1.3, 1.6, 1.6, 1.6, 0.6, 0.5, 0.5, 0.5);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+    // object Timeline source_line=1437 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+}
+
+// LuaSTG function: ecl_BossCard2
+void ecl_BossCard2()
+{
+    // object Movement source_line=1454 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 0.0);
+    // object Movement source_line=1456 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(0, 0, 0.0, 0.0);
+    // object Movement source_line=1463 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(60, 4, 0.0, 192.0);
+    // object Timeline source_line=1477 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+    // object Timeline source_line=1480 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1000);
+}
+
+// LuaSTG function: ecl_BossCard2_at1
+void ecl_BossCard2_at1(var A, var B, var C)
+{
+    // object BulletEmitter source_line=1500 family=ecl_shot
+    // difficulty count.layers: E=1, N=3, H=3, L=3; preserved as TH12 difficulty table; default preview N=3
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.0, N=1.0, H=1.0, L=1.0; preserved as TH12 difficulty table; default preview N=1.0
+    // difficulty speed.first: E=2.0, N=2.0, H=2.8, L=2.8; preserved as TH12 difficulty table; default preview N=2.0
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 21, 3);
+    ins_522(0, 1, 1, 1, 1, 1, 3, 3, 3);
+    ins_504(0, %A, 0.28559932f);
+    ins_521(0, 2.0, 2.0, 2.8, 2.8, 1.0, 1.0, 1.0, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+}
+
+// LuaSTG function: ecl_BossCard2_at2
+void ecl_BossCard2_at2()
+{
+    // object LaserEmitter source_line=1519 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: line
+    ins_600(0, 0.0f, 512.0, 0.0f, 16.0);
+    ins_601(0, 60, 16, 30, 15, 0);
+    ins_608(0, 0.0f);
+    ins_602(0);
+}
+
+// LuaSTG function: ecl_BossCard3
+void ecl_BossCard3()
+{
+    // object Movement source_line=1537 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 0.0);
+    // object Movement source_line=1539 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(0, 0, 0.0, 0.0);
+    // object Movement source_line=1548 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(60, 4, 0.0, 192.0);
+    // object Timeline source_line=1561 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(160);
+}
+
+// LuaSTG function: ecl_BossCard3_at
+void ecl_BossCard3_at()
+{
+    var A;
+    // object Timeline source_line=1570 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(300);
+    // object BulletEmitter source_line=1587 family=ecl_shot
+    ins_500(2);
+    ins_507(2, 0);
+    ins_502(2, 15, 6);
+    ins_506(2, 1, 1);
+    ins_504(2, 0.0f, 0.28559932f);
+    ins_505(2, 2.5, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(2);
+    // object BulletEmitter source_line=1588 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=5, L=7; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.2, H=1.2, L=1.2; preserved as TH12 difficulty table; default preview N=1.2
+    // difficulty speed.first: E=3.0, N=3.0, H=3.0, L=5.0; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(3);
+    ins_507(3, 0);
+    ins_502(3, 17, 1);
+    ins_522(3, 1, 1, 1, 1, 1, 1, 5, 7);
+    ins_504(3, 0.0f, 0.0f);
+    ins_521(3, 3.0, 3.0, 3.0, 5.0, 1.2, 1.2, 1.2, 1.2);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(3);
+    // object BulletEmitter source_line=1589 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=5, L=7; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.2, H=1.2, L=1.2; preserved as TH12 difficulty table; default preview N=1.2
+    // difficulty speed.first: E=3.0, N=3.0, H=3.0, L=5.0; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(4);
+    ins_507(4, 0);
+    ins_502(4, 17, 1);
+    ins_522(4, 1, 1, 1, 1, 1, 1, 5, 7);
+    ins_504(4, 0.0f, 0.0f);
+    ins_521(4, 3.0, 3.0, 3.0, 5.0, 1.2, 1.2, 1.2, 1.2);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(4);
+    // object BulletEmitter source_line=1590 family=ecl_shot
+    ins_500(5);
+    ins_507(5, 3);
+    ins_502(5, 1, 0);
+    ins_506(5, 1, 1);
+    ins_504(5, 0.0f, 0.0f);
+    ins_505(5, 1.0, 0.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(5);
+    // object Timeline source_line=1591 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83($A);
+}
+
+// LuaSTG function: ecl_BossCard3_at2
+void ecl_BossCard3_at2()
+{
+    // object LaserEmitter source_line=1624 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: curve
+    ins_600(0, 0.0f, -1.0, 0.0f, 16.0);
+    ins_601(0, 32, -1, -1, -1, 0);
+    ins_608(0, 0.0f);
+    ins_611(0);
+    // object LaserEmitter source_line=1636 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: curve
+    ins_600(0, 0.0f, -1.0, 0.0f, 16.0);
+    ins_601(0, 32, -1, -1, -1, 0);
+    ins_608(0, 0.0f);
+    ins_611(0);
+}
+
+// LuaSTG function: ecl_BossCard3_at2b
+void ecl_BossCard3_at2b()
+{
+    // object Timeline source_line=1662 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(40);
+    // object LaserEmitter source_line=1671 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: curve
+    ins_600(0, 0.0f, -1.0, 0.0f, 16.0);
+    ins_601(0, 32, -1, -1, -1, 0);
+    ins_608(0, 0.0f);
+    ins_611(0);
+    // object LaserEmitter source_line=1683 family=ecl_laser
+    // LuaSTG laser semantic lowering -> th12: curve
+    ins_600(0, 0.0f, -1.0, 0.0f, 16.0);
+    ins_601(0, 32, -1, -1, -1, 0);
+    ins_608(0, 0.0f);
+    ins_611(0);
+}
+
+// LuaSTG function: ecl_BossCard4
+void ecl_BossCard4()
+{
+    // object Movement source_line=1704 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 0.0);
+    // object Movement source_line=1706 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(0, 0, 0.0, 0.0);
+    // object Movement source_line=1716 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(60, 4, 0.0, 224.0);
+    // object Timeline source_line=1741 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(120);
+    // object Movement source_line=1744 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(60, 4, 0.0, 128.0);
+    // object Timeline source_line=1754 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(160);
+}
+
+// LuaSTG function: ecl_BossCard4_at
+void ecl_BossCard4_at()
+{
+    var A, C, B;
+    // object BulletEmitter source_line=1787 family=ecl_shot
+    ins_500(2);
+    ins_507(2, 1);
+    ins_502(2, 11, 6);
+    ins_506(2, 2, 1);
+    ins_504(2, %A, %C);
+    ins_505(2, 6.5, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(2);
+    // object BulletEmitter source_line=1788 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=5, L=7; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.2, H=1.2, L=1.2; preserved as TH12 difficulty table; default preview N=1.2
+    // difficulty speed.first: E=3.0, N=3.0, H=3.0, L=5.0; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(3);
+    ins_507(3, 0);
+    ins_502(3, 17, 1);
+    ins_522(3, 1, 1, 1, 1, 1, 1, 5, 7);
+    ins_504(3, %B, %C);
+    ins_521(3, 3.0, 3.0, 3.0, 5.0, 1.2, 1.2, 1.2, 1.2);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(3);
+    // object BulletEmitter source_line=1789 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=5, L=7; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.2, N=1.2, H=1.2, L=1.2; preserved as TH12 difficulty table; default preview N=1.2
+    // difficulty speed.first: E=3.0, N=3.0, H=3.0, L=5.0; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(4);
+    ins_507(4, 0);
+    ins_502(4, 17, 1);
+    ins_522(4, 1, 1, 1, 1, 1, 1, 5, 7);
+    ins_504(4, %A, %C);
+    ins_521(4, 3.0, 3.0, 3.0, 5.0, 1.2, 1.2, 1.2, 1.2);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(4);
+    // object BulletEmitter source_line=1790 family=ecl_shot
+    ins_500(5);
+    ins_507(5, 3);
+    ins_502(5, 1, 0);
+    ins_506(5, 1, 1);
+    ins_504(5, %B, %C);
+    ins_505(5, 1.0, 0.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(5);
+    // object Timeline source_line=1791 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(3);
+    // object BulletEmitter source_line=1821 family=ecl_shot
+    ins_500(2);
+    ins_507(2, 1);
+    ins_502(2, 11, 6);
+    ins_506(2, 3, 1);
+    ins_504(2, %A, 1.0471976f);
+    ins_505(2, 6.5, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(2);
+    // object BulletEmitter source_line=1822 family=ecl_shot
+    // difficulty speed.step: E=1.2, N=1.2, H=1.2, L=1.2; preserved as TH12 difficulty table; default preview N=1.2
+    // difficulty speed.first: E=3.0, N=3.0, H=3.0, L=5.0; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(3);
+    ins_507(3, 0);
+    ins_502(3, 17, 1);
+    ins_506(3, 3, 1);
+    ins_504(3, %B, 1.0471976f);
+    ins_521(3, 3.0, 3.0, 3.0, 5.0, 1.2, 1.2, 1.2, 1.2);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(3);
+    // object BulletEmitter source_line=1823 family=ecl_shot
+    // difficulty speed.step: E=1.2, N=1.2, H=1.2, L=1.2; preserved as TH12 difficulty table; default preview N=1.2
+    // difficulty speed.first: E=3.0, N=3.0, H=3.0, L=5.0; preserved as TH12 difficulty table; default preview N=3.0
+    ins_500(4);
+    ins_507(4, 0);
+    ins_502(4, 17, 1);
+    ins_506(4, 3, 1);
+    ins_504(4, %B, 1.0471976f);
+    ins_521(4, 3.0, 3.0, 3.0, 5.0, 1.2, 1.2, 1.2, 1.2);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(4);
+    // object BulletEmitter source_line=1824 family=ecl_shot
+    ins_500(5);
+    ins_507(5, 3);
+    ins_502(5, 1, 0);
+    ins_506(5, 3, 1);
+    ins_504(5, %A, 1.0471976f);
+    ins_505(5, 1.0, 0.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(5);
+    // object Timeline source_line=1825 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(3);
+}
+
+// LuaSTG function: ecl_BossCard4_at2
+void ecl_BossCard4_at2()
+{
+    var A;
+    // object Timeline source_line=1835 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(120);
+    // object BulletEmitter source_line=1854 family=ecl_shot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 17, 2);
+    ins_506(0, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_505(0, 2.5, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object Timeline source_line=1859 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(5);
+    // object Timeline source_line=1862 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(120);
+    // object BulletEmitter source_line=1869 family=ecl_shot
+    ins_500(0);
+    ins_507(0, 1);
+    ins_502(0, 17, 2);
+    ins_506(0, 1, 1);
+    ins_504(0, %A, 0.0f);
+    ins_505(0, 2.5, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+    // object Timeline source_line=1874 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(5);
+    // object Timeline source_line=1877 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(120);
+}
+
+// LuaSTG function: ecl_BossCard4_at3
+void ecl_BossCard4_at3()
+{
+    // object BulletEmitter source_line=1896 family=ecl_shot
+    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
+    // difficulty count.ways: E=1, N=1, H=3, L=3; preserved as TH12 difficulty table; default preview N=1
+    // difficulty speed.step: E=1.0, N=1.0, H=1.0, L=1.0; preserved as TH12 difficulty table; default preview N=1.0
+    // difficulty speed.first: E=2.0, N=2.0, H=2.5, L=3.0; preserved as TH12 difficulty table; default preview N=2.0
+    ins_500(1);
+    ins_507(1, 0);
+    ins_502(1, 26, 0);
+    ins_522(1, 1, 1, 3, 3, 1, 1, 1, 1);
+    ins_504(1, 0.0f, 0.7853982f);
+    ins_521(1, 2.0, 2.0, 2.5, 3.0, 1.0, 1.0, 1.0, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(1);
+    // object Timeline source_line=1898 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+}
+
+// LuaSTG function: ecl_BossCard4_at4
+void ecl_BossCard4_at4()
+{
+    // object Timeline source_line=1930 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(32000);
+}
+
+// LuaSTG function: ecl_BossCard4_at5
+void ecl_BossCard4_at5()
+{
+    var A;
+    // object BulletEmitter source_line=1968 family=ecl_shot
+    ins_500(6);
+    ins_507(6, 0);
+    ins_502(6, 17, 3);
+    ins_506(6, 1, 1);
+    ins_504(6, %A, 0.0f);
+    ins_505(6, 2.5, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(6);
+    // object Timeline source_line=1970 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+}
+
+// LuaSTG function: ecl_BossCard4_at6
+void ecl_BossCard4_at6()
+{
+    // object BulletEmitter source_line=1989 family=ecl_shot
+    ins_500(7);
+    ins_507(7, 3);
+    ins_502(7, 3, 1);
+    ins_506(7, 16, 1);
+    ins_504(7, 0.0f, 0.28559932f);
+    ins_505(7, 3.0, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(7);
+    // object Timeline source_line=1990 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(20);
+}
+
+// LuaSTG function: ecl_BossCard4_at7
+void ecl_BossCard4_at7()
+{
+    var B;
+    // object BulletEmitter source_line=2019 family=ecl_shot
+    ins_500(7);
+    ins_507(7, 1);
+    ins_502(7, 17, 1);
+    ins_506(7, 1, 1);
+    ins_504(7, 1.5707964f, 0.28559932f);
+    ins_505(7, (%B / 64.0) + ([-9999.0f] * 0.5), 0.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(7);
+    // object Timeline source_line=2020 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(10);
+    // object BulletEmitter source_line=2033 family=ecl_shot
+    ins_500(7);
+    ins_507(7, 1);
+    ins_502(7, 17, 1);
+    ins_506(7, 1, 1);
+    ins_504(7, 1.5707964f, 0.28559932f);
+    ins_505(7, (%B / 64.0) + ([-9999.0f] * 0.5), 0.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(7);
+    // object Timeline source_line=2034 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(10);
+}
+
+// LuaSTG function: ecl_BossCard5
+void ecl_BossCard5()
+{
+    var F, C, B;
+    // object Movement source_line=2051 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 0.0);
+    // object Movement source_line=2053 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(0, 0, 0.0, 0.0);
+    // object Movement source_line=2058 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(120, 4, 160.0, 128.0);
+    // object Timeline source_line=2067 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Movement source_line=2083 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301($F, 4, %C, %B);
+    // object Timeline source_line=2085 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83($F);
+    // object Movement source_line=2109 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301($F, 4, %C, %B);
+    // object Timeline source_line=2111 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83($F);
+    // object Movement source_line=2141 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301($F, 4, %C, %B);
+    // object Timeline source_line=2143 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83($F);
+    // object Movement source_line=2168 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301($F, 4, %C, %B);
+    // object Timeline source_line=2170 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83($F);
+}
+
+// LuaSTG function: ecl_BossCard5_at
+void ecl_BossCard5_at(var A, var B, var C, var D)
+{
+    var K;
+    // object BulletEmitter source_line=2226 family=ecl_shot
+    ins_500(0);
+    ins_507(0, 0);
+    ins_502(0, 3, 6);
+    ins_506(0, 1, 1);
+    ins_504(0, %K, 0.0f);
+    ins_505(0, 0.0, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501(0);
+}
+
+// LuaSTG function: ecl_BossCard6
+void ecl_BossCard6()
+{
+    var G;
+    // object Movement source_line=2246 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304(0.0, 0.0);
+    // object Movement source_line=2248 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(0, 0, 0.0, 0.0);
+    // object Movement source_line=2253 family=task.MoveTo
+    // movement lowering task.MoveTo -> th12: movement.position.tween -> ins_301
+    ins_301(120, 4, 0.0, 128.0);
+    // object Timeline source_line=2261 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Timeline source_line=2284 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(60);
+    // object Timeline source_line=2325 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83($G);
+}
+
+// LuaSTG function: ecl_BossCard6_at
+void ecl_BossCard6_at(var A, var B, var C, var D, var E, var F, var G)
+{
+    // object BulletEmitter source_line=2412 family=ecl_shot
+    // difficulty speed.step: E=1.0, N=1.0, H=1.0, L=1.0; preserved as TH12 difficulty table; default preview N=1.0
+    // difficulty speed.first: E=1.5, N=1.5, H=1.7, L=1.8; preserved as TH12 difficulty table; default preview N=1.5
+    ins_500($A);
+    ins_507($A, 3);
+    ins_502($A, 10, [-9985]);
+    ins_506($A, $E, 1);
+    ins_504($A, 0.0f, 0.62831855f);
+    ins_521($A, 1.5, 1.5, 1.7, 1.8, 1.0, 1.0, 1.0, 1.0);
+    // LuaSTG direct bullet call lowered to target fire
+    ins_501($A);
+}
+
+// LuaSTG function: ecl_BossCard6_atLine
+void ecl_BossCard6_atLine()
+{
+    // object Timeline source_line=2425 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(14);
+    // object Movement source_line=2426 family=SetV2
+    // movement lowering SetV2 -> th12: movement.velocity.set -> ins_304
+    ins_304([-9981.0f], [-9980.0f]);
+    // object Timeline source_line=2429 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1000);
+}
+
+// LuaSTG function: ecl_BossEyes
+void ecl_BossEyes()
+{
+    // object Timeline source_line=2471 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+}
+
+// LuaSTG function: ecl_BossEyes2
+void ecl_BossEyes2()
+{
+    // object Timeline source_line=2490 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(100);
+    // object Timeline source_line=2526 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+}
+
+// LuaSTG function: ecl_HPWait
+void ecl_HPWait(var A, var B)
+{
+    // object Timeline source_line=2541 family=wait
+    // LuaSTG wait lowering -> th12
+    ins_83(1);
+}
