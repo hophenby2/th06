@@ -9,6 +9,7 @@ from pathlib import Path
 from .backend import choose_difficulty, compile_bullet_emitter, compile_object, first_difficulty_group, normalize_difficulty, th12_aux_emitter_id, wrap_ranked_lines
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
+from .semantics import generation_for_game, opcode_map_for, remap_raw_arg_by_semantic, unsupported_opcode_reason
 
 
 def load_objects(path: str):
@@ -53,11 +54,8 @@ def emit_transpile(program, objects, target: str) -> str:
     lines.append(f"// source game: {program.game}")
     lines.append(f"// target: {target}")
     lines.append("// whole-file lowering is a structured draft; verify target-game scheduling and resources")
-    resources = dict(program.resources)
-    for resource, entries in synthetic_resource_entries(program, target).items():
-        resources.setdefault(resource, entries)
+    resources = apply_resource_plans(dict(program.resources), objects, target)
     for resource, entries in resources.items():
-        entries = target_resource_entries(program, target, resource, entries)
         quoted = "; ".join(f'"{entry}"' for entry in entries)
         lines.append(f"{resource} {{ {quoted}; }}")
     if program.top_level:
@@ -71,8 +69,9 @@ def emit_transpile(program, objects, target: str) -> str:
 
     function_order = [func.name for func in program.functions]
     function_params = inferred_function_params(program)
-    if program.game == "th15" and target == "th12" and Path(program.source).name == "st01.decl":
-        lines.extend(th12_stage01_compat_wrappers(set(function_order)))
+    alias_lines = emit_entry_aliases(objects, target, set(function_order))
+    if alias_lines:
+        lines.extend(alias_lines)
         if lines and lines[-1] != "":
             lines.append("")
     for function in function_order:
@@ -111,16 +110,53 @@ def drop_redeclared_param_vars(lines: list[str], params: str) -> list[str]:
     return out
 
 
-def synthetic_resource_entries(program, target: str) -> dict[str, list[str]]:
-    name = Path(program.source).name
-    if program.game == "th15" and target == "th12" and name in {"st01bs.decl", "st01mbs.decl", "st01mbs2.decl"}:
-        return {"anim": ["enemy.anm", "stgenm01.anm"]}
-    return {}
+
+def apply_resource_plans(resources: dict[str, list[str]], objects: list[object], target: str) -> dict[str, list[str]]:
+    target_generation = generation_for_game(target)
+    result = {key: list(value) for key, value in resources.items()}
+    for obj in objects:
+        if getattr(obj, "kind", None) != "ResourcePlan":
+            continue
+        for rule in getattr(obj, "fields", {}).get("rules", []):
+            if rule.get("when_target_generation") != target_generation:
+                continue
+            resource = str(rule.get("resource", ""))
+            entries = [str(entry) for entry in rule.get("entries", [])]
+            mode = str(rule.get("mode", "replace"))
+            if mode == "replace":
+                result[resource] = entries
+            elif mode == "default_if_missing":
+                result.setdefault(resource, entries)
+            elif mode == "append_missing":
+                current = result.setdefault(resource, [])
+                for entry in entries:
+                    if entry not in current:
+                        current.append(entry)
+    return result
+
+
+def emit_entry_aliases(objects: list[object], target: str, function_names: set[str]) -> list[str]:
+    target_generation = generation_for_game(target)
+    lines: list[str] = []
+    for obj in objects:
+        if getattr(obj, "kind", None) != "EntryAlias":
+            continue
+        fields = getattr(obj, "fields", {})
+        if fields.get("when_target_generation") != target_generation:
+            continue
+        aliases = fields.get("aliases", {})
+        needed = [(alias, real) for alias, real in aliases.items() if alias not in function_names and real in function_names]
+        if not needed:
+            continue
+        lines.append(f"// entry alias lowering {obj.family} -> {target}: {fields.get('reason', '')}")
+        for alias, real in needed:
+            lines.extend([f"void {alias}()", "{", f"    @{real}();", "    return;", "}"])
+    return lines
 
 
 def inferred_function_params(program) -> dict[str, str]:
     params = {func.name: getattr(func, "params", "") for func in program.functions}
-    if program.game not in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+    if generation_for_game(program.game) != "th13_plus":
         return params
     if Path(program.source).name != "default.decl":
         return params
@@ -154,56 +190,23 @@ def collect_sibling_prototype_params(source: Path) -> dict[str, str]:
     return result
 
 
-def target_resource_entries(program, target: str, resource: str, entries: list[str]) -> list[str]:
-    if program.game == "th15" and target == "th12" and resource == "anim" and Path(program.source).name == "st01.decl":
-        return ["enemy.anm", "stgenm01.anm"]
-    return list(entries)
-
-def th12_stage01_compat_wrappers(function_names: set[str]) -> list[str]:
-    mapping = {
-        "BGirl00": "MainSub00", "BGirl02": "MainSub01", "BGirl04": "MainSub02", "BGirl05": "MainSub03", "BGirl07": "MainSub04", "BGirl10": "MainSub05",
-        "GGirl00": "MainSub00", "GGirl02": "MainSub01", "GGirl04": "MainSub02", "GGirl05": "MainSub03", "GGirl07": "MainSub04", "GGirl10": "MainSub05",
-        "RGirl00": "MainSub00", "RGirl02": "MainSub01", "RGirl04": "MainSub02", "RGirl05": "MainSub03", "RGirl07": "MainSub04", "RGirl10": "MainSub05",
-        "YGirl00": "MainSub00", "YGirl02": "MainSub01", "YGirl04": "MainSub02", "YGirl05": "MainSub03", "YGirl07": "MainSub04", "YGirl10": "MainSub05",
-        # Do not wrap Boss/MBoss names: TH15 stage01 loads them from external ECLI files.
-        # A local wrapper with the same name shadows the external entry and can recurse/crash.
-        "MainSub02b": "MainSub02", "MainSub07b": "MainSub07", "MainSub08": "MainLatter", "MainSub08b": "MainLatter",
-        "MainSub09": "MainLatter", "MainSub10": "MainLatter2", "MainSub10b": "MainLatter2", "MainSub11": "MainLatter2",
-        "MainSub12": "MainLatter2", "MainSub13": "MainLatter2",
-    }
-    lines: list[str] = []
-    needed = [(wrapper, target) for wrapper, target in mapping.items() if wrapper not in function_names and target in function_names]
-    if not needed:
-        return lines
-    lines.append("// TH12 stage01 compatibility entry wrappers.")
-    lines.append("// These names are used by the original TH12 stage scheduling / enemy entries.")
-    for wrapper, target in needed:
-        lines.extend([f"void {wrapper}()", "{", f"    @{target}();", "    return;", "}"])
-    return lines
-
-
 def is_fire_instruction(ins) -> bool:
     return getattr(ins, "opcode", None) in {401, 501, 601}
 
 
-def should_preserve_raw_timeline(program_source: str, source_game: str, target: str, function_name: str) -> bool:
-    if source_game not in {"th13", "th14", "th15", "th16", "th17", "th18"} or target != "th12":
-        return False
-    return Path(program_source or "").name in {"st01bs.decl", "st01mbs.decl", "st01mbs2.decl"}
-
-
 def emit_function_body(function_objects: list[object], target: str) -> list[str]:
     timelines = [obj for obj in function_objects if getattr(obj, "kind", None) == "Timeline"]
-    semantic_objects = [obj for obj in function_objects if getattr(obj, "kind", None) not in {"Timeline", "BossPattern"}]
+    helper = next((obj for obj in function_objects if getattr(obj, "kind", None) == "HelperRoutine" and helper_applies(obj, target)), None)
+    if helper is not None:
+        return emit_helper_routine_body(helper, target)
+    rewrites = [obj for obj in function_objects if getattr(obj, "kind", None) == "TimelineRewrite" and rewrite_applies(obj, target)]
+    semantic_objects = [obj for obj in function_objects if getattr(obj, "kind", None) not in {"Timeline", "BossPattern", "HelperRoutine", "TimelineRewrite"}]
     if not timelines:
         return emit_semantic_object_block(semantic_objects, target)
 
     timeline = timelines[0]
-    special_default = emit_th15_default_special_body(timeline, target)
-    if special_default is not None:
-        return special_default
-    if should_preserve_raw_timeline(getattr(timeline, "source", ""), getattr(timeline, "game", "unknown"), target, getattr(timeline, "function", "")):
-        return emit_raw_timeline_body(timeline, target)
+    if any(rewrite.fields.get("semantic") == "boss.skip_debug_spell_selector" for rewrite in rewrites):
+        return emit_raw_timeline_body(timeline, target, rewrites)
     object_starts: dict[int, list[object]] = {}
     covered_lines: set[int] = set()
     for obj in semantic_objects:
@@ -221,15 +224,16 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
     source_game = getattr(timeline, "game", "unknown")
     bullet_state = make_bullet_lowering_state(function_objects, source_game, target)
     for event in timeline.fields.get("statements", []):
-        if is_th15_stage1_debug_selector_event(event, source_game, target, getattr(timeline, "function", "")):
+        stage_rewrite = find_rewrite(rewrites, "stage.skip_debug_spell_selector")
+        if stage_rewrite and matches_condition_rewrite(event, stage_rewrite):
             if not skipped_debug_selector:
-                lines.append("    // TH15 debug/spell selector removed for TH12 normal stage entry.")
-                lines.append("    // Original [-9907] branch can trap TH12 in a pre-stage spell-test loop.")
-                lines.append("    goto main_440 @ 0;")
+                lines.append(f"    // timeline rewrite: {stage_rewrite.fields.get('reason', '')}")
+                replacement = stage_rewrite.fields.get("replacement_goto", {})
+                lines.append(f"    goto {replacement.get('label', 'main_440')} @ {replacement.get('time', '0')};")
                 skipped_debug_selector = True
             lines.append(f"    // original debug selector: {event.get('text', '')}")
             continue
-        if skipped_debug_selector and event.get("kind") in {"call", "goto", "conditional_goto", "label", "instruction"} and int(event.get("line", 0) or 0) < 1302:
+        if skipped_debug_selector and stage_rewrite and event.get("kind") in {"call", "goto", "conditional_goto", "label", "instruction"} and int(event.get("line", 0) or 0) < int(stage_rewrite.fields.get("skip_until_line_before", 0) or 0):
             lines.append(f"    // original debug selector body: {event.get('text', '')}")
             continue
         line_no = int(event.get("line", 0) or 0)
@@ -254,20 +258,30 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
     return lines
 
 
-def emit_th15_default_special_body(timeline, target: str) -> list[str] | None:
-    if getattr(timeline, "game", "") != "th15" or target != "th12":
-        return None
-    if Path(str(getattr(timeline, "source", ""))).name != "default.decl":
-        return None
-    name = getattr(timeline, "function", "")
-    if name not in {"Ecl_EtBreak", "Ecl_EtBreak2", "Ecl_EtBreak2_ni", "Ecl_EtBreak_ni"}:
-        return None
-    interval = "6" if name in {"Ecl_EtBreak2", "Ecl_EtBreak2_ni"} else "10"
-    clear_opcode = 513 if name.endswith("_ni") else 512
+
+def helper_applies(obj, target: str) -> bool:
+    return getattr(obj, "fields", {}).get("when_target_generation") == generation_for_game(target)
+
+
+def rewrite_applies(obj, target: str) -> bool:
+    return getattr(obj, "fields", {}).get("when_target_generation") == generation_for_game(target)
+
+
+def emit_helper_routine_body(helper, target: str) -> list[str]:
+    semantic = helper.fields.get("semantic")
+    if semantic == "bullet.clear_radial_helper" and generation_for_game(target) == "th12":
+        return emit_radial_clear_helper_body(helper)
+    return [f"    // unsupported helper routine for {target}: {semantic}"]
+
+
+def emit_radial_clear_helper_body(helper) -> list[str]:
+    name = getattr(helper, "function", "helper")
+    clear_opcode = 513 if helper.fields.get("preserve_items") else 512
+    interval = str(helper.fields.get("interval", "10"))
     label = f"{name}_120"
     end = f"{name}_216"
     return [
-        "    // TH15 default bullet-clear helper lowered to TH12 native equivalent.",
+        "    // helper semantic lowering: bullet.clear_radial_helper -> th12 native clear loop.",
         "    var A, B;",
         "    %B = 16.0f;",
         "    ins_402(32);",
@@ -285,19 +299,32 @@ def emit_th15_default_special_body(timeline, target: str) -> list[str] | None:
     ]
 
 
-def emit_raw_timeline_body(timeline, target: str) -> list[str]:
+def find_rewrite(rewrites: list[object], semantic: str):
+    return next((rewrite for rewrite in rewrites if getattr(rewrite, "fields", {}).get("semantic") == semantic), None)
+
+
+def matches_condition_rewrite(event: dict[str, object], rewrite) -> bool:
+    needle = str(getattr(rewrite, "fields", {}).get("condition_contains", ""))
+    if event.get("kind") != "conditional_goto":
+        return False
+    return bool(needle) and (needle in str(event.get("text", "")) or needle in str(event.get("condition", "")))
+
+
+def emit_raw_timeline_body(timeline, target: str, rewrites: list[object] | None = None) -> list[str]:
+    rewrites = rewrites or []
     lines: list[str] = []
     lines.append(f"    // Timeline lowering {timeline.family} -> {target}; raw-order boss/bullet-safe path")
     lines.append("    // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.")
     emitted_spelltest_skip = False
     source_game = getattr(timeline, "game", "unknown")
+    boss_rewrite = find_rewrite(rewrites, "boss.skip_debug_spell_selector")
     for event in timeline.fields.get("statements", []):
-        if should_skip_boss_spelltest_event(event, timeline, target):
+        if boss_rewrite and matches_condition_rewrite(event, boss_rewrite):
             if not emitted_spelltest_skip:
                 label = str(event.get("label", ""))
                 time = str(event.get("time", "0"))
                 if label:
-                    lines.append("    // TH15 boss spell-test branch removed for TH12 normal stage flow.")
+                    lines.append(f"    // timeline rewrite: {boss_rewrite.fields.get('reason', '')}")
                     lines.append(f"    goto {label} @ {time};")
                 emitted_spelltest_skip = True
             lines.append(f"    // original spell-test branch: {event.get('text', '')}")
@@ -312,23 +339,13 @@ def emit_raw_timeline_body(timeline, target: str) -> list[str]:
 
 
 
-def should_skip_boss_spelltest_event(event: dict[str, object], timeline, target: str) -> bool:
-    if target != "th12" or getattr(timeline, "game", "") != "th15":
-        return False
-    if Path(str(getattr(timeline, "source", ""))).name not in {"st01bs.decl", "st01mbs.decl", "st01mbs2.decl"}:
-        return False
-    if "[-9907]" not in str(event.get("text", "")) and "[-9907]" not in str(event.get("condition", "")):
-        return False
-    return event.get("kind") == "conditional_goto"
-
-
 @dataclass
 class BulletLoweringState:
     double_flower_aux: dict[str, str]
 
 
 def make_bullet_lowering_state(function_objects: list[object], source_game: str, target: str) -> BulletLoweringState | None:
-    if source_game not in {"th13", "th14", "th15", "th16", "th17", "th18"} or target != "th12":
+    if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
     aux: dict[str, str] = {}
     for obj in function_objects:
@@ -344,7 +361,7 @@ def make_bullet_lowering_state(function_objects: list[object], source_game: str,
 
 
 def lower_bullet_fire_opcode(opcode: int, args: list[object], source_game: str, target: str, bullet_state: BulletLoweringState | None) -> list[str] | None:
-    if opcode != 601 or target != "th12" or source_game not in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+    if opcode != 601 or generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
     emitter_id = str(args[0]) if args else "0"
     aux_id = bullet_state.double_flower_aux.get(emitter_id) if bullet_state else None
@@ -357,96 +374,8 @@ def lower_bullet_fire_opcode(opcode: int, args: list[object], source_game: str, 
     return None
 
 
-TH13PLUS_TO_TH12_RAW_REORDER = {
-    # enemy / animation
-    300: (256, [0, 1, 2, 3, 4, 5]),
-    301: (257, [0, 1, 2, 3, 4, 5]),
-    302: (258, [0]),
-    303: (259, [0, 1]),
-    306: (262, [0, 1]),
-    307: (263, [0, 1]),
-    308: (264, [0, 1]),
-    # movement
-    400: (300, [0, 1]),
-    401: (301, [0, 1, 2, 3]),
-    402: (302, [0, 1]),
-    403: (303, [0, 1, 2, 3]),
-    404: (304, [0, 1]),
-    405: (305, [0, 1, 2, 3]),
-    406: (306, [0, 1]),
-    407: (307, [0, 1, 2, 3]),
-    420: (320, [0, 1, 2, 3, 4, 5]),
-    421: (321, [0, 1, 2, 3, 4, 5, 6]),
-    422: (322, [0, 1, 2, 3, 4, 5]),
-    423: (323, [0, 1, 2, 3, 4, 5, 6]),
-    425: (325, [0, 1, 2, 3, 4, 5, 6]),
-    426: (326, [0, 1, 2, 3, 4, 5, 6]),
-    427: (327, []),
-}
-
-TH13PLUS_TO_TH12_RAW = {
-    500: 400, 501: 401, 502: 402, 503: 403, 504: 404, 505: 405, 506: 406, 507: 407,
-    508: 408, 509: 409, 510: 410, 511: 411, 512: 412, 513: 413, 514: 414, 515: 415,
-    516: 416, 517: 417, 518: 418, 519: 419, 520: 420, 521: 421, 522: 422, 523: 423,
-    524: 424, 525: 425, 526: 426, 527: 427, 528: 428, 529: 435, 530: 436, 531: 437,
-    532: 438, 533: 439, 534: 440, 535: 435, 536: 436, 537: 437, 538: 438, 539: 439,
-    540: 440, 542: 442, 543: 443, 544: 444, 545: 445, 546: 446, 547: 447, 548: 448,
-    549: 449, 552: 452, 553: 453, 554: 454, 555: 455, 556: 456,
-    # TH13+ bullet slot setup/fire -> TH12 bullet slot setup/fire.
-    # Keep these raw-order in boss ECLs so dynamic parameters such as ins_606($F, ...) are not moved.
-    600: 500, 601: 501, 602: 502, 603: 503, 604: 504, 605: 505, 606: 506, 607: 507,
-    608: 508, 609: 509,
-}
-
-TH13PLUS_TO_TH12_RAW_UNSUPPORTED = {
-    569: "TH15 pointdevice/LoLK-specific unit flag, no TH12 equivalent",
-    610: "TH15 bullet clear/transform opcode is not TH12 opcode 510; parameter formats differ",
-    613: "TH15 bullet/effect opcode is not TH12 opcode 513; parameter formats differ",
-    614: "TH15 bullet difficulty/rank extension is not TH12 opcode 514; parameter formats differ",
-    616: "TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ",
-    526: "TH15 spell/boss effect opcode is not TH12 opcode 426; parameter formats differ",
-    630: "TH15 bullet extension opcode, not mapped to TH12",
-    1001: "TH15 game-specific opcode, no TH12 equivalent",
-    1002: "TH15 game-specific opcode, no TH12 equivalent",
-}
-
-
 def remap_raw_named_args(source_opcode: int, target_opcode: int, args: list[str], source_game: str, target: str) -> list[str]:
-    if source_game == "th15" and target == "th12" and source_opcode == 302 and target_opcode == 258 and len(args) == 1:
-        if args[0] == "2":
-            return ["1"]
-        if args[0] == "3":
-            return ["2"]
-    if source_game == "th15" and target == "th12" and source_opcode == 602 and target_opcode == 502 and len(args) >= 3:
-        mapped = args[:]
-        mapped[1] = remap_th15_bullet_shape_to_th12(mapped[1])
-        return mapped
-    if source_game == "th15" and target == "th12" and source_opcode == 607 and target_opcode == 507 and len(args) >= 2:
-        mapped = args[:]
-        mapped[1] = remap_crossgen_single_flower_style_to_th12(mapped[1])
-        return mapped
-    return args
-
-
-def remap_crossgen_single_flower_style_to_th12(style: str) -> str:
-    table = {
-        "2": "4",
-        "3": "5",
-    }
-    return table.get(str(style).strip(), style)
-
-
-
-def remap_th15_bullet_shape_to_th12(shape: str) -> str:
-    table = {
-        "0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5": "4", "6": "5", "7": "6",
-        "8": "7", "9": "8", "10": "9", "11": "10", "12": "11", "13": "12", "14": "13", "15": "14",
-        "16": "15", "17": "16", "18": "18", "19": "18", "20": "19", "21": "20", "22": "21",
-        "23": "22", "24": "22", "25": "24", "26": "29", "27": "29", "28": "24", "29": "25",
-        "30": "18", "31": "9", "32": "26", "33": "23", "34": "28", "35": "7", "36": "9",
-        "37": "15", "38": "30",
-    }
-    return table.get(str(shape).strip(), shape)
+    return remap_raw_arg_by_semantic(source_game, target, source_opcode, target_opcode, args)
 
 
 def literal_time_value(value: str) -> str:
@@ -531,33 +460,30 @@ def emit_ranked_text_from_literals(text: str, difficulty_literals: object) -> li
 
 
 def lower_raw_instruction_event(opcode: int, args: list[object], text: str, source_game: str, target: str, difficulty_literals: object = None) -> list[str]:
-    if source_game in {"th13", "th14", "th15", "th16", "th17", "th18"} and target == "th12":
-        if opcode in TH13PLUS_TO_TH12_RAW_REORDER:
-            mapped, order = TH13PLUS_TO_TH12_RAW_REORDER[opcode]
-            mapped_args = [str(args[index]) for index in order if index < len(args)]
-            mapped_args = remap_raw_named_args(opcode, mapped, mapped_args, source_game, target)
-            ranked = emit_ranked_raw_instruction(mapped, mapped_args, difficulty_literals, opcode, source_game, target)
-            if ranked:
-                return [f"    // raw-order opcode map {source_game}->th12: ins_{opcode} -> ins_{mapped}; ranked args from source difficulty literals", *ranked]
-            return [
-                f"    // raw-order opcode map {source_game}->th12: ins_{opcode} -> ins_{mapped}; verify semantics",
-                f"    ins_{mapped}({', '.join(mapped_args)});",
-            ]
-        if opcode in TH13PLUS_TO_TH12_RAW:
-            mapped = TH13PLUS_TO_TH12_RAW[opcode]
-            mapped_args = remap_raw_named_args(opcode, mapped, [str(arg) for arg in args], source_game, target)
-            ranked = emit_ranked_raw_instruction(mapped, mapped_args, difficulty_literals, opcode, source_game, target)
-            if ranked:
-                return [f"    // raw opcode fallback {source_game}->th12: ins_{opcode} -> ins_{mapped}; ranked args from source difficulty literals", *ranked]
-            return [
-                f"    // raw opcode fallback {source_game}->th12: ins_{opcode} -> ins_{mapped}; verify semantics",
-                f"    ins_{mapped}({', '.join(mapped_args)});",
-            ]
-        if opcode in TH13PLUS_TO_TH12_RAW_UNSUPPORTED:
-            return [
-                f"    // unsupported {source_game}->th12 opcode ins_{opcode}: {TH13PLUS_TO_TH12_RAW_UNSUPPORTED[opcode]}",
-                f"    // original: {text}",
-            ]
+    raw_map = opcode_map_for(source_game, target, opcode)
+    if raw_map:
+        mapped = raw_map.target_opcode
+        if raw_map.arg_order is None:
+            mapped_args = [str(arg) for arg in args]
+            mapping_label = "semantic opcode fallback"
+        else:
+            mapped_args = [str(args[index]) for index in raw_map.arg_order if index < len(args)]
+            mapping_label = "semantic opcode reorder"
+        mapped_args = remap_raw_named_args(opcode, mapped, mapped_args, source_game, target)
+        ranked = emit_ranked_raw_instruction(mapped, mapped_args, difficulty_literals, opcode, source_game, target)
+        semantic_note = f" semantic={raw_map.semantic}" if raw_map.semantic else ""
+        if ranked:
+            return [f"    // {mapping_label} {source_game}->{target}: ins_{opcode} -> ins_{mapped};{semantic_note}; ranked args from source difficulty literals", *ranked]
+        return [
+            f"    // {mapping_label} {source_game}->{target}: ins_{opcode} -> ins_{mapped};{semantic_note}; verify semantics",
+            f"    ins_{mapped}({', '.join(mapped_args)});",
+        ]
+    unsupported_reason = unsupported_opcode_reason(source_game, target, opcode)
+    if unsupported_reason:
+        return [
+            f"    // unsupported {source_game}->{target} opcode ins_{opcode}: {unsupported_reason}",
+            f"    // original: {text}",
+        ]
     return []
 
 
@@ -573,10 +499,6 @@ def wrap_event_rank(lines: list[str], event: dict[str, object], target: str) -> 
     return [f"    {line}" for line in wrap_ranked_lines(stripped, str(difficulty), target)]
 
 
-def is_th15_stage1_debug_selector_event(event: dict[str, object], source_game: str, target: str, function_name: str) -> bool:
-    if source_game != "th15" or target != "th12" or function_name != "main":
-        return False
-    return event.get("kind") == "conditional_goto" and "[-9907]" in str(event.get("condition", ""))
 
 def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", target: str = "", bullet_state: BulletLoweringState | None = None) -> list[str]:
     kind = event.get("kind")

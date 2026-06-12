@@ -5,6 +5,7 @@ from typing import Iterable
 
 from .lifter import lift_program as lift_bullets
 from .model import AnimationOp, BossPattern, EnemyOp, Function, Instruction, IRObject, LaserEmitter, MovementOp, Program
+from .program_lifter import lift_program_adapters
 from .timeline_lifter import lift_timelines
 
 TH13PLUS = {"th13", "th14", "th15", "th16", "th17", "th18"}
@@ -22,6 +23,7 @@ def make_obj(cls, program: Program, func: Function, ins: Instruction, family: st
 
 def lift_all_objects(program: Program) -> list[object]:
     objects: list[object] = []
+    objects.extend(lift_program_adapters(program))
     objects.extend(lift_bullets(program))
     objects.extend(lift_timelines(program))
     for func in program.functions:
@@ -84,7 +86,7 @@ def lift_movements(program: Program, func: Function) -> list[MovementOp]:
             404: "moveVel", 405: "moveVelTime", 406: "moveVelRel", 407: "moveVelRelTime",
             408: "moveCircle", 409: "moveCircleTime", 410: "moveCircleRel", 411: "moveCircleRelTime",
             420: "moveEllipse", 421: "moveEllipseTime", 422: "moveEllipseRel", 423: "moveEllipseRelTime",
-            424: "moveSetMirror", 425: "moveBezier", 426: "moveBezierRel", 427: "moveReset",
+            425: "moveBezier", 426: "moveBezierRel", 427: "moveReset",
             432: "moveEnm", 433: "moveEnmRel", 434: "moveCurve", 435: "moveCurveRel",
             440: "moveDir", 441: "moveDirTime", 442: "moveDirRel", 443: "moveDirRelTime",
             444: "moveSpeed", 445: "moveSpeedTime", 446: "moveSpeedRel", 447: "moveSpeedRelTime",
@@ -144,10 +146,14 @@ def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
         animation = {302: "anmSelect", 303: "anmSetSprite", 306: "anmSetMain", 307: "anmPlay", 308: "anmPlayAbs", 317: "anmSwitch", 318: "anmReset"}
         enemy = {300: "enmCreate", 301: "enmCreateA", 304: "enmCreateM", 305: "enmCreateAM", 309: "enmCreateF", 310: "enmCreateAF", 311: "enmCreateMF", 312: "enmCreateAMF"}
         family = "th13plus"
-    elif program.game in {"th10", "th11", "th12"}:
+    elif program.game == "th12":
         animation = {258: "anmSelect", 259: "anmSetSprite", 262: "anmSetMain", 263: "anmPlay", 264: "anmPlayAbs"}
         enemy = {256: "enmCreate", 257: "enmCreateA", 260: "enmCreateM", 261: "enmCreateAM", 265: "enmCreateF", 266: "enmCreateAF", 267: "enmCreateMF", 268: "enmCreateAMF"}
-        family = "th10_th12"
+        family = "th12"
+    elif program.game in {"th10", "th11"}:
+        animation = {258: "anmSelect", 259: "anmSetSprite", 262: "anmSetMain", 263: "anmPlay", 264: "anmPlayAbs"}
+        enemy = {256: "enmCreate", 257: "enmCreateA", 260: "enmCreateM", 261: "enmCreateAM", 265: "enmCreateF", 266: "enmCreateAF", 267: "enmCreateMF", 268: "enmCreateAMF"}
+        family = "th10_th11"
     else:
         return objects
     for ins in func.body:

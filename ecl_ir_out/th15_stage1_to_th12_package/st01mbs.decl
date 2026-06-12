@@ -12,53 +12,53 @@ void MBoss()
 {
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
-    // raw opcode fallback th15->th12: ins_512 -> ins_412; verify semantics
+    // semantic opcode fallback th15->th12: ins_512 -> ins_412; semantic=unit.property.12; verify semantics
     ins_412(0);
     [-9949] = 0;
     [-9948] = 0;
     [-9947] = 1;
-    // raw opcode fallback th15->th12: ins_525 -> ins_425; verify semantics
+    // semantic opcode fallback th15->th12: ins_525 -> ins_425; semantic=unit.property.25; verify semantics
     ins_425();
-    // raw opcode fallback th15->th12: ins_513 -> ins_413; verify semantics
+    // semantic opcode fallback th15->th12: ins_513 -> ins_413; semantic=unit.property.13; verify semantics
     ins_413();
-    // raw-order opcode map th15->th12: ins_300 -> ins_256; verify semantics
+    // semantic opcode reorder th15->th12: ins_300 -> ins_256; semantic=enemy.create; verify semantics
     ins_256("Ecl_EtBreak_ni", 0.0f, 0.0f, 9999, 0, 0);
-    // raw-order opcode map th15->th12: ins_302 -> ins_258; verify semantics
+    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
     ins_258(1);
-    // raw-order opcode map th15->th12: ins_303 -> ins_259; verify semantics
+    // semantic opcode reorder th15->th12: ins_303 -> ins_259; semantic=animation.set_sprite; verify semantics
     ins_259(1, 107);
-    // raw-order opcode map th15->th12: ins_302 -> ins_258; verify semantics
+    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
     ins_258(2);
-    // raw-order opcode map th15->th12: ins_306 -> ins_262; verify semantics
+    // semantic opcode reorder th15->th12: ins_306 -> ins_262; semantic=animation.set_main; verify semantics
     ins_262(0, 0);
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
     ins_402(76);
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(48.0f, 48.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(40.0f, 40.0f);
-    // raw opcode fallback th15->th12: ins_511 -> ins_411; verify semantics
+    // semantic opcode fallback th15->th12: ins_511 -> ins_411; semantic=unit.property.11; verify semantics
     ins_411(10000);
-    // raw opcode fallback th15->th12: ins_527 -> ins_427; verify semantics
+    // semantic opcode fallback th15->th12: ins_527 -> ins_427; semantic=unit.property.27; verify semantics
     ins_427(0, 10000.0f, -8355585);
-    // raw opcode fallback th15->th12: ins_514 -> ins_414; verify semantics
+    // semantic opcode fallback th15->th12: ins_514 -> ins_414; semantic=unit.property.14; verify semantics
     ins_414(1, 0, 1500, "MBossDead");
-    // raw opcode fallback th15->th12: ins_521 -> ins_421; verify semantics
+    // semantic opcode fallback th15->th12: ins_521 -> ins_421; semantic=unit.property.21; verify semantics
     ins_421(1, "MBossEscape");
     // unlifted instruction: ins_629(128.0f, 9408511);
-    // raw-order opcode map th15->th12: ins_400 -> ins_300; verify semantics
+    // semantic opcode reorder th15->th12: ins_400 -> ins_300; semantic=movement.position.set; verify semantics
     ins_300(-192.0f, -64.0f);
-    // raw-order opcode map th15->th12: ins_401 -> ins_301; verify semantics
+    // semantic opcode reorder th15->th12: ins_401 -> ins_301; semantic=movement.position.tween; verify semantics
     ins_301(100, 4, 0.0f, 128.0f);
     ins_83(40);
-    // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
+    // semantic opcode fallback th15->th12: ins_504 -> ins_404; semantic=unit.property.04; verify semantics
     ins_404(0.0f, 128.0f, 280.0f, 256.0f);
-    // TH15 boss spell-test branch removed for TH12 normal stage flow.
+    // timeline rewrite: normal target boss flow should bypass source spell-test selector
     goto MBoss_984 @ 0;
     // original spell-test branch: unless ([-9907] >= 0) goto MBoss_984 @ 0;
     // original spell-test branch: unless (([-9907] >= 0) && ([-9907] <= 1)) goto MBoss_984 @ 0;
     ins_83(50);
-    // raw opcode fallback th15->th12: ins_511 -> ins_411; verify semantics
+    // semantic opcode fallback th15->th12: ins_511 -> ins_411; semantic=unit.property.11; verify semantics
     ins_411(1300);
     @MBossCard1();
     MBoss_984:
@@ -102,17 +102,17 @@ void MBoss1_at(var A, var B, var C)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var D, E, F, G, H;
-    // raw opcode fallback th15->th12: ins_600 -> ins_500; verify semantics
+    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
     ins_500(0);
-    // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
+    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
     ins_507(0, 1);
-    // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
+    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
     ins_502(0, 12, 8);
-    // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
+    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
     ins_506(0, 1, 1);
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(0, 1.5707964f, 0.034906585f);
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
     !E
     ins_505(0, 1.5f, 1.0f);
     !N
@@ -124,19 +124,19 @@ void MBoss1_at(var A, var B, var C)
     !*
     // unlifted instruction: ins_611(0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611(0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // raw-order opcode map th15->th12: ins_302 -> ins_258; verify semantics
+    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
     ins_258(2);
     // unlifted instruction: ins_313(0);
     $F = 1;
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($G, 4, 8, 8, 12);
     goto MBoss1_at_800 @ 0;
     MBoss1_at_500:
-    // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
+    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
     ins_506(0, $F, 1);
     %A = %A + %C;
     $F = $F + 1;
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
@@ -150,15 +150,15 @@ void MBoss1_at(var A, var B, var C)
     !*
     MBoss1_at_800:
     if ($G--) goto MBoss1_at_500 @ 0;
-    // raw opcode fallback th15->th12: ins_600 -> ins_500; verify semantics
+    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
     ins_500(0);
-    // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
+    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
     ins_507(0, 1);
-    // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
+    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
     ins_502(0, 18, 4);
-    // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
+    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
     ins_506(0, 1, 1);
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; ranked args from source difficulty literals
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; ranked args from source difficulty literals
     !E
     ins_504(0, 1.5707964f, 0.523599f);
     !N
@@ -168,7 +168,7 @@ void MBoss1_at(var A, var B, var C)
     !L
     ins_504(0, 1.5707964f, 0.226893f);
     !*
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
     !E
     ins_505(0, 1.5f, 1.0f);
     !N
@@ -182,18 +182,18 @@ void MBoss1_at(var A, var B, var C)
     // unlifted instruction: ins_611(0, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611(0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611(0, 0, 1048576, 0, -999999, -999999.0f, -999999.0f);
-    // raw-order opcode map th15->th12: ins_302 -> ins_258; verify semantics
+    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
     ins_258(2);
     // unlifted instruction: ins_313(0);
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($H, 4, 8, 16, 24);
     goto MBoss1_at_1736 @ 0;
     MBoss1_at_1436:
-    // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
+    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
     ins_506(0, $F, 1);
     %A = %A + %C;
     $F = $F + 1;
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
@@ -228,13 +228,13 @@ void MBoss1_at2()
     !L
     ins_83(150);
     !*
-    // raw opcode fallback th15->th12: ins_600 -> ins_500; verify semantics
+    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
     ins_500(1);
-    // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
+    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
     ins_507(1, 5);
-    // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
-    ins_502(1, 19, 3);
-    // raw opcode fallback th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
+    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
+    ins_502(1, 20, 3);
+    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; ranked args from source difficulty literals
     !E
     ins_506(1, 1, 1);
     !N
@@ -244,9 +244,9 @@ void MBoss1_at2()
     !L
     ins_506(1, 1, 3);
     !*
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(1, 0.0f, 0.034906585f);
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
     !E
     ins_505(1, 1.0f, 0.8f);
     !N
@@ -260,9 +260,9 @@ void MBoss1_at2()
     $C = 600;
     goto MBoss1_at2_800 @ 0;
     MBoss1_at2_560:
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(1, [-9989.0f] + ([-9998.0f] / 32.0f), 0.0f);
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(1);
     // dynamic wait preserved from difficulty literals
     !E
@@ -286,44 +286,44 @@ void MBossCard1()
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     @BossItemCard();
-    // raw opcode fallback th15->th12: ins_513 -> ins_413; verify semantics
+    // semantic opcode fallback th15->th12: ins_513 -> ins_413; semantic=unit.property.13; verify semantics
     ins_413();
     // unlifted instruction: ins_21();
-    // raw opcode fallback th15->th12: ins_525 -> ins_425; verify semantics
+    // semantic opcode fallback th15->th12: ins_525 -> ins_425; semantic=unit.property.25; verify semantics
     ins_425();
     unless ([-9986] == 0) goto MBossCard1_244 @ 0;
     // unlifted instruction: ins_615(640.0f);
     goto MBossCard1_264 @ 0;
     MBossCard1_244:
-    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
     // original: ins_616(640.0f);
     MBossCard1_264:
-    // raw opcode fallback th15->th12: ins_523 -> ins_423; verify semantics
+    // semantic opcode fallback th15->th12: ins_523 -> ins_423; semantic=unit.property.23; verify semantics
     ins_423();
     // unlifted instruction: ins_632(0);
-    // raw opcode fallback th15->th12: ins_545 -> ins_445; verify semantics
+    // semantic opcode fallback th15->th12: ins_545 -> ins_445; semantic=unit.property.45; verify semantics
     ins_445();
-    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
     ins_416(27);
-    // raw-order opcode map th15->th12: ins_404 -> ins_304; verify semantics
+    // semantic opcode reorder th15->th12: ins_404 -> ins_304; semantic=movement.velocity.set; verify semantics
     ins_304(0.0f, 0.0f);
-    // raw-order opcode map th15->th12: ins_405 -> ins_305; verify semantics
+    // semantic opcode reorder th15->th12: ins_405 -> ins_305; semantic=movement.velocity.tween; verify semantics
     ins_305(0, 0, 0.0f, 0.0f);
-    // raw-order opcode map th15->th12: ins_401 -> ins_301; verify semantics
+    // semantic opcode reorder th15->th12: ins_401 -> ins_301; semantic=movement.position.tween; verify semantics
     ins_301(0, 0, 0.0f, 0.0f);
     [-9949] = 0;
     [-9948] = 0;
     [-9947] = 1;
-    // raw opcode fallback th15->th12: ins_514 -> ins_414; verify semantics
+    // semantic opcode fallback th15->th12: ins_514 -> ins_414; semantic=unit.property.14; verify semantics
     ins_414(0, 0, 1500, "MBossDead");
-    // raw opcode fallback th15->th12: ins_539 -> ins_439; verify semantics
+    // semantic opcode fallback th15->th12: ins_539 -> ins_439; semantic=difficulty.extra; verify semantics
     ins_439(0, 1500, 500000, "�X���u�A���e�B���b�g�u���U�[�h�v");
-    // raw-order opcode map th15->th12: ins_401 -> ins_301; verify semantics
+    // semantic opcode reorder th15->th12: ins_401 -> ins_301; semantic=movement.position.tween; verify semantics
     ins_301(60, 4, 0.0f, 144.0f);
-    // raw opcode fallback th15->th12: ins_504 -> ins_404; verify semantics
+    // semantic opcode fallback th15->th12: ins_504 -> ins_404; semantic=unit.property.04; verify semantics
     ins_404(0.0f, 128.0f, 280.0f, 64.0f);
     ins_83(60);
-    // raw-order opcode map th15->th12: ins_307 -> ins_263; verify semantics
+    // semantic opcode reorder th15->th12: ins_307 -> ins_263; semantic=animation.play; verify semantics
     ins_263(1, 73);
     +60:
     // unlifted instruction: ins_0();
@@ -350,13 +350,13 @@ void MBossCard1_at(var A, var B, var C)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var D, E, F;
-    // raw opcode fallback th15->th12: ins_600 -> ins_500; verify semantics
+    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
     ins_500(0);
-    // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
+    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
     ins_507(0, 5);
-    // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
-    ins_502(0, 9, 6);
-    // raw opcode fallback th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
+    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
+    ins_502(0, 10, 6);
+    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; ranked args from source difficulty literals
     !E
     ins_506(0, 1, 8);
     !N
@@ -366,9 +366,9 @@ void MBossCard1_at(var A, var B, var C)
     !L
     ins_506(0, 3, 8);
     !*
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(0, 0.0f, 0.034906585f);
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
     !E
     ins_505(0, 1.0f, 1.1f);
     !N
@@ -380,14 +380,14 @@ void MBossCard1_at(var A, var B, var C)
     !*
     // unlifted instruction: ins_611(0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_611(0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($F, 6, 8, 8, 10);
     goto MBossCard1_at_884 @ 0;
     MBossCard1_at_660:
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(0, %A, %B);
     %A = %A + %C;
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
@@ -421,17 +421,17 @@ void MBossCard1_at2()
     !L
     ins_83(150);
     !*
-    // raw opcode fallback th15->th12: ins_600 -> ins_500; verify semantics
+    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
     ins_500(1);
-    // raw opcode fallback th15->th12: ins_607 -> ins_507; verify semantics
+    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
     ins_507(1, 5);
-    // raw opcode fallback th15->th12: ins_602 -> ins_502; verify semantics
-    ins_502(1, 19, 4);
-    // raw opcode fallback th15->th12: ins_606 -> ins_506; verify semantics
+    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
+    ins_502(1, 20, 4);
+    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
     ins_506(1, 1, 6);
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(1, 0.0f, 0.034906585f);
-    // raw opcode fallback th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
     !E
     ins_505(1, 9.0f, 1.0f);
     !N
@@ -443,45 +443,45 @@ void MBossCard1_at2()
     !*
     // unlifted instruction: ins_611(1, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // unlifted instruction: ins_612(1, 0, 16, 60, 1, 0, 0, 1.5707964f, [-1.0f], -999999.0f, -999999.0f);
-    // unsupported th15->th12 opcode ins_614: TH15 bullet difficulty/rank extension is not TH12 opcode 514; parameter formats differ
+    // unsupported th15->th12 opcode ins_614: bullet difficulty/rank extension is not TH12 opcode 514; parameter formats differ
     // original: ins_614(2, 1);
-    // unsupported th15->th12 opcode ins_610: TH15 bullet clear/transform opcode is not TH12 opcode 510; parameter formats differ
+    // unsupported th15->th12 opcode ins_610: bullet clear/transform opcode is not TH12 opcode 510; parameter formats differ
     // original: ins_610(2, 1, 0, 16, 60, 1, 0, 0, -1.5707964f, [-1.0f], -999999.0f, -999999.0f);
     $C = 600;
     goto MBossCard1_at2_1748 @ 0;
     MBossCard1_at2_788:
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(1, 0.3926991f + ([-9998.0f] / 32.0f), 0.05235988f);
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(1);
     !HL
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(1, 0.19634955f + ([-9998.0f] / 32.0f), 0.05235988f);
     !*
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(1);
     !L
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(1, 0.7853982f + ([-9998.0f] / 32.0f), 0.05235988f);
     !*
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(1);
     ins_83(160);
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(2, 2.7488935f + ([-9998.0f] / 32.0f), -0.05235988f);
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(2);
     !HL
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(2, 2.9452431f + ([-9998.0f] / 32.0f), -0.05235988f);
     !*
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(2);
     !L
-    // raw opcode fallback th15->th12: ins_604 -> ins_504; verify semantics
+    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
     ins_504(2, 2.3561945f + ([-9998.0f] / 32.0f), -0.05235988f);
     !*
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(2);
     // dynamic wait preserved from difficulty literals
     !E
@@ -504,17 +504,17 @@ void MBossDead()
 {
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
-    // raw opcode fallback th15->th12: ins_523 -> ins_423; verify semantics
+    // semantic opcode fallback th15->th12: ins_523 -> ins_423; semantic=unit.property.23; verify semantics
     ins_423();
-    // raw opcode fallback th15->th12: ins_525 -> ins_425; verify semantics
+    // semantic opcode fallback th15->th12: ins_525 -> ins_425; semantic=unit.property.25; verify semantics
     ins_425();
     unless ([-9959] <= 1) goto MBossDead_384 @ 0;
     unless ([-9986] == 0) goto MBossDead_304 @ 0;
-    // raw-order opcode map th15->th12: ins_300 -> ins_256; verify semantics
+    // semantic opcode reorder th15->th12: ins_300 -> ins_256; semantic=enemy.create; verify semantics
     ins_256("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
     goto MBossDead_360 @ 0;
     MBossDead_304:
-    // raw-order opcode map th15->th12: ins_300 -> ins_256; verify semantics
+    // semantic opcode reorder th15->th12: ins_300 -> ins_256; semantic=enemy.create; verify semantics
     ins_256("Ecl_EtBreak_ni", 0.0f, 0.0f, 9999, 0, 0);
     MBossDead_360:
     goto MBossDead_528 @ 0;
@@ -523,14 +523,14 @@ void MBossDead()
     // unlifted instruction: ins_615(640.0f);
     goto MBossDead_528 @ 0;
     MBossDead_508:
-    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
     // original: ins_616(640.0f);
     MBossDead_528:
-    // raw-order opcode map th15->th12: ins_307 -> ins_263; verify semantics
+    // semantic opcode reorder th15->th12: ins_307 -> ins_263; semantic=animation.play; verify semantics
     ins_263(1, 65);
-    // raw opcode fallback th15->th12: ins_505 -> ins_405; verify semantics
+    // semantic opcode fallback th15->th12: ins_505 -> ins_405; semantic=unit.property.05; verify semantics
     ins_405();
-    // raw opcode fallback th15->th12: ins_511 -> ins_411; verify semantics
+    // semantic opcode fallback th15->th12: ins_511 -> ins_411; semantic=unit.property.11; verify semantics
     ins_411(100000);
     !E
     @BossItemPhase(20, 10, 48.0f);
@@ -542,24 +542,24 @@ void MBossDead()
     @BossItemPhase(30, 10, 48.0f);
     !*
     // unlifted instruction: ins_570();
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
     ins_402(3);
     // unlifted instruction: ins_557(60, 0, -11534256, 600.0f, 1800.0f);
-    // raw opcode fallback th15->th12: ins_517 -> ins_417; verify semantics
+    // semantic opcode fallback th15->th12: ins_517 -> ins_417; semantic=unit.property.17; verify semantics
     ins_417(30, 12, 0);
-    // raw-order opcode map th15->th12: ins_307 -> ins_263; verify semantics
+    // semantic opcode reorder th15->th12: ins_307 -> ins_263; semantic=animation.play; verify semantics
     ins_263(0, 28);
-    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
     ins_416(5);
     ins_83(60);
-    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
     ins_424(2);
     ins_83(60);
-    // raw opcode fallback th15->th12: ins_512 -> ins_412; verify semantics
+    // semantic opcode fallback th15->th12: ins_512 -> ins_412; semantic=unit.property.12; verify semantics
     ins_412(-1);
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
     ins_402(16);
-    // raw-order opcode map th15->th12: ins_401 -> ins_301; verify semantics
+    // semantic opcode reorder th15->th12: ins_401 -> ins_301; semantic=movement.position.tween; verify semantics
     ins_301(60, 4, 192.0f, -32.0f);
     ins_83(60);
     // unlifted instruction: ins_1();
@@ -570,34 +570,34 @@ void MBossEscape()
 {
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
-    // raw opcode fallback th15->th12: ins_514 -> ins_414; verify semantics
+    // semantic opcode fallback th15->th12: ins_514 -> ins_414; semantic=unit.property.14; verify semantics
     ins_414(0, -1, 0, "");
-    // raw opcode fallback th15->th12: ins_514 -> ins_414; verify semantics
+    // semantic opcode fallback th15->th12: ins_514 -> ins_414; semantic=unit.property.14; verify semantics
     ins_414(1, -1, 0, "");
-    // raw opcode fallback th15->th12: ins_523 -> ins_423; verify semantics
+    // semantic opcode fallback th15->th12: ins_523 -> ins_423; semantic=unit.property.23; verify semantics
     ins_423();
-    // raw opcode fallback th15->th12: ins_505 -> ins_405; verify semantics
+    // semantic opcode fallback th15->th12: ins_505 -> ins_405; semantic=unit.property.05; verify semantics
     ins_405();
-    // raw opcode fallback th15->th12: ins_525 -> ins_425; verify semantics
+    // semantic opcode fallback th15->th12: ins_525 -> ins_425; semantic=unit.property.25; verify semantics
     ins_425();
     unless ([-9986] == 0) goto MBossEscape_280 @ 0;
     // unlifted instruction: ins_615(640.0f);
     goto MBossEscape_300 @ 0;
     MBossEscape_280:
-    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
     // original: ins_616(640.0f);
     MBossEscape_300:
-    // raw opcode fallback th15->th12: ins_511 -> ins_411; verify semantics
+    // semantic opcode fallback th15->th12: ins_511 -> ins_411; semantic=unit.property.11; verify semantics
     ins_411(100000);
     // unlifted instruction: ins_557(60, 0, -11534256, 600.0f, 1800.0f);
-    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
     ins_424(2);
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
     ins_402(16);
-    // raw-order opcode map th15->th12: ins_401 -> ins_301; verify semantics
+    // semantic opcode reorder th15->th12: ins_401 -> ins_301; semantic=movement.position.tween; verify semantics
     ins_301(60, 4, 0.0f, -32.0f);
     ins_83(10);
-    // raw opcode fallback th15->th12: ins_512 -> ins_412; verify semantics
+    // semantic opcode fallback th15->th12: ins_512 -> ins_412; semantic=unit.property.12; verify semantics
     ins_412(-1);
     ins_83(50);
     // unlifted instruction: ins_1();

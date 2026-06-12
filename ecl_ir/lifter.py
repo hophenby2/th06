@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from .model import BulletEmitter, BulletTransform, Function, Instruction, Program
+from .semantics import bullet_shape_semantic, spread_semantic
 
 TH13PLUS_GAMES = {"th13", "th14", "th15", "th16", "th17", "th18"}
 TH12_GAMES = {"th12"}
@@ -70,31 +71,13 @@ def resolved_plain(value: object) -> str:
     return str(value)
 
 
-def classify_th13plus_spread(style: object) -> dict[str, object]:
-    raw = resolved_plain(style).strip()
-    if raw == "9":
-        return {"spread_family": "double_flower", "target_biases": ["left", "right"], "aimed": True}
-    if raw == "10":
-        return {"spread_family": "double_flower", "target_biases": ["left", "right"], "aimed": False}
-    if raw in {"2", "3"}:
-        return {"spread_family": "single_flower", "bias": "left", "aimed": raw == "2"}
-    if raw in {"4", "5"}:
-        return {"spread_family": "single_flower", "bias": "offset_left", "aimed": raw == "4"}
-    return {"spread_family": aim_mode_name(raw), "aimed": raw in {"0", "2", "4", "9"}}
-
-
-def classify_th12_spread(style: object) -> dict[str, object]:
-    raw = resolved_plain(style).strip()
-    if raw in {"2", "3"}:
-        return {"spread_family": "single_flower", "bias": "right", "aimed": raw == "2"}
-    if raw in {"4", "5"}:
-        return {"spread_family": "single_flower", "bias": "left", "aimed": raw == "4"}
-    return {"spread_family": aim_mode_name(raw), "aimed": raw in {"0", "2", "4"}}
-
-
 def update_spread_semantics(emitter: BulletEmitter, style: object, family: str) -> None:
-    classifier = classify_th13plus_spread if family == "th13plus" else classify_th12_spread
-    emitter.semantics.setdefault("bullet", {}).setdefault("spread", {}).update(classifier(style))
+    game = emitter.game if family in {"th13plus", "th12"} else family
+    emitter.semantics.setdefault("bullet", {}).setdefault("spread", {}).update(spread_semantic(game, style))
+
+
+def update_shape_semantics(emitter: BulletEmitter, shape: object) -> None:
+    emitter.semantics.setdefault("bullet", {})["shape"] = bullet_shape_semantic(emitter.game, shape)
 
 
 def apply_th13plus(emitter: BulletEmitter, ins: Instruction) -> None:
@@ -106,8 +89,10 @@ def apply_th13plus(emitter: BulletEmitter, ins: Instruction) -> None:
         emitter.aim.setdefault("mode", aim_mode_name(arg(args, 1, "0")))
         update_spread_semantics(emitter, style, "th13plus")
     elif op == 602:
-        set_ranked_field(emitter.appearance, "style", with_difficulty(arg(args, 1), ins.difficulty_literals), ins.difficulty)
+        shape = with_difficulty(arg(args, 1), ins.difficulty_literals)
+        set_ranked_field(emitter.appearance, "style", shape, ins.difficulty)
         set_ranked_field(emitter.appearance, "color", with_difficulty(arg(args, 2), ins.difficulty_literals), ins.difficulty)
+        update_shape_semantics(emitter, shape)
     elif op == 603:
         emitter.origin["x"] = arg(args, 1, "0") if not hasattr(emitter, "origin") else emitter.origin.get("x", arg(args, 1, "0"))
         emitter.origin["y"] = arg(args, 2, "0") if not hasattr(emitter, "origin") else arg(args, 2, "0")
@@ -154,8 +139,10 @@ def apply_th12(emitter: BulletEmitter, ins: Instruction) -> None:
         emitter.aim.setdefault("mode", aim_mode_name(arg(args, 1, "0")))
         update_spread_semantics(emitter, style, "th12")
     elif op == 502:
-        set_ranked_field(emitter.appearance, "style", with_difficulty(arg(args, 1), ins.difficulty_literals), ins.difficulty)
+        shape = with_difficulty(arg(args, 1), ins.difficulty_literals)
+        set_ranked_field(emitter.appearance, "style", shape, ins.difficulty)
         set_ranked_field(emitter.appearance, "color", with_difficulty(arg(args, 2), ins.difficulty_literals), ins.difficulty)
+        update_shape_semantics(emitter, shape)
     elif op == 503:
         emitter.origin = {"x": arg(args, 1, "0"), "y": arg(args, 2, "0")}
     elif op == 504:

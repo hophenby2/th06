@@ -7,8 +7,7 @@ ecli { "default.ecl"; "st01bs.ecl"; "st01mbs.ecl"; "st01mbs2.ecl"; }
 // top-level declarations
 void MainBossSpell();
 void MainMBossSpell();
-// TH12 stage01 compatibility entry wrappers.
-// These names are used by the original TH12 stage scheduling / enemy entries.
+// entry alias lowering program -> th12: target stage scheduler references named enemy entries that differ from source function names
 void BGirl00()
 {
     @MainSub00();
@@ -185,11 +184,11 @@ void GirlA01()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // unsupported th15->th12 opcode ins_569: TH15 pointdevice/LoLK-specific unit flag, no TH12 equivalent
+    // unsupported th15->th12 opcode ins_569: pointdevice/LoLK-specific unit flag, no TH12 equivalent
     // original: ins_569(1);
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(24.0f, 24.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(16.0f, 16.0f);
     // object Movement source_line=13 family=th13plus
     // movement lowering th13plus -> th12: moveVel
@@ -239,11 +238,11 @@ void GirlA01_at()
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 7.0f, -999999.0f
     unless ([-9959] == 3) goto GirlA01_at_540 @ 0;
     GirlA01_at_540:
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($A, 1, 1, 4, 20);
     goto GirlA01_at_720 @ 0;
     GirlA01_at_600:
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
@@ -281,7 +280,7 @@ void GirlA01_at_l()
     $A = 1;
     goto GirlA01_at_l_412 @ 0;
     GirlA01_at_l_372:
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     ins_83(30);
     GirlA01_at_l_412:
@@ -295,9 +294,9 @@ void GirlA02()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(24.0f, 24.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(16.0f, 16.0f);
     // object Movement source_line=102 family=th13plus
     // movement lowering th13plus -> th12: moveVel
@@ -347,11 +346,11 @@ void GirlA02_at()
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 7.0f, -999999.0f
     unless ([-9959] == 3) goto GirlA02_at_540 @ 0;
     GirlA02_at_540:
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($A, 1, 1, 4, 20);
     goto GirlA02_at_720 @ 0;
     GirlA02_at_600:
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
@@ -389,7 +388,7 @@ void GirlA02_at_l()
     $A = 1;
     goto GirlA02_at_l_412 @ 0;
     GirlA02_at_l_372:
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     ins_83(30);
     GirlA02_at_l_412:
@@ -403,9 +402,9 @@ void GirlA03()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(24.0f, 24.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(16.0f, 16.0f);
     // object Movement source_line=191 family=th13plus
     // movement lowering th13plus -> th12: moveVel
@@ -450,11 +449,11 @@ void GirlA03_at()
     ins_504(0, 0.0f, 1.0471976f);
     ins_521(0, 1.5f, 1.5f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($A, 1, 1, 7, 16);
     goto GirlA03_at_600 @ 0;
     GirlA03_at_480:
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
@@ -486,15 +485,15 @@ void GirlB01()
     // object Animation source_line=256 family=th13plus
     // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
     ins_259(1, 93);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(1);
-    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
-    ins_407(1, 2);
-    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    ins_407(1, 4);
+    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
     ins_407(2, 1);
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(32.0f, 32.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(24.0f, 24.0f);
     // object Movement source_line=262 family=th13plus
     // movement lowering th13plus -> th12: moveVel
@@ -530,7 +529,7 @@ void GirlB01_at()
     // object BulletEmitter source_line=281 family=th13plus
     ins_500(0);
     ins_507(0, 1);
-    ins_502(0, 7, 6);
+    ins_502(0, 8, 6);
     ins_506(0, 1, 1);
     ins_504(0, 1.5707964f, 0.34906584f);
     ins_505(0, 1.0f, 0.0f);
@@ -538,17 +537,17 @@ void GirlB01_at()
     ins_521(0, 1.2f, 1.6f, 2.2f, 4.2f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
-    // unsupported th15->th12 opcode ins_614: TH15 bullet difficulty/rank extension is not TH12 opcode 514; parameter formats differ
+    // unsupported th15->th12 opcode ins_614: bullet difficulty/rank extension is not TH12 opcode 514; parameter formats differ
     // original: ins_614(1, 0);
-    // raw opcode fallback th15->th12: ins_603 -> ins_503; verify semantics
+    // semantic opcode fallback th15->th12: ins_603 -> ins_503; semantic=bullet.emitter.03; verify semantics
     ins_503(1, 8.0f, 0.0f);
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($A, 3, 8, 60, 300);
     goto GirlB01_at_628 @ 0;
     GirlB01_at_488:
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(1);
     // dynamic wait preserved from difficulty literals
     !E
@@ -580,20 +579,20 @@ void GirlB02()
     // object Animation source_line=316 family=th13plus
     // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
     ins_259(1, 99);
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(28.0f, 28.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(16.0f, 16.0f);
-    // unsupported th15->th12 opcode ins_1002: TH15 game-specific opcode, no TH12 equivalent
+    // unsupported th15->th12 opcode ins_1002: game-specific opcode, no TH12 equivalent
     // original: ins_1002(5);
-    // unsupported th15->th12 opcode ins_1001: TH15 game-specific opcode, no TH12 equivalent
+    // unsupported th15->th12 opcode ins_1001: game-specific opcode, no TH12 equivalent
     // original: ins_1001(140);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(1);
-    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
     ins_407(1, 1);
-    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
-    ins_407(2, 2);
+    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    ins_407(2, 4);
     @GirlB02_at() async;
     // object Movement source_line=325 family=th13plus
     // movement lowering th13plus -> th12: moveVel
@@ -625,7 +624,7 @@ void GirlB02_at()
     // object BulletEmitter source_line=342 family=th13plus
     ins_500(0);
     ins_507(0, 4);
-    ins_502(0, 4, 2);
+    ins_502(0, 5, 2);
     ins_506(0, 1, 1);
     ins_504(0, [-9998.0f], 0.0f);
     ins_505(0, 1.0f, 0.0f);
@@ -636,14 +635,14 @@ void GirlB02_at()
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, -2147483648, 60, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 4, 60, -999999, 0.016666668f, -999999.0f
     ins_83(60 + ([-10000] % 80));
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     $A = 1;
     goto GirlB02_at_1088 @ 0;
     GirlB02_at_668:
-    // raw opcode fallback th15->th12: ins_548 -> ins_448; verify semantics
+    // semantic opcode fallback th15->th12: ins_548 -> ins_448; semantic=unit.property.48; verify semantics
     ins_448(240 + ([-10000] % 40), 120 + ([-10000] % 40), 100 + ([-10000] % 40), 70 + ([-10000] % 40));
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     GirlB02_at_1088:
     if ($A--) goto GirlB02_at_668 @ 0;
@@ -662,7 +661,7 @@ void GirlBlueA01()
     // object Animation source_line=369 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(2);
     @GirlA01();
     // unlifted instruction: ins_1();
@@ -678,7 +677,7 @@ void GirlBlueA01e()
     // object Animation source_line=378 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(2);
     !NHL
     @GirlA01_at() async;
@@ -697,7 +696,7 @@ void GirlBlueA02()
     // object Animation source_line=390 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(2);
     @GirlA02();
     // unlifted instruction: ins_1();
@@ -713,7 +712,7 @@ void GirlBlueA02e()
     // object Animation source_line=399 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(2);
     @GirlA02_at() async;
     @GirlA02();
@@ -730,7 +729,7 @@ void GirlBlueA03()
     // object Animation source_line=409 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 0);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(2);
     @GirlA03();
     // unlifted instruction: ins_1();
@@ -749,21 +748,19 @@ void GirlC01()
     // object Animation source_line=419 family=th13plus
     // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
     ins_259(1, 93);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(1);
-    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
     ins_407(1, 1);
-    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
-    ins_407(2, 2);
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    ins_407(2, 4);
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(32.0f, 32.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(24.0f, 24.0f);
     unless ([-9997.0f] > _f(0)) goto GirlC01_320 @ 0;
-    // object Movement source_line=426 family=th13plus
-    // no safe lowering implemented for Movement family=th13plus to th12
-    // ins_424(1);
-    // unsupported movement semantic: moveSetMirror
+    // semantic opcode reorder th15->th12: ins_424 -> ins_324; semantic=movement.mirror_mode; verify semantics
+    ins_324(1);
     GirlC01_320:
     // object Movement source_line=428 family=th13plus
     // movement lowering th13plus -> th12: moveVel
@@ -793,23 +790,23 @@ void GirlC01_at()
     // difficulty count.ways: E=1, N=1, H=2, LO=5; preserved as TH12 difficulty table; default preview N=1
     ins_500(0);
     ins_507(0, 1);
-    ins_502(0, 7, 6);
+    ins_502(0, 8, 6);
     ins_522(0, 1, 1, 2, 5, 1, 1, 1, 1);
     ins_504(0, 1.5707964f, 0.12217305f);
     ins_505(0, %A, 0.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($B, 1, 3, 6, 12);
     goto GirlC01_at_860 @ 0;
     GirlC01_at_396:
-    // raw opcode fallback th15->th12: ins_536 -> ins_436; verify semantics
+    // semantic opcode fallback th15->th12: ins_536 -> ins_436; semantic=difficulty.normal; verify semantics
     ins_436(%A, 1.0f, 1.5f, 2.0f, 3.0f);
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($C, 6, 12, 12, 12);
     goto GirlC01_at_716 @ 0;
     GirlC01_at_492:
     %A = %A + 0.15f;
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
@@ -845,7 +842,7 @@ void GirlD01()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // unsupported th15->th12 opcode ins_569: TH15 pointdevice/LoLK-specific unit flag, no TH12 equivalent
+    // unsupported th15->th12 opcode ins_569: pointdevice/LoLK-specific unit flag, no TH12 equivalent
     // original: ins_569(6);
     // object Animation source_line=500 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
@@ -856,15 +853,15 @@ void GirlD01()
     // object Animation source_line=502 family=th13plus
     // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
     ins_259(1, 93);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(1);
-    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
-    ins_407(1, 2);
-    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    ins_407(1, 4);
+    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
     ins_407(2, 4);
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(32.0f, 32.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(24.0f, 24.0f);
     // object Movement source_line=508 family=th13plus
     // movement lowering th13plus -> th12: moveVel
@@ -913,7 +910,7 @@ void GirlD01_at()
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 4.0f, -999999.0f
     unless ([-9959] == 3) goto GirlD01_at_460 @ 0;
     GirlD01_at_460:
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($A, 2, 3, 6, 10);
     goto GirlD01_at_640 @ 0;
     GirlD01_at_520:
@@ -952,21 +949,21 @@ void GirlD01_at2()
     ins_505(1, %B, 0.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($D, 2, 4, 4, 4);
     goto GirlD01_at2_1096 @ 0;
     GirlD01_at2_360:
-    // raw opcode fallback th15->th12: ins_536 -> ins_436; verify semantics
+    // semantic opcode fallback th15->th12: ins_536 -> ins_436; semantic=difficulty.normal; verify semantics
     ins_436(%B, 1.1f, 1.1f, 1.5f, 2.1f);
     %C = 1.570796f;
     $A = 8;
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($A, 8, 8, 13, 14);
     $E = 4;
     goto GirlD01_at2_952 @ 0;
     GirlD01_at2_604:
     %B = %B + 0.07f;
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(1);
     ins_83(3);
     $F = 2;
@@ -1001,7 +998,7 @@ void GirlD02()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // unsupported th15->th12 opcode ins_569: TH15 pointdevice/LoLK-specific unit flag, no TH12 equivalent
+    // unsupported th15->th12 opcode ins_569: pointdevice/LoLK-specific unit flag, no TH12 equivalent
     // original: ins_569(6);
     // object Animation source_line=618 family=th13plus
     // Animation lowering th13plus -> th12: anmSelect; semantic verification required
@@ -1012,15 +1009,15 @@ void GirlD02()
     // object Animation source_line=620 family=th13plus
     // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
     ins_259(1, 93);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(1);
-    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
-    ins_407(1, 2);
-    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    ins_407(1, 4);
+    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
     ins_407(2, 4);
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(32.0f, 32.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(24.0f, 24.0f);
     // object Movement source_line=626 family=th13plus
     // movement lowering th13plus -> th12: moveVel
@@ -1067,7 +1064,7 @@ void GirlD02_at()
     ins_504(2, 0.0f, 0.05235988f);
     ins_521(2, 1.6f, 1.6f, 3.0f, 4.0f, 1.6f, 1.6f, 1.6f, 1.6f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($A, 2, 5, 8, 4);
     goto GirlD02_at_596 @ 0;
     GirlD02_at_476:
@@ -1106,21 +1103,21 @@ void GirlD02_at2()
     ins_505(1, %B, 0.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($D, 2, 4, 4, 4);
     goto GirlD02_at2_1096 @ 0;
     GirlD02_at2_360:
-    // raw opcode fallback th15->th12: ins_536 -> ins_436; verify semantics
+    // semantic opcode fallback th15->th12: ins_536 -> ins_436; semantic=difficulty.normal; verify semantics
     ins_436(%B, 1.1f, 1.1f, 1.5f, 2.1f);
     %C = 1.570796f;
     $A = 8;
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($A, 8, 8, 13, 14);
     $E = 4;
     goto GirlD02_at2_952 @ 0;
     GirlD02_at2_604:
     %B = %B + 0.07f;
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(1);
     ins_83(3);
     $F = 2;
@@ -1161,7 +1158,7 @@ void GirlRedA01()
     // object Animation source_line=742 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 5);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(1);
     @GirlA01();
     // unlifted instruction: ins_1();
@@ -1177,7 +1174,7 @@ void GirlRedA01e()
     // object Animation source_line=751 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 5);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(1);
     !NHL
     @GirlA01_at() async;
@@ -1196,7 +1193,7 @@ void GirlRedA02()
     // object Animation source_line=763 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 5);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(1);
     @GirlA02();
     // unlifted instruction: ins_1();
@@ -1212,7 +1209,7 @@ void GirlRedA02e()
     // object Animation source_line=772 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 5);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(1);
     @GirlA02_at() async;
     @GirlA02();
@@ -1229,7 +1226,7 @@ void GirlRedA03()
     // object Animation source_line=782 family=th13plus
     // Animation lowering th13plus -> th12: anmSetMain; semantic verification required
     ins_262(0, 5);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(1);
     @GirlA03();
     // unlifted instruction: ins_1();
@@ -1240,7 +1237,7 @@ void LogoEnemy()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     ins_83(1410);
-    // raw opcode fallback th15->th12: ins_554 -> ins_454; verify semantics
+    // semantic opcode fallback th15->th12: ins_554 -> ins_454; semantic=unit.effect.54; verify semantics
     ins_454();
     return;
 }
@@ -1249,22 +1246,22 @@ void MainBoss()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // raw opcode fallback th15->th12: ins_519 -> ins_419; verify semantics
+    // semantic opcode fallback th15->th12: ins_519 -> ins_419; semantic=unit.property.19; verify semantics
     ins_419();
     // object Enemy source_line=798 family=th13plus
     // Enemy lowering th13plus -> th12: enmCreateA; semantic verification required
     ins_257("Boss", 144.0f, -16.0f, 40, 1000, 1);
-    // raw opcode fallback th15->th12: ins_519 -> ins_419; verify semantics
+    // semantic opcode fallback th15->th12: ins_519 -> ins_419; semantic=unit.property.19; verify semantics
     ins_419();
     +1:
-    // raw opcode fallback th15->th12: ins_520 -> ins_420; verify semantics
+    // semantic opcode fallback th15->th12: ins_520 -> ins_420; semantic=unit.property.20; verify semantics
     ins_420();
-    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
     ins_424(81);
     +60:
-    // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
+    // semantic opcode fallback th15->th12: ins_518 -> ins_418; semantic=unit.property.18; verify semantics
     ins_418(1);
-    // raw opcode fallback th15->th12: ins_519 -> ins_419; verify semantics
+    // semantic opcode fallback th15->th12: ins_519 -> ins_419; semantic=unit.property.19; verify semantics
     ins_419();
     return;
     return;
@@ -1275,7 +1272,7 @@ void MainBossDebug()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     +10:
-    // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
+    // semantic opcode fallback th15->th12: ins_518 -> ins_418; semantic=unit.property.18; verify semantics
     ins_418(0);
     @MainBoss();
     return;
@@ -1286,7 +1283,7 @@ void MainBossDebug2()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     +10:
-    // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
+    // semantic opcode fallback th15->th12: ins_518 -> ins_418; semantic=unit.property.18; verify semantics
     ins_418(-1);
     @MainBoss();
     return;
@@ -1298,7 +1295,7 @@ void MainFront()
     // control-flow, async scheduling, and expression semantics require target-game verification
     @MainSub00();
     ins_83(320);
-    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
     ins_424(1);
     ins_83(230);
     @MainSub01b() async;
@@ -1317,7 +1314,7 @@ void MainLatter()
     // control-flow, async scheduling, and expression semantics require target-game verification
     @MainLatterB() async;
     @MainSub04();
-    // raw opcode fallback th15->th12: ins_520 -> ins_420; verify semantics
+    // semantic opcode fallback th15->th12: ins_520 -> ins_420; semantic=unit.property.20; verify semantics
     ins_420();
     ins_83(61);
     @MainSub05();
@@ -1330,7 +1327,7 @@ void MainLatter2()
     // control-flow, async scheduling, and expression semantics require target-game verification
     @MainLatter2B() async;
     @MainSub06();
-    // raw opcode fallback th15->th12: ins_520 -> ins_420; verify semantics
+    // semantic opcode fallback th15->th12: ins_520 -> ins_420; semantic=unit.property.20; verify semantics
     ins_420();
     ins_83(61);
     @MainSub07();
@@ -1341,7 +1338,7 @@ void MainLatter2B()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // raw opcode fallback th15->th12: ins_520 -> ins_420; verify semantics
+    // semantic opcode fallback th15->th12: ins_520 -> ins_420; semantic=unit.property.20; verify semantics
     ins_420();
     ins_83(60);
     return;
@@ -1351,7 +1348,7 @@ void MainLatterB()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // raw opcode fallback th15->th12: ins_520 -> ins_420; verify semantics
+    // semantic opcode fallback th15->th12: ins_520 -> ins_420; semantic=unit.property.20; verify semantics
     ins_420();
     ins_83(60);
     return;
@@ -1361,7 +1358,7 @@ void MainMBossDebug()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
     ins_424(22);
     // object Enemy source_line=879 family=th13plus
     // Enemy lowering th13plus -> th12: enmCreateA; semantic verification required
@@ -1380,20 +1377,20 @@ void MainMsgDebug()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // unsupported th15->th12 opcode ins_630: TH15 bullet extension opcode, not mapped to TH12
+    // unsupported th15->th12 opcode ins_630: bullet extension opcode, not mapped to TH12
     // original: ins_630(1);
     +10:
-    // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
+    // semantic opcode fallback th15->th12: ins_518 -> ins_418; semantic=unit.property.18; verify semantics
     ins_418(0);
-    // raw opcode fallback th15->th12: ins_519 -> ins_419; verify semantics
+    // semantic opcode fallback th15->th12: ins_519 -> ins_419; semantic=unit.property.19; verify semantics
     ins_419();
     +1:
-    // raw opcode fallback th15->th12: ins_519 -> ins_419; verify semantics
+    // semantic opcode fallback th15->th12: ins_519 -> ins_419; semantic=unit.property.19; verify semantics
     ins_419();
     +60:
-    // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
+    // semantic opcode fallback th15->th12: ins_518 -> ins_418; semantic=unit.property.18; verify semantics
     ins_418(1);
-    // raw opcode fallback th15->th12: ins_519 -> ins_419; verify semantics
+    // semantic opcode fallback th15->th12: ins_519 -> ins_419; semantic=unit.property.19; verify semantics
     ins_419();
     goto MainMsgDebug_184 @ 4071;
     MainMsgDebug_168:
@@ -1799,7 +1796,7 @@ void MapleEnemy()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
     ins_402(32);
     $A = 60;
     goto MapleEnemy_164 @ 0;
@@ -1834,13 +1831,13 @@ void Phantom01()
     // object Animation source_line=1176 family=th13plus
     // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
     ins_259(0, 87);
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(28.0f, 28.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(16.0f, 16.0f);
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
     ins_402(12);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(2);
     // object Movement source_line=1181 family=th13plus
     // movement lowering th13plus -> th12: moveVel
@@ -1855,7 +1852,7 @@ void Phantom01()
     @Phantom01_at() async;
     !*
     ins_83(60);
-    // raw opcode fallback th15->th12: ins_503 -> ins_403; verify semantics
+    // semantic opcode fallback th15->th12: ins_503 -> ins_403; semantic=unit.property.03; verify semantics
     ins_403(12);
     goto Phantom01_384 @ 0;
     Phantom01_364:
@@ -1875,19 +1872,19 @@ void Phantom01_at()
     // object BulletEmitter source_line=1200 family=th13plus
     ins_500(0);
     ins_507(0, 0);
-    ins_502(0, 4, 4);
+    ins_502(0, 5, 4);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.0f);
     ins_505(0, 1.0f, 0.0f);
     ins_522(0, 1, 1, 1, 1, 1, 1, 1, 8);
     ins_521(0, 1.0f, 1.0f, 3.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
+    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
     ins_435($A, 1, 1, 1, 2);
     goto Phantom01_at_504 @ 0;
     Phantom01_at_372:
     ins_83(60 + ([-10000] % 90));
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     Phantom01_at_504:
     if ($A--) goto Phantom01_at_372 @ 0;
@@ -1906,13 +1903,13 @@ void Phantom02()
     // object Animation source_line=1221 family=th13plus
     // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
     ins_259(0, 87);
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(28.0f, 28.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(16.0f, 16.0f);
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
     ins_402(12);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(2);
     @Phantom02_at() async;
     // object Movement source_line=1227 family=th13plus
@@ -1960,7 +1957,7 @@ void Phantom02_at()
     ins_521(0, 1.0f, 2.0f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     ins_83(120 + ([-10000] % 100));
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
     ins_501(0);
     return;
 }
@@ -1975,21 +1972,21 @@ void Phantom02b()
     // object Animation source_line=1261 family=th13plus
     // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
     ins_259(0, 79);
-    // raw opcode fallback th15->th12: ins_516 -> ins_416; verify semantics
+    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
     ins_416(50);
-    // raw opcode fallback th15->th12: ins_500 -> ins_400; verify semantics
+    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
     ins_400(28.0f, 28.0f);
-    // raw opcode fallback th15->th12: ins_501 -> ins_401; verify semantics
+    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
     ins_401(16.0f, 16.0f);
-    // unsupported th15->th12 opcode ins_1002: TH15 game-specific opcode, no TH12 equivalent
+    // unsupported th15->th12 opcode ins_1002: game-specific opcode, no TH12 equivalent
     // original: ins_1002(1);
-    // unsupported th15->th12 opcode ins_1001: TH15 game-specific opcode, no TH12 equivalent
+    // unsupported th15->th12 opcode ins_1001: game-specific opcode, no TH12 equivalent
     // original: ins_1001(60);
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
     ins_402(12);
-    // raw opcode fallback th15->th12: ins_510 -> ins_410; verify semantics
+    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
     ins_410(2);
-    // raw opcode fallback th15->th12: ins_507 -> ins_407; verify semantics
+    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
     ins_407(1, 1);
     !L
     @Phantom02_at() async;
@@ -2001,7 +1998,7 @@ void Phantom02b()
     // movement lowering th13plus -> th12: moveVelTime
     ins_305(260, 0, 1.5707964f + ([-9998.0f] / _f(8)), 1.0f);
     ins_83(60);
-    // raw opcode fallback th15->th12: ins_503 -> ins_403; verify semantics
+    // semantic opcode fallback th15->th12: ins_503 -> ins_403; semantic=unit.property.03; verify semantics
     ins_403(12);
     goto Phantom02b_520 @ 0;
     Phantom02b_500:
@@ -2017,13 +2014,12 @@ void main()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // raw opcode fallback th15->th12: ins_502 -> ins_402; verify semantics
+    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
     ins_402(32);
     ins_83(1);
-    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
     ins_424(0);
-    // TH15 debug/spell selector removed for TH12 normal stage entry.
-    // Original [-9907] branch can trap TH12 in a pre-stage spell-test loop.
+    // timeline rewrite: normal target stage entry should bypass source spell-test selector
     goto main_440 @ 0;
     // original debug selector: unless ([-9907] >= 0) goto main_440 @ 0;
     // original debug selector: unless ([-9907] <= 1) goto main_316 @ 0;
@@ -2047,11 +2043,11 @@ void main()
     +60:
     // unlifted instruction: ins_0();
     @MainFront();
-    // raw opcode fallback th15->th12: ins_525 -> ins_425; verify semantics
+    // semantic opcode fallback th15->th12: ins_525 -> ins_425; semantic=unit.property.25; verify semantics
     ins_425();
-    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
     // original: ins_616(640.0f);
-    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
     ins_424(2);
     ins_83(2);
     // object Enemy source_line=1316 family=th13plus
@@ -2060,9 +2056,9 @@ void main()
     ins_83(160);
     @MainLatter();
     ins_83(120);
-    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
     // original: ins_616(640.0f);
-    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
     ins_424(4);
     ins_83(2);
     // object Enemy source_line=1323 family=th13plus
@@ -2071,14 +2067,14 @@ void main()
     ins_83(160);
     @MainLatter2();
     ins_83(300);
-    // raw opcode fallback th15->th12: ins_525 -> ins_425; verify semantics
+    // semantic opcode fallback th15->th12: ins_525 -> ins_425; semantic=unit.property.25; verify semantics
     ins_425();
-    // unsupported th15->th12 opcode ins_616: TH15 bullet/effect opcode is not TH12 opcode 516; parameter formats differ
+    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
     // original: ins_616(640.0f);
-    // raw opcode fallback th15->th12: ins_524 -> ins_424; verify semantics
+    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
     ins_424(41);
     ins_83(160);
-    // raw opcode fallback th15->th12: ins_518 -> ins_418; verify semantics
+    // semantic opcode fallback th15->th12: ins_518 -> ins_418; semantic=unit.property.18; verify semantics
     ins_418(0);
     @MainBoss();
     goto main_1264 @ 60;

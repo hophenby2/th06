@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from .model import BulletEmitter
+from .semantics import encode_bullet_shape, encode_spread_style, th12_double_flower_pair
 
 INT_SENTINEL = "-999999"
 FLOAT_SENTINEL = "-999999.0f"
@@ -214,11 +215,7 @@ def spread_semantics(e: BulletEmitter) -> dict:
 
 
 def target_flower_pair_from_semantics(e: BulletEmitter) -> tuple[str, str] | None:
-    spread = spread_semantics(e)
-    if spread.get("spread_family") != "double_flower":
-        return None
-    aimed = bool(spread.get("aimed"))
-    return ("4", "2") if aimed else ("5", "3")
+    return th12_double_flower_pair(spread_semantics(e))
 
 
 def compile_bullet_emitter(emitter: BulletEmitter, target: str) -> str:
@@ -279,13 +276,13 @@ def object_difficulty(obj) -> str | None:
 
 ANIMATION_OPS = {
     "th12": {"anmSelect": 258, "anmSetSprite": 259, "anmSetMain": 262, "anmPlay": 263, "anmPlayAbs": 264},
-    "th10_th12": {"anmSelect": 258, "anmSetSprite": 259, "anmSetMain": 262, "anmPlay": 263, "anmPlayAbs": 264},
+    "th10_th11": {"anmSelect": 258, "anmSetSprite": 259, "anmSetMain": 262, "anmPlay": 263, "anmPlayAbs": 264},
     "th13plus": {"anmSelect": 302, "anmSetSprite": 303, "anmSetMain": 306, "anmPlay": 307, "anmPlayAbs": 308, "anmSwitch": 317, "anmReset": 318},
 }
 
 ENEMY_OPS = {
     "th12": {"enmCreate": 256, "enmCreateA": 257, "enmCreateM": 260, "enmCreateAM": 261, "enmCreateF": 265, "enmCreateAF": 266, "enmCreateMF": 267, "enmCreateAMF": 268},
-    "th10_th12": {"enmCreate": 256, "enmCreateA": 257, "enmCreateM": 260, "enmCreateAM": 261, "enmCreateF": 265, "enmCreateAF": 266, "enmCreateMF": 267, "enmCreateAMF": 268},
+    "th10_th11": {"enmCreate": 256, "enmCreateA": 257, "enmCreateM": 260, "enmCreateAM": 261, "enmCreateF": 265, "enmCreateAF": 266, "enmCreateMF": 267, "enmCreateAMF": 268},
     "th13plus": {"enmCreate": 300, "enmCreateA": 301, "enmCreateM": 304, "enmCreateAM": 305, "enmCreateF": 309, "enmCreateAF": 310, "enmCreateMF": 311, "enmCreateAMF": 312},
 }
 
@@ -299,7 +296,7 @@ def target_family(target: str) -> str:
     if target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
         return "th13plus"
     if target in {"th10", "th11"}:
-        return "th10_th12"
+        return "th10_th11"
     if target in {"th06", "th07", "th08"}:
         return "th08_macro"
     return "th12"
@@ -523,41 +520,20 @@ def compile_th13plus(e: BulletEmitter) -> str:
 
 
 def remap_bullet_spread_style_for_target(e: BulletEmitter, target: str):
-    value = e.aim.get("mode_raw")
-    if target != "th12" or getattr(e, "family", "") != "th13plus":
-        return value
-    if isinstance(value, dict):
-        return {rank: remap_th13plus_spread_style_to_th12(str(style)) for rank, style in value.items()}
-    return remap_th13plus_spread_style_to_th12(str(value)) if value is not None else value
-
-
-def remap_th13plus_spread_style_to_th12(style: str) -> str:
-    table = {
-        "2": "4",
-        "3": "5",
-    }
-    return table.get(style.strip(), style)
+    spread = spread_semantics(e)
+    if spread:
+        return encode_spread_style(spread, target, e.aim.get("mode_raw"))
+    return e.aim.get("mode_raw")
 
 
 def remap_bullet_shape_for_target(e: BulletEmitter, target: str):
+    semantic_shape = getattr(e, "semantics", {}).get("bullet", {}).get("shape")
     value = e.appearance.get("style")
-    if target != "th12" or getattr(e, "family", "") != "th13plus":
-        return value
     if isinstance(value, dict):
-        return {rank: remap_th13plus_shape_to_th12(str(shape)) for rank, shape in value.items()}
-    return remap_th13plus_shape_to_th12(str(value)) if value is not None else value
-
-
-def remap_th13plus_shape_to_th12(shape: str) -> str:
-    table = {
-        "0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5": "4", "6": "5", "7": "6",
-        "8": "7", "9": "8", "10": "9", "11": "10", "12": "11", "13": "12", "14": "13", "15": "14",
-        "16": "15", "17": "16", "18": "18", "19": "18", "20": "19", "21": "20", "22": "21",
-        "23": "22", "24": "22", "25": "24", "26": "29", "27": "29", "28": "24", "29": "25",
-        "30": "18", "31": "9", "32": "26", "33": "23", "34": "28", "35": "7", "36": "9",
-        "37": "15", "38": "30",
-    }
-    return table.get(shape.strip(), shape)
+        return {rank: encode_bullet_shape(semantic_shape or f"raw:{shape}", target, shape) for rank, shape in value.items()}
+    if semantic_shape:
+        return encode_bullet_shape(semantic_shape, target, value)
+    return value
 
 
 def compile_th12(e: BulletEmitter) -> str:

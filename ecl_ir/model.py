@@ -178,3 +178,27 @@ class BossPattern(IRObject):
 class TimelineOp(IRObject):
     def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "structured"):
         super().__init__("Timeline", game, function, source_line, id, family)
+
+
+@dataclass
+class ResourcePlan(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "resources", family: str = "program"):
+        super().__init__("ResourcePlan", game, function, source_line, id, family)
+
+
+@dataclass
+class EntryAlias(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "entry_alias", family: str = "program"):
+        super().__init__("EntryAlias", game, function, source_line, id, family)
+
+
+@dataclass
+class HelperRoutine(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "helper", family: str = "program"):
+        super().__init__("HelperRoutine", game, function, source_line, id, family)
+
+
+@dataclass
+class TimelineRewrite(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "timeline_rewrite", family: str = "program"):
+        super().__init__("TimelineRewrite", game, function, source_line, id, family)
