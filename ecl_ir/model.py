@@ -111,6 +111,7 @@ class BulletEmitter:
     speed: dict[str, Any] = field(default_factory=dict)
     sound: dict[str, Any] = field(default_factory=dict)
     flags: dict[str, Any] = field(default_factory=dict)
+    semantics: dict[str, Any] = field(default_factory=dict)
     transforms: list[BulletTransform] = field(default_factory=list)
     fire_lines: list[int] = field(default_factory=list)
     raw: list[Instruction] = field(default_factory=list)
@@ -135,6 +136,7 @@ class BulletEmitter:
             "speed": self.speed,
             "sound": self.sound,
             "flags": self.flags,
+            "semantics": self.semantics,
             "transforms": [t.__dict__ for t in self.transforms],
             "fire_lines": self.fire_lines,
             "raw": [ins.to_dict() for ins in self.raw],

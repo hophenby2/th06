@@ -82,16 +82,20 @@ def lift_movements(program: Program, func: Function) -> list[MovementOp]:
         movement_names = {
             400: "movePos", 401: "movePosTime", 402: "movePosRel", 403: "movePosRelTime",
             404: "moveVel", 405: "moveVelTime", 406: "moveVelRel", 407: "moveVelRelTime",
-            408: "moveCircle", 409: "moveCircleTime", 420: "moveEllipse", 421: "moveEllipseTime",
+            408: "moveCircle", 409: "moveCircleTime", 410: "moveCircleRel", 411: "moveCircleRelTime",
+            420: "moveEllipse", 421: "moveEllipseTime", 422: "moveEllipseRel", 423: "moveEllipseRelTime",
             424: "moveSetMirror", 425: "moveBezier", 426: "moveBezierRel", 427: "moveReset",
             432: "moveEnm", 433: "moveEnmRel", 434: "moveCurve", 435: "moveCurveRel",
+            440: "moveDir", 441: "moveDirTime", 442: "moveDirRel", 443: "moveDirRelTime",
+            444: "moveSpeed", 445: "moveSpeedTime", 446: "moveSpeedRel", 447: "moveSpeedRelTime",
         }
         family = "th13plus"
     elif program.game == "th12":
         movement_names = {
             300: "movePos", 301: "movePosTime", 302: "movePosRel", 303: "movePosRelTime",
             304: "moveVel", 305: "moveVelTime", 306: "moveVelRel", 307: "moveVelRelTime",
-            320: "moveEllipse", 321: "moveEllipseTime", 325: "moveBezier", 326: "moveBezierRel", 327: "moveReset",
+            320: "moveEllipse", 321: "moveEllipseTime", 322: "moveEllipseRel", 323: "moveEllipseRelTime",
+            325: "moveBezier", 326: "moveBezierRel", 327: "moveReset",
         }
         family = "th12"
     elif program.game in {"th10", "th11"}:
@@ -99,13 +103,37 @@ def lift_movements(program: Program, func: Function) -> list[MovementOp]:
         family = "th10"
     else:
         return objects
+    current_direction: str | None = None
+    current_speed: str | None = None
     for ins in func.body:
         if ins.opcode not in movement_names:
             continue
         obj = make_obj(MovementOp, program, func, ins, family)
-        obj.fields["op"] = movement_names[ins.opcode]
+        op_name = movement_names[ins.opcode]
+        obj.fields["op"] = op_name
         obj.fields["args"] = ins.args
         obj.fields["difficulty"] = ins.difficulty
+        obj.fields.setdefault("semantics", {})["motion"] = {"op": op_name}
+        if program.game in TH13PLUS:
+            if ins.opcode in {404, 406} and len(ins.args) >= 2:
+                current_direction, current_speed = ins.args[0], ins.args[1]
+                obj.fields["semantics"]["motion"].update({"direction": current_direction, "speed": current_speed})
+            elif ins.opcode in {405, 407} and len(ins.args) >= 4:
+                current_direction, current_speed = ins.args[2], ins.args[3]
+                obj.fields["semantics"]["motion"].update({"time": ins.args[0], "mode": ins.args[1], "direction": current_direction, "speed": current_speed})
+            elif ins.opcode in {440, 442} and len(ins.args) >= 1:
+                current_direction = ins.args[0]
+                obj.fields["semantics"]["motion"].update({"direction": current_direction, "speed": current_speed})
+            elif ins.opcode in {441, 443} and len(ins.args) >= 3:
+                obj.fields["semantics"]["motion"].update({"time": ins.args[0], "mode": ins.args[1], "direction_delta": ins.args[2], "base_direction": current_direction, "speed": current_speed})
+                if current_direction is not None:
+                    current_direction = f"{current_direction} + {ins.args[2]}"
+            elif ins.opcode in {444, 446} and len(ins.args) >= 1:
+                current_speed = ins.args[0]
+                obj.fields["semantics"]["motion"].update({"direction": current_direction, "speed": current_speed})
+            elif ins.opcode in {445, 447} and len(ins.args) >= 3:
+                current_speed = ins.args[2]
+                obj.fields["semantics"]["motion"].update({"time": ins.args[0], "mode": ins.args[1], "direction": current_direction, "speed": current_speed})
         objects.append(obj)
     return objects
 

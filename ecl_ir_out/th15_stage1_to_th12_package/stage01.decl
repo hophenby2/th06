@@ -412,8 +412,9 @@ void GirlA03()
     ins_304(1.5707964f, 2.5f);
     @GirlA03_at() async;
     ins_83(60);
-    // unsupported th15->th12 opcode ins_441: movement-direction acceleration opcode has no confirmed TH12 one-to-one raw fallback here
-    // original: ins_441(120, 7, [-9981.0f]);
+    // object Movement source_line=194 family=th13plus
+    // movement semantic lowering th13plus -> th12: moveDirTime with remembered speed
+    ins_305(120, 0, 1.5707964f + [-9981.0f], 2.5f);
     ins_83(120);
     goto GirlA03_252 @ 0;
     GirlA03_232:
@@ -873,8 +874,9 @@ void GirlD01()
     ins_305(80, 1, 1.5707964f, 0.0f);
     @GirlD01_at() async;
     ins_83(80);
-    // unsupported th15->th12 opcode ins_445: speed interpolation opcode may correspond to TH12 345/347 family, not safely mapped yet
-    // original: ins_445(120, 1, 1.0f);
+    // object Movement source_line=512 family=th13plus
+    // movement semantic lowering th13plus -> th12: moveSpeedTime with remembered direction
+    ins_305(120, 1, 1.5707964f, 1.0f);
     ins_83(60);
     goto GirlD01_440 @ 0;
     GirlD01_420:
@@ -894,12 +896,19 @@ void GirlD01_at()
     ins_83(60);
     // object BulletEmitter source_line=526 family=th13plus
     // difficulty count.layers: E=2, N=6, H=6, LO=6; preserved as TH12 difficulty table; default preview N=6
+    // TH15 double flower spread lowered to two TH12 single-side flower slots: 0+2
     ins_500(0);
-    ins_507(0, 9);
+    ins_507(0, 4);
     ins_502(0, 6, 4);
     ins_522(0, 10, 10, 10, 10, 2, 6, 6, 6);
     ins_504(0, 0.0f, 0.05235988f);
     ins_505(0, 1.6f, 1.6f);
+    ins_500(2);
+    ins_507(2, 2);
+    ins_502(2, 6, 4);
+    ins_522(2, 10, 10, 10, 10, 2, 6, 6, 6);
+    ins_504(2, 0.0f, 0.05235988f);
+    ins_505(2, 1.6f, 1.6f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 4.0f, -999999.0f
     unless ([-9959] == 3) goto GirlD01_at_460 @ 0;
@@ -908,8 +917,9 @@ void GirlD01_at()
     ins_435($A, 2, 3, 6, 10);
     goto GirlD01_at_640 @ 0;
     GirlD01_at_520:
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // TH15 double flower fire lowered to two TH12 slots: 0+2
     ins_501(0);
+    ins_501(2);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(120);
@@ -1020,8 +1030,9 @@ void GirlD02()
     ins_305(80, 1, 1.5707964f, 0.0f);
     @GirlD02_at() async;
     ins_83(240);
-    // unsupported th15->th12 opcode ins_445: speed interpolation opcode may correspond to TH12 345/347 family, not safely mapped yet
-    // original: ins_445(120, 1, -1.0f);
+    // object Movement source_line=630 family=th13plus
+    // movement semantic lowering th13plus -> th12: moveSpeedTime with remembered direction
+    ins_305(120, 1, 1.5707964f, -1.0f);
     ins_83(60);
     goto GirlD02_440 @ 0;
     GirlD02_420:
@@ -1042,19 +1053,27 @@ void GirlD02_at()
     // object BulletEmitter source_line=644 family=th13plus
     // difficulty count.layers: E=2, N=6, H=8, LO=6; preserved as TH12 difficulty table; default preview N=6
     // difficulty speed.first: E=1.6f, N=1.6f, H=3.0f, LO=4.0f; preserved as TH12 difficulty table; default preview N=1.6f
+    // TH15 double flower spread lowered to two TH12 single-side flower slots: 0+2
     ins_500(0);
-    ins_507(0, 9);
+    ins_507(0, 4);
     ins_502(0, 6, 2);
     ins_522(0, 8, 8, 8, 8, 2, 6, 8, 6);
     ins_504(0, 0.0f, 0.05235988f);
     ins_521(0, 1.6f, 1.6f, 3.0f, 4.0f, 1.6f, 1.6f, 1.6f, 1.6f);
+    ins_500(2);
+    ins_507(2, 2);
+    ins_502(2, 6, 2);
+    ins_522(2, 8, 8, 8, 8, 2, 6, 8, 6);
+    ins_504(2, 0.0f, 0.05235988f);
+    ins_521(2, 1.6f, 1.6f, 3.0f, 4.0f, 1.6f, 1.6f, 1.6f, 1.6f);
     // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
     // raw opcode fallback th15->th12: ins_535 -> ins_435; verify semantics
     ins_435($A, 2, 5, 8, 4);
     goto GirlD02_at_596 @ 0;
     GirlD02_at_476:
-    // raw opcode fallback th15->th12: ins_601 -> ins_501; verify semantics
+    // TH15 double flower fire lowered to two TH12 slots: 0+2
     ins_501(0);
+    ins_501(2);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(120);
@@ -1828,9 +1847,10 @@ void Phantom01()
     ins_304(1.5707964f, 1.0f);
     // object Movement source_line=1182 family=th13plus
     // movement lowering th13plus -> th12: moveVelTime
-    ins_305(120, 3, 1.5707964f, 1.5f);
-    // unsupported th15->th12 opcode ins_422: TH13+ movement opcode not represented in current TH12 movement subset
-    // original: ins_422([-9981.0f], 0.034906585f, 10.0f, 0.0f, [-9971.0f], 0.0f);
+    ins_305(120, 0, 1.5707964f, 1.5f);
+    // object Movement source_line=1183 family=th13plus
+    // movement lowering th13plus -> th12: moveEllipseRel
+    ins_322([-9981.0f], 0.034906585f, 10.0f, 0.0f, [-9971.0f], 0.0f);
     !HL
     @Phantom01_at() async;
     !*
@@ -1901,18 +1921,20 @@ void Phantom02()
     ins_83(140);
     // object Movement source_line=1229 family=th13plus
     // movement lowering th13plus -> th12: moveVelTime
-    ins_305(120, 3, 1.5707964f, 0.0f);
-    // unsupported th15->th12 opcode ins_422: TH13+ movement opcode not represented in current TH12 movement subset
-    // original: ins_422([-9998.0f], 0.034906585f, 0.0f, 0.0f, [-9971.0f], 0.0f);
-    // unsupported th15->th12 opcode ins_423: TH13+ movement opcode not represented in current TH12 movement subset
-    // original: ins_423(60, 0, -999999.0f, 40.0f, 0.0f, [-9971.0f], 0.0f);
+    ins_305(120, 0, 1.5707964f, 0.0f);
+    // object Movement source_line=1230 family=th13plus
+    // movement lowering th13plus -> th12: moveEllipseRel
+    ins_322([-9998.0f], 0.034906585f, 0.0f, 0.0f, [-9971.0f], 0.0f);
+    // object Movement source_line=1231 family=th13plus
+    // movement lowering th13plus -> th12: moveEllipseRelTime
+    ins_323(60, 0, -999999.0f, 40.0f, 0.0f, [-9971.0f], 0.0f);
     ins_83(90);
     // object Movement source_line=1233 family=th13plus
     // movement lowering th13plus -> th12: moveVel
     ins_304(-1.5707964f, 0.0f);
     // object Movement source_line=1234 family=th13plus
     // movement lowering th13plus -> th12: moveVelTime
-    ins_305(120, 3, -1.5707964f, 1.0f);
+    ins_305(120, 0, -1.5707964f, 1.0f);
     goto Phantom02_484 @ 0;
     Phantom02_464:
     ins_83(1000);

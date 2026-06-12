@@ -166,6 +166,61 @@ def th12_difficulty_count_args(emitter_id: str, ways_value, fallback_ways: str, 
     layer_values = layer_values or [fallback_layers for _ in range(4)]
     return [emitter_id, *ways, *layer_values]
 
+def emit_th12_bullet_setup_lines(
+    emitter_id: str,
+    aim_raw_value,
+    style_value,
+    color_value,
+    ways_value,
+    ways: str,
+    layers_value,
+    layers: str,
+    angle_value,
+    angle_step_value,
+    speed_value,
+    speed: str,
+    speed_step_value,
+    speed_step: str,
+) -> list[str]:
+    lines: list[str] = [f"ins_500({emitter_id});"]
+    lines.extend(emit_instruction_with_ranked_args(507, [emitter_id, aim_raw_value], ["0", "1"]))
+    lines.extend(emit_instruction_with_ranked_args(502, [emitter_id, style_value, color_value], ["0", "0", "0"]))
+    count_args = th12_difficulty_count_args(emitter_id, ways_value, ways, layers_value, layers)
+    if count_args:
+        lines.append(f"ins_522({', '.join(count_args)});")
+    else:
+        lines.extend(emit_instruction_with_ranked_args(506, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
+    lines.extend(emit_instruction_with_ranked_args(504, [emitter_id, angle_value, angle_step_value], ["0", "0.0f", "0.0f"]))
+    speed_args = th12_difficulty_speed_args(emitter_id, speed_value, speed, speed_step_value, speed_step)
+    if speed_args:
+        lines.append(f"ins_521({', '.join(speed_args)});")
+    else:
+        lines.extend(emit_instruction_with_ranked_args(505, [emitter_id, speed_value, speed_step_value], ["0", "1.0f", "0.0f"]))
+    return lines
+
+
+def th12_aux_emitter_id(emitter_id: str) -> str | None:
+    stripped = str(emitter_id).strip()
+    if not re.fullmatch(r"\d+", stripped):
+        return None
+    aux = int(stripped) + 2
+    if aux > 7:
+        return None
+    return str(aux)
+
+
+def spread_semantics(e: BulletEmitter) -> dict:
+    return getattr(e, "semantics", {}).get("bullet", {}).get("spread", {})
+
+
+def target_flower_pair_from_semantics(e: BulletEmitter) -> tuple[str, str] | None:
+    spread = spread_semantics(e)
+    if spread.get("spread_family") != "double_flower":
+        return None
+    aimed = bool(spread.get("aimed"))
+    return ("4", "2") if aimed else ("5", "3")
+
+
 def compile_bullet_emitter(emitter: BulletEmitter, target: str) -> str:
     if target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
         return compile_th13plus(emitter)
@@ -335,22 +390,96 @@ def compile_laser(obj, target: str) -> str:
     return "\n".join(lines)
 
 
+def parenthesize_expr(expr: object) -> str:
+    expr = str(expr).strip()
+    if re.fullmatch(r"[-+]?\d+(?:\.\d+)?f?", expr):
+        return expr
+    if re.fullmatch(r"\[-?\d+(?:\.0f)?\]|[%$][A-Za-z_][A-Za-z0-9_]*", expr):
+        return expr
+    if expr.startswith("(") and expr.endswith(")"):
+        return expr
+    return f"({expr})"
+
+
+def add_float_expr(left: object, right: object) -> str:
+    left_text = str(left).strip()
+    right_text = str(right).strip()
+    if right_text.startswith("-") and re.fullmatch(r"-\d+(?:\.\d+)?f?", right_text):
+        return f"{parenthesize_expr(left_text)} - {right_text[1:]}"
+    return f"{parenthesize_expr(left_text)} + {parenthesize_expr(right_text)}"
+
+
+def th12_unit_move_mode(mode: object) -> str:
+    text = str(mode).strip()
+    return text if text in {"0", "1", "4", "9"} else "0"
+
+
+def normalize_th12_move_args(movement: str, args: list[str]) -> list[str]:
+    normalized = [str(arg) for arg in args]
+    if movement in {"movePosTime", "movePosRelTime", "moveVelTime", "moveVelRelTime", "moveEllipseTime", "moveEllipseRelTime", "moveBezier", "moveBezierRel"}:
+        if len(normalized) > 1 and normalized[1] not in {"0", "1", "4", "9"}:
+            normalized[1] = "0"
+    return normalized
+
+
+def compile_split_motion_semantic(obj, target: str) -> str | None:
+    if target != "th12":
+        return None
+    motion = obj.fields.get("semantics", {}).get("motion", {})
+    op = motion.get("op")
+    rel = op in {"moveDirRel", "moveDirRelTime", "moveSpeedRel", "moveSpeedRelTime"}
+    direct_opcode = 306 if rel else 304
+    time_opcode = 307 if rel else 305
+    if op in {"moveDir", "moveDirRel"}:
+        speed = motion.get("speed")
+        direction = motion.get("direction")
+        if speed is None or direction is None:
+            return compile_raw_comment(obj, target) + "\n// unsupported split movement semantic: direction set needs current speed"
+        return f"// movement semantic lowering {obj.family} -> {target}: {op} with remembered speed\nins_{direct_opcode}({direction}, {speed});"
+    if op in {"moveDirTime", "moveDirRelTime"}:
+        speed = motion.get("speed")
+        base_direction = motion.get("base_direction")
+        delta = motion.get("direction_delta")
+        if speed is None or base_direction is None or delta is None:
+            return compile_raw_comment(obj, target) + "\n// unsupported split movement semantic: direction interpolation needs current direction and speed"
+        direction = add_float_expr(base_direction, delta)
+        return f"// movement semantic lowering {obj.family} -> {target}: {op} with remembered speed\nins_{time_opcode}({motion.get('time', '0')}, {th12_unit_move_mode(motion.get('mode', '0'))}, {direction}, {speed});"
+    if op in {"moveSpeed", "moveSpeedRel"}:
+        direction = motion.get("direction")
+        speed = motion.get("speed")
+        if direction is None or speed is None:
+            return compile_raw_comment(obj, target) + "\n// unsupported split movement semantic: speed set needs current direction"
+        return f"// movement semantic lowering {obj.family} -> {target}: {op} with remembered direction\nins_{direct_opcode}({direction}, {speed});"
+    if op in {"moveSpeedTime", "moveSpeedRelTime"}:
+        direction = motion.get("direction")
+        speed = motion.get("speed")
+        if direction is None or speed is None:
+            return compile_raw_comment(obj, target) + "\n// unsupported split movement semantic: speed interpolation needs current direction"
+        return f"// movement semantic lowering {obj.family} -> {target}: {op} with remembered direction\nins_{time_opcode}({motion.get('time', '0')}, {th12_unit_move_mode(motion.get('mode', '0'))}, {direction}, {speed});"
+    return None
+
+
 def compile_movement(obj, target: str) -> str:
     if target in {"th06", "th07", "th08"}:
         return compile_raw_comment(obj, target) + f"\n// movement lowering to {target} macro generation is not implemented yet"
     if target not in {"th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"}:
         raise ValueError(f"unsupported movement target: {target}")
+    semantic = compile_split_motion_semantic(obj, target)
+    if semantic is not None:
+        return semantic
     movement = obj.fields.get("op")
     args = obj.fields.get("args", [])
     th13 = {
         "movePos": 400, "movePosTime": 401, "movePosRel": 402, "movePosRelTime": 403,
         "moveVel": 404, "moveVelTime": 405, "moveVelRel": 406, "moveVelRelTime": 407,
-        "moveEllipse": 420, "moveEllipseTime": 421, "moveBezier": 425, "moveBezierRel": 426, "moveReset": 427,
+        "moveEllipse": 420, "moveEllipseTime": 421, "moveEllipseRel": 422, "moveEllipseRelTime": 423,
+        "moveBezier": 425, "moveBezierRel": 426, "moveReset": 427,
     }
     th12 = {
         "movePos": 300, "movePosTime": 301, "movePosRel": 302, "movePosRelTime": 303,
         "moveVel": 304, "moveVelTime": 305, "moveVelRel": 306, "moveVelRelTime": 307,
-        "moveEllipse": 320, "moveEllipseTime": 321, "moveBezier": 325, "moveBezierRel": 326, "moveReset": 327,
+        "moveEllipse": 320, "moveEllipseTime": 321, "moveEllipseRel": 322, "moveEllipseRelTime": 323,
+        "moveBezier": 325, "moveBezierRel": 326, "moveReset": 327,
     }
     th10 = {
         "movePos": 320, "movePosTime": 321, "moveVel": 322, "moveVelTime": 323,
@@ -360,7 +489,8 @@ def compile_movement(obj, target: str) -> str:
     opcode = table.get(movement)
     if opcode is None:
         return compile_raw_comment(obj, target) + f"\n// unsupported movement semantic: {movement}"
-    return f"// movement lowering {obj.family} -> {target}: {movement}\nins_{opcode}({', '.join(args)});"
+    lowered_args = normalize_th12_move_args(movement, args) if target == "th12" else args
+    return f"// movement lowering {obj.family} -> {target}: {movement}\nins_{opcode}({', '.join(lowered_args)});"
 
 
 def compile_th13plus(e: BulletEmitter) -> str:
@@ -451,20 +581,16 @@ def compile_th12(e: BulletEmitter) -> str:
     if speed_step_value is None and e.speed.get("last_or_step") is not None:
         speed_step_value = e.speed.get("last_or_step")
     speed_step = v(speed_step_value, e.speed.get("last_or_step", "0.0f"))
-    lines = [f"ins_500({emitter_id});"]
-    lines.extend(emit_instruction_with_ranked_args(507, [emitter_id, aim_raw_value], ["0", "1"]))
-    lines.extend(emit_instruction_with_ranked_args(502, [emitter_id, style_value, color_value], ["0", "0", "0"]))
-    count_args = th12_difficulty_count_args(emitter_id, ways_value, ways, layers_value, layers)
-    if count_args:
-        lines.append(f"ins_522({', '.join(count_args)});")
+
+    double_flower = target_flower_pair_from_semantics(e)
+    aux_emitter_id = th12_aux_emitter_id(str(emitter_id)) if double_flower else None
+    if double_flower and aux_emitter_id:
+        lines = [f"// TH15 double flower spread lowered to two TH12 single-side flower slots: {emitter_id}+{aux_emitter_id}"]
+        lines.extend(emit_th12_bullet_setup_lines(emitter_id, double_flower[0], style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step))
+        lines.extend(emit_th12_bullet_setup_lines(aux_emitter_id, double_flower[1], style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step))
     else:
-        lines.extend(emit_instruction_with_ranked_args(506, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
-    lines.extend(emit_instruction_with_ranked_args(504, [emitter_id, angle_value, angle_step_value], ["0", "0.0f", "0.0f"]))
-    speed_args = th12_difficulty_speed_args(emitter_id, speed_value, speed, speed_step_value, speed_step)
-    if speed_args:
-        lines.append(f"ins_521({', '.join(speed_args)});")
-    else:
-        lines.extend(emit_instruction_with_ranked_args(505, [emitter_id, speed_value, speed_step_value], ["0", "1.0f", "0.0f"]))
+        lines = emit_th12_bullet_setup_lines(emitter_id, aim_raw_value, style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step)
+
     for field, value in (("speed.first", speed_value), ("speed.step", speed_step_value), ("count.ways", ways_value), ("count.layers", layers_value)):
         comment = difficulty_comment(field, value)
         if comment:
@@ -480,8 +606,14 @@ def compile_th12(e: BulletEmitter) -> str:
             lines.append(f"ins_512({', '.join(transform.raw_args)});")
         elif transform.raw_opcode == 624 and len(transform.raw_args) == 9:
             lines.extend(emit_instruction_with_ranked_args(521, transform.raw_args, [emitter_id, "1.0f", "1.0f", "1.0f", "1.0f", "0.0f", "0.0f", "0.0f", "0.0f"]))
+            if aux_emitter_id:
+                aux_args = [aux_emitter_id, *transform.raw_args[1:]]
+                lines.extend(emit_instruction_with_ranked_args(521, aux_args, [aux_emitter_id, "1.0f", "1.0f", "1.0f", "1.0f", "0.0f", "0.0f", "0.0f", "0.0f"]))
         elif transform.raw_opcode == 625 and len(transform.raw_args) == 9:
             lines.extend(emit_instruction_with_ranked_args(522, transform.raw_args, [emitter_id, "1", "1", "1", "1", "1", "1", "1", "1"]))
+            if aux_emitter_id:
+                aux_args = [aux_emitter_id, *transform.raw_args[1:]]
+                lines.extend(emit_instruction_with_ranked_args(522, aux_args, [aux_emitter_id, "1", "1", "1", "1", "1", "1", "1", "1"]))
         elif transform.raw_opcode in {609, 610, 611, 612}:
             lines.append(f"// unsupported th13+ transform for th12; preserved source ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
         elif transform.raw_opcode in {510, 511, 512}:

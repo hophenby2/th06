@@ -64,12 +64,47 @@ def set_ranked_field(container: dict, key: str, value: object, difficulty: str |
     container[key] = merge_ranked_value(container.get(key), value, difficulty)
 
 
+def resolved_plain(value: object) -> str:
+    if isinstance(value, dict):
+        return str(value.get("placeholder", ""))
+    return str(value)
+
+
+def classify_th13plus_spread(style: object) -> dict[str, object]:
+    raw = resolved_plain(style).strip()
+    if raw == "9":
+        return {"spread_family": "double_flower", "target_biases": ["left", "right"], "aimed": True}
+    if raw == "10":
+        return {"spread_family": "double_flower", "target_biases": ["left", "right"], "aimed": False}
+    if raw in {"2", "3"}:
+        return {"spread_family": "single_flower", "bias": "left", "aimed": raw == "2"}
+    if raw in {"4", "5"}:
+        return {"spread_family": "single_flower", "bias": "offset_left", "aimed": raw == "4"}
+    return {"spread_family": aim_mode_name(raw), "aimed": raw in {"0", "2", "4", "9"}}
+
+
+def classify_th12_spread(style: object) -> dict[str, object]:
+    raw = resolved_plain(style).strip()
+    if raw in {"2", "3"}:
+        return {"spread_family": "single_flower", "bias": "right", "aimed": raw == "2"}
+    if raw in {"4", "5"}:
+        return {"spread_family": "single_flower", "bias": "left", "aimed": raw == "4"}
+    return {"spread_family": aim_mode_name(raw), "aimed": raw in {"0", "2", "4"}}
+
+
+def update_spread_semantics(emitter: BulletEmitter, style: object, family: str) -> None:
+    classifier = classify_th13plus_spread if family == "th13plus" else classify_th12_spread
+    emitter.semantics.setdefault("bullet", {}).setdefault("spread", {}).update(classifier(style))
+
+
 def apply_th13plus(emitter: BulletEmitter, ins: Instruction) -> None:
     args = ins.args
     op = ins.opcode
     if op == 607:
-        set_ranked_field(emitter.aim, "mode_raw", with_difficulty(arg(args, 1, "0"), ins.difficulty_literals), ins.difficulty)
+        style = with_difficulty(arg(args, 1, "0"), ins.difficulty_literals)
+        set_ranked_field(emitter.aim, "mode_raw", style, ins.difficulty)
         emitter.aim.setdefault("mode", aim_mode_name(arg(args, 1, "0")))
+        update_spread_semantics(emitter, style, "th13plus")
     elif op == 602:
         set_ranked_field(emitter.appearance, "style", with_difficulty(arg(args, 1), ins.difficulty_literals), ins.difficulty)
         set_ranked_field(emitter.appearance, "color", with_difficulty(arg(args, 2), ins.difficulty_literals), ins.difficulty)
@@ -114,8 +149,10 @@ def apply_th12(emitter: BulletEmitter, ins: Instruction) -> None:
     args = ins.args
     op = ins.opcode
     if op == 507:
-        set_ranked_field(emitter.aim, "mode_raw", with_difficulty(arg(args, 1, "0"), ins.difficulty_literals), ins.difficulty)
+        style = with_difficulty(arg(args, 1, "0"), ins.difficulty_literals)
+        set_ranked_field(emitter.aim, "mode_raw", style, ins.difficulty)
         emitter.aim.setdefault("mode", aim_mode_name(arg(args, 1, "0")))
+        update_spread_semantics(emitter, style, "th12")
     elif op == 502:
         set_ranked_field(emitter.appearance, "style", with_difficulty(arg(args, 1), ins.difficulty_literals), ins.difficulty)
         set_ranked_field(emitter.appearance, "color", with_difficulty(arg(args, 2), ins.difficulty_literals), ins.difficulty)

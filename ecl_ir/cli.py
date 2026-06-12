@@ -3,9 +3,10 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from dataclasses import dataclass
 from pathlib import Path
 
-from .backend import choose_difficulty, compile_bullet_emitter, compile_object, first_difficulty_group, normalize_difficulty, wrap_ranked_lines
+from .backend import choose_difficulty, compile_bullet_emitter, compile_object, first_difficulty_group, normalize_difficulty, th12_aux_emitter_id, wrap_ranked_lines
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
 
@@ -218,6 +219,7 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
     lines.append("    // control-flow, async scheduling, and expression semantics require target-game verification")
     skipped_debug_selector = False
     source_game = getattr(timeline, "game", "unknown")
+    bullet_state = make_bullet_lowering_state(function_objects, source_game, target)
     for event in timeline.fields.get("statements", []):
         if is_th15_stage1_debug_selector_event(event, source_game, target, getattr(timeline, "function", "")):
             if not skipped_debug_selector:
@@ -238,7 +240,7 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
                     lines.append(f"    {line}")
         if line_no in covered_lines:
             continue
-        lines.extend(emit_timeline_event(event, getattr(timeline, "game", "unknown"), target))
+        lines.extend(emit_timeline_event(event, getattr(timeline, "game", "unknown"), target, bullet_state))
     emitted_starts = set(object_starts)
     late_objects = [obj for obj in semantic_objects if getattr(obj, "source_line", 0) not in emitted_starts and not getattr(obj, "raw", [])]
     if late_objects:
@@ -288,6 +290,7 @@ def emit_raw_timeline_body(timeline, target: str) -> list[str]:
     lines.append(f"    // Timeline lowering {timeline.family} -> {target}; raw-order boss/bullet-safe path")
     lines.append("    // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.")
     emitted_spelltest_skip = False
+    source_game = getattr(timeline, "game", "unknown")
     for event in timeline.fields.get("statements", []):
         if should_skip_boss_spelltest_event(event, timeline, target):
             if not emitted_spelltest_skip:
@@ -299,7 +302,7 @@ def emit_raw_timeline_body(timeline, target: str) -> list[str]:
                 emitted_spelltest_skip = True
             lines.append(f"    // original spell-test branch: {event.get('text', '')}")
             continue
-        lines.extend(emit_timeline_event(event, getattr(timeline, "game", "unknown"), target))
+        lines.extend(emit_timeline_event(event, source_game, target))
     loops = timeline.fields.get("loops", [])
     if loops:
         lines.append("    // detected loops:")
@@ -317,6 +320,41 @@ def should_skip_boss_spelltest_event(event: dict[str, object], timeline, target:
     if "[-9907]" not in str(event.get("text", "")) and "[-9907]" not in str(event.get("condition", "")):
         return False
     return event.get("kind") == "conditional_goto"
+
+
+@dataclass
+class BulletLoweringState:
+    double_flower_aux: dict[str, str]
+
+
+def make_bullet_lowering_state(function_objects: list[object], source_game: str, target: str) -> BulletLoweringState | None:
+    if source_game not in {"th13", "th14", "th15", "th16", "th17", "th18"} or target != "th12":
+        return None
+    aux: dict[str, str] = {}
+    for obj in function_objects:
+        if getattr(obj, "kind", None) != "BulletEmitter" or getattr(obj, "family", "") != "th13plus":
+            continue
+        emitter_id = str(getattr(obj, "id", ""))
+        spread = getattr(obj, "semantics", {}).get("bullet", {}).get("spread", {})
+        if spread.get("spread_family") == "double_flower":
+            aux_id = th12_aux_emitter_id(emitter_id)
+            if aux_id:
+                aux[emitter_id] = aux_id
+    return BulletLoweringState(aux)
+
+
+def lower_bullet_fire_opcode(opcode: int, args: list[object], source_game: str, target: str, bullet_state: BulletLoweringState | None) -> list[str] | None:
+    if opcode != 601 or target != "th12" or source_game not in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+        return None
+    emitter_id = str(args[0]) if args else "0"
+    aux_id = bullet_state.double_flower_aux.get(emitter_id) if bullet_state else None
+    if aux_id:
+        return [
+            f"    // TH15 double flower fire lowered to two TH12 slots: {emitter_id}+{aux_id}",
+            f"    ins_501({emitter_id});",
+            f"    ins_501({aux_id});",
+        ]
+    return None
 
 
 TH13PLUS_TO_TH12_RAW_REORDER = {
@@ -339,6 +377,8 @@ TH13PLUS_TO_TH12_RAW_REORDER = {
     407: (307, [0, 1, 2, 3]),
     420: (320, [0, 1, 2, 3, 4, 5]),
     421: (321, [0, 1, 2, 3, 4, 5, 6]),
+    422: (322, [0, 1, 2, 3, 4, 5]),
+    423: (323, [0, 1, 2, 3, 4, 5, 6]),
     425: (325, [0, 1, 2, 3, 4, 5, 6]),
     426: (326, [0, 1, 2, 3, 4, 5, 6]),
     427: (327, []),
@@ -359,10 +399,6 @@ TH13PLUS_TO_TH12_RAW = {
 }
 
 TH13PLUS_TO_TH12_RAW_UNSUPPORTED = {
-    441: "movement-direction acceleration opcode has no confirmed TH12 one-to-one raw fallback here",
-    422: "TH13+ movement opcode not represented in current TH12 movement subset",
-    423: "TH13+ movement opcode not represented in current TH12 movement subset",
-    445: "speed interpolation opcode may correspond to TH12 345/347 family, not safely mapped yet",
     569: "TH15 pointdevice/LoLK-specific unit flag, no TH12 equivalent",
     610: "TH15 bullet clear/transform opcode is not TH12 opcode 510; parameter formats differ",
     613: "TH15 bullet/effect opcode is not TH12 opcode 513; parameter formats differ",
@@ -387,17 +423,18 @@ def remap_raw_named_args(source_opcode: int, target_opcode: int, args: list[str]
         return mapped
     if source_game == "th15" and target == "th12" and source_opcode == 607 and target_opcode == 507 and len(args) >= 2:
         mapped = args[:]
-        mapped[1] = remap_th15_bullet_spread_style_to_th12(mapped[1])
+        mapped[1] = remap_crossgen_single_flower_style_to_th12(mapped[1])
         return mapped
     return args
 
 
-def remap_th15_bullet_spread_style_to_th12(style: str) -> str:
+def remap_crossgen_single_flower_style_to_th12(style: str) -> str:
     table = {
         "2": "4",
         "3": "5",
     }
     return table.get(str(style).strip(), style)
+
 
 
 def remap_th15_bullet_shape_to_th12(shape: str) -> str:
@@ -541,7 +578,7 @@ def is_th15_stage1_debug_selector_event(event: dict[str, object], source_game: s
         return False
     return event.get("kind") == "conditional_goto" and "[-9907]" in str(event.get("condition", ""))
 
-def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", target: str = "") -> list[str]:
+def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", target: str = "", bullet_state: BulletLoweringState | None = None) -> list[str]:
     kind = event.get("kind")
     text = str(event.get("text") or "")
     if not text:
@@ -576,6 +613,9 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
             if collapsed != wait:
                 return wrap_event_rank([f"    // dynamic wait expression collapsed for timer syntax: {wait}", f"    +{collapsed}:"], event, target)
             return wrap_event_rank([f"    +{wait}:"], event, target)
+        fire_lowered = lower_bullet_fire_opcode(int(opcode or -1), list(args), source_game, target, bullet_state)
+        if fire_lowered:
+            return wrap_event_rank(fire_lowered, event, target)
         lowered = lower_raw_instruction_event(int(opcode or -1), list(args), text, source_game, target, event.get("difficulty_literals", []))
         if lowered:
             if any(line.strip().startswith("!") for line in lowered):
