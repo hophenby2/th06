@@ -28,7 +28,7 @@ void MBossB()
     // semantic op_key lowering th15->th12: anm.set_sprite
     ins_259(1, 107);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(3);
+    ins_258(2);
     // semantic op_key lowering th15->th12: anm.set_main
     ins_262(0, 0);
     // semantic op_key lowering th15->th12: unit.flag_set
@@ -146,7 +146,7 @@ void MBossB1_at(var A, var B, var C)
     // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
     ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(3);
+    ins_258(2);
     // semantic op_key lowering th15->th12: anm.selected_play
     ins_269(0);
     $F = 1;
@@ -211,7 +211,7 @@ void MBossB1_at(var A, var B, var C)
     // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
     ins_509(0, 3, 0, 268435456, 0, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(3);
+    ins_258(2);
     // semantic op_key lowering th15->th12: anm.selected_play
     ins_269(0);
     // semantic op_key lowering th15->th12: unit.diff_i
@@ -540,7 +540,7 @@ void MBossCardB1_at()
     // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
     ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(3);
+    ins_258(2);
     // semantic op_key lowering th15->th12: anm.selected_play
     ins_269(0);
     $B = 1;

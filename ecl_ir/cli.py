@@ -345,9 +345,21 @@ def emit_entry_aliases(objects: list[object], target: str, function_names: set[s
         needed = [(alias, real) for alias, real in aliases.items() if alias not in function_names and real in function_names]
         if not needed:
             continue
+        anm_setup = fields.get("anm_setup", {})
         lines.append(f"// entry alias lowering {obj.family} -> {target}: {fields.get('reason', '')}")
         for alias, real in needed:
-            lines.extend([f"void {alias}()", "{", f"    @{real}();", "    return;", "}"])
+            lines.extend([f"void {alias}()", "{"])
+            setup = anm_setup.get(alias) if isinstance(anm_setup, dict) else None
+            if isinstance(setup, dict):
+                z_index = setup.get("z_index")
+                z_index_after = setup.get("z_index_after")
+                if z_index is not None and not z_index_after:
+                    lines.append(f"    ins_410({z_index});")
+                lines.append(f"    ins_258({setup.get('anm_bank', 1)});")
+                lines.append(f"    ins_262({setup.get('main_slot', 1)}, {setup.get('main_script', 50)});")
+                if z_index is not None and z_index_after:
+                    lines.append(f"    ins_410({z_index});")
+            lines.extend([f"    @{real}();", "    return;", "}"])
     return lines
 
 

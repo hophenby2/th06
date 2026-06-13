@@ -10,121 +10,187 @@ void MainMBossSpell();
 // entry alias lowering program -> th12: target stage scheduler references named enemy entries that differ from source function names
 void BGirl00()
 {
+    ins_410(2);
+    ins_258(1);
+    ins_262(1, 50);
     @MainSub00();
     return;
 }
 void BGirl02()
 {
+    ins_410(2);
+    ins_258(1);
+    ins_262(1, 50);
     @MainSub01();
     return;
 }
 void BGirl04()
 {
+    ins_410(2);
+    ins_258(1);
+    ins_262(1, 50);
     @MainSub02();
     return;
 }
 void BGirl05()
 {
+    ins_410(2);
+    ins_258(1);
+    ins_262(1, 50);
     @MainSub03();
     return;
 }
 void BGirl07()
 {
+    ins_410(2);
+    ins_258(1);
+    ins_262(1, 50);
     @MainSub04();
     return;
 }
 void BGirl10()
 {
+    ins_410(2);
+    ins_258(1);
+    ins_262(1, 50);
     @MainSub05();
     return;
 }
 void GGirl00()
 {
+    ins_410(9);
+    ins_258(1);
+    ins_262(1, 52);
     @MainSub00();
     return;
 }
 void GGirl02()
 {
+    ins_410(9);
+    ins_258(1);
+    ins_262(1, 52);
     @MainSub01();
     return;
 }
 void GGirl04()
 {
+    ins_410(9);
+    ins_258(1);
+    ins_262(1, 52);
     @MainSub02();
     return;
 }
 void GGirl05()
 {
+    ins_410(9);
+    ins_258(1);
+    ins_262(1, 52);
     @MainSub03();
     return;
 }
 void GGirl07()
 {
+    ins_410(9);
+    ins_258(1);
+    ins_262(1, 52);
     @MainSub04();
     return;
 }
 void GGirl10()
 {
+    ins_410(9);
+    ins_258(1);
+    ins_262(1, 52);
     @MainSub05();
     return;
 }
 void RGirl00()
 {
+    ins_258(1);
+    ins_262(1, 51);
+    ins_410(1);
     @MainSub00();
     return;
 }
 void RGirl02()
 {
+    ins_258(1);
+    ins_262(1, 51);
+    ins_410(1);
     @MainSub01();
     return;
 }
 void RGirl04()
 {
+    ins_258(1);
+    ins_262(1, 51);
+    ins_410(1);
     @MainSub02();
     return;
 }
 void RGirl05()
 {
+    ins_258(1);
+    ins_262(1, 51);
+    ins_410(1);
     @MainSub03();
     return;
 }
 void RGirl07()
 {
+    ins_258(1);
+    ins_262(1, 51);
+    ins_410(1);
     @MainSub04();
     return;
 }
 void RGirl10()
 {
+    ins_258(1);
+    ins_262(1, 51);
+    ins_410(1);
     @MainSub05();
     return;
 }
 void YGirl00()
 {
+    ins_258(1);
+    ins_262(1, 53);
     @MainSub00();
     return;
 }
 void YGirl02()
 {
+    ins_258(1);
+    ins_262(1, 53);
     @MainSub01();
     return;
 }
 void YGirl04()
 {
+    ins_258(1);
+    ins_262(1, 53);
     @MainSub02();
     return;
 }
 void YGirl05()
 {
+    ins_258(1);
+    ins_262(1, 53);
     @MainSub03();
     return;
 }
 void YGirl07()
 {
+    ins_258(1);
+    ins_262(1, 53);
     @MainSub04();
     return;
 }
 void YGirl10()
 {
+    ins_258(1);
+    ins_262(1, 53);
     @MainSub05();
     return;
 }
@@ -548,7 +614,7 @@ void GirlB01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=254 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=255 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 20);
@@ -653,7 +719,7 @@ void GirlB02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=314 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=315 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 35);
@@ -752,7 +818,7 @@ void GirlBlueA01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=368 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=369 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 0);
@@ -769,7 +835,7 @@ void GirlBlueA01e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=377 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=378 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 0);
@@ -789,7 +855,7 @@ void GirlBlueA02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=389 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=390 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 0);
@@ -806,7 +872,7 @@ void GirlBlueA02e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=398 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=399 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 0);
@@ -824,7 +890,7 @@ void GirlBlueA03()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=408 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=409 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 0);
@@ -841,7 +907,7 @@ void GirlC01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=417 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=418 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 35);
@@ -967,7 +1033,7 @@ void GirlD01()
     // dropped source-specific semantic op for th12: unit.unknown569(6)
     // object Animation source_line=500 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=501 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 40);
@@ -1158,7 +1224,7 @@ void GirlD02()
     // dropped source-specific semantic op for th12: unit.unknown569(6)
     // object Animation source_line=618 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=619 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 40);
@@ -1352,7 +1418,7 @@ void GirlRedA01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=741 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=742 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 5);
@@ -1369,7 +1435,7 @@ void GirlRedA01e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=750 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=751 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 5);
@@ -1389,7 +1455,7 @@ void GirlRedA02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=762 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=763 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 5);
@@ -1406,7 +1472,7 @@ void GirlRedA02e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=771 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=772 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 5);
@@ -1424,7 +1490,7 @@ void GirlRedA03()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=781 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=782 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 5);
@@ -2032,7 +2098,7 @@ void Phantom01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=1175 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=1176 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259(0, 87);
@@ -2117,7 +2183,7 @@ void Phantom02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=1220 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=1221 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259(0, 87);
@@ -2199,7 +2265,7 @@ void Phantom02b()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=1260 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(2);
+    ins_258(1);
     // object Animation source_line=1261 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259(0, 79);

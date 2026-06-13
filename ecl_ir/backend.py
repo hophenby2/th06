@@ -365,7 +365,7 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
     args = [str(arg) for arg in event.get("args", [])]
     if semantic_map is not None and semantic_map.arg_order is not None:
         args = [args[index] for index in semantic_map.arg_order if index < len(args)]
-    elif source_game and source_opcode >= 0:
+    if source_game and source_opcode >= 0:
         args = remap_raw_arg_by_semantic(source_game, target, source_opcode, opcode, args)
     adapted_args = adapt_args_for_op_key(op_key, source_game, source_opcode, target, opcode, args)
     if adapted_args is None:

@@ -15,6 +15,14 @@ STAGE_ENTRY_ALIASES: dict[str, str] = {
     "MainSub12": "MainLatter2", "MainSub13": "MainLatter2",
 }
 
+TH12_STAGE_ENTRY_ANM_SETUP: dict[str, dict[str, int | None]] = {
+    # Values mirrored from th12/stage01.decl entry wrappers.
+    "B": {"anm_bank": 1, "main_slot": 1, "main_script": 50, "z_index": 2, "z_index_after": 0},
+    "G": {"anm_bank": 1, "main_slot": 1, "main_script": 52, "z_index": 9, "z_index_after": 0},
+    "R": {"anm_bank": 1, "main_slot": 1, "main_script": 51, "z_index": 1, "z_index_after": 1},
+    "Y": {"anm_bank": 1, "main_slot": 1, "main_script": 53, "z_index": None, "z_index_after": 0},
+}
+
 BULLET_CLEAR_HELPERS = {"Ecl_EtBreak", "Ecl_EtBreak2", "Ecl_EtBreak2_ni", "Ecl_EtBreak_ni"}
 BOSS_SCRIPT_FILES = {"st01bs.decl", "st01mbs.decl", "st01mbs2.decl"}
 
@@ -72,6 +80,11 @@ def lift_entry_aliases(program: Program) -> list[EntryAlias]:
     obj.fields = {
         "when_target_generation": "th12",
         "aliases": aliases,
+        "anm_setup": {
+            alias: setup
+            for alias in aliases
+            if (setup := TH12_STAGE_ENTRY_ANM_SETUP.get(alias[:1])) is not None
+        },
         "reason": "target stage scheduler references named enemy entries that differ from source function names",
     }
     return [obj]
