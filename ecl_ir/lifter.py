@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from collections.abc import Iterable
 
 from .model import BulletEmitter, BulletTransform, Function, Instruction, Program
@@ -109,8 +110,7 @@ def apply_th13plus(emitter: BulletEmitter, ins: Instruction) -> None:
         set_ranked_field(emitter.appearance, "color", with_difficulty(arg(args, 2), ins.difficulty_literals), ins.difficulty)
         update_shape_semantics(emitter, shape)
     elif op == 603:
-        emitter.origin["x"] = arg(args, 1, "0") if not hasattr(emitter, "origin") else emitter.origin.get("x", arg(args, 1, "0"))
-        emitter.origin["y"] = arg(args, 2, "0") if not hasattr(emitter, "origin") else arg(args, 2, "0")
+        emitter.origin = {"mode": "offset", "x": arg(args, 1, "0"), "y": arg(args, 2, "0")}
     elif op == 604:
         set_ranked_field(emitter.aim, "base_angle", with_difficulty(arg(args, 1, "0"), ins.difficulty_literals), ins.difficulty)
         set_ranked_field(emitter.aim, "angle_step", with_difficulty(arg(args, 2, "0"), ins.difficulty_literals), ins.difficulty)
@@ -175,10 +175,49 @@ def apply_th12(emitter: BulletEmitter, ins: Instruction) -> None:
     elif op == 508:
         emitter.sound["id"] = arg(args, 1)
         emitter.sound["mode"] = arg(args, 2)
+    elif op == 523:
+        emitter.origin = {"mode": "polar", "angle": arg(args, 1, "0.0f"), "radius": arg(args, 2, "0.0f")}
+    elif op == 524:
+        emitter.origin = {"mode": "distance", "distance": arg(args, 1, "0.0f")}
+    elif op == 525:
+        emitter.origin = {"mode": "absolute", "x": arg(args, 1, "0.0f"), "y": arg(args, 2, "0.0f")}
     elif op in {509, 510, 511, 512, 521, 522}:
         emitter.transforms.append(BulletTransform(index=arg(args, 1, "0"), action_type="etEx", raw_opcode=op, raw_args=args[:], difficulty=ins.difficulty))
     elif op == 501:
         emitter.fire_lines.append(ins.line_no)
+
+
+def annotate_definition_prefix(emitter: BulletEmitter, apply_instruction) -> None:
+    prefix = BulletEmitter(
+        game=emitter.game,
+        function=emitter.function,
+        source_line=emitter.source_line,
+        id=emitter.id,
+        family=emitter.family,
+    )
+    prefix.origin = {"mode": "enemy", "x": "0", "y": "0"}
+    previous_line: int | None = None
+    for ins in emitter.raw:
+        if previous_line is not None and ins.line_no != previous_line + 1:
+            break
+        prefix.raw.append(ins)
+        append_emitter_op(prefix, ins)
+        apply_instruction(prefix, ins)
+        previous_line = ins.line_no
+        if ins.opcode in {401, 501, 601}:
+            break
+    emitter.semantics["definition_state"] = {
+        "origin": deepcopy(prefix.origin),
+        "appearance": deepcopy(prefix.appearance),
+        "aim": deepcopy(prefix.aim),
+        "count": deepcopy(prefix.count),
+        "speed": deepcopy(prefix.speed),
+        "sound": deepcopy(prefix.sound),
+        "flags": deepcopy(prefix.flags),
+        "semantics": deepcopy(prefix.semantics),
+        "transforms": [deepcopy(transform.__dict__) for transform in prefix.transforms],
+        "raw_lines": [ins.line_no for ins in prefix.raw],
+    }
 
 
 def aim_mode_name(raw: str) -> str:
@@ -250,6 +289,8 @@ def lift_th12_function(game: str, func: Function) -> list[BulletEmitter]:
             emitter.raw.append(ins)
             append_emitter_op(emitter, ins)
             apply_th12(emitter, ins)
+    for emitter in emitters:
+        annotate_definition_prefix(emitter, apply_th12)
     return emitters
 
 

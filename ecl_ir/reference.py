@@ -237,6 +237,25 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                     source=f"{th10_info.source}; name inherited from th11 same-generation table",
                 )
     if "th12" in result:
+        info = result["th12"].get(445)
+        if info and info.name == "laserCancel":
+            result["th12"][445] = OpcodeInfo(
+                game="th12",
+                opcode=445,
+                name=info.name,
+                signature="",
+                source=f"{info.source}; signature forced from no-arg laser cancel semantic",
+            )
+        for opcode, signature in ((523, "Sff"), (524, "Sf"), (525, "Sff")):
+            info = result["th12"].get(opcode)
+            if info:
+                result["th12"][opcode] = OpcodeInfo(
+                    game="th12",
+                    opcode=opcode,
+                    name=info.name,
+                    signature=signature,
+                    source=f"{info.source}; signature forced from ecl3 bullet origin semantic",
+                )
         # TH13+ kept several TH12 opcodes with identical signatures but the scraped
         # eclmap rows are blank.  Inherit only exact-signature matches so op_key
         # generation stays semantic without inventing pairwise conversions.
@@ -271,6 +290,35 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                     name=info.name,
                     signature="ot",
                     source=f"{info.source}; signature forced to thecl format ot",
+                )
+        for opcode in (513, 519, 520, 523, 525, 545):
+            info = result[game].get(opcode)
+            if info:
+                result[game][opcode] = OpcodeInfo(
+                    game=game,
+                    opcode=opcode,
+                    name=info.name,
+                    signature="",
+                    source=f"{info.source}; signature forced from no-arg unit/boss semantic",
+                )
+        info = result[game].get(514)
+        if info and info.name == "setInterrupt":
+            result[game][514] = OpcodeInfo(
+                game=game,
+                opcode=514,
+                name=info.name,
+                signature="SSSm",
+                source=f"{info.source}; signature forced from setInterrupt semantic layout",
+            )
+        for opcode in (537, 538, 539):
+            info = result[game].get(opcode)
+            if info and info.name in {"spell", "spell2", "spell3"}:
+                result[game][opcode] = OpcodeInfo(
+                    game=game,
+                    opcode=opcode,
+                    name=info.name,
+                    signature="SSSm",
+                    source=f"{info.source}; signature forced from spell semantic layout",
                 )
     return result
 

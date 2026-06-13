@@ -181,6 +181,34 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_12: ArgLayout(("et_id", "width"), {"et_id": "0", "width": "16.0f"}),
         GEN_13: ArgLayout(("et_id", "width"), {"et_id": "0", "width": "16.0f"}),
     },
+    "laser.length": {
+        GEN_12: ArgLayout(("et_id", "length"), {"et_id": "0", "length": "128.0f"}),
+        GEN_13: ArgLayout(("et_id", "length"), {"et_id": "0", "length": "128.0f"}),
+    },
+    "laser.offset": {
+        GEN_12: ArgLayout(("laser_id", "x", "y"), {"laser_id": "0", "x": "0.0f", "y": "0.0f"}),
+        GEN_13: ArgLayout(("laser_id", "x", "y"), {"laser_id": "0", "x": "0.0f", "y": "0.0f"}),
+    },
+    "laser.trajectory": {
+        GEN_12: ArgLayout(("laser_id", "speed", "angle"), {"laser_id": "0", "speed": "0.0f", "angle": "0.0f"}),
+        GEN_13: ArgLayout(("laser_id", "x_speed", "y_speed"), {"laser_id": "0", "x_speed": "0.0f", "y_speed": "0.0f"}),
+    },
+    "laser.angle": {
+        GEN_12: ArgLayout(("laser_id", "angle"), {"laser_id": "0", "angle": "0.0f"}),
+        GEN_13: ArgLayout(("laser_id", "angle"), {"laser_id": "0", "angle": "0.0f"}),
+    },
+    "laser.rotation": {
+        GEN_12: ArgLayout(("laser_id", "angle"), {"laser_id": "0", "angle": "0.0f"}),
+        GEN_13: ArgLayout(("laser_id", "angle"), {"laser_id": "0", "angle": "0.0f"}),
+    },
+    "laser.end": {
+        GEN_12: ArgLayout(("laser_id",), {"laser_id": "0"}),
+        GEN_13: ArgLayout(("laser_id",), {"laser_id": "0"}),
+    },
+    "laser.curve_on": {
+        GEN_12: ArgLayout(("et_id",), {"et_id": "0"}),
+        GEN_13: ArgLayout(("et_id",), {"et_id": "0"}),
+    },
     "anm.rotate": {
         GEN_OLD: ArgLayout(("angle",), {"slot": "0"}),
         GEN_12: ArgLayout(("slot", "angle"), {"slot": "0"}),
@@ -311,6 +339,11 @@ def adapt_args_for_op_key(op_key: str, source_game: str, source_opcode: int, tar
     target_fields = target_layout.fields
     if op_key == "bullet.transform" and target_gen == GEN_13 and target_opcode == 611:
         target_fields = ("et_id", "channel", "mode", "a", "b", "r", "s")
+    if op_key == "laser.trajectory" and source_gen == GEN_12 and target_gen == GEN_13:
+        speed = fields.get("speed", target_defaults.get("speed", "0.0f"))
+        angle = fields.get("angle", target_defaults.get("angle", "0.0f"))
+        fields["x_speed"] = f"({speed}) * cos({angle})"
+        fields["y_speed"] = f"({speed}) * sin({angle})"
     result = [adapt_field_value(field, fields.get(field, target_defaults.get(field, "")), source_gen, target_gen) for field in target_fields]
     return result
 

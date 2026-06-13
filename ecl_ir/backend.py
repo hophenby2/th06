@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import re
 from .arg_adapter import adapt_args_for_op_key, adapt_values_for_generation
-from .model import BulletEmitter
+from copy import deepcopy
+
+from .model import BulletEmitter, BulletTransform
 from .op_ir import target_opcode_for_op_key
 from .reference import is_opcode_supported, validate_opcode_args
-from .semantics import encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_bullet_transform_mode, remap_raw_arg_by_semantic, remap_shape_change_arg, th12_double_flower_pair, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509
+from .semantics import boss_phase_prefix_ops, bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_bullet_transform_mode, remap_raw_arg_by_semantic, remap_shape_change_arg, th12_double_flower_pair, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509, unsupported_bullet_transform_mode_reason
 
 INT_SENTINEL = "-999999"
 FLOAT_SENTINEL = "-999999.0f"
@@ -181,7 +183,7 @@ def compile_lossy_semantic_fallback(event: dict[str, object], target: str) -> st
     if op_key == "flow.debug22":
         return f"// dropped debug-only semantic op for {target}: debug22({args})"
     if op_key in {
-        "unit.unknown569", "raw.spec1", "raw.spec2", "laser.debug700", "movement.unknown444", "movement.spell_ex",
+        "unit.unknown569", "raw.spec1", "raw.spec2", "laser.debug700", "movement.unknown444",
         "enemy.create_legacy270", "enemy.create_maple", "anm.reset", "bullet.distance",
         "raw.eff_create", "raw.eff_create_angle", "raw.card_eff", "raw.timer_threshold", "raw.ins_129",
         "raw.et_on_auto_delay", "flow.familiar_create", "flow.familiar_create_f", "flow.familiar_create_a",
@@ -379,6 +381,16 @@ def drop_th12_stage6_stage_mboss_boss_anm(event: dict[str, object], target: str,
     return None
 
 
+def compile_special_semantic_event(event: dict[str, object], target: str) -> str | None:
+    op_key = str(event.get("op_key") or "")
+    args = [str(arg) for arg in event.get("args", [])]
+    if op_key == "boss.spell_ex" and target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+        if len(args) >= 4:
+            return f"ins_537({', '.join(args[:4])});"
+        return f"// unsupported boss.spell_ex arity for {target}: {', '.join(args)}"
+    return None
+
+
 def compile_ir_op_event(event: dict[str, object], target: str, comment: str | None = None, context: dict[str, object] | None = None) -> str | None:
     op_key = str(event.get("op_key") or "")
     if not op_key:
@@ -401,6 +413,8 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
         return lowered
     if lowered := compile_th08_anm_alias(event, target):
         return lowered
+    if lowered := compile_special_semantic_event(event, target):
+        return lowered
     opcode = target_opcode_for_op_key(op_key, target)
     semantic_map = opcode_map_for(source_game, target, source_opcode) if source_game and source_opcode >= 0 else None
     if opcode is None and semantic_map is not None:
@@ -421,6 +435,9 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
     if error:
         return compile_lossy_semantic_fallback(event, target)
     line = emit_checked_instruction(target, opcode, args)
+    prefix = boss_phase_prefix_ops(op_key, target)
+    if prefix:
+        line = "\n".join(prefix + [line])
     if comment:
         return f"// {comment}: {op_key} -> ins_{opcode}\n{line}"
     return line
@@ -609,15 +626,44 @@ def append_definition_fire(text: str, emitter: BulletEmitter, target: str) -> st
     return "\n".join(lines)
 
 
+def definition_emitter_state(emitter: BulletEmitter) -> BulletEmitter:
+    state = getattr(emitter, "semantics", {}).get("definition_state")
+    if not isinstance(state, dict):
+        return emitter
+    definition = BulletEmitter(
+        game=emitter.game,
+        function=emitter.function,
+        source_line=emitter.source_line,
+        id=emitter.id,
+        family=emitter.family,
+    )
+    definition.origin = deepcopy(state.get("origin", emitter.origin))
+    definition.appearance = deepcopy(state.get("appearance", emitter.appearance))
+    definition.aim = deepcopy(state.get("aim", emitter.aim))
+    definition.count = deepcopy(state.get("count", emitter.count))
+    definition.speed = deepcopy(state.get("speed", emitter.speed))
+    definition.sound = deepcopy(state.get("sound", emitter.sound))
+    definition.flags = deepcopy(state.get("flags", emitter.flags))
+    definition.semantics = deepcopy(emitter.semantics)
+    if isinstance(state.get("semantics"), dict):
+        definition.semantics["bullet"] = deepcopy(state["semantics"].get("bullet", definition.semantics.get("bullet", {})))
+    definition.transforms = [BulletTransform(**transform) for transform in state.get("transforms", []) if isinstance(transform, dict)]
+    definition.fire_lines = emitter.fire_lines[:]
+    definition.raw = emitter.raw[:]
+    definition.unsupported = emitter.unsupported[:]
+    return definition
+
+
 def compile_bullet_emitter(emitter: BulletEmitter, target: str) -> str:
+    definition = definition_emitter_state(emitter)
     if target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
-        compiled = compile_th13plus(emitter)
+        compiled = compile_th13plus(definition)
     elif target == "th12":
-        compiled = compile_th12(emitter)
+        compiled = compile_th12(definition)
     elif target in {"th10", "th11"}:
-        compiled = compile_th10_slot(emitter, target)
+        compiled = compile_th10_slot(definition, target)
     elif target in {"th06", "th07", "th08"}:
-        compiled = compile_th08_macro(emitter, target)
+        compiled = compile_th08_macro(definition, target)
     else:
         raise ValueError(f"unsupported target backend: {target}")
     return append_definition_fire(compiled, emitter, target)
@@ -1203,7 +1249,9 @@ def compile_movement(obj, target: str) -> str:
 
 def compile_th13plus(e: BulletEmitter) -> str:
     emitter_id = v(e.id, "0")
-    aim_raw_value = e.aim.get("mode_raw", mode_raw(e.aim.get("mode"), default="1"))
+    aim_raw_value = remap_bullet_spread_style_for_target(e, target="th15")
+    if aim_raw_value is None:
+        aim_raw_value = mode_raw(e.aim.get("mode"), default="1")
     style_value = remap_bullet_shape_for_target(e, target="th15")
     color_value = e.appearance.get("color")
     ways_value = e.count.get("ways")
@@ -1238,6 +1286,9 @@ def lower_transform_for_th13plus(transform, source_game: str, target: str, emitt
     if transform.raw_opcode in {609, 610, 611, 612} and args:
         return [f"ins_{transform.raw_opcode}({', '.join(args)});"]
     if source_game == "th12" and transform.raw_opcode == 509 and len(args) == 8:
+        reason = unsupported_bullet_transform_mode_reason(source_game, target, args[3])
+        if reason:
+            return [f"// dropped unsupported bullet transform mode from ins_509: {reason}; original args: {', '.join(args)}"]
         converted = th12_509_to_th13plus_609(args, target)
         return [f"ins_609({', '.join(converted)});"]
     if source_game == "th12" and transform.raw_opcode == 510 and not args:
@@ -1268,10 +1319,10 @@ def remap_bullet_spread_style_for_target(e: BulletEmitter, target: str):
 
 
 def remap_bullet_shape_for_target(e: BulletEmitter, target: str):
-    semantic_shape = getattr(e, "semantics", {}).get("bullet", {}).get("shape")
     value = e.appearance.get("style")
     if isinstance(value, dict):
-        return {rank: encode_bullet_shape(semantic_shape or f"raw:{shape}", target, shape) for rank, shape in value.items()}
+        return {rank: encode_bullet_shape(bullet_shape_semantic(e.game, shape), target, shape) for rank, shape in value.items()}
+    semantic_shape = getattr(e, "semantics", {}).get("bullet", {}).get("shape")
     if semantic_shape:
         return encode_bullet_shape(semantic_shape, target, value)
     return value

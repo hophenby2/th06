@@ -31,6 +31,13 @@ OVERRIDE_DOMAIN_BY_NAME = {
 }
 
 OP_ALIASES = {
+    "lifeset": "boss.life_set",
+    "setboss": "boss.set_boss",
+    "timerreset": "boss.timer_reset",
+    "setinterrupt": "boss.set_interrupt",
+    "settimeout": "boss.set_timeout",
+    "spellend": "boss.spell_end",
+    "setchapter": "boss.set_chapter",
     "anm_select": "anm.select",
     "anm_set_sprite": "anm.set_sprite",
     "anm_set_main": "anm.set_main",
@@ -207,6 +214,8 @@ def op_key_for_name(game: str, opcode: int, name: str) -> str:
 
 
 def op_key_for_opcode(game: str, opcode: int) -> str:
+    if game.lower() == "th12" and opcode == 422:
+        return "boss.spell_ex"
     info = opcode_info(game, opcode)
     if info and info.name:
         return op_key_for_name(game, opcode, info.name)
@@ -253,9 +262,10 @@ def target_opcode_for_op_key(op_key: str, target: str) -> int | None:
 def op_event(game: str, opcode: int, args: list[str], line: int | None = None, difficulty: str | None = None) -> dict[str, object]:
     info = opcode_info(game, opcode)
     key = op_key_for_opcode(game, opcode)
+    domain = "boss" if key == "boss.spell_ex" else domain_for(game, opcode, info.name if info else "")
     return {
         "op_key": key,
-        "domain": domain_for(game, opcode, info.name if info else ""),
+        "domain": domain,
         "source_game": game,
         "source_opcode": opcode,
         "source_name": info.name if info else "",

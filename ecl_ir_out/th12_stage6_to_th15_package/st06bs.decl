@@ -32,8 +32,8 @@ void Boss()
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
     ins_401(60, 4, 0.0f, 112.0f);
     +60:
-    // unsupported semantic op_key for th12->th15: unit.dialog_wait
-    // original: ins_419();
+    // semantic op_key lowering th12->th15: unit.dialog_wait
+    ins_519();
     // semantic op_key lowering th12->th15: movement.move_limit
     ins_504(0.0f, 112.0f, 280.0f, 64.0f);
     // object Animation source_line=53 family=th12
@@ -59,10 +59,11 @@ void Boss1()
 {
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 2200, 2640, "BossCard1");
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 2200, 2640, "BossCard1");
     // semantic op_key lowering th12->th15: unit.life_marker
     ins_527(0, 2200.0f, -24448);
     // semantic op_key lowering th12->th15: boss.set_chapter
@@ -123,7 +124,7 @@ void Boss1_at1()
     ins_607(0, 3);
     ins_602(0, 0, 6);
     ins_606(0, 1, 1);
-    ins_604(0, %A, 0.0f);
+    ins_604(0, 0.0f, 0.0f);
     ins_605(0, 1.0f, 0.0f);
     ins_625(0, 6, 12, 14, 14, 1, 1, 1, 1);
     ins_624(0, 3.0f, 3.0f, 4.0f, 4.4f, 3.5f, 1.5f, 1.5f, 1.5f);
@@ -132,7 +133,7 @@ void Boss1_at1()
     ins_607(1, 3);
     ins_602(1, 4, 6);
     ins_606(1, 1, 1);
-    ins_604(1, %A, 0.0f);
+    ins_604(1, 0.0f, 0.0f);
     ins_605(1, 1.0f, 0.0f);
     ins_625(1, 6, 12, 14, 14, 1, 1, 1, 1);
     ins_624(1, 3.0f, 3.0f, 4.0f, 4.4f, 3.5f, 1.5f, 1.5f, 1.5f);
@@ -141,36 +142,56 @@ void Boss1_at1()
     ins_607(2, 3);
     ins_602(2, 18, 3);
     ins_606(2, 1, 1);
-    ins_604(2, %A, 0.0f);
+    ins_604(2, 0.0f, 0.0f);
     ins_605(2, 1.0f, 0.0f);
     ins_625(2, 6, 12, 14, 14, 1, 1, 1, 1);
     ins_624(2, 3.0f, 3.0f, 4.0f, 4.4f, 3.5f, 1.5f, 1.5f, 1.5f);
     // object BulletEmitter source_line=115 family=th12
     ins_600(3);
     ins_607(3, 3);
-    ins_602(3, 26, 1);
+    ins_602(3, 32, 1);
     ins_606(3, 1, 1);
-    ins_604(3, %A, 0.0f);
+    ins_604(3, 0.0f, 0.0f);
     ins_605(3, 1.0f, 0.0f);
     ins_625(3, 6, 12, 14, 14, 1, 1, 1, 1);
     ins_624(3, 3.0f, 3.0f, 4.0f, 4.4f, 1.5f, 1.5f, 1.5f, 1.5f);
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(0, [-9997.0f], [-9996.0f] - _f(32));
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(1, [-9997.0f], [-9996.0f] - _f(32));
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(2, [-9997.0f], [-9996.0f] - _f(32));
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(3, [-9997.0f], [-9996.0f] - _f(32));
     %C = [-9998.0f];
     $D = 3;
     goto Boss1_at1_3288 @ 0;
     Boss1_at1_1292:
     %A = %C;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(1, %A, 0.0f);
     %A = %A + 0.060415f;
     %B = %A;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(2, %A, 0.0f);
     %A = %A + 0.060415f;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(3, %A, 0.0f);
     %A = %A + 0.060415f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(1);
@@ -181,17 +202,29 @@ void Boss1_at1()
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(20, 20, 15, 11);
     %A = %B;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(1, %A, 0.0f);
     %A = %A - 0.060415f;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(2, %A, 0.0f);
     %A = %A - 0.060415f;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(3, %A, 0.0f);
     %A = %A - 0.060415f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
@@ -228,7 +261,7 @@ void Boss1_at1b()
     ins_607(0, 3);
     ins_602(0, 0, 6);
     ins_606(0, 1, 1);
-    ins_604(0, %A, 0.0f);
+    ins_604(0, 0.0f, 0.0f);
     ins_605(0, 1.0f, 0.0f);
     ins_625(0, 6, 12, 14, 14, 1, 1, 1, 1);
     ins_624(0, 3.0f, 3.0f, 4.0f, 4.4f, 3.5f, 1.5f, 1.5f, 1.5f);
@@ -237,7 +270,7 @@ void Boss1_at1b()
     ins_607(1, 3);
     ins_602(1, 4, 6);
     ins_606(1, 1, 1);
-    ins_604(1, %A, 0.0f);
+    ins_604(1, 0.0f, 0.0f);
     ins_605(1, 1.0f, 0.0f);
     ins_625(1, 6, 12, 14, 14, 1, 1, 1, 1);
     ins_624(1, 3.0f, 3.0f, 4.0f, 4.4f, 3.5f, 1.5f, 1.5f, 1.5f);
@@ -246,36 +279,56 @@ void Boss1_at1b()
     ins_607(2, 3);
     ins_602(2, 18, 3);
     ins_606(2, 1, 1);
-    ins_604(2, %A, 0.0f);
+    ins_604(2, 0.0f, 0.0f);
     ins_605(2, 1.0f, 0.0f);
     ins_625(2, 6, 12, 14, 14, 1, 1, 1, 1);
     ins_624(2, 3.0f, 3.0f, 4.0f, 4.4f, 3.5f, 1.5f, 1.5f, 1.5f);
     // object BulletEmitter source_line=205 family=th12
     ins_600(3);
     ins_607(3, 3);
-    ins_602(3, 26, 1);
+    ins_602(3, 32, 1);
     ins_606(3, 1, 1);
-    ins_604(3, %A, 0.0f);
+    ins_604(3, 0.0f, 0.0f);
     ins_605(3, 1.0f, 0.0f);
     ins_625(3, 6, 12, 14, 14, 1, 1, 1, 1);
     ins_624(3, 3.0f, 3.0f, 4.0f, 4.4f, 1.5f, 1.5f, 1.5f, 1.5f);
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(0, [-9997.0f], [-9996.0f] - _f(32));
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(1, [-9997.0f], [-9996.0f] - _f(32));
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(2, [-9997.0f], [-9996.0f] - _f(32));
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(3, [-9997.0f], [-9996.0f] - _f(32));
     %C = [-9998.0f];
     $D = 3;
     goto Boss1_at1b_3288 @ 0;
     Boss1_at1b_1292:
     %A = %C;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(1, %A, 0.0f);
     %A = %A - 0.060415f;
     %B = %A;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(2, %A, 0.0f);
     %A = %A - 0.060415f;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(3, %A, 0.0f);
     %A = %A - 0.060415f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(1);
@@ -286,17 +339,29 @@ void Boss1_at1b()
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(20, 20, 15, 11);
     %A = %B;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(1, %A, 0.0f);
     %A = %A + 0.060415f;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(2, %A, 0.0f);
     %A = %A + 0.060415f;
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(3, %A, 0.0f);
     %A = %A + 0.060415f;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
@@ -330,12 +395,12 @@ void Boss2()
     var A, B;
     // semantic op_key lowering th12->th15: boss.life_set
     ins_511(12400);
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // semantic op_key lowering th12->th15: flow.kill_all_async
     ins_21();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     unless ([-9986] == 0) goto Boss2_228 @ 0;
     // semantic op_key lowering th12->th15: bullet.cancel_radius
     ins_615(640.0f);
@@ -355,16 +420,17 @@ void Boss2()
     // object Movement source_line=291 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
     ins_401(0, 0, 0.0f, 0.0f);
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
     // semantic op_key lowering th12->th15: unit.func_set
     ins_632(0);
-    // unsupported semantic op_key for th12->th15: unit.laser_cancel
-    // original: ins_445();
+    // semantic op_key lowering th12->th15: unit.laser_cancel
+    ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 2400, 2640, "BossCard2");
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 2400, 2640, "BossCard2");
     // semantic op_key lowering th12->th15: unit.life_marker
     ins_527(0, 2400.0f, -24448);
     // semantic op_key lowering th12->th15: unit.stars
@@ -509,43 +575,52 @@ void Boss2_at1()
     ins_607(0, 1);
     ins_602(0, 8, 2);
     ins_606(0, 1, 1);
-    ins_604(0, %A, 0.0f);
+    ins_604(0, 0.0f, 0.0f);
     ins_605(0, 8.0f, 8.0f);
-    ins_608(0, 19, -1);
-    // object LaserEmitter source_line=376 family=th12
-    // laser lowering th12 -> th15; semantic op_key backend
-    ins_700(0, 0.0f, 512.0f, 16.0f, 16.0f);
-    ins_701(0, 60, 16, 60, 15, 0);
-    ins_703(0, 0);
-    ins_703(0, 0);
-    ins_703(0, 0);
-    ins_703(0, 0);
     // semantic op_key lowering th12->th15: laser.new
     ins_700(0, 0.0f, 512.0f, 16.0f, 16.0f);
     // semantic op_key lowering th12->th15: laser.timing
     ins_701(0, 60, 16, 60, 15, 0);
+    // semantic op_key lowering th12->th15: bullet.sound
+    ins_608(0, 19, -1);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(0, -114.0f, 54.0f);
     %B = [-9997.0f] + _f(-114);
     %C = [-9996.0f] + _f(54);
     // semantic op_key lowering th12->th15: bullet.angle_to_player
     ins_623(%A, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: laser.straight_on
     ins_703(0, 0);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(0, 114.0f, 54.0f);
     %B = [-9997.0f] + _f(114);
     %C = [-9996.0f] + _f(54);
     // semantic op_key lowering th12->th15: bullet.angle_to_player
     ins_623(%A, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: laser.straight_on
     ins_703(0, 0);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(0, -64.0f, -80.0f);
     %B = [-9997.0f] + _f(-64);
     %C = [-9996.0f] + _f(-80);
     // semantic op_key lowering th12->th15: bullet.angle_to_player
     ins_623(%A, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: laser.straight_on
     ins_703(0, 0);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(0, 64.0f, -80.0f);
     %B = [-9997.0f] + _f(64);
     %C = [-9996.0f] + _f(-80);
     // semantic op_key lowering th12->th15: bullet.angle_to_player
     ins_623(%A, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: laser.straight_on
     ins_703(0, 0);
     return;
@@ -561,47 +636,56 @@ void Boss2_at1h(var A)
     ins_607(0, 1);
     ins_602(0, 8, 2);
     ins_606(0, 1, 1);
-    ins_604(0, %B, 0.0f);
+    ins_604(0, 0.0f, 0.0f);
     ins_605(0, 8.0f, 8.0f);
-    ins_608(0, 19, -1);
-    // object LaserEmitter source_line=413 family=th12
-    // laser lowering th12 -> th15; semantic op_key backend
-    ins_700(0, 0.0f, 512.0f, 16.0f, 16.0f);
-    ins_701(0, 60, 16, 60, 15, 0);
-    ins_703(0, 0);
-    ins_703(0, 0);
-    ins_703(0, 0);
-    ins_703(0, 0);
     // semantic op_key lowering th12->th15: laser.new
     ins_700(0, 0.0f, 512.0f, 16.0f, 16.0f);
     // semantic op_key lowering th12->th15: laser.timing
     ins_701(0, 60, 16, 60, 15, 0);
+    // semantic op_key lowering th12->th15: bullet.sound
+    ins_608(0, 19, -1);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(0, -114.0f, 54.0f);
     %C = [-9997.0f] + _f(-114);
     %D = [-9996.0f] + _f(54);
     // semantic op_key lowering th12->th15: bullet.angle_to_player
     ins_623(%B, %C, %D);
     %B = %B + (%A * [-9987.0f]);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %B, 0.0f);
     // semantic op_key lowering th12->th15: laser.straight_on
     ins_703(0, 0);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(0, 114.0f, 54.0f);
     %C = [-9997.0f] + _f(114);
     %D = [-9996.0f] + _f(54);
     // semantic op_key lowering th12->th15: bullet.angle_to_player
     ins_623(%B, %C, %D);
     %B = %B + (%A * [-9987.0f]);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %B, 0.0f);
     // semantic op_key lowering th12->th15: laser.straight_on
     ins_703(0, 0);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(0, -64.0f, -80.0f);
     %C = [-9997.0f] + _f(-64);
     %D = [-9996.0f] + _f(-80);
     // semantic op_key lowering th12->th15: bullet.angle_to_player
     ins_623(%B, %C, %D);
     %B = %B + (%A * [-9987.0f]);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %B, 0.0f);
     // semantic op_key lowering th12->th15: laser.straight_on
     ins_703(0, 0);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(0, 64.0f, -80.0f);
     %C = [-9997.0f] + _f(64);
     %D = [-9996.0f] + _f(-80);
     // semantic op_key lowering th12->th15: bullet.angle_to_player
     ins_623(%B, %C, %D);
     %B = %B + (%A * [-9987.0f]);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %B, 0.0f);
     // semantic op_key lowering th12->th15: laser.straight_on
     ins_703(0, 0);
     return;
@@ -619,19 +703,22 @@ void Boss2_at2()
     // object BulletEmitter source_line=452 family=th12
     ins_600(1);
     ins_607(1, 0);
-    ins_602(1, 29, 0);
+    ins_602(1, 26, 0);
     ins_606(1, $D, 1);
-    ins_604(1, [-9998.0f] / _f(5), 3.1415927f / _f($D));
+    ins_604(1, 0.0f, 0.28559932f);
     ins_605(1, 5.0f, 3.5f);
     ins_609(1, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(1, 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
-    ins_609(1, 2, 0, 64, 60, 1, [-9989.0f], %E);
     // semantic op_key lowering th12->th15: unit.diff_f
     ins_536(%E, 2.0f, 2.0f, 2.0f, 3.0f);
     $D = $D - 1;
     $F = 6000;
     goto Boss2_at2_836 @ 0;
     Boss2_at2_520:
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(1, 2, 0, 64, 60, 1, [-9989.0f], %E)
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(1, [-9998.0f] / _f(5), 3.1415927f / _f($D));
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(1);
     // semantic op_key lowering th12->th15: unit.diff_wait
@@ -681,12 +768,12 @@ void Boss3()
     // object Animation source_line=488 family=th12
     // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
     ins_303(12, -1);
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // semantic op_key lowering th12->th15: flow.kill_all_async
     ins_21();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     unless ([-9986] == 0) goto Boss3_468 @ 0;
     // semantic op_key lowering th12->th15: bullet.cancel_radius
     ins_615(640.0f);
@@ -706,12 +793,12 @@ void Boss3()
     // object Movement source_line=502 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
     ins_401(0, 0, 0.0f, 0.0f);
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
     // semantic op_key lowering th12->th15: unit.func_set
     ins_632(0);
-    // unsupported semantic op_key for th12->th15: unit.laser_cancel
-    // original: ins_445();
+    // semantic op_key lowering th12->th15: unit.laser_cancel
+    ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
     // unsupported semantic op_key for th12->th15: movement.move_limit_reset
@@ -719,8 +806,9 @@ void Boss3()
     // object Movement source_line=508 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(0.0f, 192.0f);
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 2500, 2700, "BossCard3");
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 2500, 2700, "BossCard3");
     // semantic op_key lowering th12->th15: unit.life_marker
     ins_527(0, 2500.0f, -24448);
     // semantic op_key lowering th12->th15: unit.stars
@@ -907,7 +995,7 @@ void Boss3_at1()
     ins_607(0, 1);
     ins_602(0, 8, 4);
     ins_606(0, 1, 5);
-    ins_604(0, %A, %A);
+    ins_604(0, 0.0f, 0.0f);
     ins_605(0, 3.0f, 2.7f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
@@ -917,6 +1005,10 @@ void Boss3_at1()
     Boss3_at1_392:
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 32.0f);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(0, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, %A);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     %A = %A + 0.19635f;
@@ -939,7 +1031,7 @@ void Boss3_at1e1()
     ins_607(1, 1);
     ins_602(1, 8, 13);
     ins_606(1, 1, 5);
-    ins_604(1, %A, %A);
+    ins_604(1, 0.0f, 0.0f);
     ins_605(1, 1.0f, 0.7f);
     ins_609(1, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(1, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
@@ -949,8 +1041,14 @@ void Boss3_at1e1()
     ins_535($D, 30, 60, 60, 60);
     goto Boss3_at1e1_996 @ 0;
     Boss3_at1e1_508:
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(1, _f(-114) + [-9997.0f], _f(54) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(1, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(1, %A, %A);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(1);
     %A = %A + 0.19635f;
@@ -976,7 +1074,7 @@ void Boss3_at1e2()
     ins_607(2, 1);
     ins_602(2, 8, 13);
     ins_606(2, 1, 5);
-    ins_604(2, %A, %A);
+    ins_604(2, 0.0f, 0.0f);
     ins_605(2, 1.0f, 0.7f);
     ins_609(2, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(2, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
@@ -986,8 +1084,14 @@ void Boss3_at1e2()
     ins_535($D, 30, 60, 60, 60);
     goto Boss3_at1e2_996 @ 0;
     Boss3_at1e2_508:
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(2, _f(114) + [-9997.0f], _f(54) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(2, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(2, %A, %A);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(2);
     %A = %A - 0.19635f;
@@ -1013,7 +1117,7 @@ void Boss3_at1e3()
     ins_607(3, 1);
     ins_602(3, 8, 2);
     ins_606(3, 1, 5);
-    ins_604(3, %A, %A);
+    ins_604(3, 0.0f, 0.0f);
     ins_605(3, 1.0f, 0.7f);
     ins_609(3, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(3, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
@@ -1023,8 +1127,14 @@ void Boss3_at1e3()
     ins_535($D, 30, 60, 60, 60);
     goto Boss3_at1e3_1072 @ 0;
     Boss3_at1e3_508:
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(3, _f(-64) + [-9997.0f], _f(-80) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(3, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(3, %A, %A);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(3);
     %A = %A - 0.19635f;
@@ -1053,7 +1163,7 @@ void Boss3_at1e4()
     ins_607(4, 1);
     ins_602(4, 8, 2);
     ins_606(4, 1, 5);
-    ins_604(4, %A, %A);
+    ins_604(4, 0.0f, 0.0f);
     ins_605(4, 1.0f, 0.7f);
     ins_609(4, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(4, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
@@ -1063,8 +1173,14 @@ void Boss3_at1e4()
     ins_535($D, 30, 60, 60, 60);
     goto Boss3_at1e4_1072 @ 0;
     Boss3_at1e4_508:
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(4, _f(64) + [-9997.0f], _f(-80) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(4, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(4, %A, %A);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(4);
     %A = %A + 0.19635f;
@@ -1122,12 +1238,12 @@ void Boss4()
     ins_303(12, -1);
     // semantic op_key lowering th12->th15: unit.flag_set
     ins_502(2);
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // semantic op_key lowering th12->th15: flow.kill_all_async
     ins_21();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     unless ([-9986] == 0) goto Boss4_488 @ 0;
     // semantic op_key lowering th12->th15: bullet.cancel_radius
     ins_615(640.0f);
@@ -1147,12 +1263,12 @@ void Boss4()
     // object Movement source_line=779 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
     ins_401(0, 0, 0.0f, 0.0f);
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
     // semantic op_key lowering th12->th15: unit.func_set
     ins_632(0);
-    // unsupported semantic op_key for th12->th15: unit.laser_cancel
-    // original: ins_445();
+    // semantic op_key lowering th12->th15: unit.laser_cancel
+    ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
     // unsupported semantic op_key for th12->th15: movement.move_limit_reset
@@ -1160,8 +1276,9 @@ void Boss4()
     // object Movement source_line=785 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(0.0f, 192.0f);
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 5000, 4200, "BossCard4");
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 5000, 4200, "BossCard4");
     // semantic op_key lowering th12->th15: unit.life_marker
     ins_527(0, 5000.0f, -24448);
     // semantic op_key lowering th12->th15: unit.stars
@@ -1372,7 +1489,7 @@ void Boss4_at1()
     ins_607(0, 1);
     ins_602(0, 8, 4);
     ins_606(0, 1, 1);
-    ins_604(0, %A, %A);
+    ins_604(0, 0.0f, 0.0f);
     ins_605(0, 3.0f, 2.7f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
@@ -1382,6 +1499,10 @@ void Boss4_at1()
     Boss4_at1_392:
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 32.0f);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(0, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, %A);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     %A = %A + 0.19635f;
@@ -1404,7 +1525,7 @@ void Boss4_at1e1()
     ins_607(1, 1);
     ins_602(1, 8, 13);
     ins_606(1, 1, 3);
-    ins_604(1, %A, %A);
+    ins_604(1, 0.0f, 0.0f);
     ins_605(1, 1.2f, 1.0f);
     ins_609(1, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(1, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
@@ -1414,8 +1535,14 @@ void Boss4_at1e1()
     $E = 32;
     goto Boss4_at1e1_1252 @ 0;
     Boss4_at1e1_588:
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(1, _f(-114) + [-9997.0f], _f(54) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(1, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(1, %A, %A);
     unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e1_1080 @ 0;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(1);
@@ -1454,7 +1581,7 @@ void Boss4_at1e2()
     ins_607(2, 1);
     ins_602(2, 8, 13);
     ins_606(2, 1, 3);
-    ins_604(2, %A, %A);
+    ins_604(2, 0.0f, 0.0f);
     ins_605(2, 1.2f, 1.0f);
     ins_609(2, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(2, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
@@ -1464,8 +1591,14 @@ void Boss4_at1e2()
     $E = 32;
     goto Boss4_at1e2_1252 @ 0;
     Boss4_at1e2_588:
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(2, _f(114) + [-9997.0f], _f(54) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(2, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(2, %A, %A);
     unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e2_1080 @ 0;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(2);
@@ -1504,7 +1637,7 @@ void Boss4_at1e3()
     ins_607(3, 1);
     ins_602(3, 8, 2);
     ins_606(3, 1, 3);
-    ins_604(3, %A, %A);
+    ins_604(3, 0.0f, 0.0f);
     ins_605(3, 1.2f, 1.0f);
     ins_609(3, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(3, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
@@ -1514,8 +1647,14 @@ void Boss4_at1e3()
     $E = 32;
     goto Boss4_at1e3_1252 @ 0;
     Boss4_at1e3_588:
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(3, _f(-64) + [-9997.0f], _f(-80) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(3, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(3, %A, %A);
     unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e3_1080 @ 0;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(3);
@@ -1554,7 +1693,7 @@ void Boss4_at1e4()
     ins_607(4, 1);
     ins_602(4, 8, 2);
     ins_606(4, 1, 3);
-    ins_604(4, %A, %A);
+    ins_604(4, 0.0f, 0.0f);
     ins_605(4, 1.2f, 1.0f);
     ins_609(4, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(4, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
@@ -1564,8 +1703,14 @@ void Boss4_at1e4()
     $E = 32;
     goto Boss4_at1e4_1252 @ 0;
     Boss4_at1e4_588:
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(4, _f(64) + [-9997.0f], _f(-80) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
+    // semantic op_key lowering th12->th15: bullet.offset
+    ins_603(4, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(4, %A, %A);
     unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e4_1080 @ 0;
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(4);
@@ -1643,12 +1788,12 @@ void Boss5()
     ins_303(12, -1);
     // semantic op_key lowering th12->th15: unit.flag_set
     ins_502(2);
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // semantic op_key lowering th12->th15: flow.kill_all_async
     ins_21();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     unless ([-9986] == 0) goto Boss5_528 @ 0;
     // semantic op_key lowering th12->th15: bullet.cancel_radius
     ins_615(640.0f);
@@ -1668,12 +1813,12 @@ void Boss5()
     // object Movement source_line=1116 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
     ins_401(0, 0, 0.0f, 0.0f);
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
     // semantic op_key lowering th12->th15: unit.func_set
     ins_632(0);
-    // unsupported semantic op_key for th12->th15: unit.laser_cancel
-    // original: ins_445();
+    // semantic op_key lowering th12->th15: unit.laser_cancel
+    ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
     // unsupported semantic op_key for th12->th15: movement.move_limit_reset
@@ -1815,12 +1960,12 @@ void Boss6()
     ins_303(12, -1);
     // semantic op_key lowering th12->th15: unit.flag_set
     ins_502(2);
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // semantic op_key lowering th12->th15: flow.kill_all_async
     ins_21();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     unless ([-9986] == 0) goto Boss6_488 @ 0;
     // semantic op_key lowering th12->th15: bullet.cancel_radius
     ins_615(640.0f);
@@ -1840,12 +1985,12 @@ void Boss6()
     // object Movement source_line=1201 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
     ins_401(0, 0, 0.0f, 0.0f);
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
     // semantic op_key lowering th12->th15: unit.func_set
     ins_632(0);
-    // unsupported semantic op_key for th12->th15: unit.laser_cancel
-    // original: ins_445();
+    // semantic op_key lowering th12->th15: unit.laser_cancel
+    ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
     // unsupported semantic op_key for th12->th15: movement.move_limit_reset
@@ -1888,21 +2033,21 @@ void BossCard1()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C, D;
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // semantic op_key lowering th12->th15: flow.kill_all_async
     ins_21();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     // object Enemy source_line=1232 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
     ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
     // semantic op_key lowering th12->th15: unit.func_set
     ins_632(0);
-    // unsupported semantic op_key for th12->th15: unit.laser_cancel
-    // original: ins_445();
+    // semantic op_key lowering th12->th15: unit.laser_cancel
+    ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
     // object Movement source_line=1237 family=th12
@@ -1917,24 +2062,26 @@ void BossCard1()
     [-9949] = 0;
     [-9948] = 0;
     !EN
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 0, 2700, "Boss2");
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 2700, "Boss2");
     !*
     !HL
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 0, 2100, "Boss2");
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 2100, "Boss2");
     !*
     !EN
-    // unsupported semantic op_key for th12->th15: boss.spell
-    // original: ins_437(77, 2700, 500000, "魔法「紫雲のオーメン」");
+    // semantic op_key lowering th12->th15: boss.spell
+    ins_537(77, 2700, 500000, "魔法「紫雲のオーメン」");
     !*
     !H
-    // unsupported semantic op_key for th12->th15: boss.spell3
-    // original: ins_439(79, 2700, 500000, "吉兆「紫の雲路」");
+    // semantic op_key lowering th12->th15: boss.spell3
+    ins_539(79, 2700, 500000, "吉兆「紫の雲路」");
     !*
     !L
-    // semantic op_key lowering th12->th15: movement.spell_ex
-    // dropped source-specific semantic op for th15: movement.spell_ex(80, 2700, 500000, "吉兆「極楽の紫の雲路」")
+    // semantic op_key lowering th12->th15: boss.spell_ex
+    ins_537(80, 2700, 500000, "吉兆「極楽の紫の雲路」");
     !*
     // semantic op_key lowering th12->th15: boss.set_chapter
     ins_524(43);
@@ -1995,9 +2142,9 @@ void BossCard1_at1()
     // object BulletEmitter source_line=1287 family=th12
     ins_600(0);
     ins_607(0, 3);
-    ins_602(0, 29, 0);
+    ins_602(0, 26, 0);
     ins_606(0, 1, 1);
-    ins_604(0, %A, 0.18479957f);
+    ins_604(0, 0.0f, 0.0f);
     ins_605(0, 1.0f, 0.0f);
     ins_625(0, 1, 1, 1, 1, 2, 4, 4, 4);
     ins_624(0, 2.0f, 2.2f, 2.5f, 2.5f, 1.2f, 1.0f, 1.0f, 1.0f);
@@ -2008,6 +2155,10 @@ void BossCard1_at1()
     $C = 80;
     goto BossCard1_at1_796 @ 0;
     BossCard1_at1_552:
+    // semantic op_key lowering th12->th15: bullet.distance
+    ins_627(0, %B);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.18479957f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     %B = %B - _f(1);
@@ -2019,6 +2170,10 @@ void BossCard1_at1()
     $D = 40;
     goto BossCard1_at1_1148 @ 0;
     BossCard1_at1_904:
+    // semantic op_key lowering th12->th15: bullet.distance
+    ins_627(0, %B);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.18479957f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     %B = %B - _f(1);
@@ -2041,9 +2196,9 @@ void BossCard1_at1h()
     // object BulletEmitter source_line=1325 family=th12
     ins_600(0);
     ins_607(0, 3);
-    ins_602(0, 29, 0);
+    ins_602(0, 26, 0);
     ins_606(0, 1, 1);
-    ins_604(0, %A, 0.007853982f);
+    ins_604(0, 0.0f, 0.0f);
     ins_605(0, 1.0f, 0.0f);
     ins_625(0, 1, 1, 1, 1, 2, 4, 4, 4);
     ins_624(0, 2.0f, 2.5f, 2.5f, 2.5f, 1.2f, 1.0f, 1.0f, 1.0f);
@@ -2054,6 +2209,10 @@ void BossCard1_at1h()
     $C = 80;
     goto BossCard1_at1h_796 @ 0;
     BossCard1_at1h_552:
+    // semantic op_key lowering th12->th15: bullet.distance
+    ins_627(0, %B);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.007853982f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     %B = %B - _f(1);
@@ -2065,6 +2224,10 @@ void BossCard1_at1h()
     $D = 40;
     goto BossCard1_at1h_1148 @ 0;
     BossCard1_at1h_904:
+    // semantic op_key lowering th12->th15: bullet.distance
+    ins_627(0, %B);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.007853982f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     %B = %B - _f(1);
@@ -2087,9 +2250,9 @@ void BossCard1_at2()
     // object BulletEmitter source_line=1363 family=th12
     ins_600(1);
     ins_607(1, 3);
-    ins_602(1, 28, 4);
+    ins_602(1, 34, 4);
     ins_606(1, 1, 1);
-    ins_604(1, %A, 0.1308997f);
+    ins_604(1, 0.0f, 0.0f);
     ins_605(1, 1.0f, 0.0f);
     ins_625(1, 1, 1, 1, 1, 2, 4, 4, 4);
     ins_624(1, 1.3f, 1.3f, 1.6f, 1.6f, 0.6f, 0.5f, 0.5f, 0.5f);
@@ -2099,6 +2262,10 @@ void BossCard1_at2()
     $C = 40;
     goto BossCard1_at2_748 @ 0;
     BossCard1_at2_504:
+    // semantic op_key lowering th12->th15: bullet.distance
+    ins_627(1, %B);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(1, %A, 0.14279966f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(1);
     %B = %B - _f(1);
@@ -2110,6 +2277,10 @@ void BossCard1_at2()
     $D = 40;
     goto BossCard1_at2_1100 @ 0;
     BossCard1_at2_856:
+    // semantic op_key lowering th12->th15: bullet.distance
+    ins_627(1, %B);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(1, %A, 0.1308997f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(1);
     %B = %B - _f(1);
@@ -2132,9 +2303,9 @@ void BossCard1_at2h()
     // object BulletEmitter source_line=1400 family=th12
     ins_600(1);
     ins_607(1, 3);
-    ins_602(1, 28, 4);
+    ins_602(1, 34, 4);
     ins_606(1, 1, 1);
-    ins_604(1, %A, 0.1308997f);
+    ins_604(1, 0.0f, 0.0f);
     ins_605(1, 1.0f, 0.0f);
     ins_625(1, 1, 1, 1, 1, 2, 4, 4, 4);
     ins_624(1, 1.3f, 1.6f, 1.6f, 1.6f, 0.6f, 0.5f, 0.5f, 0.5f);
@@ -2144,6 +2315,10 @@ void BossCard1_at2h()
     $C = 40;
     goto BossCard1_at2h_748 @ 0;
     BossCard1_at2h_504:
+    // semantic op_key lowering th12->th15: bullet.distance
+    ins_627(1, %B);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(1, %A, 0.14279966f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(1);
     %B = %B - _f(1);
@@ -2155,6 +2330,10 @@ void BossCard1_at2h()
     $D = 40;
     goto BossCard1_at2h_1100 @ 0;
     BossCard1_at2h_856:
+    // semantic op_key lowering th12->th15: bullet.distance
+    ins_627(1, %B);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(1, %A, 0.1308997f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(1);
     %B = %B - _f(1);
@@ -2174,21 +2353,21 @@ void BossCard2()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // semantic op_key lowering th12->th15: flow.kill_all_async
     ins_21();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     // object Enemy source_line=1440 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
     ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
     // semantic op_key lowering th12->th15: unit.func_set
     ins_632(0);
-    // unsupported semantic op_key for th12->th15: unit.laser_cancel
-    // original: ins_445();
+    // semantic op_key lowering th12->th15: unit.laser_cancel
+    ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
     // object Movement source_line=1445 family=th12
@@ -2202,15 +2381,16 @@ void BossCard2()
     ins_401(0, 0, 0.0f, 0.0f);
     [-9949] = 0;
     [-9948] = 0;
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 0, 2700, "Boss3");
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 2700, "Boss3");
     !EN
-    // unsupported semantic op_key for th12->th15: boss.spell
-    // original: ins_437(81, 2700, 500000, "魔法「魔界蝶の妖香」");
+    // semantic op_key lowering th12->th15: boss.spell
+    ins_537(81, 2700, 500000, "魔法「魔界蝶の妖香」");
     !*
     !HL
-    // unsupported semantic op_key for th12->th15: boss.spell3
-    // original: ins_439(83, 2700, 500000, "魔法「マジックバタフライ」");
+    // semantic op_key lowering th12->th15: boss.spell3
+    ins_539(83, 2700, 500000, "魔法「マジックバタフライ」");
     !*
     // object Movement source_line=1456 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
@@ -2279,22 +2459,20 @@ void BossCard2_at2()
     ins_607(0, 1);
     ins_602(0, 8, 4);
     ins_606(0, 1, 1);
-    ins_604(0, %A, 0.0f);
+    ins_604(0, 0.0f, 0.0f);
     ins_605(0, 8.0f, 8.0f);
-    ins_608(0, 19, -1);
-    // object LaserEmitter source_line=1502 family=th12
-    // laser lowering th12 -> th15; semantic op_key backend
-    ins_700(0, 0.0f, 512.0f, 16.0f, 16.0f);
-    ins_701(0, 60, 16, 30, 15, 0);
-    ins_703(0, 0);
     // semantic op_key lowering th12->th15: laser.new
     ins_700(0, 0.0f, 512.0f, 16.0f, 16.0f);
     // semantic op_key lowering th12->th15: laser.timing
     ins_701(0, 60, 16, 30, 15, 0);
+    // semantic op_key lowering th12->th15: bullet.sound
+    ins_608(0, 19, -1);
     %A = [-9989.0f];
     $D = 16;
     goto BossCard2_at2_476 @ 0;
     BossCard2_at2_348:
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: laser.straight_on
     ins_703(0, 0);
     %A = %A + 0.392699f;
@@ -2310,21 +2488,21 @@ void BossCard3()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // semantic op_key lowering th12->th15: flow.kill_all_async
     ins_21();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     // object Enemy source_line=1523 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
     ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
     // semantic op_key lowering th12->th15: unit.func_set
     ins_632(0);
-    // unsupported semantic op_key for th12->th15: unit.laser_cancel
-    // original: ins_445();
+    // semantic op_key lowering th12->th15: unit.laser_cancel
+    ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
     // object Movement source_line=1528 family=th12
@@ -2339,19 +2517,20 @@ void BossCard3()
     [-9949] = 0;
     [-9948] = 0;
     @BossEyes() async;
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 0, 3000, "Boss4");
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 3000, "Boss4");
     !EN
-    // unsupported semantic op_key for th12->th15: boss.spell
-    // original: ins_437(85, 3000, 500000, "光魔「スターメイルシュトロム」");
+    // semantic op_key lowering th12->th15: boss.spell
+    ins_537(85, 3000, 500000, "光魔「スターメイルシュトロム」");
     !*
     !H
-    // unsupported semantic op_key for th12->th15: boss.spell3
-    // original: ins_439(87, 3000, 500000, "光魔「魔法銀河系」");
+    // semantic op_key lowering th12->th15: boss.spell3
+    ins_539(87, 3000, 500000, "光魔「魔法銀河系」");
     !*
     !L
-    // semantic op_key lowering th12->th15: movement.spell_ex
-    // dropped source-specific semantic op for th15: movement.spell_ex(88, 3000, 500000, "光魔「魔法銀河系」")
+    // semantic op_key lowering th12->th15: boss.spell_ex
+    ins_537(88, 3000, 500000, "光魔「魔法銀河系」");
     !*
     // object Movement source_line=1542 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
@@ -2405,6 +2584,8 @@ void BossCard3_at()
     // semantic op_key lowering th12->th15: bullet.copy
     ins_614(5, 2);
     // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(2, [-9997.0f] + _f(-114), [-9996.0f] + _f(54));
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
     ins_628(3, [-9997.0f] + _f(114), [-9996.0f] + _f(54));
     // semantic op_key lowering th12->th15: bullet.et_offset_abs
     ins_628(4, [-9997.0f] + _f(-64), [-9996.0f] + _f(-80));
@@ -2443,22 +2624,20 @@ void BossCard3_at2()
     ins_607(0, 1);
     ins_602(0, 0, 13);
     ins_606(0, 1, 1);
-    ins_604(0, %A, 0.0f);
+    ins_604(0, -0.7853982f, -0.7853982f);
     ins_605(0, 4.0f, 4.0f);
-    ins_608(0, 19, -1);
-    ins_609(0, 0, 0, 128, 10, -999999, -999999.0f, -999999.0f);
-    ins_609(0, 1, 0, 256, 120, 0, -999999.0f, -999999.0f);
-    ins_609(0, 2, 1, 8, 60000, -999999, 0.0f, 0.015707964f);
-    // object LaserEmitter source_line=1601 family=th12
-    // laser lowering th12 -> th15; semantic op_key backend
-    ins_700(0, -1.0f, -1.0f, -1.0f, 16.0f);
-    ins_701(0, 32, -1, -1, -1, 0);
-    ins_711(0);
-    ins_711(0);
     // semantic op_key lowering th12->th15: laser.new
     ins_700(0, -1.0f, -1.0f, -1.0f, 16.0f);
     // semantic op_key lowering th12->th15: laser.timing
     ins_701(0, 32, -1, -1, -1, 0);
+    // semantic op_key lowering th12->th15: bullet.sound
+    ins_608(0, 19, -1);
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(0, 0, 0, 512, 10, -999999, -999999.0f, -999999.0f)
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(0, 1, 0, 1024, 120, 0, -999999.0f, -999999.0f)
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(0, 2, 1, 8, 60000, -999999, 0.0f, 0.015707964f)
     %A = 2.356194f;
     // semantic op_key lowering th12->th15: unit.diff_f
     ins_536(%E, 128.0f, 64.0f, 64.0f, 64.0f);
@@ -2472,6 +2651,10 @@ void BossCard3_at2()
     goto BossCard3_at2_1084 @ 0;
     BossCard3_at2_712:
     %C = ([-9999.0f] * %E) + %D;
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(0, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: laser.curve_on
     ins_711(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
@@ -2488,6 +2671,10 @@ void BossCard3_at2()
     goto BossCard3_at2_1720 @ 0;
     BossCard3_at2_1348:
     %C = ([-9999.0f] * %E) + %D;
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(0, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: laser.curve_on
     ins_711(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
@@ -2517,22 +2704,20 @@ void BossCard3_at2b()
     ins_607(0, 1);
     ins_602(0, 0, 13);
     ins_606(0, 1, 1);
-    ins_604(0, %A, 0.0f);
+    ins_604(0, -0.7853982f, -0.7853982f);
     ins_605(0, 4.0f, 4.0f);
-    ins_608(0, 19, -1);
-    ins_609(0, 0, 0, 128, 10, -999999, -999999.0f, -999999.0f);
-    ins_609(0, 1, 0, 256, 120, 0, -999999.0f, -999999.0f);
-    ins_609(0, 2, 1, 8, 60000, -999999, 0.0f, 0.015707964f);
-    // object LaserEmitter source_line=1657 family=th12
-    // laser lowering th12 -> th15; semantic op_key backend
-    ins_700(0, -1.0f, -1.0f, -1.0f, 16.0f);
-    ins_701(0, 32, -1, -1, -1, 0);
-    ins_711(0);
-    ins_711(0);
     // semantic op_key lowering th12->th15: laser.new
     ins_700(0, -1.0f, -1.0f, -1.0f, 16.0f);
     // semantic op_key lowering th12->th15: laser.timing
     ins_701(0, 32, -1, -1, -1, 0);
+    // semantic op_key lowering th12->th15: bullet.sound
+    ins_608(0, 19, -1);
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(0, 0, 0, 512, 10, -999999, -999999.0f, -999999.0f)
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(0, 1, 0, 1024, 120, 0, -999999.0f, -999999.0f)
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(0, 2, 1, 8, 60000, -999999, 0.0f, 0.015707964f)
     %A = -0.785398f;
     // semantic op_key lowering th12->th15: unit.diff_f
     ins_536(%E, 128.0f, 64.0f, 64.0f, 64.0f);
@@ -2547,6 +2732,10 @@ void BossCard3_at2b()
     goto BossCard3_at2b_1064 @ 0;
     BossCard3_at2b_692:
     %C = ([-9999.0f] * %E) + %D;
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(0, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: laser.curve_on
     ins_711(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
@@ -2563,6 +2752,10 @@ void BossCard3_at2b()
     goto BossCard3_at2b_1700 @ 0;
     BossCard3_at2b_1328:
     %C = ([-9999.0f] * %E) + %D;
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(0, %B, %C);
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: laser.curve_on
     ins_711(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
@@ -2587,21 +2780,21 @@ void BossCard4()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // semantic op_key lowering th12->th15: flow.kill_all_async
     ins_21();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     // object Enemy source_line=1712 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
     ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
     // semantic op_key lowering th12->th15: unit.func_set
     ins_632(0);
-    // unsupported semantic op_key for th12->th15: unit.laser_cancel
-    // original: ins_445();
+    // semantic op_key lowering th12->th15: unit.laser_cancel
+    ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
     // object Movement source_line=1717 family=th12
@@ -2617,24 +2810,26 @@ void BossCard4()
     [-9948] = 0;
     @BossEyes() async;
     !E
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 0, 4200, "Boss6");
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 4200, "Boss6");
     !*
     !NHL
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 0, 4200, "Boss5");
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 4200, "Boss5");
     !*
     !EN
-    // unsupported semantic op_key for th12->th15: boss.spell
-    // original: ins_437(89, 4200, 500000, "大魔法「魔神復誦」");
+    // semantic op_key lowering th12->th15: boss.spell
+    ins_537(89, 4200, 500000, "大魔法「魔神復誦」");
     !*
     !H
-    // unsupported semantic op_key for th12->th15: boss.spell3
-    // original: ins_439(91, 4200, 500000, "大魔法「魔神復誦」");
+    // semantic op_key lowering th12->th15: boss.spell3
+    ins_539(91, 4200, 500000, "大魔法「魔神復誦」");
     !*
     !L
-    // semantic op_key lowering th12->th15: movement.spell_ex
-    // dropped source-specific semantic op for th15: movement.spell_ex(92, 4200, 500000, "大魔法「魔神復誦」")
+    // semantic op_key lowering th12->th15: boss.spell_ex
+    ins_537(92, 4200, 500000, "大魔法「魔神復誦」");
     !*
     // object Movement source_line=1734 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
@@ -2840,8 +3035,8 @@ void BossCard4_at()
     ins_600(2);
     ins_607(2, 1);
     ins_602(2, 12, 6);
-    ins_606(2, 3, 1);
-    ins_604(2, %A, 1.0471976f);
+    ins_606(2, 2, 1);
+    ins_604(2, 0.0f, 0.28559932f);
     ins_605(2, 6.5f, 1.0f);
     ins_609(2, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.copy
@@ -2857,11 +3052,15 @@ void BossCard4_at()
     goto BossCard4_at_1344 @ 0;
     BossCard4_at_496:
     // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(2, [-9997.0f] + _f(-114), [-9996.0f] + _f(54));
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
     ins_628(3, [-9997.0f] + _f(114), [-9996.0f] + _f(54));
     // semantic op_key lowering th12->th15: bullet.et_offset_abs
     ins_628(4, [-9997.0f] + _f(-64), [-9996.0f] + _f(-80));
     // semantic op_key lowering th12->th15: bullet.et_offset_abs
     ins_628(5, [-9997.0f] + _f(64), [-9996.0f] + _f(-80));
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(2, %A, %C);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(4, %A, %C);
     // semantic op_key lowering th12->th15: bullet.angle
@@ -2883,6 +3082,8 @@ void BossCard4_at()
     if ($D--) goto BossCard4_at_496 @ 0;
     $E = 0;
     // semantic op_key lowering th12->th15: bullet.count
+    ins_606(2, 3, 1);
+    // semantic op_key lowering th12->th15: bullet.count
     ins_606(3, 3, 1);
     // semantic op_key lowering th12->th15: bullet.count
     ins_606(4, 3, 1);
@@ -2892,11 +3093,15 @@ void BossCard4_at()
     goto BossCard4_at_3168 @ 0;
     BossCard4_at_1604:
     // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(2, [-9997.0f] + _f(-114), [-9996.0f] + _f(54));
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
     ins_628(3, [-9997.0f] + _f(114), [-9996.0f] + _f(54));
     // semantic op_key lowering th12->th15: bullet.et_offset_abs
     ins_628(4, [-9997.0f] + _f(-64), [-9996.0f] + _f(-80));
     // semantic op_key lowering th12->th15: bullet.et_offset_abs
     ins_628(5, [-9997.0f] + _f(64), [-9996.0f] + _f(-80));
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(2, %A, 1.0471976f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(5, %A, 1.0471976f);
     // semantic op_key lowering th12->th15: bullet.angle
@@ -2949,16 +3154,15 @@ void BossCard4_at2()
     ins_607(0, 1);
     ins_602(0, 18, 2);
     ins_606(0, 1, 1);
-    ins_604(0, %A, 0.0f);
+    ins_604(0, 0.0f, 0.28559932f);
     ins_605(0, 2.5f, 1.0f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 1, 0, 64, 1, 15, 0.0f, -999999.0f);
     ins_609(0, 2, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
-    ins_609(0, 4, 0, 4, 60, -999999, %B, -999.0f);
-    ins_609(0, 3, 0, 32, 1, 1, [-9998.0f] / _f(16), [-9999.0f] * 1.0f);
-    ins_609(0, 3, 0, 32, 1, 1, [-9998.0f] / _f(16), [-9999.0f] * 1.0f);
     // semantic op_key lowering th12->th15: unit.diff_f
     ins_536(%B, 0.033333335f, 0.033333335f, 0.041666668f, 0.05f);
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(0, 4, 0, 4, 60, -999999, %B, -999.0f)
     goto BossCard4_at2_2080 @ 0;
     BossCard4_at2_528:
     %A = 3.141593f;
@@ -2966,6 +3170,10 @@ void BossCard4_at2()
     ins_535($C, 2, 6, 7, 8);
     goto BossCard4_at2_1160 @ 0;
     BossCard4_at2_628:
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(0, 3, 0, 32, 1, 1, [-9998.0f] / _f(16), [-9999.0f] * 1.0f)
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     !E
@@ -2993,6 +3201,10 @@ void BossCard4_at2()
     ins_535($D, 2, 6, 7, 8);
     goto BossCard4_at2_1936 @ 0;
     BossCard4_at2_1404:
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(0, 3, 0, 32, 1, 1, [-9998.0f] / _f(16), [-9999.0f] * 1.0f)
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     !E
@@ -3034,7 +3246,7 @@ void BossCard4_at3()
     // object BulletEmitter source_line=2002 family=th12
     ins_600(1);
     ins_607(1, 0);
-    ins_602(1, 26, 0);
+    ins_602(1, 32, 0);
     ins_606(1, 1, 1);
     ins_604(1, 0.0f, 0.7853982f);
     ins_605(1, 1.0f, 0.0f);
@@ -3116,13 +3328,15 @@ void BossCard4_at5()
     ins_607(6, 0);
     ins_602(6, 18, 3);
     ins_606(6, 1, 1);
-    ins_604(6, %A, 0.0f);
+    ins_604(6, 0.0f, 0.62831855f);
     ins_605(6, 2.5f, 1.0f);
     ins_609(6, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(6, 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     %A = -1.570796f;
     goto BossCard4_at5_1336 @ 0;
     BossCard4_at5_456:
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(6, %A, 0.0f);
     unless ($B == 0) goto BossCard4_at5_936 @ 0;
     %A = %A + 0.15708f;
     !E
@@ -3208,10 +3422,14 @@ void BossCard4_at7()
     ins_602(7, 18, 1);
     ins_606(7, 1, 1);
     ins_604(7, 1.5707964f, 0.28559932f);
-    ins_605(7, (%B / 64.0f) + ([-9999.0f] * 0.5f), 0.0f);
+    ins_605(7, ([-9999.0f] * 2.0f) + 0.5f, 1.0f);
     ins_609(7, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(7, 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     %B = ([-9999.0f] * _f(128)) + _f(64);
+    // semantic op_key lowering th12->th15: bullet.speed
+    ins_605(7, (%B / 64.0f) + ([-9999.0f] * 0.5f), 0.0f);
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(7, %B, [-9999.0f] * _f(192));
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(7);
     // semantic op_key lowering th12->th15: flow.wait
@@ -3222,11 +3440,15 @@ void BossCard4_at7()
     ins_602(7, 18, 1);
     ins_606(7, 1, 1);
     ins_604(7, 1.5707964f, 0.28559932f);
-    ins_605(7, (%B / 64.0f) + ([-9999.0f] * 0.5f), 0.0f);
+    ins_605(7, ([-9999.0f] * 2.0f) + 0.5f, 1.0f);
     ins_609(7, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(7, 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     %B = ([-9999.0f] * _f(128)) + _f(64);
+    // semantic op_key lowering th12->th15: bullet.speed
+    ins_605(7, (%B / 64.0f) + ([-9999.0f] * 0.5f), 0.0f);
     %B = %B * _f(-1);
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(7, %B, [-9999.0f] * _f(192));
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(7);
     // semantic op_key lowering th12->th15: flow.wait
@@ -3243,21 +3465,21 @@ void BossCard5()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C, D, E, F, G, H, I, J;
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // semantic op_key lowering th12->th15: flow.kill_all_async
     ins_21();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     // object Enemy source_line=2169 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
     ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
     // semantic op_key lowering th12->th15: unit.func_set
     ins_632(0);
-    // unsupported semantic op_key for th12->th15: unit.laser_cancel
-    // original: ins_445();
+    // semantic op_key lowering th12->th15: unit.laser_cancel
+    ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
     // object Movement source_line=2174 family=th12
@@ -3276,19 +3498,20 @@ void BossCard5()
     // object Movement source_line=2180 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
     ins_401(120, 4, 160.0f, 128.0f);
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 0, 4800, "Boss6");
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 4800, "Boss6");
     !N
-    // unsupported semantic op_key for th12->th15: boss.spell2
-    // original: ins_438(93, 4800, 500000, "「聖尼公のエア巻物」");
+    // semantic op_key lowering th12->th15: boss.spell2
+    ins_538(93, 4800, 500000, "「聖尼公のエア巻物」");
     !*
     !H
-    // unsupported semantic op_key for th12->th15: boss.spell3
-    // original: ins_439(94, 4800, 500000, "「聖尼公のエア巻物」");
+    // semantic op_key lowering th12->th15: boss.spell3
+    ins_539(94, 4800, 500000, "「聖尼公のエア巻物」");
     !*
     !L
-    // semantic op_key lowering th12->th15: movement.spell_ex
-    // dropped source-specific semantic op for th15: movement.spell_ex(95, 4800, 500000, "超人「聖白蓮」")
+    // semantic op_key lowering th12->th15: boss.spell_ex
+    ins_537(95, 4800, 500000, "超人「聖白蓮」");
     !*
     // semantic op_key lowering th12->th15: unit.set_invuln
     ins_515(70);
@@ -3538,16 +3761,22 @@ void BossCard5_at(var A, var B, var C, var D)
     ins_607(0, 0);
     ins_602(0, 4, 6);
     ins_606(0, 1, 1);
-    ins_604(0, %K, 0.0f);
+    ins_604(0, 0.0f, 0.62831855f);
     ins_605(0, 0.0f, 1.0f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
-    ins_609(0, 2, 0, -2147483648, 160, -999999, -999999.0f, -999999.0f);
-    ins_609(0, 3, 0, 4, 60, -999999, 0.023333333f, -999.0f);
     %K = 1.5707964f + ([-9998.0f] / _f(16));
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(0, 2, 0, 4096, 160, -999999, -999999.0f, -999999.0f)
     $L = 61;
     goto BossCard5_at_1692 @ 0;
     BossCard5_at_1340:
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, %K, 0.0f);
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform(0, 3, 0, 4, 60, -999999, 0.023333333f, -999.0f)
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628(0, %A, %B);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     %A = %A + %E;
@@ -3565,21 +3794,21 @@ void BossCard6()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C, D, E, F, G, H, I, J, K, L, M;
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // semantic op_key lowering th12->th15: flow.kill_all_async
     ins_21();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     // object Enemy source_line=2390 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
     ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
     // semantic op_key lowering th12->th15: unit.func_set
     ins_632(0);
-    // unsupported semantic op_key for th12->th15: unit.laser_cancel
-    // original: ins_445();
+    // semantic op_key lowering th12->th15: unit.laser_cancel
+    ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
     // object Movement source_line=2395 family=th12
@@ -3598,19 +3827,20 @@ void BossCard6()
     // object Movement source_line=2401 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
     ins_401(120, 4, 0.0f, 128.0f);
-    // unsupported semantic op_key for th12->th15: boss.set_interrupt
-    // original: ins_414(0, 0, 7200, "BossDead");
+    // semantic op_key lowering th12->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 7200, "BossDead");
     !EN
-    // unsupported semantic op_key for th12->th15: boss.spell
-    // original: ins_437(96, 7200, 500000, "飛鉢「フライングファンタスティカ」");
+    // semantic op_key lowering th12->th15: boss.spell
+    ins_537(96, 7200, 500000, "飛鉢「フライングファンタスティカ」");
     !*
     !H
-    // unsupported semantic op_key for th12->th15: boss.spell3
-    // original: ins_439(98, 7200, 500000, "飛鉢「伝説の飛空円盤」");
+    // semantic op_key lowering th12->th15: boss.spell3
+    ins_539(98, 7200, 500000, "飛鉢「伝説の飛空円盤」");
     !*
     !L
-    // semantic op_key lowering th12->th15: movement.spell_ex
-    // dropped source-specific semantic op for th15: movement.spell_ex(99, 7200, 500000, "飛鉢「伝説の飛空円盤」")
+    // semantic op_key lowering th12->th15: boss.spell_ex
+    ins_537(99, 7200, 500000, "飛鉢「伝説の飛空円盤」");
     !*
     // semantic op_key lowering th12->th15: unit.set_invuln
     ins_515(70);
@@ -3815,13 +4045,11 @@ void BossCard6_at(var A, var B, var C, var D, var E, var F, var G)
     ins_605($A, 1.0f, 0.0f);
     ins_624($A, 1.5f, 1.5f, 1.7f, 1.8f, 1.0f, 1.0f, 1.0f, 1.0f);
     ins_609($A, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_609($A, 1, 0, 2097152, $G, -999999, -999999.0f, -999999.0f);
+    // dropped unsupported bullet transform mode from ins_509: TH12 etEx mode 2097152 is not TH13+ mode 2097152; the TH13+ value is velocity-over-time and corrupts TH12 transform chains; original args: $A, 1, 0, 2097152, $G, -999999, -999999.0f, -999999.0f
     ins_609($A, 2, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     ins_609($A, 3, 0, 128, 300, -999999, -999999.0f, -999999.0f);
     ins_609($A, 4, 0, 256, 1600, 0, -999999.0f, -999999.0f);
     ins_609($A, 5, 1, 8, 60, -999999, -0.008333334f, %D);
-    ins_609($A, 6, 1, 524288, 60000, -999999, %H, %I);
-    ins_609($A, 7, 1, 8, 60000, -999999, 0.0f, %D / 4.8f);
     unless ($F != 0) goto BossCard6_at_636 @ 0;
     // semantic op_key lowering th12->th15: bullet.angle_to_player
     ins_623(%H, %B, %C);
@@ -3833,6 +4061,12 @@ void BossCard6_at(var A, var B, var C, var D, var E, var F, var G)
     ins_536(%I, 0.5f, 0.5f, 0.55f, 0.6f);
     [-9981.0f] = %H;
     [-9980.0f] = %I;
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform($A, 6, 1, 134217728, 60000, -999999, %H, %I)
+    // semantic op_key lowering th12->th15: bullet.transform
+    // dropped source-specific semantic op for th15: bullet.transform($A, 7, 1, 8, 60000, -999999, 0.0f, %D / 4.8f)
+    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    ins_628($A, %B, %C);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601($A);
     [-9983] = $G;
@@ -3918,10 +4152,10 @@ void BossDead()
     +60:
     // unsupported semantic op_key for th12->th15: bullet.clear_all
     // original: ins_510();
-    // unsupported semantic op_key for th12->th15: boss.spell_end
-    // original: ins_423();
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: boss.spell_end
+    ins_523();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     // semantic op_key lowering th12->th15: movement.game_speed
     ins_547(0.25f);
     // semantic op_key lowering th12->th15: boss.set_boss

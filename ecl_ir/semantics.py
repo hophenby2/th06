@@ -68,6 +68,14 @@ def generation_for_game(game: str) -> str:
     return GEN_UNKNOWN
 
 
+def lifted_raw_coverage_policy(kind: str, source_game: str, target: str, family: str = "") -> str:
+    source_generation = generation_for_game(source_game)
+    target_generation = generation_for_game(target)
+    if kind == "BulletEmitter" and family == "th12" and source_generation == GEN_TH12 and target_generation == GEN_TH13_PLUS:
+        return "contiguous_setup_prefix"
+    return "default"
+
+
 # Opcode semantics are registered by meaning first, then encoded per generation.
 SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("enemy.create", {GEN_TH13_PLUS: 300, GEN_TH12: 256}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
@@ -99,27 +107,37 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("movement.bezier", {GEN_TH13_PLUS: 425, GEN_TH12: 325}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
     SemanticOpcode("movement.bezier_rel", {GEN_TH13_PLUS: 426, GEN_TH12: 326}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
     SemanticOpcode("movement.reset", {GEN_TH13_PLUS: 427, GEN_TH12: 327}, {(GEN_TH13_PLUS, GEN_TH12): ()}),
-    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(500, 520)),
+    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(500, 511)),
+    SemanticOpcode("boss.life_set", {GEN_TH13_PLUS: 511, GEN_TH12: 411}),
+    SemanticOpcode("boss.set_boss", {GEN_TH13_PLUS: 512, GEN_TH12: 412}),
+    SemanticOpcode("boss.timer_reset", {GEN_TH13_PLUS: 513, GEN_TH12: 413}),
+    SemanticOpcode("boss.set_interrupt", {GEN_TH13_PLUS: 514, GEN_TH12: 414}),
+    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(515, 519)),
+    SemanticOpcode("unit.dialog_wait", {GEN_TH13_PLUS: 519, GEN_TH12: 419}),
     SemanticOpcode("unit.boss_wait", {GEN_TH13_PLUS: 520, GEN_TH12: 420}),
-    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(521, 526)),
+    SemanticOpcode("boss.set_timeout", {GEN_TH13_PLUS: 521, GEN_TH12: 421}),
+    SemanticOpcode("unit.property.22", {GEN_TH13_PLUS: 522, GEN_TH12: 422}),
+    SemanticOpcode("boss.spell_end", {GEN_TH13_PLUS: 523, GEN_TH12: 423}),
+    SemanticOpcode("boss.set_chapter", {GEN_TH13_PLUS: 524, GEN_TH12: 424}),
+    SemanticOpcode("enemy.enm_kill_all", {GEN_TH13_PLUS: 525, GEN_TH12: 425}),
     SemanticOpcode("unit.property.27", {GEN_TH13_PLUS: 527, GEN_TH12: 427}),
     SemanticOpcode("unit.property.28", {GEN_TH13_PLUS: 528, GEN_TH12: 428}),
-    SemanticOpcode("unit.property.29", {GEN_TH13_PLUS: 529, GEN_TH12: 435}),
-    SemanticOpcode("unit.property.30", {GEN_TH13_PLUS: 530, GEN_TH12: 436}),
-    SemanticOpcode("unit.property.31", {GEN_TH13_PLUS: 531, GEN_TH12: 437}),
-    SemanticOpcode("unit.property.32", {GEN_TH13_PLUS: 532, GEN_TH12: 438}),
-    SemanticOpcode("unit.property.33", {GEN_TH13_PLUS: 533, GEN_TH12: 439}),
-    SemanticOpcode("unit.property.34", {GEN_TH13_PLUS: 534, GEN_TH12: 440}),
-    SemanticOpcode("difficulty.easy", {GEN_TH13_PLUS: 535, GEN_TH12: 435}),
-    SemanticOpcode("difficulty.normal", {GEN_TH13_PLUS: 536, GEN_TH12: 436}),
-    SemanticOpcode("difficulty.hard", {GEN_TH13_PLUS: 537, GEN_TH12: 437}),
-    SemanticOpcode("difficulty.lunatic", {GEN_TH13_PLUS: 538, GEN_TH12: 438}),
-    SemanticOpcode("difficulty.extra", {GEN_TH13_PLUS: 539, GEN_TH12: 439}),
-    SemanticOpcode("difficulty.any", {GEN_TH13_PLUS: 540, GEN_TH12: 440}),
+    SemanticOpcode("unit.property.29", {GEN_TH13_PLUS: 529, GEN_TH12: 429}),
+    SemanticOpcode("unit.property.30", {GEN_TH13_PLUS: 530, GEN_TH12: 430}),
+    SemanticOpcode("unit.property.31", {GEN_TH13_PLUS: 531, GEN_TH12: 431}),
+    SemanticOpcode("unit.property.32", {GEN_TH13_PLUS: 532, GEN_TH12: 432}),
+    SemanticOpcode("unit.property.33", {GEN_TH13_PLUS: 533, GEN_TH12: 433}),
+    SemanticOpcode("unit.property.34", {GEN_TH13_PLUS: 534, GEN_TH12: 434}),
+    SemanticOpcode("unit.diff_i", {GEN_TH13_PLUS: 535, GEN_TH12: 435}),
+    SemanticOpcode("unit.diff_f", {GEN_TH13_PLUS: 536, GEN_TH12: 436}),
+    SemanticOpcode("boss.spell", {GEN_TH13_PLUS: 537, GEN_TH12: 437}),
+    SemanticOpcode("boss.spell2", {GEN_TH13_PLUS: 538, GEN_TH12: 438}),
+    SemanticOpcode("boss.spell3", {GEN_TH13_PLUS: 539, GEN_TH12: 439}),
+    SemanticOpcode("unit.stars", {GEN_TH13_PLUS: 540, GEN_TH12: 440}),
     SemanticOpcode("unit.property.42", {GEN_TH13_PLUS: 542, GEN_TH12: 442}),
     SemanticOpcode("unit.property.43", {GEN_TH13_PLUS: 543, GEN_TH12: 443}),
     SemanticOpcode("unit.property.44", {GEN_TH13_PLUS: 544, GEN_TH12: 444}),
-    SemanticOpcode("unit.property.45", {GEN_TH13_PLUS: 545, GEN_TH12: 445}),
+    SemanticOpcode("unit.laser_cancel", {GEN_TH13_PLUS: 545, GEN_TH12: 445}),
     SemanticOpcode("unit.property.46", {GEN_TH13_PLUS: 546, GEN_TH12: 446}),
     SemanticOpcode("unit.property.47", {GEN_TH13_PLUS: 547, GEN_TH12: 447}),
     SemanticOpcode("unit.property.48", {GEN_TH13_PLUS: 548, GEN_TH12: 448}),
@@ -243,7 +261,14 @@ BULLET_SHAPES: tuple[SemanticValue, ...] = (
     SemanticValue("butterfly", {GEN_TH13_PLUS: "22", GEN_TH12: "21", GEN_TH10_TH11: "21", GEN_TH06_TH08: "21"}),
     SemanticValue("big_star", {GEN_TH13_PLUS: "23", GEN_TH12: "22", GEN_TH10_TH11: "22", GEN_TH06_TH08: "8"}),
     SemanticValue("big_star_reverse", {GEN_TH13_PLUS: "24", GEN_TH12: "22", GEN_TH10_TH11: "22", GEN_TH06_TH08: "8"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11, GEN_TH06_TH08)),
+    SemanticValue("light_orb", {GEN_TH13_PLUS: "33", GEN_TH12: "23"}),
+    SemanticValue("light_flame", {GEN_TH13_PLUS: "25", GEN_TH12: "24"}),
     SemanticValue("heart", {GEN_TH13_PLUS: "29", GEN_TH12: "25", GEN_TH10_TH11: "25", GEN_TH06_TH08: "25"}),
+    SemanticValue("orb_large", {GEN_TH13_PLUS: "32", GEN_TH12: "26"}),
+    SemanticValue("rose", {GEN_TH13_PLUS: "34", GEN_TH12: "27"}, lossy_targets=(GEN_TH13_PLUS,)),
+    SemanticValue("drop", {GEN_TH13_PLUS: "34", GEN_TH12: "28"}),
+    SemanticValue("purple_flame", {GEN_TH13_PLUS: "26", GEN_TH12: "29"}),
+    SemanticValue("laser_segment", {GEN_TH13_PLUS: "38", GEN_TH12: "30"}),
 )
 BULLET_SHAPE_BY_GENERATION_VALUE: dict[tuple[str, str], SemanticValue] = {}
 for shape in BULLET_SHAPES:
@@ -275,11 +300,19 @@ for mode in BULLET_TRANSFORM_MODES:
         BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE.setdefault((generation, value), mode)
 BULLET_TRANSFORM_MODE_BY_SEMANTIC = {mode.semantic: mode for mode in BULLET_TRANSFORM_MODES}
 
+UNSUPPORTED_BULLET_TRANSFORM_MODE_REASONS: dict[tuple[str, str, str], str] = {
+    (
+        GEN_TH12,
+        GEN_TH13_PLUS,
+        "2097152",
+    ): "TH12 etEx mode 2097152 is not TH13+ mode 2097152; the TH13+ value is velocity-over-time and corrupts TH12 transform chains",
+}
+
 SPREAD_STYLES: tuple[SemanticValue, ...] = (
     SemanticValue("single_flower.right.aimed", {GEN_TH12: "2", GEN_TH10_TH11: "2"}),
     SemanticValue("single_flower.right.fixed", {GEN_TH12: "3", GEN_TH10_TH11: "3"}),
-    SemanticValue("single_flower.left.aimed", {GEN_TH13_PLUS: "2", GEN_TH12: "2", GEN_TH10_TH11: "2"}),
-    SemanticValue("single_flower.left.fixed", {GEN_TH13_PLUS: "3", GEN_TH12: "3", GEN_TH10_TH11: "3"}),
+    SemanticValue("single_flower.left.aimed", {GEN_TH13_PLUS: "2", GEN_TH12: "4", GEN_TH10_TH11: "4"}),
+    SemanticValue("single_flower.left.fixed", {GEN_TH13_PLUS: "3", GEN_TH12: "5", GEN_TH10_TH11: "5"}),
     SemanticValue("single_flower.offset_left.aimed", {GEN_TH13_PLUS: "4", GEN_TH12: "4", GEN_TH10_TH11: "4"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11)),
     SemanticValue("single_flower.offset_left.fixed", {GEN_TH13_PLUS: "5", GEN_TH12: "5", GEN_TH10_TH11: "5"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11)),
     SemanticValue("double_flower.aimed", {GEN_TH13_PLUS: "9", GEN_TH12: "4", GEN_TH10_TH11: "4"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11)),
@@ -288,10 +321,6 @@ SPREAD_STYLES: tuple[SemanticValue, ...] = (
 SPREAD_BY_GENERATION_VALUE: dict[tuple[str, str], SemanticValue] = {}
 for style in SPREAD_STYLES:
     for generation, value in style.values.items():
-        # Target encodings are intentionally lossy for TH12 (e.g. double-flower
-        # lowers to two single-flower emitters).  Source decoding must keep the
-        # first native meaning for that generation rather than the later lossy
-        # target-only aliases.
         SPREAD_BY_GENERATION_VALUE.setdefault((generation, value), style)
 SPREAD_BY_SEMANTIC = {style.semantic: style for style in SPREAD_STYLES}
 
@@ -344,6 +373,12 @@ def encode_bullet_transform_mode(semantic: str, target: str, fallback: Any = Non
 
 def remap_bullet_transform_mode(source_game: str, target: str, mode: Any) -> str:
     return encode_bullet_transform_mode(bullet_transform_mode_semantic(source_game, mode), target, mode)
+
+
+def unsupported_bullet_transform_mode_reason(source_game: str, target: str, mode: Any) -> str | None:
+    return UNSUPPORTED_BULLET_TRANSFORM_MODE_REASONS.get(
+        (generation_for_game(source_game), generation_for_game(target), plain(mode).strip())
+    )
 
 
 def remap_shape_change_arg(source_game: str, target: str, mode: Any, shape: Any) -> str:
@@ -435,6 +470,12 @@ def opcode_map_for(source_game: str, target: str, source_opcode: int) -> RawOpco
     return OPCODE_BY_SOURCE_TARGET.get((generation_for_game(source_game), generation_for_game(target), source_opcode))
 
 
+def boss_phase_prefix_ops(op_key: str, target: str) -> list[str]:
+    if generation_for_game(target) == GEN_TH13_PLUS and op_key == "boss.set_interrupt":
+        return ["[-9947] = 1;"]
+    return []
+
+
 def unsupported_opcode_reason(source_game: str, target: str, source_opcode: int) -> str | None:
     return UNSUPPORTED_SEMANTIC_OPCODES.get((generation_for_game(source_game), source_opcode, generation_for_game(target)))
 
@@ -453,4 +494,8 @@ def remap_raw_arg_by_semantic(source_game: str, target: str, source_opcode: int,
         mapped[1] = encode_bullet_shape(bullet_shape_semantic(source_game, mapped[1]), target, mapped[1])
     elif source_opcode in {607, 507} and source_opcode != target_opcode and len(mapped) >= 2:
         mapped[1] = encode_spread_style(spread_semantic(source_game, mapped[1]), target, mapped[1])
+    elif source_opcode in {609, 509} and source_opcode != target_opcode and len(mapped) >= 5:
+        source_mode = mapped[3]
+        mapped[3] = remap_bullet_transform_mode(source_game, target, source_mode)
+        mapped[4] = remap_shape_change_arg(source_game, target, source_mode, mapped[4])
     return mapped

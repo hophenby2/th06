@@ -139,8 +139,8 @@ void Cir00Dead()
     ins_607(0, 0);
     ins_602(0, 4, 4);
     ins_606(0, 1, 1);
-    ins_604(0, [-9998.0f] / _f(16), 0.0f);
-    ins_605(0, ([-9999.0f] * 1.0f) + 2.0f, 0.0f);
+    ins_604(0, 0.0f, 0.3926991f);
+    ins_605(0, 1.0f, 0.0f);
     ins_625(0, 1, 1, 3, 3, 1, 1, 1, 1);
     ins_624(0, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 2.0f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
@@ -151,6 +151,10 @@ void Cir00Dead()
     $A = 4;
     goto Cir00Dead_692 @ 0;
     Cir00Dead_468:
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, [-9998.0f] / _f(16), 0.0f);
+    // semantic op_key lowering th12->th15: bullet.speed
+    ins_605(0, ([-9999.0f] * 1.0f) + 2.0f, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     Cir00Dead_692:
@@ -172,7 +176,7 @@ void Cir00_at()
     ins_607(0, 2);
     ins_602(0, 4, 6);
     ins_606(0, 1, 1);
-    ins_604(0, [-9998.0f] / _f(8), 0.0f);
+    ins_604(0, 0.0f, 0.05235988f);
     ins_605(0, 1.0f, 0.0f);
     ins_608(0, 22, -1);
     ins_625(0, 1, 1, 3, 4, 1, 1, 1, 1);
@@ -182,6 +186,8 @@ void Cir00_at()
     ins_609(0, 2, 0, 4, 90, -999999, 0.033333335f, -999999.0f);
     goto Cir00_at_572 @ 0;
     Cir00_at_436:
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, [-9998.0f] / _f(8), 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
@@ -306,7 +312,7 @@ void Girl00_at()
     ins_607(0, 3);
     ins_602(0, 12, 4);
     ins_606(0, 1, 1);
-    ins_604(0, [-9998.0f], 0.0f);
+    ins_604(0, 0.0f, 0.032724924f);
     ins_605(0, 1.0f, 0.0f);
     ins_608(0, -1, -1);
     ins_625(0, 24, 48, 48, 64, 1, 1, 1, 2);
@@ -316,6 +322,8 @@ void Girl00_at()
     $A = 4;
     goto Girl00_at_516 @ 0;
     Girl00_at_448:
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, [-9998.0f], 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     // semantic op_key lowering th12->th15: flow.wait
@@ -382,7 +390,7 @@ void Girl01_at()
     ins_607(0, 3);
     ins_602(0, 0, 13);
     ins_606(0, 1, 1);
-    ins_604(0, [-9998.0f], 0.0f);
+    ins_604(0, 0.0f, 0.032724924f);
     ins_605(0, 1.0f, 0.0f);
     ins_608(0, -1, -1);
     ins_625(0, 16, 32, 40, 52, 1, 1, 1, 1);
@@ -394,6 +402,8 @@ void Girl01_at()
     $A = 4;
     goto Girl01_at_536 @ 0;
     Girl01_at_468:
+    // semantic op_key lowering th12->th15: bullet.angle
+    ins_604(0, [-9998.0f], 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     // semantic op_key lowering th12->th15: flow.wait
@@ -515,10 +525,10 @@ void MBoss()
     [-9949] = 0;
     [-9948] = 0;
     [-9947] = 1;
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
-    // unsupported semantic op_key for th12->th15: boss.timer_reset
-    // original: ins_413();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
+    // semantic op_key lowering th12->th15: boss.timer_reset
+    ins_513();
     // object Enemy source_line=3002 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
     ins_300("Ecl_EtBreak_ni", 0.0f, 0.0f, 9999, 0, 0);
@@ -530,8 +540,8 @@ void MBoss()
     // dropped TH12 MBoss boss-bank sprite script 46 in TH15 stage-side script
     // object Animation source_line=3006 family=th12
     // dropped TH12 MBoss boss-bank sprite script 47 in TH15 stage-side script
-    // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
-    // original: ins_425();
+    // semantic op_key lowering th12->th15: enemy.enm_kill_all
+    ins_525();
     // object Enemy source_line=3008 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
     ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
@@ -708,7 +718,7 @@ void MBossGirl00_at()
     var A, B;
     // object BulletEmitter source_line=3152 family=th12
     ins_600(0);
-    ins_607(0, 5);
+    ins_607(0, 3);
     ins_602(0, 10, 6);
     ins_606(0, [-9985], 1);
     ins_604(0, [-9981.0f], 0.5235988f);
@@ -745,7 +755,7 @@ void MBossGirl01_at()
     var A, B;
     // object BulletEmitter source_line=3180 family=th12
     ins_600(0);
-    ins_607(0, 5);
+    ins_607(0, 3);
     ins_602(0, 10, 2);
     ins_606(0, [-9985], 1);
     ins_604(0, [-9981.0f], 0.5235988f);
@@ -787,15 +797,15 @@ void MainBossDebug()
     // object Enemy source_line=3210 family=th12
     // Enemy lowering th12 -> th15: enemy.create_abs -> ins_301
     ins_301("Boss", -144.0f, -16.0f, 40, 1000, 1);
-    // unsupported semantic op_key for th12->th15: unit.dialog_wait
-    // original: ins_419();
+    // semantic op_key lowering th12->th15: unit.dialog_wait
+    ins_519();
     // semantic op_key lowering th12->th15: unit.death_wait
-    // approximated deathWait on target without deathWait opcode: no-op
+    ins_520();
     +60:
     // semantic op_key lowering th12->th15: unit.dialog_read
     ins_518(1);
-    // unsupported semantic op_key for th12->th15: unit.dialog_wait
-    // original: ins_419();
+    // semantic op_key lowering th12->th15: unit.dialog_wait
+    ins_519();
     return;
     return;
 }
@@ -829,19 +839,19 @@ void MainMsgDebug()
     +120:
     // semantic op_key lowering th12->th15: unit.dialog_read
     ins_518(0);
-    // unsupported semantic op_key for th12->th15: unit.dialog_wait
-    // original: ins_419();
+    // semantic op_key lowering th12->th15: unit.dialog_wait
+    ins_519();
     // object Enemy source_line=3238 family=th12
     // Enemy lowering th12 -> th15: enemy.create_abs -> ins_301
     ins_301("Boss", -144.0f, -16.0f, 40, 1000, 1);
     +1:
-    // unsupported semantic op_key for th12->th15: unit.dialog_wait
-    // original: ins_419();
+    // semantic op_key lowering th12->th15: unit.dialog_wait
+    ins_519();
     +60:
     // semantic op_key lowering th12->th15: unit.dialog_read
     ins_518(1);
-    // unsupported semantic op_key for th12->th15: unit.dialog_wait
-    // original: ins_419();
+    // semantic op_key lowering th12->th15: unit.dialog_wait
+    ins_519();
     goto MainMsgDebug_232 @ 4181;
     MainMsgDebug_216:
     +4000:
@@ -1424,20 +1434,20 @@ void main()
     ins_23(1860);
     // semantic op_key lowering th12->th15: unit.dialog_read
     ins_518(0);
-    // unsupported semantic op_key for th12->th15: unit.dialog_wait
-    // original: ins_419();
+    // semantic op_key lowering th12->th15: unit.dialog_wait
+    ins_519();
     // object Enemy source_line=3574 family=th12
     // Enemy lowering th12 -> th15: enemy.create_abs -> ins_301
     ins_301("Boss", -144.0f, -16.0f, 40, 1000, 1);
-    // unsupported semantic op_key for th12->th15: unit.dialog_wait
-    // original: ins_419();
+    // semantic op_key lowering th12->th15: unit.dialog_wait
+    ins_519();
     // semantic op_key lowering th12->th15: unit.death_wait
-    // approximated deathWait on target without deathWait opcode: no-op
+    ins_520();
     +60:
     // semantic op_key lowering th12->th15: unit.dialog_read
     ins_518(1);
-    // unsupported semantic op_key for th12->th15: unit.dialog_wait
-    // original: ins_419();
+    // semantic op_key lowering th12->th15: unit.dialog_wait
+    ins_519();
     goto main_544 @ 120;
     main_524:
     // semantic op_key lowering th12->th15: flow.wait

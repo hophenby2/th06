@@ -11,7 +11,7 @@ from .backend import choose_difficulty, compile_bullet_emitter, compile_ir_op_ev
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
 from .reference import validate_opcode_args
-from .semantics import generation_for_game, remap_raw_arg_by_semantic, spread_semantic, th12_double_flower_pair, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509
+from .semantics import generation_for_game, lifted_raw_coverage_policy, remap_raw_arg_by_semantic, spread_semantic, th12_double_flower_pair, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509, unsupported_bullet_transform_mode_reason
 from .luastg_backend import emit_luastg_file
 from .luastg_lifter import emit_luastg_ir_json
 from .luastg_normalizer import emit_normalized_json, normalize_luastg_file
@@ -503,17 +503,43 @@ def should_preserve_dynamic_bullet_config(ins) -> bool:
 def should_cover_lifted_raw_instruction(ins, obj, source_game: str, target: str) -> bool:
     if is_fire_instruction(ins):
         return False
-    if (
-        getattr(obj, "kind", None) == "BulletEmitter"
-        and source_game == "th12"
-        and target == "th15"
-        and getattr(obj, "family", "") == "th12"
-    ):
+    policy = lifted_raw_coverage_policy(getattr(obj, "kind", ""), source_game, target, getattr(obj, "family", ""))
+    if policy == "contiguous_setup_prefix":
         return True
     return not should_preserve_dynamic_bullet_config(ins)
 
 
+def covered_lines_for_lifted_object(obj, source_game: str, target: str) -> set[int]:
+    raw = getattr(obj, "raw", [])
+    if not raw:
+        return set()
+    if getattr(obj, "kind", None) == "LaserEmitter":
+        return set()
+    covered: set[int] = set()
+    policy = lifted_raw_coverage_policy(getattr(obj, "kind", ""), source_game, target, getattr(obj, "family", ""))
+    if policy == "contiguous_setup_prefix":
+        previous_line: int | None = None
+        for ins in raw:
+            line_no = getattr(ins, "line_no", None)
+            if previous_line is not None and line_no != previous_line + 1:
+                break
+            if is_fire_instruction(ins):
+                break
+            if should_cover_lifted_raw_instruction(ins, obj, source_game, target):
+                covered.add(line_no)
+            previous_line = line_no
+        return covered
+    for ins in raw:
+        if is_fire_instruction(ins):
+            break
+        if should_cover_lifted_raw_instruction(ins, obj, source_game, target):
+            covered.add(ins.line_no)
+    return covered
+
+
 def should_emit_semantic_object_in_timeline(obj, source_game: str, target: str) -> bool:
+    if getattr(obj, "kind", None) == "LaserEmitter":
+        return False
     if (
         getattr(obj, "kind", None) == "BulletEmitter"
         and generation_for_game(source_game) == "th13_plus"
@@ -545,7 +571,7 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
             object_starts.setdefault(getattr(obj, "source_line", 0), []).append(obj)
             continue
         object_starts.setdefault(raw[0].line_no, []).append(obj)
-        covered_lines.update(ins.line_no for ins in raw if should_cover_lifted_raw_instruction(ins, obj, source_game, target))
+        covered_lines.update(covered_lines_for_lifted_object(obj, source_game, target))
 
     lines: list[str] = []
     lines.append(f"    // Timeline lowering {timeline.family} -> {target}; interleaved structured draft")
@@ -1221,6 +1247,13 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         create_lowered = lower_bullet_create_opcode(int(opcode or -1), list(args), source_game, target, bullet_state)
         if create_lowered:
             return wrap_event_rank(create_lowered, event, target)
+        if generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus" and int(opcode or -1) == 509 and len(args) >= 4:
+            reason = unsupported_bullet_transform_mode_reason(source_game, target, args[3])
+            if reason:
+                return wrap_event_rank([
+                    f"    // dropped unsupported bullet transform mode from ins_509: {reason}",
+                    f"    // original: {text}",
+                ], event, target)
         fire_lowered = lower_bullet_fire_opcode(int(opcode or -1), list(args), source_game, target, bullet_state)
         if fire_lowered:
             return wrap_event_rank(fire_lowered, event, target)
