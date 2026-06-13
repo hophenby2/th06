@@ -137,7 +137,7 @@ void Cir00Dead()
     // object BulletEmitter source_line=2750 family=th12
     ins_600(0);
     ins_607(0, 0);
-    ins_602(0, 3, 4);
+    ins_602(0, 4, 4);
     ins_606(0, 1, 1);
     ins_604(0, [-9998.0f] / _f(16), 0.0f);
     ins_605(0, ([-9999.0f] * 1.0f) + 2.0f, 0.0f);
@@ -146,21 +146,11 @@ void Cir00Dead()
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 2, 0, 4, 60, -999999, 0.016666668f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.aim
-    ins_607(0, 0);
-    // semantic op_key lowering th12->th15: bullet.sprite
-    ins_602(0, 4, 4);
-    // semantic op_key lowering th12->th15: bullet.angle
-    ins_604(0, 0.0f, 0.3926991f);
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(22);
     $A = 4;
     goto Cir00Dead_692 @ 0;
     Cir00Dead_468:
-    // semantic op_key lowering th12->th15: bullet.angle
-    ins_604(0, [-9998.0f] / _f(16), 0.0f);
-    // semantic op_key lowering th12->th15: bullet.speed
-    ins_605(0, ([-9999.0f] * 1.0f) + 2.0f, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     Cir00Dead_692:
@@ -180,7 +170,7 @@ void Cir00_at()
     // object BulletEmitter source_line=2775 family=th12
     ins_600(0);
     ins_607(0, 2);
-    ins_602(0, 3, 6);
+    ins_602(0, 4, 6);
     ins_606(0, 1, 1);
     ins_604(0, [-9998.0f] / _f(8), 0.0f);
     ins_605(0, 1.0f, 0.0f);
@@ -190,18 +180,8 @@ void Cir00_at()
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 2, 0, 4, 90, -999999, 0.033333335f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.aim
-    ins_607(0, 2);
-    // semantic op_key lowering th12->th15: bullet.sprite
-    ins_602(0, 4, 6);
-    // semantic op_key lowering th12->th15: bullet.angle
-    ins_604(0, 0.0f, 0.05235988f);
-    // semantic op_key lowering th12->th15: bullet.sound
-    ins_608(0, 22, -1);
     goto Cir00_at_572 @ 0;
     Cir00_at_436:
-    // semantic op_key lowering th12->th15: bullet.angle
-    ins_604(0, [-9998.0f] / _f(8), 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
@@ -324,7 +304,7 @@ void Girl00_at()
     // object BulletEmitter source_line=2853 family=th12
     ins_600(0);
     ins_607(0, 3);
-    ins_602(0, 11, 4);
+    ins_602(0, 12, 4);
     ins_606(0, 1, 1);
     ins_604(0, [-9998.0f], 0.0f);
     ins_605(0, 1.0f, 0.0f);
@@ -333,19 +313,9 @@ void Girl00_at()
     ins_624(0, 1.5f, 1.5f, 2.0f, 3.5f, 1.0f, 1.0f, 1.0f, 2.0f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.aim
-    ins_607(0, 3);
-    // semantic op_key lowering th12->th15: bullet.sprite
-    ins_602(0, 12, 4);
-    // semantic op_key lowering th12->th15: bullet.angle
-    ins_604(0, 0.0f, 0.032724924f);
-    // semantic op_key lowering th12->th15: bullet.sound
-    ins_608(0, -1, -1);
     $A = 4;
     goto Girl00_at_516 @ 0;
     Girl00_at_448:
-    // semantic op_key lowering th12->th15: bullet.angle
-    ins_604(0, [-9998.0f], 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     // semantic op_key lowering th12->th15: flow.wait
@@ -419,21 +389,11 @@ void Girl01_at()
     ins_624(0, 1.5f, 1.5f, 2.0f, 2.5f, 1.0f, 1.0f, 1.0f, 2.0f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.aim
-    ins_607(0, 3);
-    // semantic op_key lowering th12->th15: bullet.sprite
-    ins_602(0, 0, 13);
-    // semantic op_key lowering th12->th15: bullet.angle
-    ins_604(0, 0.0f, 0.032724924f);
-    // semantic op_key lowering th12->th15: bullet.sound
-    ins_608(0, -1, -1);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(20);
     $A = 4;
     goto Girl01_at_536 @ 0;
     Girl01_at_468:
-    // semantic op_key lowering th12->th15: bullet.angle
-    ins_604(0, [-9998.0f], 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
     // semantic op_key lowering th12->th15: flow.wait
@@ -510,19 +470,13 @@ void Girl02_at()
     // object BulletEmitter source_line=2954 family=th12
     ins_600(0);
     ins_607(0, 3);
-    ins_602(0, 7, 13);
+    ins_602(0, 8, 13);
     ins_606(0, 1, 1);
     ins_604(0, 1.5707964f, 0.032724924f);
     ins_605(0, 1.0f, 0.0f);
     ins_625(0, 1, 1, 1, 1, 1, 1, 1, 1);
     ins_624(0, 2.5f, 2.5f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 2.0f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.aim
-    ins_607(0, 3);
-    // semantic op_key lowering th12->th15: bullet.sprite
-    ins_602(0, 8, 13);
-    // semantic op_key lowering th12->th15: bullet.angle
-    ins_604(0, 1.5707964f, 0.032724924f);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(20 + ([-10000] % 60));
     goto Girl02_at_572 @ 0;
@@ -571,14 +525,11 @@ void MBoss()
     // semantic op_key lowering th12->th15: boss.set_boss
     ins_512(-1);
     // object Animation source_line=3004 family=th12
-    // Animation lowering th12 -> th15: anm.select -> ins_302
-    ins_302(3);
+    // dropped TH12 MBoss boss-bank ANM select in TH15 stage-side script
     // object Animation source_line=3005 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(0, 46);
+    // dropped TH12 MBoss boss-bank sprite script 46 in TH15 stage-side script
     // object Animation source_line=3006 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(1, 47);
+    // dropped TH12 MBoss boss-bank sprite script 47 in TH15 stage-side script
     // unsupported semantic op_key for th12->th15: enemy.enm_kill_all
     // original: ins_425();
     // object Enemy source_line=3008 family=th12
@@ -758,23 +709,13 @@ void MBossGirl00_at()
     // object BulletEmitter source_line=3152 family=th12
     ins_600(0);
     ins_607(0, 5);
-    ins_602(0, 9, 6);
+    ins_602(0, 10, 6);
     ins_606(0, [-9985], 1);
     ins_604(0, [-9981.0f], 0.5235988f);
     ins_605(0, [-9980.0f], 1.0f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     ins_609(0, 2, 0, 256, 60, 0, -999999.0f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.aim
-    ins_607(0, 5);
-    // semantic op_key lowering th12->th15: bullet.sprite
-    ins_602(0, 10, 6);
-    // semantic op_key lowering th12->th15: bullet.count
-    ins_606(0, [-9985], 1);
-    // semantic op_key lowering th12->th15: bullet.angle
-    ins_604(0, [-9981.0f], 0.5235988f);
-    // semantic op_key lowering th12->th15: bullet.speed
-    ins_605(0, [-9980.0f], 1.0f);
     $A = 2;
     goto MBossGirl00_at_568 @ 0;
     MBossGirl00_at_400:
@@ -805,23 +746,13 @@ void MBossGirl01_at()
     // object BulletEmitter source_line=3180 family=th12
     ins_600(0);
     ins_607(0, 5);
-    ins_602(0, 9, 2);
+    ins_602(0, 10, 2);
     ins_606(0, [-9985], 1);
     ins_604(0, [-9981.0f], 0.5235988f);
     ins_605(0, [-9980.0f], 1.0f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     ins_609(0, 2, 0, 256, 60, 0, -999999.0f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.aim
-    ins_607(0, 5);
-    // semantic op_key lowering th12->th15: bullet.sprite
-    ins_602(0, 10, 2);
-    // semantic op_key lowering th12->th15: bullet.count
-    ins_606(0, [-9985], 1);
-    // semantic op_key lowering th12->th15: bullet.angle
-    ins_604(0, [-9981.0f], 0.5235988f);
-    // semantic op_key lowering th12->th15: bullet.speed
-    ins_605(0, [-9980.0f], 1.0f);
     $A = 2;
     goto MBossGirl01_at_568 @ 0;
     MBossGirl01_at_400:
@@ -1179,7 +1110,7 @@ void MbossGirl00()
     ins_303(1, 50);
     // object Animation source_line=3400 family=th12
     // Animation lowering th12 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=3401 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
     ins_306(0, 26);
@@ -1254,7 +1185,7 @@ void MbossGirl01()
     ins_303(1, 50);
     // object Animation source_line=3441 family=th12
     // Animation lowering th12 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=3442 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
     ins_306(0, 26);

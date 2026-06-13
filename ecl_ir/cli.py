@@ -500,6 +500,19 @@ def should_preserve_dynamic_bullet_config(ins) -> bool:
     return getattr(ins, "opcode", None) in {502, 503, 504, 505, 506, 507, 508, 600, 602, 603, 604, 605, 606, 607, 608, 609, 611, 612, 624, 625, 627}
 
 
+def should_cover_lifted_raw_instruction(ins, obj, source_game: str, target: str) -> bool:
+    if is_fire_instruction(ins):
+        return False
+    if (
+        getattr(obj, "kind", None) == "BulletEmitter"
+        and source_game == "th12"
+        and target == "th15"
+        and getattr(obj, "family", "") == "th12"
+    ):
+        return True
+    return not should_preserve_dynamic_bullet_config(ins)
+
+
 def should_emit_semantic_object_in_timeline(obj, source_game: str, target: str) -> bool:
     if (
         getattr(obj, "kind", None) == "BulletEmitter"
@@ -523,6 +536,7 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
     timeline = timelines[0]
     if any(rewrite.fields.get("semantic") == "boss.skip_debug_spell_selector" for rewrite in rewrites):
         return emit_raw_timeline_body(timeline, target, rewrites)
+    source_game = getattr(timeline, "game", "unknown")
     object_starts: dict[int, list[object]] = {}
     covered_lines: set[int] = set()
     for obj in semantic_objects:
@@ -531,13 +545,12 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
             object_starts.setdefault(getattr(obj, "source_line", 0), []).append(obj)
             continue
         object_starts.setdefault(raw[0].line_no, []).append(obj)
-        covered_lines.update(ins.line_no for ins in raw if not is_fire_instruction(ins) and not should_preserve_dynamic_bullet_config(ins))
+        covered_lines.update(ins.line_no for ins in raw if should_cover_lifted_raw_instruction(ins, obj, source_game, target))
 
     lines: list[str] = []
     lines.append(f"    // Timeline lowering {timeline.family} -> {target}; interleaved structured draft")
     lines.append("    // control-flow, async scheduling, and expression semantics require target-game verification")
     skipped_debug_selector = False
-    source_game = getattr(timeline, "game", "unknown")
     bullet_state = make_bullet_lowering_state(function_objects, source_game, target)
     for event in timeline.fields.get("statements", []):
         stage_rewrite = find_rewrite(rewrites, "stage.skip_debug_spell_selector")

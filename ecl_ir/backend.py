@@ -343,7 +343,7 @@ def th12_stage6_to_th15_anm_args(event: dict[str, object], target: str, args: li
         return args
 
     function = str(context.get("function", "") if context else "")
-    boss_like = function.startswith(("Boss", "MBoss", "Mboss"))
+    boss_like = function.startswith("Boss") or function in {"HPWait", "MBossCard1LaserHit"}
     op_key = str(event.get("op_key") or "")
     if op_key == "anm.select" and len(args) == 1 and args[0] == "1":
         # TH12 stage06 enemy sprites use stgenm06 bank 1.  TH15 stage6 enemy
@@ -363,10 +363,28 @@ def th12_stage6_to_th15_anm_args(event: dict[str, object], target: str, args: li
     return args
 
 
+def drop_th12_stage6_stage_mboss_boss_anm(event: dict[str, object], target: str, context: dict[str, object] | None = None) -> str | None:
+    if target != "th15" or str(event.get("source_game") or "") != "th12":
+        return None
+    if not str(context.get("source_path", "") if context else "").replace("\\", "/").endswith("/th12/stage06.decl"):
+        return None
+    if str(context.get("function", "") if context else "") != "MBoss":
+        return None
+    op_key = str(event.get("op_key") or "")
+    args = [str(arg) for arg in event.get("args", [])]
+    if op_key == "anm.select" and args == ["2"]:
+        return "// dropped TH12 MBoss boss-bank ANM select in TH15 stage-side script"
+    if op_key == "anm.set_sprite" and len(args) == 2 and args[1] in {"46", "47"}:
+        return f"// dropped TH12 MBoss boss-bank sprite script {args[1]} in TH15 stage-side script"
+    return None
+
+
 def compile_ir_op_event(event: dict[str, object], target: str, comment: str | None = None, context: dict[str, object] | None = None) -> str | None:
     op_key = str(event.get("op_key") or "")
     if not op_key:
         return None
+    if dropped := drop_th12_stage6_stage_mboss_boss_anm(event, target, context):
+        return dropped
     source_game = str(event.get("source_game") or "")
     source_opcode = int(event.get("source_opcode") or -1)
     if target == "th12" and source_game in {"th13", "th14", "th15", "th16", "th17", "th18"} and source_opcode in {611, 612}:
@@ -1186,7 +1204,7 @@ def compile_movement(obj, target: str) -> str:
 def compile_th13plus(e: BulletEmitter) -> str:
     emitter_id = v(e.id, "0")
     aim_raw_value = e.aim.get("mode_raw", mode_raw(e.aim.get("mode"), default="1"))
-    style_value = e.appearance.get("style")
+    style_value = remap_bullet_shape_for_target(e, target="th15")
     color_value = e.appearance.get("color")
     ways_value = e.count.get("ways")
     layers_value = e.count.get("layers")
