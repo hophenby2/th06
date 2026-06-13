@@ -391,6 +391,10 @@ def is_fire_instruction(ins) -> bool:
     return getattr(ins, "opcode", None) in {401, 501, 601}
 
 
+def should_preserve_dynamic_bullet_config(ins) -> bool:
+    return getattr(ins, "opcode", None) in {502, 503, 504, 505, 506, 507, 508, 602, 603, 604, 605, 606, 607, 608}
+
+
 def emit_function_body(function_objects: list[object], target: str) -> list[str]:
     timelines = [obj for obj in function_objects if getattr(obj, "kind", None) == "Timeline"]
     helper = next((obj for obj in function_objects if getattr(obj, "kind", None) == "HelperRoutine" and helper_applies(obj, target)), None)
@@ -412,7 +416,7 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
             object_starts.setdefault(getattr(obj, "source_line", 0), []).append(obj)
             continue
         object_starts.setdefault(raw[0].line_no, []).append(obj)
-        covered_lines.update(ins.line_no for ins in raw if not is_fire_instruction(ins))
+        covered_lines.update(ins.line_no for ins in raw if not is_fire_instruction(ins) and not should_preserve_dynamic_bullet_config(ins))
 
     lines: list[str] = []
     lines.append(f"    // Timeline lowering {timeline.family} -> {target}; interleaved structured draft")
@@ -569,6 +573,31 @@ def lower_bullet_fire_opcode(opcode: int, args: list[object], source_game: str, 
             f"    ins_501({aux_id});",
         ]
     return None
+
+
+def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str, target: str, difficulty_literals: object = None) -> list[str] | None:
+    if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
+        return None
+    mapping = {
+        602: 502,
+        603: 503,
+        604: 504,
+        605: 505,
+        606: 506,
+        607: 507,
+        608: 508,
+    }
+    mapped = mapping.get(opcode)
+    if mapped is None:
+        return None
+    rendered_args = [str(arg) for arg in args]
+    ranked = emit_ranked_raw_instruction(mapped, rendered_args, difficulty_literals)
+    if ranked:
+        return [f"    // dynamic bullet config lowering {source_game}->{target}: ins_{opcode} -> ins_{mapped}; ranked args from source difficulty literals", *ranked]
+    return [
+        f"    // dynamic bullet config lowering {source_game}->{target}: ins_{opcode} -> ins_{mapped}",
+        f"    ins_{mapped}({', '.join(rendered_args)});",
+    ]
 
 
 def literal_time_value(value: str) -> str:
@@ -728,6 +757,11 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         fire_lowered = lower_bullet_fire_opcode(int(opcode or -1), list(args), source_game, target, bullet_state)
         if fire_lowered:
             return wrap_event_rank(fire_lowered, event, target)
+        config_lowered = lower_bullet_config_opcode(int(opcode or -1), list(args), source_game, target, event.get("difficulty_literals", []))
+        if config_lowered:
+            if any(line.strip().startswith("!") for line in config_lowered):
+                return config_lowered
+            return wrap_event_rank(config_lowered, event, target)
         lowered = lower_raw_instruction_event(int(opcode or -1), list(args), text, source_game, target, event.get("difficulty_literals", []), event.get("ir_op"))
         if lowered:
             if any(line.strip().startswith("!") for line in lowered):

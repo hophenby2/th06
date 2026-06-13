@@ -45,6 +45,16 @@ def apply_difficulty_args(args: list[str], literals: object) -> list[object]:
     return [with_difficulty(arg, literals) for arg in args]
 
 
+def difficulty_table_value(args: list[str], start: int, default: str) -> object:
+    values = {
+        "E": arg(args, start, default),
+        "N": arg(args, start + 1, default),
+        "H": arg(args, start + 2, default),
+        "L": arg(args, start + 3, default),
+    }
+    return {"placeholder": values["N"], "difficulty": values}
+
+
 def with_rank(value: str, difficulty: str | None) -> object:
     if difficulty and difficulty != "*":
         return {"placeholder": value, "difficulty": {difficulty: value}}
@@ -128,9 +138,12 @@ def apply_th13plus(emitter: BulletEmitter, ins: Instruction) -> None:
         emitter.speed.setdefault("difficulty_raw", []).append({"opcode": op, "args": args[:], "difficulty": ins.difficulty})
     elif op in {620, 621, 622}:
         emitter.count.setdefault("difficulty_raw", []).append({"opcode": op, "args": args[:], "difficulty": ins.difficulty})
-    elif op in {624, 625}:
-        converted_args = apply_difficulty_args(args, ins.difficulty_literals)
-        emitter.transforms.append(BulletTransform(index=arg(args, 0, "0"), channel="0", action_type="difficultyTable", raw_opcode=op, raw_args=converted_args, difficulty=ins.difficulty))
+    elif op == 624:
+        set_ranked_field(emitter.speed, "first", difficulty_table_value(args, 1, "1.0f"), ins.difficulty)
+        set_ranked_field(emitter.speed, "step", difficulty_table_value(args, 5, "0.0f"), ins.difficulty)
+    elif op == 625:
+        set_ranked_field(emitter.count, "ways", difficulty_table_value(args, 1, "1"), ins.difficulty)
+        set_ranked_field(emitter.count, "layers", difficulty_table_value(args, 5, "1"), ins.difficulty)
     elif op == 601:
         emitter.fire_lines.append(ins.line_no)
 

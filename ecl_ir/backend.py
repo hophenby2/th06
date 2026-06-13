@@ -166,6 +166,8 @@ def normalize_target_args_for_op_key(op_key: str, target: str, args: list[str]) 
 UNSAFE_TARGET_OPCODES: dict[str, set[int]] = {
     # thtk12/thecl.exe -c 8 has no usable format entry for these despite names in th08.eclm.
     "th08": {143, 162},
+    # Listed in eclmap, but thtk12's version-12 format table cannot serialize it.
+    "th12": {22},
 }
 
 
@@ -493,13 +495,13 @@ def emit_th12_bullet_setup_lines(
     if count_args:
         lines.append(f"ins_522({', '.join(count_args)});")
     else:
-        lines.extend(emit_instruction_with_ranked_args(506, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
+        lines.extend(emit_instruction_with_ranked_args(506, [emitter_id, ways, layers], ["0", "1", "1"]))
     lines.extend(emit_instruction_with_ranked_args(504, [emitter_id, as_float_expr(angle_value if angle_value is not None else "0.0f"), as_float_expr(angle_step_value if angle_step_value is not None else "0.0f")], ["0", "0.0f", "0.0f"]))
     speed_args = th12_difficulty_speed_args(emitter_id, speed_value, speed, speed_step_value, speed_step)
     if speed_args:
         lines.append(f"ins_521({', '.join(speed_args)});")
     else:
-        lines.extend(emit_instruction_with_ranked_args(505, [emitter_id, speed_value, speed_step_value], ["0", "1.0f", "0.0f"]))
+        lines.extend(emit_instruction_with_ranked_args(505, [emitter_id, speed, speed_step], ["0", "1.0f", "0.0f"]))
     return lines
 
 
