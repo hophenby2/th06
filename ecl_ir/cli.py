@@ -101,6 +101,98 @@ def emit_transpile(program, objects, target: str) -> str:
     return "\n".join(lines)
 
 
+def stage06_th12_to_th15_resources(kind: str) -> dict[str, list[str]]:
+    if kind == "stage":
+        return {"anim": ["enemy.anm", "st06enm.anm"], "ecli": ["default.ecl", "st06bs.ecl"]}
+    return {}
+
+
+def is_stage06_boss_function(name: str) -> bool:
+    return name.startswith("Boss") or name in {"HPWait", "MBossCard1LaserHit"}
+
+
+def emit_th15_stage06_mainboss_wrapper() -> list[str]:
+    return [
+        "void MainBoss()",
+        "{",
+        "    // th15 stage-side boss wrapper, mirroring th15 st06.decl",
+        "    ins_519();",
+        "    ins_301(\"Boss\", 144.0f, -16.0f, 40, 1000, 1);",
+        "    ins_519();",
+        "+1:",
+        "    ins_520();",
+        "    ins_524(81);",
+        "+60:",
+        "    ins_518(2);",
+        "    ins_519();",
+        "    return;",
+        "}",
+    ]
+
+
+def emit_transpile_selected_functions(program, objects, target: str, selected_functions: set[str], resources: dict[str, list[str]], header_note: str, include_stage_wrapper: bool = False) -> str:
+    lines: list[str] = []
+    lines.append(f"// source: {program.source}")
+    lines.append(f"// source game: {program.game}")
+    lines.append(f"// target: {target}")
+    lines.append(header_note)
+    for resource, entries in resources.items():
+        if not should_emit_resource(resource, target):
+            continue
+        quoted = "; ".join(f'"{entry}"' for entry in entries)
+        lines.append(f"{resource} {{ {quoted}; }}")
+    if include_stage_wrapper:
+        lines.append("// top-level declarations")
+        lines.append("void MainBossSpell();")
+        lines.append("")
+        lines.extend(emit_th15_stage06_mainboss_wrapper())
+    by_function: dict[str, list[object]] = {}
+    for obj in objects:
+        function = getattr(obj, "function", "")
+        if function in selected_functions:
+            by_function.setdefault(function, []).append(obj)
+
+    function_params = inferred_function_params(program)
+    for function in [func.name for func in program.functions if func.name in selected_functions]:
+        function_objects = by_function.get(function, [])
+        if not function_objects:
+            continue
+        params = function_params.get(function, "")
+        lines.append("")
+        lines.append(target_function_header(function, params, target))
+        lines.append("{")
+        body_lines = emit_function_body(function_objects, target)
+        if params:
+            body_lines = drop_redeclared_param_vars(body_lines, params)
+        lines.extend(body_lines)
+        lines.append("}")
+    return "\n".join(lines)
+
+
+def emit_th12_stage06_to_th15_pair(program, objects) -> tuple[str, str]:
+    function_names = {func.name for func in program.functions}
+    boss_functions = {name for name in function_names if is_stage06_boss_function(name)}
+    stage_functions = function_names - boss_functions
+    stage = emit_transpile_selected_functions(
+        program,
+        objects,
+        "th15",
+        stage_functions,
+        stage06_th12_to_th15_resources("stage"),
+        "// th12 stage06 -> th15 stage-side lowering; resources follow th15 st06.decl",
+        include_stage_wrapper=True,
+    )
+    boss = emit_transpile_selected_functions(
+        program,
+        objects,
+        "th15",
+        boss_functions,
+        stage06_th12_to_th15_resources("boss"),
+        "// th12 stage06 -> th15 boss-side lowering; ANM bank follows th15 st06bs.decl",
+    )
+    return stage, boss
+
+
 def normalize_old_target_lines(lines: list[str]) -> list[str]:
     normalized: list[str] = []
     for line in lines:
@@ -470,7 +562,8 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
                     lines.append(f"    {line}")
         if line_no in covered_lines:
             continue
-        lines.extend(emit_timeline_event(event, getattr(timeline, "game", "unknown"), target, bullet_state))
+        context = {"function": getattr(timeline, "function", ""), "source_path": getattr(timeline, "source", "")}
+        lines.extend(emit_timeline_event(event, getattr(timeline, "game", "unknown"), target, bullet_state, context))
     emitted_starts = set(object_starts)
     late_objects = [obj for obj in semantic_objects if getattr(obj, "source_line", 0) not in emitted_starts and not getattr(obj, "raw", [])]
     if late_objects:
@@ -556,7 +649,8 @@ def emit_raw_timeline_body(timeline, target: str, rewrites: list[object] | None 
                 emitted_spelltest_skip = True
             lines.append(f"    // original spell-test branch: {event.get('text', '')}")
             continue
-        lines.extend(emit_timeline_event(event, source_game, target, bullet_state))
+        context = {"function": getattr(timeline, "function", ""), "source_path": getattr(timeline, "source", "")}
+        lines.extend(emit_timeline_event(event, source_game, target, bullet_state, context))
     loops = timeline.fields.get("loops", [])
     if loops:
         lines.append("    // detected loops:")
@@ -1003,9 +1097,31 @@ def emit_ranked_text_from_literals(text: str, difficulty_literals: object) -> li
     return lines
 
 
-def lower_raw_instruction_event(opcode: int, args: list[object], text: str, source_game: str, target: str, difficulty_literals: object = None, ir_op: dict[str, object] | None = None) -> list[str]:
+def is_th12_stage06_to_th15_context(source_game: str, target: str, context: dict[str, object] | None) -> bool:
+    if source_game != "th12" or target != "th15" or not context:
+        return False
+    return str(context.get("source_path", "")).replace("\\", "/").endswith("/th12/stage06.decl")
+
+
+def th12_stage06_to_th15_mainfront_boundary(event: dict[str, object], source_game: str, target: str, context: dict[str, object] | None) -> list[str] | None:
+    if not is_th12_stage06_to_th15_context(source_game, target, context):
+        return None
+    if str(context.get("function", "")) != "main" or event.get("kind") != "call":
+        return None
+    if str(event.get("function", "")) != "MainSub02":
+        return None
+    return [
+        "    // th15 st06 MainFront boundary before third wave: clear old enemies/bullets and advance chapter",
+        "    ins_525();",
+        "    ins_616(640.0f);",
+        "    ins_524(1);",
+        "    ins_23(10);",
+    ]
+
+
+def lower_raw_instruction_event(opcode: int, args: list[object], text: str, source_game: str, target: str, difficulty_literals: object = None, ir_op: dict[str, object] | None = None, context: dict[str, object] | None = None) -> list[str]:
     if ir_op:
-        semantic_line = compile_ir_op_event(ir_op, target)
+        semantic_line = compile_ir_op_event(ir_op, target, context=context)
         if semantic_line:
             rendered = [line if line.startswith("    ") else f"    {line}" for line in semantic_line.splitlines()]
             first_instruction = next((line.strip() for line in rendered if line.strip().startswith("ins_")), "")
@@ -1038,7 +1154,7 @@ def wrap_event_rank(lines: list[str], event: dict[str, object], target: str) -> 
 
 
 
-def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", target: str = "", bullet_state: BulletLoweringState | None = None) -> list[str]:
+def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", target: str = "", bullet_state: BulletLoweringState | None = None, context: dict[str, object] | None = None) -> list[str]:
     kind = event.get("kind")
     text = str(event.get("text") or "")
     if not text:
@@ -1046,6 +1162,17 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
     if kind == "instruction":
         opcode = event.get("opcode")
         args = event.get("args", [])
+        if (
+            is_th12_stage06_to_th15_context(source_game, target, context)
+            and int(opcode or -1) in {256, 257}
+            and args
+            and str(args[0]).strip('"') == "Boss"
+            and str(context.get("function", "")) == "main"
+        ):
+            return wrap_event_rank([
+                "    // th12 inline Boss spawn redirected through th15 stage-side MainBoss wrapper",
+                "    @MainBoss();",
+            ], event, target)
         if opcode in {23, 24}:
             wait = str(event.get("args", [""])[0]) if event.get("args") else ""
             if wait.startswith("["):
@@ -1104,7 +1231,7 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
             if any(line.strip().startswith("!") for line in diff_float_lowered):
                 return diff_float_lowered
             return wrap_event_rank(diff_float_lowered, event, target)
-        lowered = lower_raw_instruction_event(int(opcode or -1), list(args), text, source_game, target, event.get("difficulty_literals", []), event.get("ir_op"))
+        lowered = lower_raw_instruction_event(int(opcode or -1), list(args), text, source_game, target, event.get("difficulty_literals", []), event.get("ir_op"), context)
         if lowered:
             if any(line.strip().startswith("!") for line in lowered):
                 return lowered
@@ -1133,6 +1260,9 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         ranked = emit_ranked_text_from_literals(statement_text, event.get("difficulty_literals", []))
         if ranked:
             return ranked
+        boundary = th12_stage06_to_th15_mainfront_boundary(event, source_game, target, context)
+        if boundary:
+            return wrap_event_rank([*boundary, f"    {statement_text}"], event, target)
         return wrap_event_rank([f"    {statement_text}"], event, target)
     if kind == "raw":
         if re.fullmatch(r"[%$]?[A-Za-z_][A-Za-z0-9_]*|[-+]?\d+(?:\.\d+)?f?", text):
@@ -1157,6 +1287,18 @@ def cmd_transpile(args: argparse.Namespace) -> int:
         Path(args.output).write_text(output)
     else:
         print(output)
+    return 0
+
+
+def cmd_transpile_stage06_th15(args: argparse.Namespace) -> int:
+    program, objects = load_objects(args.input)
+    if program.game != "th12" or Path(program.source).name != "stage06.decl":
+        raise SystemExit("transpile-stage06-th15 expects th12/stage06.decl as input")
+    stage, boss = emit_th12_stage06_to_th15_pair(program, objects)
+    out_dir = Path(args.output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "st06.decl").write_text(stage)
+    (out_dir / "st06bs.decl").write_text(boss)
     return 0
 
 
@@ -1384,6 +1526,11 @@ def main(argv: list[str] | None = None) -> int:
     transpile.add_argument("--target", required=True, choices=["th06", "th07", "th08", "th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"])
     transpile.add_argument("--output", help="write output to file instead of stdout")
     transpile.set_defaults(func=cmd_transpile)
+
+    transpile_stage06 = sub.add_parser("transpile-stage06-th15", help="lower th12 stage06 into th15 st06/st06bs package")
+    transpile_stage06.add_argument("input")
+    transpile_stage06.add_argument("--output-dir", required=True)
+    transpile_stage06.set_defaults(func=cmd_transpile_stage06_th15)
 
     scan = sub.add_parser("scan", help="scan a directory for liftable objects")
     scan.add_argument("root")

@@ -5,7 +5,7 @@ from .arg_adapter import adapt_args_for_op_key, adapt_values_for_generation
 from .model import BulletEmitter
 from .op_ir import target_opcode_for_op_key
 from .reference import is_opcode_supported, validate_opcode_args
-from .semantics import encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_raw_arg_by_semantic, th12_double_flower_pair, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509
+from .semantics import encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_bullet_transform_mode, remap_raw_arg_by_semantic, remap_shape_change_arg, th12_double_flower_pair, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509
 
 INT_SENTINEL = "-999999"
 FLOAT_SENTINEL = "-999999.0f"
@@ -336,7 +336,34 @@ def compile_th08_anm_alias(event: dict[str, object], target: str) -> str | None:
     return None
 
 
-def compile_ir_op_event(event: dict[str, object], target: str, comment: str | None = None) -> str | None:
+def th12_stage6_to_th15_anm_args(event: dict[str, object], target: str, args: list[str], context: dict[str, object] | None = None) -> list[str]:
+    if target != "th15" or str(event.get("source_game") or "") != "th12":
+        return args
+    if not str(context.get("source_path", "") if context else "").replace("\\", "/").endswith("/th12/stage06.decl"):
+        return args
+
+    function = str(context.get("function", "") if context else "")
+    boss_like = function.startswith(("Boss", "MBoss", "Mboss"))
+    op_key = str(event.get("op_key") or "")
+    if op_key == "anm.select" and len(args) == 1 and args[0] == "1":
+        # TH12 stage06 enemy sprites use stgenm06 bank 1.  TH15 stage6 enemy
+        # sprites are in st06enm.anm, selected as bank 2 in the original stage.
+        return ["2"]
+    if op_key == "anm.select" and len(args) == 1 and args[0] == "2" and boss_like:
+        # TH12 stage/boss ANM bank 2 corresponds to the external boss ANM bank 3
+        # used by TH15 st06bs.decl.
+        return ["3"]
+    if op_key in {"anm.play", "anm.play_abs"} and len(args) >= 2 and args[0] == "1":
+        # anmPlay/anmPlayAbs carry their target ANM bank as an argument; remap it
+        # alongside anmSelect or repeated stage enemy effects can play from
+        # TH15 enemy.anm instead of st06enm.anm.
+        return ["2", *args[1:]]
+    if op_key in {"anm.play", "anm.play_abs"} and len(args) >= 2 and args[0] == "2" and boss_like:
+        return ["3", *args[1:]]
+    return args
+
+
+def compile_ir_op_event(event: dict[str, object], target: str, comment: str | None = None, context: dict[str, object] | None = None) -> str | None:
     op_key = str(event.get("op_key") or "")
     if not op_key:
         return None
@@ -367,6 +394,7 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
         args = [args[index] for index in semantic_map.arg_order if index < len(args)]
     if source_game and source_opcode >= 0:
         args = remap_raw_arg_by_semantic(source_game, target, source_opcode, opcode, args)
+    args = th12_stage6_to_th15_anm_args(event, target, args, context)
     adapted_args = adapt_args_for_op_key(op_key, source_game, source_opcode, target, opcode, args)
     if adapted_args is None:
         return None
@@ -671,7 +699,8 @@ def compile_named_op(obj, target: str, table_by_family: dict[str, dict[str, int]
         "source_opcode": getattr(obj.raw[0], "opcode", -1) if getattr(obj, "raw", None) else -1,
         "args": obj.fields.get("args", []),
     }
-    lowered = compile_ir_op_event(event, target, f"{obj.kind} lowering {obj.family} -> {target}")
+    context = {"function": getattr(obj, "function", ""), "source_path": getattr(obj, "source", "") or obj.fields.get("source", "")}
+    lowered = compile_ir_op_event(event, target, f"{obj.kind} lowering {obj.family} -> {target}", context)
     if lowered:
         return lowered
     if event.get("op_key"):
@@ -1178,11 +1207,39 @@ def compile_th13plus(e: BulletEmitter) -> str:
         if comment:
             lines.insert(0, comment)
     for transform in e.transforms:
-        if transform.raw_opcode in {609, 610, 611, 612} and transform.raw_args:
-            lines.append(f"ins_{transform.raw_opcode}({', '.join(transform.raw_args)});")
+        lowered = lower_transform_for_th13plus(transform, e.game, "th15", str(emitter_id))
+        if lowered:
+            lines.extend(lowered)
         else:
             lines.append(f"// unsupported transform from ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
     return "\n".join(lines)
+
+
+def lower_transform_for_th13plus(transform, source_game: str, target: str, emitter_id: str) -> list[str] | None:
+    args = [str(arg) for arg in transform.raw_args]
+    if transform.raw_opcode in {609, 610, 611, 612} and args:
+        return [f"ins_{transform.raw_opcode}({', '.join(args)});"]
+    if source_game == "th12" and transform.raw_opcode == 509 and len(args) == 8:
+        converted = th12_509_to_th13plus_609(args, target)
+        return [f"ins_609({', '.join(converted)});"]
+    if source_game == "th12" and transform.raw_opcode == 510 and not args:
+        return ["ins_610();"]
+    if source_game == "th12" and transform.raw_opcode == 511 and len(args) == 2:
+        return [f"ins_611({', '.join(args)});"]
+    if source_game == "th12" and transform.raw_opcode == 512 and len(args) == 1:
+        return [f"ins_612({', '.join(args)});"]
+    if source_game == "th12" and transform.raw_opcode == 521 and len(args) == 9:
+        return emit_instruction_with_ranked_args(624, args, [emitter_id, "1.0f", "1.0f", "1.0f", "1.0f", "0.0f", "0.0f", "0.0f", "0.0f"])
+    if source_game == "th12" and transform.raw_opcode == 522 and len(args) == 9:
+        return emit_instruction_with_ranked_args(625, args, [emitter_id, "1", "1", "1", "1", "1", "1", "1", "1"])
+    return None
+
+
+def th12_509_to_th13plus_609(args: list[str], target: str) -> list[str]:
+    converted = args[:]
+    converted[3] = remap_bullet_transform_mode("th12", target, converted[3])
+    converted[4] = remap_shape_change_arg("th12", target, args[3], converted[4])
+    return converted
 
 
 def remap_bullet_spread_style_for_target(e: BulletEmitter, target: str):

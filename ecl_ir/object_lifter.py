@@ -33,6 +33,7 @@ def a(ins: Instruction, index: int, default: str = "") -> str:
 
 def make_obj(cls, program: Program, func: Function, ins: Instruction, family: str, object_id: str = "0") -> IRObject:
     obj = cls(program.game, func.name, ins.line_no, object_id, family)
+    obj.source = program.source
     obj.raw.append(ins)
     obj.fields.setdefault("ir_ops", []).append(op_event(program.game, ins.opcode, ins.args, ins.line_no, ins.difficulty))
     return obj

@@ -175,7 +175,7 @@ def apply_th12(emitter: BulletEmitter, ins: Instruction) -> None:
     elif op == 508:
         emitter.sound["id"] = arg(args, 1)
         emitter.sound["mode"] = arg(args, 2)
-    elif op in {509, 510, 511, 512}:
+    elif op in {509, 510, 511, 512, 521, 522}:
         emitter.transforms.append(BulletTransform(index=arg(args, 1, "0"), action_type="etEx", raw_opcode=op, raw_args=args[:], difficulty=ins.difficulty))
     elif op == 501:
         emitter.fire_lines.append(ins.line_no)
