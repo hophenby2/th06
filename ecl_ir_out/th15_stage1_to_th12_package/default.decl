@@ -1,4 +1,4 @@
-// source: th062/th15/default.decl
+// source: E:\fork\th062\th15\default.decl
 // source game: th15
 // target: th12
 // whole-file lowering is a structured draft; verify target-game scheduling and resources
@@ -16,17 +16,17 @@ void BossItemPhase(var A, var B, var C)
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     unless ([-9986] == 0) goto BossItemPhase_240 @ 0;
-    // semantic opcode fallback th15->th12: ins_506 -> ins_406; semantic=unit.property.06; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_clear
     ins_406();
-    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_main
     ins_410(0);
-    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(1, $A);
-    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(2, $B);
-    // semantic opcode fallback th15->th12: ins_508 -> ins_408; semantic=unit.property.08; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_area
     ins_408(%C, %C);
-    // semantic opcode fallback th15->th12: ins_509 -> ins_409; semantic=unit.property.09; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_items
     ins_409();
     BossItemPhase_240:
     return;
@@ -38,19 +38,19 @@ void BossItemPhase2()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C, D;
     unless ([-9986] == 0) goto BossItemPhase2_264 @ 0;
-    // semantic opcode fallback th15->th12: ins_506 -> ins_406; semantic=unit.property.06; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_clear
     ins_406();
-    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_main
     ins_410(0);
-    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(3, $A);
-    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(1, $B);
-    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(2, $C);
-    // semantic opcode fallback th15->th12: ins_508 -> ins_408; semantic=unit.property.08; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_area
     ins_408(%D, %D);
-    // semantic opcode fallback th15->th12: ins_509 -> ins_409; semantic=unit.property.09; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_items
     ins_409();
     BossItemPhase2_264:
     return;
@@ -61,17 +61,17 @@ void BossItemPhase3(var A, var B, var C)
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     unless ([-9986] == 0) goto BossItemPhase3_240 @ 0;
-    // semantic opcode fallback th15->th12: ins_506 -> ins_406; semantic=unit.property.06; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_clear
     ins_406();
-    // semantic opcode fallback th15->th12: ins_510 -> ins_410; semantic=unit.property.10; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_main
     ins_410(6);
-    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(1, $A);
-    // semantic opcode fallback th15->th12: ins_507 -> ins_407; semantic=unit.property.07; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(2, $B);
-    // semantic opcode fallback th15->th12: ins_508 -> ins_408; semantic=unit.property.08; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_area
     ins_408(%C, %C);
-    // semantic opcode fallback th15->th12: ins_509 -> ins_409; semantic=unit.property.09; verify semantics
+    // semantic op_key lowering th15->th12: unit.drop_items
     ins_409();
     BossItemPhase3_240:
     return;
@@ -84,10 +84,10 @@ void DeadAttack1()
     [-9981.0f] = 3.0f;
     [-9985] = 3;
     [-9984] = 5;
-    // semantic opcode reorder th15->th12: ins_424 -> ins_324; semantic=movement.mirror_mode; verify semantics
+    // semantic op_key lowering th15->th12: movement.move_set_mirror
     ins_324(0);
     // object Enemy source_line=57 family=th13plus
-    // Enemy lowering th13plus -> th12: enmCreate; semantic verification required
+    // Enemy lowering th13plus -> th12: enemy.create -> ins_256
     ins_256("DeadAttackEt1", 0.0f, 0.0f, 10, 10, 0);
     return;
 }
@@ -99,10 +99,10 @@ void DeadAttack2()
     [-9981.0f] = 3.0f;
     [-9985] = 5;
     [-9984] = 4;
-    // semantic opcode reorder th15->th12: ins_424 -> ins_324; semantic=movement.mirror_mode; verify semantics
+    // semantic op_key lowering th15->th12: movement.move_set_mirror
     ins_324(0);
     // object Enemy source_line=67 family=th13plus
-    // Enemy lowering th13plus -> th12: enmCreate; semantic verification required
+    // Enemy lowering th13plus -> th12: enemy.create -> ins_256
     ins_256("DeadAttackEt1", 0.0f, 0.0f, 10, 10, 0);
     return;
 }
@@ -112,7 +112,7 @@ void DeadAttackEt1()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
+    // semantic op_key lowering th15->th12: unit.flag_set
     ins_402(32);
     // object BulletEmitter source_line=75 family=th13plus
     ins_500(0);
@@ -121,17 +121,28 @@ void DeadAttackEt1()
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
     ins_505(0, [-9981.0f], 1.0f);
-    // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
+    ins_507(0, 0);
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
+    ins_502(0, 6, 2);
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
+    ins_506(0, 1, 1);
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
+    ins_504(0, 0.0f, 0.05235988f);
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505
+    ins_505(0, [-9981.0f], 1.0f);
     $A = [-9985];
     goto DeadAttackEt1_364 @ 0;
     DeadAttackEt1_324:
-    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
+    // semantic op_key lowering th15->th12: bullet.fire
     ins_501(0);
     // dynamic wait from source opcode 23; TH12 timer labels need a literal
     // original source: src_ins_23([-9984]);
     DeadAttackEt1_364:
     if ($A--) goto DeadAttackEt1_324 @ 0;
-    // unlifted instruction: ins_1();
+    // semantic op_key lowering th15->th12: flow.delete
+    ins_1();
     // detected loops:
     // - counter_loop DeadAttackEt1_324 lines 84..88 condition=$A--
 }
@@ -218,13 +229,14 @@ void EffChargePoint()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C;
     // object Animation source_line=167 family=th13plus
-    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    // Animation lowering th13plus -> th12: anm.select -> ins_258
     ins_258(1);
     // object Animation source_line=168 family=th13plus
-    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259($B, 154 + $C);
-    // unlifted instruction: ins_319($B, %A);
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: anm.rotate
+    ins_277($B, %A);
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(54);
     return;
 }
@@ -234,17 +246,19 @@ void EffChargePoint2(var A, var B, var C, var D, var E)
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=177 family=th13plus
-    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    // Animation lowering th13plus -> th12: anm.select -> ins_258
     ins_258(1);
     // object Animation source_line=178 family=th13plus
-    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259($C, 154 + $D);
-    // unlifted instruction: ins_319($C, %A);
+    // semantic op_key lowering th15->th12: anm.rotate
+    ins_277($C, %A);
     // object Animation source_line=180 family=th13plus
-    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259($C + 1, 154 + $E);
-    // unlifted instruction: ins_319($C + 1, %A + %B);
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: anm.rotate
+    ins_277($C + 1, %A + %B);
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(54);
     return;
 }
@@ -254,21 +268,24 @@ void EffChargePoint3(var A, var B, var C, var D, var E, var F)
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=189 family=th13plus
-    // Animation lowering th13plus -> th12: anmSelect; semantic verification required
+    // Animation lowering th13plus -> th12: anm.select -> ins_258
     ins_258(1);
     // object Animation source_line=190 family=th13plus
-    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259($C, 154 + $D);
-    // unlifted instruction: ins_319($C, %A + %B);
+    // semantic op_key lowering th15->th12: anm.rotate
+    ins_277($C, %A + %B);
     // object Animation source_line=192 family=th13plus
-    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259($C + 1, 154 + $E);
-    // unlifted instruction: ins_319($C + 1, %A);
+    // semantic op_key lowering th15->th12: anm.rotate
+    ins_277($C + 1, %A);
     // object Animation source_line=194 family=th13plus
-    // Animation lowering th13plus -> th12: anmSetSprite; semantic verification required
+    // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259($C + 2, 154 + $F);
-    // unlifted instruction: ins_319($C + 2, %A - %B);
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: anm.rotate
+    ins_277($C + 2, %A - %B);
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(54);
     return;
 }
@@ -277,23 +294,23 @@ void MainBossSpell()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(43);
     +10:
-    // semantic opcode fallback th15->th12: ins_518 -> ins_418; semantic=unit.property.18; verify semantics
+    // semantic op_key lowering th15->th12: unit.dialog_read
     ins_418(-1);
     +1:
     // object Enemy source_line=206 family=th13plus
-    // Enemy lowering th13plus -> th12: enmCreateA; semantic verification required
+    // Enemy lowering th13plus -> th12: enemy.create_abs -> ins_257
     ins_257("Boss", 144.0f, -16.0f, 40, 1000, 1);
-    // semantic opcode fallback th15->th12: ins_520 -> ins_420; semantic=unit.property.20; verify semantics
+    // semantic op_key lowering th15->th12: unit.boss_wait
     ins_420();
-    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(81);
     ins_83(170);
-    // semantic opcode fallback th15->th12: ins_518 -> ins_418; semantic=unit.property.18; verify semantics
+    // semantic op_key lowering th15->th12: unit.dialog_read
     ins_418(-2);
-    // semantic opcode fallback th15->th12: ins_519 -> ins_419; semantic=unit.property.19; verify semantics
+    // semantic op_key lowering th15->th12: unit.dialog_wait
     ins_419();
     return;
 }
@@ -302,23 +319,23 @@ void MainMBossSpell()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(22);
     +10:
-    // semantic opcode fallback th15->th12: ins_518 -> ins_418; semantic=unit.property.18; verify semantics
+    // semantic op_key lowering th15->th12: unit.dialog_read
     ins_418(-3);
     +1:
     // object Enemy source_line=221 family=th13plus
-    // Enemy lowering th13plus -> th12: enmCreateA; semantic verification required
+    // Enemy lowering th13plus -> th12: enemy.create_abs -> ins_257
     ins_257("MBoss", 144.0f, -16.0f, 40, 1000, 1);
-    // semantic opcode fallback th15->th12: ins_520 -> ins_420; semantic=unit.property.20; verify semantics
+    // semantic op_key lowering th15->th12: unit.boss_wait
     ins_420();
-    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(81);
     ins_83(100);
-    // semantic opcode fallback th15->th12: ins_518 -> ins_418; semantic=unit.property.18; verify semantics
+    // semantic op_key lowering th15->th12: unit.dialog_read
     ins_418(-2);
-    // semantic opcode fallback th15->th12: ins_519 -> ins_419; semantic=unit.property.19; verify semantics
+    // semantic op_key lowering th15->th12: unit.dialog_wait
     ins_419();
     return;
 }
@@ -328,8 +345,9 @@ void et_ofs_r()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C, D;
-    // unlifted instruction: ins_81(%C, %D, [-9998.0f], %B * [-9999.0f]);
-    // semantic opcode fallback th15->th12: ins_603 -> ins_503; semantic=bullet.emitter.03; verify semantics
+    // semantic op_key lowering th15->th12: flow.circle_pos
+    ins_81(%C, %D, [-9998.0f], %B * [-9999.0f]);
+    // dynamic bullet config lowering th15->th12: ins_603 -> ins_503
     ins_503($A, %C, %D);
     return;
 }
@@ -340,19 +358,19 @@ void test()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Movement source_line=241 family=th13plus
     !NHL
-    // movement lowering th13plus -> th12: moveVel
+    // movement lowering th13plus -> th12: movement.velocity.set -> ins_304
     ins_304([-9989.0f], 0.0f);
     !*
     // object Movement source_line=242 family=th13plus
-    // movement lowering th13plus -> th12: moveVelTime
+    // movement lowering th13plus -> th12: movement.velocity.tween -> ins_305
     ins_305(60, 0, [-9989.0f] + ([-9987.0f] * 0.5235988f), 2.0f);
     // object Movement source_line=244 family=th13plus
     !E
-    // movement lowering th13plus -> th12: moveVel
+    // movement lowering th13plus -> th12: movement.velocity.set -> ins_304
     ins_304([-9981.0f] + ([-9987.0f] * 0.5235988f), 0.0f);
     !*
     // object Movement source_line=245 family=th13plus
-    // movement lowering th13plus -> th12: moveVelTime
+    // movement lowering th13plus -> th12: movement.velocity.tween -> ins_305
     ins_305(60, 0, -999999.0f, 2.0f);
     return;
 }

@@ -1,4 +1,4 @@
-// source: th15\st01.decl
+// source: E:\fork\th062\th15\st01.decl
 // source game: th15
 // target: th12
 // whole-file lowering is a structured draft; verify target-game scheduling and resources
@@ -230,16 +230,16 @@ void GirlA01_at()
     // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; preserved as TH12 difficulty table; default preview N=1.5f
     ins_500(0);
     ins_507(0, 0);
-    ins_502(0, 4, 6);
+    ins_502(0, 3, 6);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
     ins_521(0, 1.5f, 1.5f, 2.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 7.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    ins_509(0, 1, 0, 536870912, 60, -999999, 7.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 4, 6);
+    ins_502(0, 3, 6);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -296,11 +296,11 @@ void GirlA01_at_l()
     ins_522(0, 3, 3, 3, 6, 1, 1, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
     ins_521(0, 2.2f, 2.2f, 2.2f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f);
-    // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(0, 2);
+    ins_507(0, 4);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 7, 4);
+    ins_502(0, 6, 4);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 0.0f, 0.05235988f);
     $A = 1;
@@ -364,16 +364,16 @@ void GirlA02_at()
     // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; preserved as TH12 difficulty table; default preview N=1.5f
     ins_500(0);
     ins_507(0, 0);
-    ins_502(0, 4, 6);
+    ins_502(0, 3, 6);
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
     ins_521(0, 1.5f, 1.5f, 2.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 7.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    ins_509(0, 1, 0, 536870912, 60, -999999, 7.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 4, 6);
+    ins_502(0, 3, 6);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -430,11 +430,11 @@ void GirlA02_at_l()
     ins_522(0, 3, 3, 3, 6, 1, 1, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
     ins_521(0, 2.2f, 2.2f, 2.2f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f);
-    // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(0, 2);
+    ins_507(0, 4);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 7, 4);
+    ins_502(0, 6, 4);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 0.0f, 0.05235988f);
     $A = 1;
@@ -496,15 +496,15 @@ void GirlA03_at()
     // difficulty speed.first: E=1.5f, N=1.5f, H=3.0f, LO=4.0f; preserved as TH12 difficulty table; default preview N=1.5f
     ins_500(0);
     ins_507(0, 0);
-    ins_502(0, 4, 6);
+    ins_502(0, 3, 6);
     ins_506(0, 3, 1);
     ins_504(0, 0.0f, 1.0471976f);
     ins_521(0, 1.5f, 1.5f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 4, 6);
+    ins_502(0, 3, 6);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 3, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -548,7 +548,7 @@ void GirlB01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=254 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=255 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 20);
@@ -604,16 +604,16 @@ void GirlB01_at()
     // difficulty speed.first: E=1.2f, N=1.6f, H=2.2f, L=4.2f; preserved as TH12 difficulty table; default preview N=1.6f
     ins_500(0);
     ins_507(0, 1);
-    ins_502(0, 8, 6);
+    ins_502(0, 7, 6);
     ins_522(0, 1, 1, 1, 2, 1, 1, 1, 1);
     ins_504(0, 1.5707964f, 0.34906584f);
     ins_521(0, 1.2f, 1.6f, 2.2f, 4.2f, 1.0f, 1.0f, 1.0f, 1.0f);
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 8, 6);
+    ins_502(0, 7, 6);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 1.5707964f, 0.34906584f);
     // semantic op_key lowering th15->th12: bullet.copy
@@ -653,7 +653,7 @@ void GirlB02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=314 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=315 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 35);
@@ -710,19 +710,19 @@ void GirlB02_at()
     // difficulty speed.first: E=0.5f, N=0.5f, H=1.5f, L=2.5f; preserved as TH12 difficulty table; default preview N=0.5f
     ins_500(0);
     ins_507(0, 4);
-    ins_502(0, 5, 2);
+    ins_502(0, 4, 2);
     ins_522(0, 3, 5, 20, 13, 1, 1, 1, 2);
     ins_504(0, [-9998.0f], 0.0f);
     ins_521(0, 0.5f, 0.5f, 1.5f, 2.5f, 1.0f, 1.0f, 1.0f, 1.0f);
     ins_508(0, 21, -1);
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, -2147483648, 60, -999999, -999999.0f, -999999.0f
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 4, 60, -999999, 0.016666668f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    ins_509(0, 2, 0, 4096, 60, -999999, -999999.0f, -999999.0f);
+    ins_509(0, 3, 0, 4, 60, -999999, 0.016666668f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(0, 2);
+    ins_507(0, 4);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 5, 2);
+    ins_502(0, 4, 2);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 0.0f, 0.13962634f);
     // dynamic bullet config lowering th15->th12: ins_608 -> ins_508
@@ -752,7 +752,7 @@ void GirlBlueA01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=368 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=369 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 0);
@@ -769,7 +769,7 @@ void GirlBlueA01e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=377 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=378 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 0);
@@ -789,7 +789,7 @@ void GirlBlueA02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=389 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=390 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 0);
@@ -806,7 +806,7 @@ void GirlBlueA02e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=398 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=399 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 0);
@@ -824,7 +824,7 @@ void GirlBlueA03()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=408 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=409 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 0);
@@ -841,7 +841,7 @@ void GirlC01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=417 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=418 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 35);
@@ -891,15 +891,15 @@ void GirlC01_at()
     // difficulty count.ways: E=1, N=1, H=2, LO=5; preserved as TH12 difficulty table; default preview N=1
     ins_500(0);
     ins_507(0, 1);
-    ins_502(0, 8, 6);
+    ins_502(0, 7, 6);
     ins_522(0, 1, 1, 2, 5, 1, 1, 1, 1);
     ins_504(0, 1.5707964f, 0.12217305f);
     ins_505(0, %A, 0.0f);
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 8, 6);
+    ins_502(0, 7, 6);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
     !E
     ins_506(0, 1, 1);
@@ -967,7 +967,7 @@ void GirlD01()
     // dropped source-specific semantic op for th12: unit.unknown569(6)
     // object Animation source_line=500 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=501 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 40);
@@ -1028,12 +1028,14 @@ void GirlD01_at()
     ins_522(2, 10, 10, 10, 10, 2, 6, 6, 6);
     ins_504(2, 0.0f, 0.05235988f);
     ins_505(2, 1.6f, 1.6f);
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2097152, 60, -999999, 4.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    ins_509(2, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    ins_509(0, 1, 0, 536870912, 60, -999999, 4.0f, -999999.0f);
+    ins_509(2, 1, 0, 536870912, 60, -999999, 4.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(0, 9);
+    ins_507(0, 4);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 7, 4);
+    ins_502(0, 6, 4);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
     !E
     ins_506(0, 10, 2);
@@ -1083,16 +1085,16 @@ void GirlD01_at2()
     // object BulletEmitter source_line=568 family=th13plus
     ins_500(1);
     ins_507(1, 1);
-    ins_502(1, 18, 3);
+    ins_502(1, 17, 3);
     ins_506(1, 1, 1);
     ins_504(1, %C, 0.08726646f);
     ins_505(1, %B, 0.0f);
-    // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
+    ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    ins_509(1, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(1, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(1, 18, 3);
+    ins_502(1, 17, 3);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(1, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -1156,7 +1158,7 @@ void GirlD02()
     // dropped source-specific semantic op for th12: unit.unknown569(6)
     // object Animation source_line=618 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=619 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 40);
@@ -1218,11 +1220,12 @@ void GirlD02_at()
     ins_522(2, 8, 8, 8, 8, 2, 6, 8, 6);
     ins_504(2, 0.0f, 0.05235988f);
     ins_521(2, 1.6f, 1.6f, 3.0f, 4.0f, 1.6f, 1.6f, 1.6f, 1.6f);
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    ins_509(2, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(0, 9);
+    ins_507(0, 4);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 7, 2);
+    ins_502(0, 6, 2);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
     !E
     ins_506(0, 8, 2);
@@ -1278,16 +1281,16 @@ void GirlD02_at2()
     // object BulletEmitter source_line=692 family=th13plus
     ins_500(1);
     ins_507(1, 1);
-    ins_502(1, 18, 3);
+    ins_502(1, 17, 3);
     ins_506(1, 1, 1);
     ins_504(1, %C, 0.08726646f);
     ins_505(1, %B, 0.0f);
-    // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 2, 1, -999999, -999999.0f, -999999.0f
-    // unsupported th13+ transform for th12; preserved source ins_611: 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f
+    ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    ins_509(1, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(1, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(1, 18, 3);
+    ins_502(1, 17, 3);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(1, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -1349,7 +1352,7 @@ void GirlRedA01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=741 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=742 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 5);
@@ -1366,7 +1369,7 @@ void GirlRedA01e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=750 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=751 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 5);
@@ -1386,7 +1389,7 @@ void GirlRedA02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=762 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=763 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 5);
@@ -1403,7 +1406,7 @@ void GirlRedA02e()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=771 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=772 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 5);
@@ -1421,7 +1424,7 @@ void GirlRedA03()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=781 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=782 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_main -> ins_262
     ins_262(0, 5);
@@ -1455,7 +1458,7 @@ void MainBoss()
     ins_419();
     +1:
     // semantic op_key lowering th15->th12: unit.boss_wait
-    // approximated bossWait on target without bossWait opcode: no-op
+    ins_420();
     // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(81);
     +60:
@@ -1515,7 +1518,7 @@ void MainLatter()
     @MainLatterB() async;
     @MainSub04();
     // semantic op_key lowering th15->th12: unit.boss_wait
-    // approximated bossWait on target without bossWait opcode: no-op
+    ins_420();
     ins_83(61);
     @MainSub05();
     return;
@@ -1528,7 +1531,7 @@ void MainLatter2()
     @MainLatter2B() async;
     @MainSub06();
     // semantic op_key lowering th15->th12: unit.boss_wait
-    // approximated bossWait on target without bossWait opcode: no-op
+    ins_420();
     ins_83(61);
     @MainSub07();
     return;
@@ -1539,7 +1542,7 @@ void MainLatter2B()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th15->th12: unit.boss_wait
-    // approximated bossWait on target without bossWait opcode: no-op
+    ins_420();
     ins_83(60);
     return;
 }
@@ -1549,7 +1552,7 @@ void MainLatterB()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     // semantic op_key lowering th15->th12: unit.boss_wait
-    // approximated bossWait on target without bossWait opcode: no-op
+    ins_420();
     ins_83(60);
     return;
 }
@@ -2029,7 +2032,7 @@ void Phantom01()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=1175 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=1176 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259(0, 87);
@@ -2080,16 +2083,16 @@ void Phantom01_at()
     // difficulty speed.first: E=1.0f, N=1.0f, H=3.0f, L=3.0f; preserved as TH12 difficulty table; default preview N=1.0f
     ins_500(0);
     ins_507(0, 0);
-    ins_502(0, 5, 4);
+    ins_502(0, 4, 4);
     ins_522(0, 1, 1, 1, 1, 1, 1, 1, 8);
     ins_504(0, 0.0f, 0.0f);
     ins_521(0, 1.0f, 1.0f, 3.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     ins_508(0, 21, -1);
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 5, 4);
+    ins_502(0, 4, 4);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 0.0f, 0.0f);
     // dynamic bullet config lowering th15->th12: ins_608 -> ins_508
@@ -2114,7 +2117,7 @@ void Phantom02()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=1220 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=1221 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259(0, 87);
@@ -2175,11 +2178,11 @@ void Phantom02_at()
     ins_504(0, 0.0f, 0.017453292f);
     ins_521(0, 1.0f, 2.0f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     ins_508(0, 21, -1);
-    // unsupported th13+ transform for th12; preserved source ins_611: 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 7, 6);
+    ins_502(0, 6, 6);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 0.0f, 0.017453292f);
     // dynamic bullet config lowering th15->th12: ins_608 -> ins_508
@@ -2196,7 +2199,7 @@ void Phantom02b()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Animation source_line=1260 family=th13plus
     // Animation lowering th13plus -> th12: anm.select -> ins_258
-    ins_258(1);
+    ins_258(2);
     // object Animation source_line=1261 family=th13plus
     // Animation lowering th13plus -> th12: anm.set_sprite -> ins_259
     ins_259(0, 79);

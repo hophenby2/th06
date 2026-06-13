@@ -1,4 +1,4 @@
-// source: th062/th15/st01bs.decl
+// source: E:\fork\th062\th15\st01bs.decl
 // source game: th15
 // target: th12
 // whole-file lowering is a structured draft; verify target-game scheduling and resources
@@ -12,66 +12,68 @@ void Boss()
 {
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
-    // semantic opcode fallback th15->th12: ins_512 -> ins_412; semantic=unit.property.12; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_boss
     ins_412(0);
-    // semantic opcode fallback th15->th12: ins_515 -> ins_415; semantic=unit.property.15; verify semantics
+    // semantic op_key lowering th15->th12: unit.set_invuln
     ins_415(120);
-    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
+    // semantic op_key lowering th15->th12: unit.flag_set
     ins_402(3);
     [-9947] = 1;
-    // semantic opcode reorder th15->th12: ins_400 -> ins_300; semantic=movement.position.set; verify semantics
+    // semantic op_key lowering th15->th12: movement.position.set
     ins_300(0.0f, 128.0f);
-    @EffChargePoint2(1.5707964f, -1.0471976f, 8, 2, 6);
-    @EffChargePoint2(1.5707964f, 1.0471976f, 10, 7, 3);
+    // dropped TH13+ charge-point effect call for TH12 stability: @EffChargePoint2(1.5707964f, -1.0471976f, 8, 2, 6);
+    // dropped TH13+ charge-point effect call for TH12 stability: @EffChargePoint2(1.5707964f, 1.0471976f, 10, 7, 3);
     ins_83(101);
-    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
-    ins_258(2);
-    // semantic opcode reorder th15->th12: ins_306 -> ins_262; semantic=animation.set_main; verify semantics
+    // semantic op_key lowering th15->th12: anm.select
+    ins_258(3);
+    // semantic op_key lowering th15->th12: anm.set_main
     ins_262(0, 0);
-    // semantic opcode fallback th15->th12: ins_503 -> ins_403; semantic=unit.property.03; verify semantics
+    // semantic op_key lowering th15->th12: unit.flag_clear
     ins_403(3);
-    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
+    // semantic op_key lowering th15->th12: unit.flag_set
     ins_402(64);
-    // semantic opcode fallback th15->th12: ins_511 -> ins_411; semantic=unit.property.11; verify semantics
+    // semantic op_key lowering th15->th12: boss.life_set
     ins_411(11500);
-    // semantic opcode reorder th15->th12: ins_303 -> ins_259; semantic=animation.set_sprite; verify semantics
+    // semantic op_key lowering th15->th12: anm.set_sprite
     ins_259(0, 0);
-    // semantic opcode fallback th15->th12: ins_519 -> ins_419; semantic=unit.property.19; verify semantics
+    // semantic op_key lowering th15->th12: unit.dialog_wait
     ins_419();
-    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(43);
     +1:
-    // semantic opcode fallback th15->th12: ins_500 -> ins_400; semantic=unit.property.00; verify semantics
+    // semantic op_key lowering th15->th12: unit.set_hurtbox
     ins_400(40.0f, 40.0f);
-    // semantic opcode fallback th15->th12: ins_501 -> ins_401; semantic=unit.property.01; verify semantics
+    // semantic op_key lowering th15->th12: unit.set_hitbox
     ins_401(48.0f, 48.0f);
-    // semantic opcode fallback th15->th12: ins_504 -> ins_404; semantic=unit.property.04; verify semantics
+    // semantic op_key lowering th15->th12: movement.move_limit
     ins_404(0.0f, 128.0f, 280.0f, 64.0f);
-    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
+    // semantic op_key lowering th15->th12: anm.select
     ins_258(1);
-    // semantic opcode reorder th15->th12: ins_303 -> ins_259; semantic=animation.set_sprite; verify semantics
+    // semantic op_key lowering th15->th12: anm.set_sprite
     ins_259(1, 107);
-    // semantic opcode reorder th15->th12: ins_303 -> ins_259; semantic=animation.set_sprite; verify semantics
+    // semantic op_key lowering th15->th12: anm.set_sprite
     ins_259(2, 116);
-    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
-    ins_258(2);
-    // unlifted instruction: ins_629(160.0f, 15732608);
+    // semantic op_key lowering th15->th12: anm.select
+    ins_258(3);
+    // unsupported semantic op_key for th15->th12: unit.fog
+    // original: ins_629(160.0f, 15732608);
     // timeline rewrite: normal target boss flow should bypass source spell-test selector
     goto Boss_1200 @ 1;
     // original spell-test branch: unless ([-9907] >= 0) goto Boss_1200 @ 1;
     // original spell-test branch: unless (([-9907] >= 2) && ([-9907] <= 5)) goto Boss_996 @ 1;
-    // semantic opcode fallback th15->th12: ins_511 -> ins_411; semantic=unit.property.11; verify semantics
+    // semantic op_key lowering th15->th12: boss.life_set
     ins_411(1700);
     @BossCard1();
     goto Boss_1200 @ 1;
     Boss_996:
     // original spell-test branch: unless (([-9907] >= 6) && ([-9907] <= 9)) goto Boss_1200 @ 1;
-    // semantic opcode fallback th15->th12: ins_511 -> ins_411; semantic=unit.property.11; verify semantics
+    // semantic op_key lowering th15->th12: boss.life_set
     ins_411(1900);
     @BossCard2();
     Boss_1200:
     @Boss1();
-    // unlifted instruction: ins_1();
+    // semantic op_key lowering th15->th12: flow.delete
+    ins_1();
 }
 
 void Boss1()
@@ -79,39 +81,41 @@ void Boss1()
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var A, B, C;
-    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
+    // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($A, 90, 90, 40, 40);
-    // semantic opcode fallback th15->th12: ins_513 -> ins_413; semantic=unit.property.13; verify semantics
-    ins_413();
-    // semantic opcode fallback th15->th12: ins_514 -> ins_414; semantic=unit.property.14; verify semantics
+    // unsupported semantic op_key for th15->th12: boss.timer_reset
+    // original: ins_513();
+    // semantic op_key lowering th15->th12: boss.set_interrupt
     ins_414(0, 1700, 2280, "BossCard1");
-    // semantic opcode fallback th15->th12: ins_527 -> ins_427; semantic=unit.property.27; verify semantics
+    // semantic op_key lowering th15->th12: unit.life_marker
     ins_427(0, 1700.0f, -24448);
-    // semantic opcode fallback th15->th12: ins_540 -> ins_440; semantic=difficulty.any; verify semantics
+    // semantic op_key lowering th15->th12: unit.stars
     ins_440(1);
-    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
-    ins_258(2);
-    // semantic opcode reorder th15->th12: ins_306 -> ins_262; semantic=animation.set_main; verify semantics
+    // semantic op_key lowering th15->th12: anm.select
+    ins_258(3);
+    // semantic op_key lowering th15->th12: anm.set_main
     ins_262(0, 0);
-    // semantic opcode reorder th15->th12: ins_307 -> ins_263; semantic=animation.play; verify semantics
+    // semantic op_key lowering th15->th12: anm.play
     ins_263(1, 75);
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(54);
     ins_83(60);
-    // semantic opcode reorder th15->th12: ins_307 -> ins_263; semantic=animation.play; verify semantics
+    // semantic op_key lowering th15->th12: anm.play
     ins_263(1, 86);
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(6);
     @Boss1_at2() async;
     goto Boss1_636 @ 0;
     Boss1_388:
     @Boss1_at(0.0f, 0.034906585f, -0.17453292f) async;
     ins_83(120);
-    // unlifted instruction: ins_412(60, 4, 1.0f);
+    // semantic op_key lowering th15->th12: movement.move_rand
+    ins_312(60, 4, 1.0f);
     ins_83(80);
     @Boss1_at(0.0f, -0.034906585f, 0.17453292f) async;
     ins_83(120);
-    // unlifted instruction: ins_412(60, 4, 1.0f);
+    // semantic op_key lowering th15->th12: movement.move_rand
+    ins_312(60, 4, 1.0f);
     ins_83(80);
     Boss1_636:
     if (1) goto Boss1_388 @ 0;
@@ -125,17 +129,17 @@ void Boss1_at(var A, var B, var C)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var D, E, F, G, H;
-    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
+    // semantic op_key lowering th15->th12: bullet.et_new
     ins_500(0);
-    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
-    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(0, 12, 8);
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, [-9989.0f], 0.034906585f);
-    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
     !E
     ins_505(0, 1.5f, 1.0f);
     !N
@@ -145,20 +149,23 @@ void Boss1_at(var A, var B, var C)
     !L
     ins_505(0, 4.1f, 1.0f);
     !*
-    // unlifted instruction: ins_611(0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_611(0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
-    ins_258(2);
-    // unlifted instruction: ins_313(0);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th15->th12: anm.select
+    ins_258(3);
+    // semantic op_key lowering th15->th12: anm.selected_play
+    ins_269(0);
     $F = 1;
-    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
+    // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($G, 4, 8, 8, 12);
     goto Boss1_at_724 @ 0;
     Boss1_at_500:
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, $F, 1);
     $F = $F + 1;
-    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
+    // semantic op_key lowering th15->th12: bullet.fire
     ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
@@ -172,15 +179,15 @@ void Boss1_at(var A, var B, var C)
     !*
     Boss1_at_724:
     if ($G--) goto Boss1_at_500 @ 0;
-    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
+    // semantic op_key lowering th15->th12: bullet.et_new
     ins_500(0);
-    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
-    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
-    ins_502(0, 18, 4);
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
+    ins_502(0, 17, 4);
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504; ranked args from source difficulty literals
     !E
     ins_504(0, [-9989.0f], 0.436332f);
     !N
@@ -190,7 +197,7 @@ void Boss1_at(var A, var B, var C)
     !L
     ins_504(0, [-9989.0f], 0.20944f);
     !*
-    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
     !E
     ins_505(0, 2.0f, 1.0f);
     !N
@@ -200,22 +207,27 @@ void Boss1_at(var A, var B, var C)
     !L
     ins_505(0, 4.1f, 1.0f);
     !*
-    // unlifted instruction: ins_611(0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_611(0, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_611(0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_611(0, 0, 1048576, 0, -999999, -999999.0f, -999999.0f);
-    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
-    ins_258(2);
-    // unlifted instruction: ins_313(0);
-    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 2, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 3, 0, 268435456, 0, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th15->th12: anm.select
+    ins_258(3);
+    // semantic op_key lowering th15->th12: anm.selected_play
+    ins_269(0);
+    // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($H, 4, 8, 8, 12);
     goto Boss1_at_1660 @ 0;
     Boss1_at_1360:
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, $F, 1);
     %A = %A + %C;
     $F = $F + 1;
-    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
+    // semantic op_key lowering th15->th12: bullet.fire
     ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
@@ -250,13 +262,13 @@ void Boss1_at2()
     !L
     ins_83(150);
     !*
-    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
+    // semantic op_key lowering th15->th12: bullet.et_new
     ins_500(1);
-    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(1, 5);
-    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
-    ins_502(1, 20, 3);
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
+    ins_502(1, 19, 3);
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
     !E
     ins_506(1, 1, 3);
     !N
@@ -266,9 +278,9 @@ void Boss1_at2()
     !L
     ins_506(1, 1, 9);
     !*
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(1, 0.0f, 0.034906585f);
-    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
     !E
     ins_505(1, 1.0f, 0.8f);
     !N
@@ -278,13 +290,14 @@ void Boss1_at2()
     !L
     ins_505(1, 5.0f, 0.8f);
     !*
-    // unlifted instruction: ins_611(1, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     $C = 600;
     goto Boss1_at2_800 @ 0;
     Boss1_at2_560:
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(1, [-9989.0f] + ([-9998.0f] / 32.0f), 0.0f);
-    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
+    // semantic op_key lowering th15->th12: bullet.fire
     ins_501(1);
     // dynamic wait preserved from difficulty literals
     !E
@@ -307,72 +320,76 @@ void Boss2()
 {
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
-    // semantic opcode fallback th15->th12: ins_515 -> ins_415; semantic=unit.property.15; verify semantics
+    // semantic op_key lowering th15->th12: unit.set_invuln
     ins_415(120);
-    // semantic opcode fallback th15->th12: ins_511 -> ins_411; semantic=unit.property.11; verify semantics
+    // semantic op_key lowering th15->th12: boss.life_set
     ins_411(11400);
     unless ([-9986] == 0) goto Boss2_200 @ 0;
-    // unlifted instruction: ins_615(640.0f);
+    // semantic op_key lowering th15->th12: bullet.cancel_radius
+    ins_512(640.0f);
     goto Boss2_220 @ 0;
     Boss2_200:
-    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
-    // original: ins_616(640.0f);
+    // semantic op_key lowering th15->th12: bullet.clear_radius
+    ins_513(640.0f);
     Boss2_220:
     +2:
-    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(44);
     +2:
-    // unsupported th15->th12 opcode ins_569: pointdevice/LoLK-specific unit flag, no TH12 equivalent
-    // original: ins_569(1);
-    // semantic opcode fallback th15->th12: ins_540 -> ins_440; semantic=difficulty.any; verify semantics
+    // semantic op_key lowering th15->th12: unit.unknown569
+    // dropped source-specific semantic op for th12: unit.unknown569(1)
+    // semantic op_key lowering th15->th12: unit.stars
     ins_440(0);
-    // semantic opcode fallback th15->th12: ins_504 -> ins_404; semantic=unit.property.04; verify semantics
+    // semantic op_key lowering th15->th12: movement.move_limit
     ins_404(0.0f, 128.0f, 280.0f, 96.0f);
     @BossItemPhase(40, 10, 64.0f);
-    // semantic opcode fallback th15->th12: ins_513 -> ins_413; semantic=unit.property.13; verify semantics
-    ins_413();
-    // unlifted instruction: ins_21();
-    // semantic opcode fallback th15->th12: ins_525 -> ins_425; semantic=unit.property.25; verify semantics
+    // unsupported semantic op_key for th15->th12: boss.timer_reset
+    // original: ins_513();
+    // semantic op_key lowering th15->th12: flow.kill_all_async
+    ins_21();
+    // semantic op_key lowering th15->th12: enemy.enm_kill_all
     ins_425();
     unless ([-9986] == 0) goto Boss2_544 @ 4;
-    // unlifted instruction: ins_615(640.0f);
+    // semantic op_key lowering th15->th12: bullet.cancel_radius
+    ins_512(640.0f);
     goto Boss2_564 @ 4;
     Boss2_544:
-    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
-    // original: ins_616(640.0f);
+    // semantic op_key lowering th15->th12: bullet.clear_radius
+    ins_513(640.0f);
     Boss2_564:
-    // semantic opcode fallback th15->th12: ins_523 -> ins_423; semantic=unit.property.23; verify semantics
+    // semantic op_key lowering th15->th12: boss.spell_end
     ins_423();
-    // unlifted instruction: ins_632(0);
-    // semantic opcode fallback th15->th12: ins_545 -> ins_445; semantic=unit.property.45; verify semantics
-    ins_445();
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: unit.func_set
+    ins_529(0);
+    // unsupported semantic op_key for th15->th12: unit.laser_cancel
+    // original: ins_545();
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(27);
-    // semantic opcode reorder th15->th12: ins_404 -> ins_304; semantic=movement.velocity.set; verify semantics
+    // semantic op_key lowering th15->th12: movement.velocity.set
     ins_304(0.0f, 0.0f);
-    // semantic opcode reorder th15->th12: ins_405 -> ins_305; semantic=movement.velocity.tween; verify semantics
+    // semantic op_key lowering th15->th12: movement.velocity.tween
     ins_305(0, 0, 0.0f, 0.0f);
-    // semantic opcode reorder th15->th12: ins_401 -> ins_301; semantic=movement.position.tween; verify semantics
+    // semantic op_key lowering th15->th12: movement.position.tween
     ins_301(0, 0, 0.0f, 0.0f);
     [-9949] = 0;
     [-9948] = 0;
     [-9947] = 1;
-    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
-    ins_258(2);
-    // semantic opcode reorder th15->th12: ins_306 -> ins_262; semantic=animation.set_main; verify semantics
+    // semantic op_key lowering th15->th12: anm.select
+    ins_258(3);
+    // semantic op_key lowering th15->th12: anm.set_main
     ins_262(0, 0);
-    // semantic opcode fallback th15->th12: ins_514 -> ins_414; semantic=unit.property.14; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_interrupt
     ins_414(0, 1900, 2100, "BossCard2");
-    // semantic opcode fallback th15->th12: ins_527 -> ins_427; semantic=unit.property.27; verify semantics
+    // semantic op_key lowering th15->th12: unit.life_marker
     ins_427(0, 1900.0f, -24448);
-    // semantic opcode reorder th15->th12: ins_307 -> ins_263; semantic=animation.play; verify semantics
+    // semantic op_key lowering th15->th12: anm.play
     ins_263(1, 75);
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(54);
     ins_83(90);
-    // semantic opcode reorder th15->th12: ins_307 -> ins_263; semantic=animation.play; verify semantics
+    // semantic op_key lowering th15->th12: anm.play
     ins_263(1, 86);
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(6);
     @Boss2_at2() async;
     goto Boss2_1328 @ 4;
@@ -388,7 +405,8 @@ void Boss2()
     !L
     ins_83(60);
     !*
-    // unlifted instruction: ins_412(60, 4, 1.0f);
+    // semantic op_key lowering th15->th12: movement.move_rand
+    ins_312(60, 4, 1.0f);
     ins_83(80);
     Boss2_1328:
     if (1) goto Boss2_1124 @ 4;
@@ -402,17 +420,17 @@ void Boss2_at(var A, var B, var C)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var D, E, F, G;
-    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
+    // semantic op_key lowering th15->th12: bullet.et_new
     ins_500(0);
-    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
-    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(0, 12, 8);
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, [-9989.0f], 0.034906585f);
-    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
     !E
     ins_505(0, 1.5f, 1.0f);
     !N
@@ -422,20 +440,23 @@ void Boss2_at(var A, var B, var C)
     !L
     ins_505(0, 3.5f, 1.0f);
     !*
-    // unlifted instruction: ins_611(0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_611(0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
-    ins_258(2);
-    // unlifted instruction: ins_313(0);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th15->th12: anm.select
+    ins_258(3);
+    // semantic op_key lowering th15->th12: anm.selected_play
+    ins_269(0);
     $F = 1;
-    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
+    // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($G, 6, 10, 14, 14);
     goto Boss2_at_724 @ 0;
     Boss2_at_500:
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, $F, 1);
     $F = $F + 1;
-    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
+    // semantic op_key lowering th15->th12: bullet.fire
     ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
@@ -469,13 +490,13 @@ void Boss2_at2()
     !L
     ins_83(100);
     !*
-    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
+    // semantic op_key lowering th15->th12: bullet.et_new
     ins_500(1);
-    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(1, 5);
-    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(1, 12, 6);
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
     !E
     ins_506(1, 5, 10);
     !N
@@ -485,9 +506,9 @@ void Boss2_at2()
     !L
     ins_506(1, 10, 25);
     !*
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(1, 0.0f, 0.034906585f);
-    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
     !E
     ins_505(1, 1.0f, 0.8f);
     !N
@@ -497,14 +518,16 @@ void Boss2_at2()
     !L
     ins_505(1, 4.0f, 0.8f);
     !*
-    // unlifted instruction: ins_611(1, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_627(1, 64.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th15->th12: bullet.distance
+    // dropped source-specific semantic op for th12: bullet.distance(1, 64.0f)
     $C = 600;
     goto Boss2_at2_812 @ 0;
     Boss2_at2_664:
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(1, [-9998.0f], 0.0f);
-    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
+    // semantic op_key lowering th15->th12: bullet.fire
     ins_501(1);
     // dynamic wait preserved from difficulty literals
     !E
@@ -529,74 +552,81 @@ void BossCard1()
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var A;
     unless ([-9986] == 0) goto BossCard1_160 @ 0;
-    // unlifted instruction: ins_615(640.0f);
+    // semantic op_key lowering th15->th12: bullet.cancel_radius
+    ins_512(640.0f);
     goto BossCard1_180 @ 0;
     BossCard1_160:
-    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
-    // original: ins_616(640.0f);
+    // semantic op_key lowering th15->th12: bullet.clear_radius
+    ins_513(640.0f);
     BossCard1_180:
     +2:
-    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(62);
     +2:
-    // unsupported th15->th12 opcode ins_569: pointdevice/LoLK-specific unit flag, no TH12 equivalent
-    // original: ins_569(1);
-    // semantic opcode fallback th15->th12: ins_540 -> ins_440; semantic=difficulty.any; verify semantics
+    // semantic op_key lowering th15->th12: unit.unknown569
+    // dropped source-specific semantic op for th12: unit.unknown569(1)
+    // semantic op_key lowering th15->th12: unit.stars
     ins_440(1);
     @BossItemCard();
-    // semantic opcode fallback th15->th12: ins_513 -> ins_413; semantic=unit.property.13; verify semantics
-    ins_413();
-    // unlifted instruction: ins_21();
-    // semantic opcode fallback th15->th12: ins_525 -> ins_425; semantic=unit.property.25; verify semantics
+    // unsupported semantic op_key for th15->th12: boss.timer_reset
+    // original: ins_513();
+    // semantic op_key lowering th15->th12: flow.kill_all_async
+    ins_21();
+    // semantic op_key lowering th15->th12: enemy.enm_kill_all
     ins_425();
     unless ([-9986] == 0) goto BossCard1_448 @ 4;
-    // unlifted instruction: ins_615(640.0f);
+    // semantic op_key lowering th15->th12: bullet.cancel_radius
+    ins_512(640.0f);
     goto BossCard1_468 @ 4;
     BossCard1_448:
-    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
-    // original: ins_616(640.0f);
+    // semantic op_key lowering th15->th12: bullet.clear_radius
+    ins_513(640.0f);
     BossCard1_468:
-    // semantic opcode fallback th15->th12: ins_523 -> ins_423; semantic=unit.property.23; verify semantics
+    // semantic op_key lowering th15->th12: boss.spell_end
     ins_423();
-    // unlifted instruction: ins_632(0);
-    // semantic opcode fallback th15->th12: ins_545 -> ins_445; semantic=unit.property.45; verify semantics
-    ins_445();
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: unit.func_set
+    ins_529(0);
+    // unsupported semantic op_key for th15->th12: unit.laser_cancel
+    // original: ins_545();
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(27);
-    // semantic opcode reorder th15->th12: ins_404 -> ins_304; semantic=movement.velocity.set; verify semantics
+    // semantic op_key lowering th15->th12: movement.velocity.set
     ins_304(0.0f, 0.0f);
-    // semantic opcode reorder th15->th12: ins_405 -> ins_305; semantic=movement.velocity.tween; verify semantics
+    // semantic op_key lowering th15->th12: movement.velocity.tween
     ins_305(0, 0, 0.0f, 0.0f);
-    // semantic opcode reorder th15->th12: ins_401 -> ins_301; semantic=movement.position.tween; verify semantics
+    // semantic op_key lowering th15->th12: movement.position.tween
     ins_301(0, 0, 0.0f, 0.0f);
     [-9949] = 0;
     [-9948] = 0;
     [-9947] = 1;
-    // semantic opcode fallback th15->th12: ins_514 -> ins_414; semantic=unit.property.14; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_interrupt
     ins_414(0, 0, 2400, "Boss2");
     !ENH
-    // semantic opcode fallback th15->th12: ins_537 -> ins_437; semantic=difficulty.hard; verify semantics
-    ins_437(2, 2400, 500000, "ï¿½eï¿½ï¿½ï¿½uï¿½Cï¿½[ï¿½Oï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½[ï¿½eï¿½Bï¿½ï¿½ï¿½Oï¿½v");
+    // semantic op_key lowering th15->th12: boss.spell
+    ins_437(2, 2400, 500000, "’e•„uƒC[ƒOƒ‹ƒVƒ…[ƒeƒBƒ“ƒOv");
     !*
     !L
-    // semantic opcode fallback th15->th12: ins_537 -> ins_437; semantic=difficulty.hard; verify semantics
-    ins_437(2, 2400, 500000, "ï¿½eï¿½ï¿½ï¿½uï¿½ï¿½ÍŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½v");
+    // semantic op_key lowering th15->th12: boss.spell
+    ins_437(2, 2400, 500000, "’e•„u‘é‚ÍŒ‚‚¿”²‚¢‚½v");
     !*
-    // semantic opcode reorder th15->th12: ins_401 -> ins_301; semantic=movement.position.tween; verify semantics
+    // semantic op_key lowering th15->th12: movement.position.tween
     ins_301(60, 4, 0.0f, 128.0f);
-    // semantic opcode fallback th15->th12: ins_504 -> ins_404; semantic=unit.property.04; verify semantics
+    // semantic op_key lowering th15->th12: movement.move_limit
     ins_404(0.0f, 128.0f, 240.0f, 64.0f);
-    // unlifted instruction: ins_316(0, 0);
-    // semantic opcode reorder th15->th12: ins_307 -> ins_263; semantic=animation.play; verify semantics
+    // unsupported semantic op_key for th15->th12: anm.anm316
+    // original: ins_316(0, 0);
+    // semantic op_key lowering th15->th12: anm.play
     ins_263(1, 73);
     +90:
-    // unlifted instruction: ins_0();
+    // semantic op_key lowering th15->th12: flow.nop
+    ins_0();
     @BossCard1_at2(1, 1.5707964f) async;
     @BossCard1_at2(2, -1.5707964f) async;
     $A = 1000;
     goto BossCard1_1420 @ 94;
     BossCard1_1204:
-    // unlifted instruction: ins_316(0, 0);
+    // unsupported semantic op_key for th15->th12: anm.anm316
+    // original: ins_316(0, 0);
     // dynamic wait preserved from difficulty literals
     !E
     ins_83(120);
@@ -607,7 +637,8 @@ void BossCard1()
     !L
     ins_83(50);
     !*
-    // unlifted instruction: ins_412(60, 4, 1.0f);
+    // semantic op_key lowering th15->th12: movement.move_rand
+    ins_312(60, 4, 1.0f);
     ins_83(80);
     @BossCard1_at([-9989.0f]) async;
     BossCard1_1420:
@@ -628,17 +659,17 @@ void BossCard1_at(var A)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var B, C;
-    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
+    // semantic op_key lowering th15->th12: bullet.et_new
     ins_500(0);
-    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
-    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(0, 12, 6);
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 1.5707964f, 0.034906585f);
-    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
     !E
     ins_505(0, 1.5f, 1.0f);
     !N
@@ -648,22 +679,25 @@ void BossCard1_at(var A)
     !L
     ins_505(0, 4.0f, 1.0f);
     !*
-    // unlifted instruction: ins_611(0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_611(0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
-    ins_258(2);
-    // unlifted instruction: ins_313(0);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th15->th12: anm.select
+    ins_258(3);
+    // semantic op_key lowering th15->th12: anm.selected_play
+    ins_269(0);
     $B = 1;
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, [-9989.0f], 0.034906585f);
-    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
+    // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($C, 6, 8, 8, 8);
     goto BossCard1_at_752 @ 0;
     BossCard1_at_528:
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, $B, 1);
     $B = $B + 1;
-    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
+    // semantic op_key lowering th15->th12: bullet.fire
     ins_501(0);
     // dynamic wait preserved from difficulty literals
     !E
@@ -687,16 +721,16 @@ void BossCard1_at2(var A, var B)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var C, D, E, F, G;
-    // semantic opcode fallback th15->th12: ins_536 -> ins_436; semantic=difficulty.normal; verify semantics
-    ins_436(%C, 0.5235988f, 0.5235988f, 0.5235988f, 3.883222f);
-    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
+    // unsupported semantic op_key for th15->th12: unit.diff_f
+    // original: ins_536(%C, 0.5235988f, 0.5235988f, 0.5235988f, 3.883222f);
+    // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($D, 16, 16, 16, 16);
     $E = 1000;
     goto BossCard1_at2_1404 @ 0;
     BossCard1_at2_172:
-    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
+    // semantic op_key lowering th15->th12: bullet.et_new
     ins_500($A);
-    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507; ranked args from source difficulty literals
     !E
     ins_507($A, 1);
     !N
@@ -704,15 +738,15 @@ void BossCard1_at2(var A, var B)
     !H
     ins_507($A, 1);
     !L
-    ins_507($A, 5);
+    ins_507($A, 3);
     !*
-    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
-    ins_502($A, 18, 3);
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
+    ins_502($A, 17, 3);
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506($A, 1, 1);
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504($A, 1.5707964f + ([-9987.0f] * 0.17453292f), %C);
-    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
     !E
     ins_505($A, 1.5f, 1.0f);
     !N
@@ -722,23 +756,29 @@ void BossCard1_at2(var A, var B)
     !L
     ins_505($A, 2.0f, 1.0f);
     !*
-    // unlifted instruction: ins_611($A, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_611($A, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_611($A, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_611($A, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_612($A, 0, 16, 60, 1, 0, 0, %B, -999999.0f, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_611($A, 0, 512, 12, 2, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 2, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 3, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th15->th12: bullet.transform2
+    // dropped source-specific semantic op for th12: bullet.transform2($A, 0, 16, 60, 1, 0, 0, %B, -999999.0f, -999999.0f, -999999.0f)
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 4, 0, 2048, 12, 2, -999999.0f, -999999.0f);
     $F = 1;
-    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
+    // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($G, 6, 20, 40, 60);
     goto BossCard1_at2_1264 @ 0;
     BossCard1_at2_960:
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506($A, $F, 1);
     unless ($F < $D) goto BossCard1_at2_1144 @ 0;
     $F = $F + 1;
     BossCard1_at2_1144:
-    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
+    // semantic op_key lowering th15->th12: bullet.fire
     ins_501($A);
     // dynamic wait preserved from difficulty literals
     !E
@@ -770,68 +810,74 @@ void BossCard2()
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var A, B;
     unless ([-9986] == 0) goto BossCard2_160 @ 0;
-    // unlifted instruction: ins_615(640.0f);
+    // semantic op_key lowering th15->th12: bullet.cancel_radius
+    ins_512(640.0f);
     goto BossCard2_180 @ 0;
     BossCard2_160:
-    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
-    // original: ins_616(640.0f);
+    // semantic op_key lowering th15->th12: bullet.clear_radius
+    ins_513(640.0f);
     BossCard2_180:
     +2:
-    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(63);
     +2:
-    // unsupported th15->th12 opcode ins_569: pointdevice/LoLK-specific unit flag, no TH12 equivalent
-    // original: ins_569(1);
-    // semantic opcode fallback th15->th12: ins_540 -> ins_440; semantic=difficulty.any; verify semantics
+    // semantic op_key lowering th15->th12: unit.unknown569
+    // dropped source-specific semantic op for th12: unit.unknown569(1)
+    // semantic op_key lowering th15->th12: unit.stars
     ins_440(0);
     @BossItemCard();
-    // semantic opcode fallback th15->th12: ins_513 -> ins_413; semantic=unit.property.13; verify semantics
-    ins_413();
-    // unlifted instruction: ins_21();
-    // semantic opcode fallback th15->th12: ins_525 -> ins_425; semantic=unit.property.25; verify semantics
+    // unsupported semantic op_key for th15->th12: boss.timer_reset
+    // original: ins_513();
+    // semantic op_key lowering th15->th12: flow.kill_all_async
+    ins_21();
+    // semantic op_key lowering th15->th12: enemy.enm_kill_all
     ins_425();
     unless ([-9986] == 0) goto BossCard2_448 @ 4;
-    // unlifted instruction: ins_615(640.0f);
+    // semantic op_key lowering th15->th12: bullet.cancel_radius
+    ins_512(640.0f);
     goto BossCard2_468 @ 4;
     BossCard2_448:
-    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
-    // original: ins_616(640.0f);
+    // semantic op_key lowering th15->th12: bullet.clear_radius
+    ins_513(640.0f);
     BossCard2_468:
-    // semantic opcode fallback th15->th12: ins_523 -> ins_423; semantic=unit.property.23; verify semantics
+    // semantic op_key lowering th15->th12: boss.spell_end
     ins_423();
-    // unlifted instruction: ins_632(0);
-    // semantic opcode fallback th15->th12: ins_545 -> ins_445; semantic=unit.property.45; verify semantics
-    ins_445();
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: unit.func_set
+    ins_529(0);
+    // unsupported semantic op_key for th15->th12: unit.laser_cancel
+    // original: ins_545();
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(27);
-    // semantic opcode reorder th15->th12: ins_404 -> ins_304; semantic=movement.velocity.set; verify semantics
+    // semantic op_key lowering th15->th12: movement.velocity.set
     ins_304(0.0f, 0.0f);
-    // semantic opcode reorder th15->th12: ins_405 -> ins_305; semantic=movement.velocity.tween; verify semantics
+    // semantic op_key lowering th15->th12: movement.velocity.tween
     ins_305(0, 0, 0.0f, 0.0f);
-    // semantic opcode reorder th15->th12: ins_401 -> ins_301; semantic=movement.position.tween; verify semantics
+    // semantic op_key lowering th15->th12: movement.position.tween
     ins_301(0, 0, 0.0f, 0.0f);
     [-9949] = 0;
     [-9948] = 0;
     [-9947] = 1;
-    // semantic opcode fallback th15->th12: ins_514 -> ins_414; semantic=unit.property.14; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_interrupt
     ins_414(0, 0, 2400, "BossDead");
     !ENH
-    // semantic opcode fallback th15->th12: ins_537 -> ins_437; semantic=difficulty.hard; verify semantics
-    ins_437(6, 2400, 500000, "ï¿½eï¿½ï¿½ï¿½uï¿½ï¿½ï¿½iï¿½eï¿½Bï¿½bï¿½Nï¿½Kï¿½ï¿½ï¿½v");
+    // semantic op_key lowering th15->th12: boss.spell
+    ins_437(6, 2400, 500000, "e•„uƒ‹ƒiƒeƒBƒbƒNƒKƒ“v");
     !*
     !L
-    // semantic opcode fallback th15->th12: ins_537 -> ins_437; semantic=difficulty.hard; verify semantics
-    ins_437(6, 2400, 500000, "ï¿½eï¿½ï¿½ï¿½uï¿½ï¿½ï¿½iï¿½eï¿½Bï¿½bï¿½Nï¿½Kï¿½ï¿½ï¿½v");
+    // semantic op_key lowering th15->th12: boss.spell
+    ins_437(6, 2400, 500000, "e•„uƒ‹ƒiƒeƒBƒbƒNƒKƒ“v");
     !*
-    // semantic opcode reorder th15->th12: ins_401 -> ins_301; semantic=movement.position.tween; verify semantics
+    // semantic op_key lowering th15->th12: movement.position.tween
     ins_301(60, 4, 0.0f, 128.0f);
-    // semantic opcode fallback th15->th12: ins_504 -> ins_404; semantic=unit.property.04; verify semantics
+    // semantic op_key lowering th15->th12: movement.move_limit
     ins_404(0.0f, 128.0f, 240.0f, 64.0f);
-    // unlifted instruction: ins_316(0, 0);
-    // semantic opcode reorder th15->th12: ins_307 -> ins_263; semantic=animation.play; verify semantics
+    // unsupported semantic op_key for th15->th12: anm.anm316
+    // original: ins_316(0, 0);
+    // semantic op_key lowering th15->th12: anm.play
     ins_263(1, 73);
     +90:
-    // unlifted instruction: ins_0();
+    // semantic op_key lowering th15->th12: flow.nop
+    ins_0();
     @BossCard2_at2(5, 1.5707964f) async;
     +40:
     @BossCard2_at2(6, -1.5707964f) async;
@@ -839,9 +885,10 @@ void BossCard2()
     $B = 1000;
     goto BossCard2_2884 @ 134;
     BossCard2_1248:
-    // semantic opcode reorder th15->th12: ins_302 -> ins_258; semantic=animation.select; verify semantics
-    ins_258(2);
-    // unlifted instruction: ins_313(0);
+    // semantic op_key lowering th15->th12: anm.select
+    ins_258(3);
+    // semantic op_key lowering th15->th12: anm.selected_play
+    ins_269(0);
     %A = [-9989.0f];
     @BossCard2_at(0, %A) async;
     ins_83(10);
@@ -873,9 +920,11 @@ void BossCard2()
     %A = %A - 0.523599f;
     @BossCard2_at(4, %A) async;
     BossCard2_2792:
-    // unlifted instruction: ins_316(0, 0);
+    // unsupported semantic op_key for th15->th12: anm.anm316
+    // original: ins_316(0, 0);
     ins_83(60);
-    // unlifted instruction: ins_412(30, 4, 1.0f);
+    // semantic op_key lowering th15->th12: movement.move_rand
+    ins_312(30, 4, 1.0f);
     ins_83(40);
     BossCard2_2884:
     if ($B--) goto BossCard2_1248 @ 134;
@@ -895,17 +944,17 @@ void BossCard2_at(var A, var B)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var C, D;
-    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
+    // semantic op_key lowering th15->th12: bullet.et_new
     ins_500($A);
-    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507($A, 1);
-    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502($A, 12, 4);
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506($A, 1, 1);
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504($A, %B, 0.034906585f);
-    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
     !E
     ins_505($A, 1.5f, 1.0f);
     !N
@@ -915,19 +964,21 @@ void BossCard2_at(var A, var B)
     !L
     ins_505($A, 3.5f, 1.0f);
     !*
-    // unlifted instruction: ins_611($A, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_611($A, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     $C = 1;
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504($A, %B, 0.034906585f);
-    // semantic opcode fallback th15->th12: ins_535 -> ins_435; semantic=difficulty.easy; verify semantics
+    // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($D, 6, 8, 8, 8);
     goto BossCard2_at_712 @ 0;
     BossCard2_at_488:
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506($A, $C, 1);
     $C = $C + 1;
-    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
+    // semantic op_key lowering th15->th12: bullet.fire
     ins_501($A);
     // dynamic wait preserved from difficulty literals
     !E
@@ -963,13 +1014,13 @@ void BossCard2_at2(var A, var B)
     !L
     ins_83(100);
     !*
-    // semantic opcode fallback th15->th12: ins_600 -> ins_500; semantic=bullet.emitter.00; verify semantics
+    // semantic op_key lowering th15->th12: bullet.et_new
     ins_500($A);
-    // semantic opcode fallback th15->th12: ins_607 -> ins_507; semantic=bullet.emitter.07; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507($A, 5);
-    // semantic opcode fallback th15->th12: ins_602 -> ins_502; semantic=bullet.emitter.02; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502($A, 12, 6);
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
     !E
     ins_506($A, 5, 16);
     !N
@@ -979,9 +1030,9 @@ void BossCard2_at2(var A, var B)
     !L
     ins_506($A, 1, 1);
     !*
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504($A, 0.0f, 0.034906585f);
-    // semantic opcode fallback th15->th12: ins_605 -> ins_505; semantic=bullet.emitter.05; ranked args from source difficulty literals
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
     !E
     ins_505($A, 1.0f, 0.8f);
     !N
@@ -991,25 +1042,27 @@ void BossCard2_at2(var A, var B)
     !L
     ins_505($A, 1.8f, 0.8f);
     !*
-    // unlifted instruction: ins_611($A, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // unlifted instruction: ins_627($A, 64.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th15->th12: bullet.distance
+    // dropped source-specific semantic op for th12: bullet.distance($A, 64.0f)
     $G = 60000;
     goto BossCard2_at2_1180 @ 0;
     BossCard2_at2_744:
     !L
-    // semantic opcode fallback th15->th12: ins_606 -> ins_506; semantic=bullet.emitter.06; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506($A, 5, 1);
     !*
     !ENH
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504($A, [-9998.0f], 0.0f);
     !*
     !L
-    // semantic opcode fallback th15->th12: ins_604 -> ins_504; semantic=bullet.emitter.04; verify semantics
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504($A, %E, 0.0f);
     !*
     %E = %E + 3.883222f;
-    // semantic opcode fallback th15->th12: ins_601 -> ins_501; semantic=bullet.emitter.01; verify semantics
+    // semantic op_key lowering th15->th12: bullet.fire
     ins_501($A);
     unless ($F < 1000) goto BossCard2_at2_1080 @ 0;
     $F = $F + 1;
@@ -1035,70 +1088,75 @@ void BossDead()
 {
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
-    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
+    // semantic op_key lowering th15->th12: unit.flag_set
     ins_402(156);
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(5);
-    // semantic opcode reorder th15->th12: ins_404 -> ins_304; semantic=movement.velocity.set; verify semantics
+    // semantic op_key lowering th15->th12: movement.velocity.set
     ins_304([-9998.0f], 0.4f);
     unless ([-9986] == 0) goto BossDead_260 @ 0;
-    // semantic opcode reorder th15->th12: ins_300 -> ins_256; semantic=enemy.create; verify semantics
+    // semantic op_key lowering th15->th12: enemy.create
     ins_256("Ecl_EtBreak2", 0.0f, 0.0f, 9999, 0, 0);
     goto BossDead_316 @ 0;
     BossDead_260:
-    // semantic opcode reorder th15->th12: ins_300 -> ins_256; semantic=enemy.create; verify semantics
+    // semantic op_key lowering th15->th12: enemy.create
     ins_256("Ecl_EtBreak2_ni", 0.0f, 0.0f, 9999, 0, 0);
     BossDead_316:
-    // semantic opcode fallback th15->th12: ins_525 -> ins_425; semantic=unit.property.25; verify semantics
+    // semantic op_key lowering th15->th12: enemy.enm_kill_all
     ins_425();
     +60:
-    // unsupported th15->th12 opcode ins_613: bullet/effect opcode is not TH12 opcode 513; parameter formats differ
-    // original: ins_613();
-    // semantic opcode fallback th15->th12: ins_523 -> ins_423; semantic=unit.property.23; verify semantics
+    // semantic op_key lowering th15->th12: bullet.clear_all
+    ins_510();
+    // semantic op_key lowering th15->th12: boss.spell_end
     ins_423();
     @BossItemPhase(40, 15, 64.0f);
-    // semantic opcode fallback th15->th12: ins_517 -> ins_417; semantic=unit.property.17; verify semantics
-    ins_417(30, 12, 0);
-    // semantic opcode reorder th15->th12: ins_307 -> ins_263; semantic=animation.play; verify semantics
+    // unsupported semantic op_key for th15->th12: unit.set_screen_shake
+    // original: ins_517(30, 12, 0);
+    // semantic op_key lowering th15->th12: anm.play
     ins_263(1, 32);
-    // semantic opcode reorder th15->th12: ins_307 -> ins_263; semantic=animation.play; verify semantics
+    // semantic op_key lowering th15->th12: anm.play
     ins_263(1, 64);
-    // semantic opcode fallback th15->th12: ins_516 -> ins_416; semantic=unit.property.16; verify semantics
+    // semantic op_key lowering th15->th12: unit.play_sound
     ins_416(5);
-    // semantic opcode fallback th15->th12: ins_512 -> ins_412; semantic=unit.property.12; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_boss
     ins_412(-1);
-    // unlifted instruction: ins_1();
-    // unlifted instruction: ins_1();
+    // semantic op_key lowering th15->th12: flow.delete
+    ins_1();
+    // semantic op_key lowering th15->th12: flow.delete
+    ins_1();
 }
 
 void BossEscape()
 {
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
-    // semantic opcode fallback th15->th12: ins_523 -> ins_423; semantic=unit.property.23; verify semantics
+    // semantic op_key lowering th15->th12: boss.spell_end
     ins_423();
-    // semantic opcode fallback th15->th12: ins_505 -> ins_405; semantic=unit.property.05; verify semantics
-    ins_405();
-    // semantic opcode fallback th15->th12: ins_525 -> ins_425; semantic=unit.property.25; verify semantics
+    // unsupported semantic op_key for th15->th12: movement.move_limit_reset
+    // original: ins_505();
+    // semantic op_key lowering th15->th12: enemy.enm_kill_all
     ins_425();
     unless ([-9986] == 0) goto BossEscape_208 @ 0;
-    // unlifted instruction: ins_615(640.0f);
+    // semantic op_key lowering th15->th12: bullet.cancel_radius
+    ins_512(640.0f);
     goto BossEscape_228 @ 0;
     BossEscape_208:
-    // unsupported th15->th12 opcode ins_616: bullet/effect opcode is not TH12 opcode 516; parameter formats differ
-    // original: ins_616(640.0f);
+    // semantic op_key lowering th15->th12: bullet.clear_radius
+    ins_513(640.0f);
     BossEscape_228:
-    // semantic opcode fallback th15->th12: ins_511 -> ins_411; semantic=unit.property.11; verify semantics
+    // semantic op_key lowering th15->th12: boss.life_set
     ins_411(100000);
-    // semantic opcode fallback th15->th12: ins_524 -> ins_424; semantic=unit.property.24; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(43);
-    // semantic opcode fallback th15->th12: ins_512 -> ins_412; semantic=unit.property.12; verify semantics
+    // semantic op_key lowering th15->th12: boss.set_boss
     ins_412(-1);
-    // semantic opcode fallback th15->th12: ins_502 -> ins_402; semantic=unit.property.02; verify semantics
+    // semantic op_key lowering th15->th12: unit.flag_set
     ins_402(16);
-    // semantic opcode reorder th15->th12: ins_401 -> ins_301; semantic=movement.position.tween; verify semantics
+    // semantic op_key lowering th15->th12: movement.position.tween
     ins_301(60, 4, -224.0f, -16.0f);
     ins_83(60);
-    // unlifted instruction: ins_1();
-    // unlifted instruction: ins_1();
+    // semantic op_key lowering th15->th12: flow.delete
+    ins_1();
+    // semantic op_key lowering th15->th12: flow.delete
+    ins_1();
 }

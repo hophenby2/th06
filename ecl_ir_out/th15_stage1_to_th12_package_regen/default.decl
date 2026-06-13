@@ -1,4 +1,4 @@
-// source: th15\default.decl
+// source: E:\fork\th062\th15\default.decl
 // source game: th15
 // target: th12
 // whole-file lowering is a structured draft; verify target-game scheduling and resources
@@ -121,11 +121,11 @@ void DeadAttackEt1()
     ins_506(0, 1, 1);
     ins_504(0, 0.0f, 0.05235988f);
     ins_505(0, [-9981.0f], 1.0f);
-    // unsupported th13+ transform for th12; preserved source ins_609: 0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 7, 2);
+    ins_502(0, 6, 2);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -304,7 +304,7 @@ void MainBossSpell()
     // Enemy lowering th13plus -> th12: enemy.create_abs -> ins_257
     ins_257("Boss", 144.0f, -16.0f, 40, 1000, 1);
     // semantic op_key lowering th15->th12: unit.boss_wait
-    // approximated bossWait on target without bossWait opcode: no-op
+    ins_420();
     // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(81);
     ins_83(170);
@@ -329,7 +329,7 @@ void MainMBossSpell()
     // Enemy lowering th13plus -> th12: enemy.create_abs -> ins_257
     ins_257("MBoss", 144.0f, -16.0f, 40, 1000, 1);
     // semantic op_key lowering th15->th12: unit.boss_wait
-    // approximated bossWait on target without bossWait opcode: no-op
+    ins_420();
     // semantic op_key lowering th15->th12: boss.set_chapter
     ins_424(81);
     ins_83(100);

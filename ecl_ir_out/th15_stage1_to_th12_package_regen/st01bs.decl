@@ -1,4 +1,4 @@
-// source: th15\st01bs.decl
+// source: E:\fork\th062\th15\st01bs.decl
 // source game: th15
 // target: th12
 // whole-file lowering is a structured draft; verify target-game scheduling and resources
@@ -21,11 +21,11 @@ void Boss()
     [-9947] = 1;
     // semantic op_key lowering th15->th12: movement.position.set
     ins_300(0.0f, 128.0f);
-    @EffChargePoint2(1.5707964f, -1.0471976f, 8, 2, 6);
-    @EffChargePoint2(1.5707964f, 1.0471976f, 10, 7, 3);
+    // dropped TH13+ charge-point effect call for TH12 stability: @EffChargePoint2(1.5707964f, -1.0471976f, 8, 2, 6);
+    // dropped TH13+ charge-point effect call for TH12 stability: @EffChargePoint2(1.5707964f, 1.0471976f, 10, 7, 3);
     ins_83(101);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.set_main
     ins_262(0, 0);
     // semantic op_key lowering th15->th12: unit.flag_clear
@@ -54,7 +54,7 @@ void Boss()
     // semantic op_key lowering th15->th12: anm.set_sprite
     ins_259(2, 116);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // unsupported semantic op_key for th15->th12: unit.fog
     // original: ins_629(160.0f, 15732608);
     // timeline rewrite: normal target boss flow should bypass source spell-test selector
@@ -92,7 +92,7 @@ void Boss1()
     // semantic op_key lowering th15->th12: unit.stars
     ins_440(1);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.set_main
     ins_262(0, 0);
     // semantic op_key lowering th15->th12: anm.play
@@ -134,7 +134,7 @@ void Boss1_at(var A, var B, var C)
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 13, 8);
+    ins_502(0, 12, 8);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -149,12 +149,12 @@ void Boss1_at(var A, var B, var C)
     !L
     ins_505(0, 4.1f, 1.0f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.selected_play
     ins_269(0);
     $F = 1;
@@ -184,7 +184,7 @@ void Boss1_at(var A, var B, var C)
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 18, 4);
+    ins_502(0, 17, 4);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504; ranked args from source difficulty literals
@@ -207,16 +207,16 @@ void Boss1_at(var A, var B, var C)
     !L
     ins_505(0, 4.1f, 1.0f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 1048576, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 1048576, 0, 0, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 2, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 3, 0, 268435456, 0, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.selected_play
     ins_269(0);
     // semantic op_key lowering th15->th12: unit.diff_i
@@ -265,9 +265,9 @@ void Boss1_at2()
     // semantic op_key lowering th15->th12: bullet.et_new
     ins_500(1);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(1, 3);
+    ins_507(1, 5);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(1, 20, 3);
+    ins_502(1, 19, 3);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
     !E
     ins_506(1, 1, 3);
@@ -290,8 +290,8 @@ void Boss1_at2()
     !L
     ins_505(1, 5.0f, 0.8f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(1, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     $C = 600;
     goto Boss1_at2_800 @ 0;
     Boss1_at2_560:
@@ -375,7 +375,7 @@ void Boss2()
     [-9948] = 0;
     [-9947] = 1;
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.set_main
     ins_262(0, 0);
     // semantic op_key lowering th15->th12: boss.set_interrupt
@@ -425,7 +425,7 @@ void Boss2_at(var A, var B, var C)
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 13, 8);
+    ins_502(0, 12, 8);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -440,12 +440,12 @@ void Boss2_at(var A, var B, var C)
     !L
     ins_505(0, 3.5f, 1.0f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.selected_play
     ins_269(0);
     $F = 1;
@@ -493,9 +493,9 @@ void Boss2_at2()
     // semantic op_key lowering th15->th12: bullet.et_new
     ins_500(1);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(1, 3);
+    ins_507(1, 5);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(1, 13, 6);
+    ins_502(1, 12, 6);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
     !E
     ins_506(1, 5, 10);
@@ -518,8 +518,8 @@ void Boss2_at2()
     !L
     ins_505(1, 4.0f, 0.8f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(1, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: bullet.distance
     // dropped source-specific semantic op for th12: bullet.distance(1, 64.0f)
     $C = 600;
@@ -664,7 +664,7 @@ void BossCard1_at(var A)
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 13, 6);
+    ins_502(0, 12, 6);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -679,12 +679,12 @@ void BossCard1_at(var A)
     !L
     ins_505(0, 4.0f, 1.0f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.selected_play
     ins_269(0);
     $B = 1;
@@ -741,7 +741,7 @@ void BossCard1_at2(var A, var B)
     ins_507($A, 3);
     !*
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502($A, 18, 3);
+    ins_502($A, 17, 3);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506($A, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -756,18 +756,18 @@ void BossCard1_at2(var A, var B)
     !L
     ins_505($A, 2.0f, 1.0f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 1048576, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 1048576, 0, 1, -999999, -999999.0f, -999999.0f);
-    // unsupported semantic op_key for th15->th12: bullet.transform2
-    // original: ins_612($A, 0, 16, 60, 1, 0, 0, %B, -999999.0f, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 512, 0, 12, 2, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 2, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 3, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th15->th12: bullet.transform2
+    // dropped source-specific semantic op for th12: bullet.transform2($A, 0, 16, 60, 1, 0, 0, %B, -999999.0f, -999999.0f, -999999.0f)
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 4, 0, 2048, 12, 2, -999999.0f, -999999.0f);
     $F = 1;
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($G, 6, 20, 40, 60);
@@ -886,7 +886,7 @@ void BossCard2()
     goto BossCard2_2884 @ 134;
     BossCard2_1248:
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.selected_play
     ins_269(0);
     %A = [-9989.0f];
@@ -949,7 +949,7 @@ void BossCard2_at(var A, var B)
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507($A, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502($A, 13, 4);
+    ins_502($A, 12, 4);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506($A, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -964,10 +964,10 @@ void BossCard2_at(var A, var B)
     !L
     ins_505($A, 3.5f, 1.0f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     $C = 1;
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504($A, %B, 0.034906585f);
@@ -1017,9 +1017,9 @@ void BossCard2_at2(var A, var B)
     // semantic op_key lowering th15->th12: bullet.et_new
     ins_500($A);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507($A, 3);
+    ins_507($A, 5);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502($A, 13, 6);
+    ins_502($A, 12, 6);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
     !E
     ins_506($A, 5, 16);
@@ -1042,8 +1042,8 @@ void BossCard2_at2(var A, var B)
     !L
     ins_505($A, 1.8f, 0.8f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: bullet.distance
     // dropped source-specific semantic op for th12: bullet.distance($A, 64.0f)
     $G = 60000;

@@ -1,4 +1,4 @@
-// source: th15\st01mbs2.decl
+// source: E:\fork\th062\th15\st01mbs2.decl
 // source game: th15
 // target: th12
 // whole-file lowering is a structured draft; verify target-game scheduling and resources
@@ -28,7 +28,7 @@ void MBossB()
     // semantic op_key lowering th15->th12: anm.set_sprite
     ins_259(1, 107);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.set_main
     ins_262(0, 0);
     // semantic op_key lowering th15->th12: unit.flag_set
@@ -93,7 +93,7 @@ void MBossB1()
 {
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
-    @EffChargePoint3(1.5707964f, 0.5235988f, 8, 3, 3, 7);
+    // dropped TH13+ charge-point effect call for TH12 stability: @EffChargePoint3(1.5707964f, 0.5235988f, 8, 3, 3, 7);
     ins_83(160);
     goto MBossB1_488 @ 0;
     MBossB1_164:
@@ -126,7 +126,7 @@ void MBossB1_at(var A, var B, var C)
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 13, 8);
+    ins_502(0, 12, 8);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -141,12 +141,12 @@ void MBossB1_at(var A, var B, var C)
     !L
     ins_505(0, 4.1f, 1.0f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.selected_play
     ins_269(0);
     $F = 1;
@@ -179,7 +179,7 @@ void MBossB1_at(var A, var B, var C)
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 18, 4);
+    ins_502(0, 17, 4);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504; ranked args from source difficulty literals
@@ -202,16 +202,16 @@ void MBossB1_at(var A, var B, var C)
     !L
     ins_505(0, 4.1f, 1.0f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 1048576, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 1048576, 0, 0, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 2, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 3, 0, 268435456, 0, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.selected_play
     ins_269(0);
     // semantic op_key lowering th15->th12: unit.diff_i
@@ -260,9 +260,9 @@ void MBossB1_at2()
     // semantic op_key lowering th15->th12: bullet.et_new
     ins_500(1);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(1, 3);
+    ins_507(1, 5);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(1, 20, 3);
+    ins_502(1, 19, 3);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(1, 1, 3);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -277,8 +277,8 @@ void MBossB1_at2()
     !L
     ins_505(1, 1.0f, 0.8f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(1, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     $C = 600;
     goto MBossB1_at2_720 @ 0;
     MBossB1_at2_480:
@@ -520,7 +520,7 @@ void MBossCardB1_at()
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502(0, 13, 6);
+    ins_502(0, 12, 6);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506(0, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -535,12 +535,12 @@ void MBossCardB1_at()
     !L
     ins_505(0, 2.1f, 1.0f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509(0, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: anm.select
-    ins_258(2);
+    ins_258(3);
     // semantic op_key lowering th15->th12: anm.selected_play
     ins_269(0);
     $B = 1;
@@ -587,7 +587,7 @@ void MBossCardB1_at2(var A, var B)
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507($A, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
-    ins_502($A, 20, 2);
+    ins_502($A, 19, 2);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
     ins_506($A, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
@@ -602,16 +602,16 @@ void MBossCardB1_at2(var A, var B)
     !L
     ins_505($A, 2.1f, 1.0f);
     !*
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 2, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 1048576, 0, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, -2147483648, 0, 60, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform
-    ins_509($A, 0, 8, 0, 60, -999999, 0.001f, %B);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 2, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 3, 0, 4096, 60, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509($A, 4, 0, 8, 60, -999999, 0.001f, %B);
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($D, 10, 10, 1, 1);
     %E = 4.0f;

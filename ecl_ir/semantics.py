@@ -99,7 +99,9 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("movement.bezier", {GEN_TH13_PLUS: 425, GEN_TH12: 325}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
     SemanticOpcode("movement.bezier_rel", {GEN_TH13_PLUS: 426, GEN_TH12: 326}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
     SemanticOpcode("movement.reset", {GEN_TH13_PLUS: 427, GEN_TH12: 327}, {(GEN_TH13_PLUS, GEN_TH12): ()}),
-    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(500, 526)),
+    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(500, 520)),
+    SemanticOpcode("unit.boss_wait", {GEN_TH13_PLUS: 520, GEN_TH12: 420}),
+    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(521, 526)),
     SemanticOpcode("unit.property.27", {GEN_TH13_PLUS: 527, GEN_TH12: 427}),
     SemanticOpcode("unit.property.28", {GEN_TH13_PLUS: 528, GEN_TH12: 428}),
     SemanticOpcode("unit.property.29", {GEN_TH13_PLUS: 529, GEN_TH12: 435}),
@@ -217,15 +219,61 @@ add_reference_name_opcode_maps()
 
 
 BULLET_SHAPES: tuple[SemanticValue, ...] = (
-    SemanticValue("orb_medium", {GEN_TH13_PLUS: "7", GEN_TH12: "6", GEN_TH10_TH11: "6", GEN_TH06_TH08: "6"}),
-    SemanticValue("kunai_or_shard", {GEN_TH13_PLUS: "13", GEN_TH12: "12", GEN_TH10_TH11: "12", GEN_TH06_TH08: "9"}),
-    SemanticValue("small_round", {GEN_TH13_PLUS: "18", GEN_TH12: "18", GEN_TH10_TH11: "18", GEN_TH06_TH08: "8"}),
+    SemanticValue("point", {GEN_TH13_PLUS: "0", GEN_TH12: "0", GEN_TH10_TH11: "0", GEN_TH06_TH08: "0"}),
+    SemanticValue("point_highlight", {GEN_TH13_PLUS: "1", GEN_TH12: "1", GEN_TH10_TH11: "1", GEN_TH06_TH08: "0"}),
+    SemanticValue("grape", {GEN_TH13_PLUS: "2", GEN_TH12: "2", GEN_TH10_TH11: "2", GEN_TH06_TH08: "2"}),
+    SemanticValue("orb_small", {GEN_TH13_PLUS: "4", GEN_TH12: "3", GEN_TH10_TH11: "3", GEN_TH06_TH08: "3"}),
+    SemanticValue("orb_small_highlight", {GEN_TH13_PLUS: "5", GEN_TH12: "4", GEN_TH10_TH11: "4", GEN_TH06_TH08: "3"}),
+    SemanticValue("orb_ring", {GEN_TH13_PLUS: "6", GEN_TH12: "5", GEN_TH10_TH11: "5", GEN_TH06_TH08: "6"}),
+    SemanticValue("orb_ring_highlight", {GEN_TH13_PLUS: "7", GEN_TH12: "6", GEN_TH10_TH11: "6", GEN_TH06_TH08: "6"}),
+    SemanticValue("rice", {GEN_TH13_PLUS: "8", GEN_TH12: "7", GEN_TH10_TH11: "7", GEN_TH06_TH08: "7"}),
+    SemanticValue("chain", {GEN_TH13_PLUS: "9", GEN_TH12: "8", GEN_TH10_TH11: "8", GEN_TH06_TH08: "8"}),
+    SemanticValue("needle", {GEN_TH13_PLUS: "10", GEN_TH12: "9", GEN_TH10_TH11: "9", GEN_TH06_TH08: "9"}),
+    SemanticValue("amulet", {GEN_TH13_PLUS: "11", GEN_TH12: "10", GEN_TH10_TH11: "10", GEN_TH06_TH08: "10"}),
+    SemanticValue("scale", {GEN_TH13_PLUS: "12", GEN_TH12: "11", GEN_TH10_TH11: "11", GEN_TH06_TH08: "11"}),
+    SemanticValue("bell", {GEN_TH13_PLUS: "13", GEN_TH12: "12", GEN_TH10_TH11: "12", GEN_TH06_TH08: "9"}),
+    SemanticValue("cancel_effect", {GEN_TH13_PLUS: "14", GEN_TH12: "13", GEN_TH10_TH11: "13", GEN_TH06_TH08: "13"}),
+    SemanticValue("bacillus", {GEN_TH13_PLUS: "15", GEN_TH12: "14", GEN_TH10_TH11: "14", GEN_TH06_TH08: "14"}),
+    SemanticValue("small_star", {GEN_TH13_PLUS: "16", GEN_TH12: "15", GEN_TH10_TH11: "15", GEN_TH06_TH08: "8"}),
+    SemanticValue("coin", {GEN_TH13_PLUS: "17", GEN_TH12: "16", GEN_TH10_TH11: "16", GEN_TH06_TH08: "16"}),
+    SemanticValue("orb_medium", {GEN_TH13_PLUS: "18", GEN_TH12: "17", GEN_TH10_TH11: "17", GEN_TH06_TH08: "8"}),
+    SemanticValue("orb_medium_highlight", {GEN_TH13_PLUS: "19", GEN_TH12: "18", GEN_TH10_TH11: "18", GEN_TH06_TH08: "8"}),
+    SemanticValue("ellipse", {GEN_TH13_PLUS: "20", GEN_TH12: "19", GEN_TH10_TH11: "19", GEN_TH06_TH08: "19"}),
+    SemanticValue("knife", {GEN_TH13_PLUS: "21", GEN_TH12: "20", GEN_TH10_TH11: "20", GEN_TH06_TH08: "20"}),
+    SemanticValue("butterfly", {GEN_TH13_PLUS: "22", GEN_TH12: "21", GEN_TH10_TH11: "21", GEN_TH06_TH08: "21"}),
+    SemanticValue("big_star", {GEN_TH13_PLUS: "23", GEN_TH12: "22", GEN_TH10_TH11: "22", GEN_TH06_TH08: "8"}),
+    SemanticValue("big_star_reverse", {GEN_TH13_PLUS: "24", GEN_TH12: "22", GEN_TH10_TH11: "22", GEN_TH06_TH08: "8"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11, GEN_TH06_TH08)),
+    SemanticValue("heart", {GEN_TH13_PLUS: "29", GEN_TH12: "25", GEN_TH10_TH11: "25", GEN_TH06_TH08: "25"}),
 )
 BULLET_SHAPE_BY_GENERATION_VALUE: dict[tuple[str, str], SemanticValue] = {}
 for shape in BULLET_SHAPES:
     for generation, value in shape.values.items():
         BULLET_SHAPE_BY_GENERATION_VALUE.setdefault((generation, value), shape)
 BULLET_SHAPE_BY_SEMANTIC = {shape.semantic: shape for shape in BULLET_SHAPES}
+
+BULLET_TRANSFORM_MODES: tuple[SemanticValue, ...] = (
+    SemanticValue("spawn_step", {GEN_TH13_PLUS: "1", GEN_TH12: "1"}),
+    SemanticValue("set_mist", {GEN_TH13_PLUS: "2", GEN_TH12: "2"}),
+    SemanticValue("accel", {GEN_TH13_PLUS: "4", GEN_TH12: "4"}),
+    SemanticValue("tangent_accel", {GEN_TH13_PLUS: "8", GEN_TH12: "8"}),
+    SemanticValue("pause_then_velocity", {GEN_TH13_PLUS: "16", GEN_TH12: "16"}),
+    SemanticValue("bounce", {GEN_TH13_PLUS: "64", GEN_TH12: "256"}),
+    SemanticValue("uncancelable_time", {GEN_TH13_PLUS: "128", GEN_TH12: "512"}),
+    SemanticValue("offscreen_time", {GEN_TH13_PLUS: "256", GEN_TH12: "1024"}),
+    SemanticValue("shape_change", {GEN_TH13_PLUS: "512", GEN_TH12: "2048"}),
+    SemanticValue("delete", {GEN_TH13_PLUS: "1024", GEN_TH12: "8192"}),
+    SemanticValue("sound", {GEN_TH13_PLUS: "2048", GEN_TH12: "16384"}),
+    SemanticValue("wait_next", {GEN_TH13_PLUS: "-2147483648", GEN_TH12: "4096"}),
+    SemanticValue("jump", {GEN_TH13_PLUS: "65536", GEN_TH12: "4194304"}),
+    SemanticValue("independent_velocity", {GEN_TH13_PLUS: "524288", GEN_TH12: "134217728"}),
+    SemanticValue("highlight", {GEN_TH13_PLUS: "1048576", GEN_TH12: "268435456"}),
+    SemanticValue("velocity_over_time", {GEN_TH13_PLUS: "2097152", GEN_TH12: "536870912"}),
+)
+BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE: dict[tuple[str, str], SemanticValue] = {}
+for mode in BULLET_TRANSFORM_MODES:
+    for generation, value in mode.values.items():
+        BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE.setdefault((generation, value), mode)
+BULLET_TRANSFORM_MODE_BY_SEMANTIC = {mode.semantic: mode for mode in BULLET_TRANSFORM_MODES}
 
 SPREAD_STYLES: tuple[SemanticValue, ...] = (
     SemanticValue("single_flower.right.aimed", {GEN_TH12: "2", GEN_TH10_TH11: "2"}),
@@ -273,6 +321,47 @@ def encode_bullet_shape(semantic: str, target: str, fallback: Any = None) -> str
         if encoded is not None:
             return encoded
     return plain(fallback, "0")
+
+
+def bullet_transform_mode_semantic(game: str, mode: Any) -> str:
+    raw = plain(mode).strip()
+    semantic = BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE.get((generation_for_game(game), raw))
+    if semantic:
+        return semantic.semantic
+    return f"raw:{raw}"
+
+
+def encode_bullet_transform_mode(semantic: str, target: str, fallback: Any = None) -> str:
+    if semantic.startswith("raw:"):
+        return semantic[4:]
+    mode = BULLET_TRANSFORM_MODE_BY_SEMANTIC.get(semantic)
+    if mode:
+        encoded = mode.encode(generation_for_game(target))
+        if encoded is not None:
+            return encoded
+    return plain(fallback, "0")
+
+
+def remap_bullet_transform_mode(source_game: str, target: str, mode: Any) -> str:
+    return encode_bullet_transform_mode(bullet_transform_mode_semantic(source_game, mode), target, mode)
+
+
+def th13_append_transform_to_th12_509(args: list[object], index: int, source_game: str = "th15") -> list[str] | None:
+    if len(args) != 7:
+        return None
+    et_id, channel, mode, a, b, r, s = [str(arg) for arg in args]
+    mapped_mode = remap_bullet_transform_mode(source_game, "th12", mode)
+    # TH13+ ins_611 appends a transform and omits the transform index.
+    # TH12 ins_509 needs that index explicitly: et, index, channel, mode, a, b, r, s.
+    return [et_id, str(index), channel, mapped_mode, a, b, r, s]
+
+
+def th13_transform_set_to_th12_509(args: list[object], source_game: str = "th15") -> list[str] | None:
+    if len(args) != 8:
+        return None
+    converted = [str(arg) for arg in args]
+    converted[3] = remap_bullet_transform_mode(source_game, "th12", converted[3])
+    return converted
 
 
 def spread_semantic(game: str, style: Any) -> dict[str, Any]:

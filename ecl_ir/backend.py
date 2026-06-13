@@ -5,7 +5,7 @@ from .arg_adapter import adapt_args_for_op_key, adapt_values_for_generation
 from .model import BulletEmitter
 from .op_ir import target_opcode_for_op_key
 from .reference import is_opcode_supported, validate_opcode_args
-from .semantics import encode_bullet_shape, encode_spread_style, generation_for_game, remap_raw_arg_by_semantic, th12_double_flower_pair
+from .semantics import encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_raw_arg_by_semantic, th12_double_flower_pair, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509
 
 INT_SENTINEL = "-999999"
 FLOAT_SENTINEL = "-999999.0f"
@@ -190,14 +190,13 @@ def compile_lossy_semantic_fallback(event: dict[str, object], target: str) -> st
         "raw.et_delay", "raw.et_on_auto", "raw.set_life_bar", "raw.ins_153", "raw.timer_set", "raw.set_lives",
         "raw.life_threshold", "flow.float_time", "flow.math_circle_pos", "flow.inc", "raw.ins_173", "raw.ins_184",
         "flow.math_angle", "flow.math_distance", "flow.et_protect_range", "raw.val_set", "raw.player_nullify", "anm.familiar",
+        "bullet.transform", "bullet.transform2",
     }:
         return f"// dropped source-specific semantic op for {target}: {op_key}({args})"
     if target in STACK_VM_TARGETS and op_key == "flow.fset_rand_sign":
         return f"// approximated random-sign float assignment unavailable in target stack VM: {op_key}({args})"
     if target in {"th13", "th14", "th15", "th16", "th17", "th18"} and op_key == "unit.death_wait":
         return "// approximated deathWait on target without deathWait opcode: no-op"
-    if target in {"th10", "th11", "th12"} and op_key == "unit.boss_wait":
-        return "// approximated bossWait on target without bossWait opcode: no-op"
     if op_key == "boss.set_interrupt" and str(event.get("args", [""])[0]) == "-1":
         return f"// dropped disabled interrupt for {target}: setInterrupt(-1)"
     if op_key == "flow.call_async" and str(event.get("args", ["", ""])[-1]) == "-1":
@@ -341,6 +340,10 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
     op_key = str(event.get("op_key") or "")
     if not op_key:
         return None
+    source_game = str(event.get("source_game") or "")
+    source_opcode = int(event.get("source_opcode") or -1)
+    if target == "th12" and source_game in {"th13", "th14", "th15", "th16", "th17", "th18"} and source_opcode in {611, 612}:
+        return compile_lossy_semantic_fallback(event, target)
     if op_key == "flow.call_async" and str(event.get("source_game") or "") in {"th06", "th07", "th08"} and str(event.get("args", ["", ""])[-1]) == "-1":
         return f"// dropped disabled async call for {target}: callAsync(..., -1)"
     if op_key == "flow.float_time" and target not in {"th13", "th14", "th15", "th16", "th17", "th18"}:
@@ -354,12 +357,15 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
     if lowered := compile_th08_anm_alias(event, target):
         return lowered
     opcode = target_opcode_for_op_key(op_key, target)
+    semantic_map = opcode_map_for(source_game, target, source_opcode) if source_game and source_opcode >= 0 else None
+    if opcode is None and semantic_map is not None:
+        opcode = semantic_map.target_opcode
     if opcode is None or not is_opcode_supported(target, opcode) or not target_opcode_is_safe(target, opcode):
         return compile_lossy_semantic_fallback(event, target)
-    source_game = str(event.get("source_game") or "")
-    source_opcode = int(event.get("source_opcode") or -1)
     args = [str(arg) for arg in event.get("args", [])]
-    if source_game and source_opcode >= 0:
+    if semantic_map is not None and semantic_map.arg_order is not None:
+        args = [args[index] for index in semantic_map.arg_order if index < len(args)]
+    elif source_game and source_opcode >= 0:
         args = remap_raw_arg_by_semantic(source_game, target, source_opcode, opcode, args)
     adapted_args = adapt_args_for_op_key(op_key, source_game, source_opcode, target, opcode, args)
     if adapted_args is None:
@@ -1235,9 +1241,12 @@ def compile_th12(e: BulletEmitter) -> str:
         comment = difficulty_comment(field, value)
         if comment:
             lines.insert(0, comment.replace("lowered using", "preserved as TH12 difficulty table; default preview"))
+    next_transform_index = 0
     for transform in e.transforms:
         if transform.raw_opcode == 509 and len(transform.raw_args) == 8:
             lines.append(f"ins_509({', '.join(transform.raw_args)});")
+            if str(transform.raw_args[0]) == str(emitter_id) and re.fullmatch(r"-?\d+", str(transform.raw_args[1])):
+                next_transform_index = max(next_transform_index, int(str(transform.raw_args[1])) + 1)
         elif transform.raw_opcode == 510 and len(transform.raw_args) == 0:
             lines.append("ins_510();")
         elif transform.raw_opcode == 511 and len(transform.raw_args) == 2:
@@ -1254,7 +1263,25 @@ def compile_th12(e: BulletEmitter) -> str:
             if aux_emitter_id:
                 aux_args = [aux_emitter_id, *transform.raw_args[1:]]
                 lines.extend(emit_instruction_with_ranked_args(522, aux_args, [aux_emitter_id, "1", "1", "1", "1", "1", "1", "1", "1"]))
-        elif transform.raw_opcode in {609, 610, 611, 612}:
+        elif transform.raw_opcode == 609 and len(transform.raw_args) == 8:
+            converted = th13_transform_set_to_th12_509(transform.raw_args, e.game)
+            if not converted:
+                lines.append(f"// unsupported th13+ transform for th12; preserved source ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
+                continue
+            lines.append(f"ins_509({', '.join(converted)});")
+            if str(transform.raw_args[0]) == str(emitter_id) and re.fullmatch(r"-?\d+", str(transform.raw_args[1])):
+                next_transform_index = max(next_transform_index, int(str(transform.raw_args[1])) + 1)
+        elif transform.raw_opcode == 611 and len(transform.raw_args) == 7:
+            converted = th13_append_transform_to_th12_509(transform.raw_args, next_transform_index, e.game)
+            if converted:
+                lines.append(f"ins_509({', '.join(converted)});")
+                if aux_emitter_id and str(transform.raw_args[0]) == str(emitter_id):
+                    aux_converted = [aux_emitter_id, *converted[1:]]
+                    lines.append(f"ins_509({', '.join(aux_converted)});")
+                next_transform_index += 1
+            else:
+                lines.append(f"// unsupported th13+ transform for th12; preserved source ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
+        elif transform.raw_opcode in {610, 612}:
             lines.append(f"// unsupported th13+ transform for th12; preserved source ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
         elif transform.raw_opcode in {510, 511, 512}:
             lines.append(f"// unsupported th12 transform opcode/arity in generated context; preserved source ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
