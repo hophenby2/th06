@@ -1059,26 +1059,26 @@ void GirlD01_at()
     ins_502(2, 6, 4);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; mirrored to double-flower slot 2; ranked args from source difficulty literals
     !E
-    ins_506(0, 10, 2);
+    ins_506(0, 10, 1);
     !N
-    ins_506(0, 10, 6);
+    ins_506(0, 10, 3);
     !H
-    ins_506(0, 10, 6);
+    ins_506(0, 10, 3);
     !L
-    ins_506(0, 10, 6);
+    ins_506(0, 10, 3);
     !*
     !E
-    ins_506(2, 10, 2);
+    ins_506(2, 10, 1);
     !N
-    ins_506(2, 10, 6);
+    ins_506(2, 10, 3);
     !H
-    ins_506(2, 10, 6);
+    ins_506(2, 10, 3);
     !L
-    ins_506(2, 10, 6);
+    ins_506(2, 10, 3);
     !*
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504; mirrored to double-flower slot 2
-    ins_504(0, 0.0f, 0.05235988f);
-    ins_504(2, 0.0f, 0.05235988f);
+    ins_504(0, -0.15707963f, -0.05235988f);
+    ins_504(2, 0.15707963f, 0.05235988f);
     // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; mirrored to double-flower slot 2
     ins_505(0, 1.6f, 1.6f);
     ins_505(2, 1.6f, 1.6f);
@@ -1250,26 +1250,26 @@ void GirlD02_at()
     ins_502(2, 6, 2);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; mirrored to double-flower slot 2; ranked args from source difficulty literals
     !E
-    ins_506(0, 8, 2);
+    ins_506(0, 8, 1);
     !N
-    ins_506(0, 8, 6);
+    ins_506(0, 8, 3);
     !H
-    ins_506(0, 8, 8);
+    ins_506(0, 8, 4);
     !L
-    ins_506(0, 8, 6);
+    ins_506(0, 8, 3);
     !*
     !E
-    ins_506(2, 8, 2);
+    ins_506(2, 8, 1);
     !N
-    ins_506(2, 8, 6);
+    ins_506(2, 8, 3);
     !H
-    ins_506(2, 8, 8);
+    ins_506(2, 8, 4);
     !L
-    ins_506(2, 8, 6);
+    ins_506(2, 8, 3);
     !*
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504; mirrored to double-flower slot 2
-    ins_504(0, 0.0f, 0.05235988f);
-    ins_504(2, 0.0f, 0.05235988f);
+    ins_504(0, -0.19634954f, -0.05235988f);
+    ins_504(2, 0.19634954f, 0.05235988f);
     // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; mirrored to double-flower slot 2; ranked args from source difficulty literals
     !E
     ins_505(0, 1.6f, 1.6f);

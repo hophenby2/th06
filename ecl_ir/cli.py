@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -542,7 +543,7 @@ def emit_raw_timeline_body(timeline, target: str, rewrites: list[object] | None 
     lines.append("    // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.")
     emitted_spelltest_skip = False
     source_game = getattr(timeline, "game", "unknown")
-    bullet_state = BulletLoweringState({}, {}) if generation_for_game(source_game) == "th13_plus" and generation_for_game(target) == "th12" else None
+    bullet_state = BulletLoweringState({}, {}, {}) if generation_for_game(source_game) == "th13_plus" and generation_for_game(target) == "th12" else None
     boss_rewrite = find_rewrite(rewrites, "boss.skip_debug_spell_selector")
     for event in timeline.fields.get("statements", []):
         if boss_rewrite and matches_condition_rewrite(event, boss_rewrite):
@@ -569,6 +570,7 @@ def emit_raw_timeline_body(timeline, target: str, rewrites: list[object] | None 
 class BulletLoweringState:
     double_flower_aux: dict[str, str]
     transform_next_index: dict[str, int]
+    double_flower_ways: dict[str, str]
 
     def activate_double_flower(self, emitter_id: str) -> str | None:
         aux_id = th12_aux_emitter_id(emitter_id)
@@ -579,6 +581,7 @@ class BulletLoweringState:
 
     def deactivate_double_flower(self, emitter_id: str) -> None:
         self.double_flower_aux.pop(emitter_id, None)
+        self.double_flower_ways.pop(emitter_id, None)
 
     def aux_for(self, emitter_id: str) -> str | None:
         return self.double_flower_aux.get(emitter_id)
@@ -603,6 +606,13 @@ class BulletLoweringState:
         self.transform_next_index[emitter_id] = 0
         self.deactivate_double_flower(emitter_id)
 
+    def observe_count(self, emitter_id: str, ways: object) -> None:
+        if self.aux_for(emitter_id):
+            self.double_flower_ways[emitter_id] = str(ways)
+
+    def ways_for(self, emitter_id: str) -> str | None:
+        return self.double_flower_ways.get(emitter_id)
+
 
 def make_bullet_lowering_state(function_objects: list[object], source_game: str, target: str) -> BulletLoweringState | None:
     if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
@@ -617,7 +627,7 @@ def make_bullet_lowering_state(function_objects: list[object], source_game: str,
             aux_id = th12_aux_emitter_id(emitter_id)
             if aux_id:
                 aux[emitter_id] = aux_id
-    return BulletLoweringState(aux, {})
+    return BulletLoweringState(aux, {}, {})
 
 
 def lower_bullet_fire_opcode(opcode: int, args: list[object], source_game: str, target: str, bullet_state: BulletLoweringState | None) -> list[str] | None:
@@ -638,6 +648,99 @@ def emitter_arg_replaced(args: list[str], emitter_id: str) -> list[str]:
     if not args:
         return args
     return [emitter_id, *args[1:]]
+
+
+def negated_float_expr(expr: str) -> str:
+    text = str(expr).strip()
+    match = re.fullmatch(r"([-+]?)(\d+(?:\.\d+)?f?)", text)
+    if match:
+        sign, number = match.groups()
+        if sign == "-":
+            return number
+        return f"-{number}"
+    return f"0.0f - ({text})"
+
+
+def parse_float_literal(expr: str) -> float | None:
+    text = str(expr).strip()
+    if re.fullmatch(r"[-+]?\d+(?:\.\d+)?f?", text):
+        return float(text.rstrip("f"))
+    return None
+
+
+def format_float_literal(value: float) -> str:
+    text = f"{value:.8f}".rstrip("0").rstrip(".")
+    if text == "-0":
+        text = "0"
+    if "." not in text:
+        text += ".0"
+    return f"{text}f"
+
+
+def add_float_expr(expr: str, delta: str) -> str:
+    text = str(expr).strip()
+    delta = str(delta).strip()
+    base_value = parse_float_literal(text)
+    delta_value = parse_float_literal(delta)
+    if base_value is not None and delta_value is not None:
+        return format_float_literal(base_value + delta_value)
+    if delta.startswith("-"):
+        return f"{text} - {delta[1:]}"
+    return f"{text} + {delta}"
+
+
+def double_flower_center_delta(ways: str | None) -> str | None:
+    if not ways:
+        return None
+    text = str(ways).strip()
+    if text in {"", "0"}:
+        return None
+    ways_value = parse_float_literal(text)
+    if ways_value is None or ways_value == 0:
+        return None
+    return format_float_literal(math.pi / (2.0 * ways_value))
+
+
+def double_flower_aux_config_args(opcode: int, args: list[str], aux_id: str) -> list[str]:
+    aux_args = emitter_arg_replaced(args, aux_id)
+    return aux_args
+
+
+def halve_positive_int_literal(value: object) -> str:
+    text = str(value).strip()
+    if re.fullmatch(r"[-+]?\d+", text):
+        number = int(text)
+        if number > 1:
+            return str(max(1, number // 2))
+    return text
+
+
+def halve_rank_group(group: dict[str, str]) -> dict[str, str]:
+    return {key: halve_positive_int_literal(value) for key, value in group.items()}
+
+
+def halve_rank_placeholder_group(arg: str, difficulty_literals: object) -> object:
+    text = str(arg).strip()
+    match = RANK_PLACEHOLDER_RE.fullmatch(text)
+    if not match:
+        return difficulty_literals
+    group_index = int(match.group(1)) - 1
+    if isinstance(difficulty_literals, list):
+        groups = list(difficulty_literals)
+        if 0 <= group_index < len(groups) and isinstance(groups[group_index], dict):
+            groups[group_index] = halve_rank_group(groups[group_index])
+        return groups
+    if isinstance(difficulty_literals, dict) and group_index == 0:
+        return halve_rank_group(difficulty_literals)
+    return difficulty_literals
+
+
+def halve_double_flower_layer_args(args: list[str], difficulty_literals: object) -> tuple[list[str], object]:
+    if len(args) < 3:
+        return args, difficulty_literals
+    adjusted = args[:]
+    adjusted[2] = halve_positive_int_literal(adjusted[2])
+    return adjusted, halve_rank_placeholder_group(args[2], difficulty_literals)
 
 
 def ranked_or_plain_lines(
@@ -713,7 +816,25 @@ def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str
             bullet_state.deactivate_double_flower(rendered_args[0])
     rendered_args = remap_raw_arg_by_semantic(source_game, target, opcode, mapped, rendered_args)
     aux_id = bullet_state.aux_for(str(args[0])) if bullet_state and args else None
-    aux_args = emitter_arg_replaced(rendered_args, aux_id) if aux_id else None
+    if bullet_state and opcode == 606 and len(rendered_args) >= 2 and args:
+        bullet_state.observe_count(str(args[0]), rendered_args[1])
+    aux_args = double_flower_aux_config_args(opcode, rendered_args, aux_id) if aux_id else None
+    if aux_id and opcode == 606:
+        rendered_args, difficulty_literals = halve_double_flower_layer_args(rendered_args, difficulty_literals)
+        aux_args = double_flower_aux_config_args(opcode, rendered_args, aux_id)
+    if aux_id and opcode == 604 and len(rendered_args) >= 3:
+        # The primary double-flower slot is the TH12 left-bias flower, and the
+        # auxiliary slot is right-bias.  Reverse the source angular step on the
+        # left side, and offset both sides by pi/(2*way) so their shared center
+        # stays aligned with TH15's native double-flower center.
+        delta = double_flower_center_delta(bullet_state.ways_for(str(args[0])) if bullet_state else None)
+        rendered_args = rendered_args[:]
+        if delta:
+            rendered_args[1] = add_float_expr(rendered_args[1], f"-{delta}")
+        rendered_args[2] = negated_float_expr(rendered_args[2])
+        if aux_args and delta:
+            aux_args = aux_args[:]
+            aux_args[1] = add_float_expr(aux_args[1], delta)
     comment = f"    // dynamic bullet config lowering {source_game}->{target}: ins_{opcode} -> ins_{mapped}"
     if aux_args:
         comment = f"    // dynamic bullet config lowering {source_game}->{target}: ins_{opcode} -> ins_{mapped}; mirrored to double-flower slot {aux_id}"
