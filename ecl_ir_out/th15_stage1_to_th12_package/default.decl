@@ -114,14 +114,8 @@ void DeadAttackEt1()
     var A;
     // semantic op_key lowering th15->th12: unit.flag_set
     ins_402(32);
-    // object BulletEmitter source_line=75 family=th13plus
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
-    ins_507(0, 0);
-    ins_502(0, 6, 2);
-    ins_506(0, 1, 1);
-    ins_504(0, 0.0f, 0.05235988f);
-    ins_505(0, [-9981.0f], 1.0f);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
@@ -132,6 +126,8 @@ void DeadAttackEt1()
     ins_504(0, 0.0f, 0.05235988f);
     // dynamic bullet config lowering th15->th12: ins_605 -> ins_505
     ins_505(0, [-9981.0f], 1.0f);
+    // dynamic bullet transform lowering th15->th12: ins_609 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     $A = [-9985];
     goto DeadAttackEt1_364 @ 0;
     DeadAttackEt1_324:

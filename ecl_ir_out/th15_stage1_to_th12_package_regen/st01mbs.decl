@@ -106,7 +106,7 @@ void MBoss1_at(var A, var B, var C)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var D, E, F, G, H;
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
@@ -157,7 +157,7 @@ void MBoss1_at(var A, var B, var C)
     !*
     MBoss1_at_800:
     if ($G--) goto MBoss1_at_500 @ 0;
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
@@ -240,10 +240,10 @@ void MBoss1_at2()
     !L
     ins_83(150);
     !*
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(1);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(1, 5);
+    ins_507(1, 3);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(1, 19, 3);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
@@ -369,10 +369,10 @@ void MBossCard1_at(var A, var B, var C)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var D, E, F;
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(0, 5);
+    ins_507(0, 3);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(0, 9, 6);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
@@ -442,10 +442,10 @@ void MBossCard1_at2()
     !L
     ins_83(150);
     !*
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(1);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(1, 5);
+    ins_507(1, 3);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(1, 19, 4);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506
@@ -464,8 +464,16 @@ void MBossCard1_at2()
     !*
     // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
     ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform2
-    // dropped source-specific semantic op for th12: bullet.transform2(1, 0, 16, 60, 1, 0, 0, 1.5707964f, [-1.0f], -999999.0f, -999999.0f)
+    // dynamic bullet transform lowering th15->th12: ins_612 -> ins_509; ranked args from source difficulty literals
+    !E
+    ins_509(1, 1, 0, 16, 60, 1, 1.5707964f, 1.0f);
+    !N
+    ins_509(1, 1, 0, 16, 60, 1, 1.5707964f, 1.5f);
+    !H
+    ins_509(1, 1, 0, 16, 60, 1, 1.5707964f, 1.5f);
+    !L
+    ins_509(1, 1, 0, 16, 60, 1, 1.5707964f, 1.5f);
+    !*
     // semantic op_key lowering th15->th12: bullet.copy
     ins_511(2, 1);
     // unsupported semantic op_key for th15->th12: bullet.transform_set2

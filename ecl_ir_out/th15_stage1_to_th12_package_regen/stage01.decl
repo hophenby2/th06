@@ -292,16 +292,8 @@ void GirlA01_at()
     !L
     ins_83(30);
     !*
-    // object BulletEmitter source_line=39 family=th13plus
-    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; preserved as TH12 difficulty table; default preview N=1.5f
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
-    ins_507(0, 0);
-    ins_502(0, 3, 6);
-    ins_506(0, 1, 1);
-    ins_504(0, 0.0f, 0.05235988f);
-    ins_521(0, 1.5f, 1.5f, 2.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_509(0, 1, 0, 536870912, 60, -999999, 7.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
@@ -320,7 +312,11 @@ void GirlA01_at()
     !L
     ins_505(0, 3.0f, 1.0f);
     !*
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     unless ([-9959] == 3) goto GirlA01_at_540 @ 0;
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 0, 536870912, 60, -999999, 7.0f, -999999.0f);
     GirlA01_at_540:
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($A, 1, 1, 4, 20);
@@ -351,24 +347,20 @@ void GirlA01_at_l()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
     ins_83(30);
-    // object BulletEmitter source_line=81 family=th13plus
-    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
-    // difficulty count.ways: E=3, N=3, H=3, L=6; preserved as TH12 difficulty table; default preview N=3
-    // difficulty speed.step: E=1.0f, N=1.0f, H=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
-    // difficulty speed.first: E=2.2f, N=2.2f, H=2.2f, L=1.5f; preserved as TH12 difficulty table; default preview N=2.2f
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
-    ins_507(0, 4);
-    ins_502(0, 6, 4);
-    ins_522(0, 3, 3, 3, 6, 1, 1, 1, 1);
-    ins_504(0, 0.0f, 0.05235988f);
-    ins_521(0, 2.2f, 2.2f, 2.2f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(0, 4);
+    ins_507(0, 2);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(0, 6, 4);
+    // dynamic bullet config lowering th15->th12: ins_625 -> ins_522
+    ins_522(0, 3, 3, 3, 6, 1, 1, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 0.0f, 0.05235988f);
+    // dynamic bullet config lowering th15->th12: ins_624 -> ins_521
+    ins_521(0, 2.2f, 2.2f, 2.2f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // dynamic bullet transform lowering th15->th12: ins_609 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     $A = 1;
     goto GirlA01_at_l_412 @ 0;
     GirlA01_at_l_372:
@@ -426,16 +418,8 @@ void GirlA02_at()
     !L
     ins_83(30);
     !*
-    // object BulletEmitter source_line=128 family=th13plus
-    // difficulty speed.first: E=1.5f, N=1.5f, H=2.0f, LO=3.0f; preserved as TH12 difficulty table; default preview N=1.5f
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
-    ins_507(0, 0);
-    ins_502(0, 3, 6);
-    ins_506(0, 1, 1);
-    ins_504(0, 0.0f, 0.05235988f);
-    ins_521(0, 1.5f, 1.5f, 2.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_509(0, 1, 0, 536870912, 60, -999999, 7.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
@@ -454,7 +438,11 @@ void GirlA02_at()
     !L
     ins_505(0, 3.0f, 1.0f);
     !*
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     unless ([-9959] == 3) goto GirlA02_at_540 @ 0;
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 0, 536870912, 60, -999999, 7.0f, -999999.0f);
     GirlA02_at_540:
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($A, 1, 1, 4, 20);
@@ -485,24 +473,20 @@ void GirlA02_at_l()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
     ins_83(30);
-    // object BulletEmitter source_line=170 family=th13plus
-    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
-    // difficulty count.ways: E=3, N=3, H=3, L=6; preserved as TH12 difficulty table; default preview N=3
-    // difficulty speed.step: E=1.0f, N=1.0f, H=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
-    // difficulty speed.first: E=2.2f, N=2.2f, H=2.2f, L=1.5f; preserved as TH12 difficulty table; default preview N=2.2f
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
-    ins_507(0, 4);
-    ins_502(0, 6, 4);
-    ins_522(0, 3, 3, 3, 6, 1, 1, 1, 1);
-    ins_504(0, 0.0f, 0.05235988f);
-    ins_521(0, 2.2f, 2.2f, 2.2f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(0, 4);
+    ins_507(0, 2);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(0, 6, 4);
+    // dynamic bullet config lowering th15->th12: ins_625 -> ins_522
+    ins_522(0, 3, 3, 3, 6, 1, 1, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 0.0f, 0.05235988f);
+    // dynamic bullet config lowering th15->th12: ins_624 -> ins_521
+    ins_521(0, 2.2f, 2.2f, 2.2f, 1.5f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // dynamic bullet transform lowering th15->th12: ins_609 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     $A = 1;
     goto GirlA02_at_l_412 @ 0;
     GirlA02_at_l_372:
@@ -558,15 +542,8 @@ void GirlA03_at()
     !L
     ins_83(30);
     !*
-    // object BulletEmitter source_line=217 family=th13plus
-    // difficulty speed.first: E=1.5f, N=1.5f, H=3.0f, LO=4.0f; preserved as TH12 difficulty table; default preview N=1.5f
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
-    ins_507(0, 0);
-    ins_502(0, 3, 6);
-    ins_506(0, 3, 1);
-    ins_504(0, 0.0f, 1.0471976f);
-    ins_521(0, 1.5f, 1.5f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
@@ -585,6 +562,8 @@ void GirlA03_at()
     !L
     ins_505(0, 4.0f, 1.0f);
     !*
+    // dynamic bullet transform lowering th15->th12: ins_609 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($A, 1, 1, 7, 16);
     goto GirlA03_at_600 @ 0;
@@ -624,7 +603,7 @@ void GirlB01()
     // semantic op_key lowering th15->th12: unit.drop_main
     ins_410(1);
     // semantic op_key lowering th15->th12: unit.drop_extra
-    ins_407(1, 4);
+    ins_407(1, 2);
     // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(2, 1);
     // semantic op_key lowering th15->th12: unit.set_hurtbox
@@ -663,25 +642,22 @@ void GirlB01_at()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
     ins_83(60);
-    // object BulletEmitter source_line=281 family=th13plus
-    // difficulty count.layers: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
-    // difficulty count.ways: E=1, N=1, H=1, L=2; preserved as TH12 difficulty table; default preview N=1
-    // difficulty speed.step: E=1.0f, N=1.0f, H=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
-    // difficulty speed.first: E=1.2f, N=1.6f, H=2.2f, L=4.2f; preserved as TH12 difficulty table; default preview N=1.6f
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
-    ins_507(0, 1);
-    ins_502(0, 7, 6);
-    ins_522(0, 1, 1, 1, 2, 1, 1, 1, 1);
-    ins_504(0, 1.5707964f, 0.34906584f);
-    ins_521(0, 1.2f, 1.6f, 2.2f, 4.2f, 1.0f, 1.0f, 1.0f, 1.0f);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(0, 7, 6);
+    // dynamic bullet config lowering th15->th12: ins_625 -> ins_522
+    ins_522(0, 1, 1, 1, 2, 1, 1, 1, 1);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 1.5707964f, 0.34906584f);
+    // dynamic bullet config lowering th15->th12: ins_624 -> ins_521
+    ins_521(0, 1.2f, 1.6f, 2.2f, 4.2f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: bullet.copy
     ins_511(1, 0);
     // dynamic bullet config lowering th15->th12: ins_603 -> ins_503
@@ -739,7 +715,7 @@ void GirlB02()
     // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(1, 1);
     // semantic op_key lowering th15->th12: unit.drop_extra
-    ins_407(2, 4);
+    ins_407(2, 2);
     @GirlB02_at() async;
     // object Movement source_line=325 family=th13plus
     // movement lowering th13plus -> th12: movement.velocity.set -> ins_304
@@ -769,30 +745,28 @@ void GirlB02_at()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // object BulletEmitter source_line=342 family=th13plus
-    // difficulty count.layers: E=1, N=1, H=1, L=2; preserved as TH12 difficulty table; default preview N=1
-    // difficulty count.ways: E=3, N=5, H=20, L=13; preserved as TH12 difficulty table; default preview N=5
-    // difficulty speed.step: E=1.0f, N=1.0f, H=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
-    // difficulty speed.first: E=0.5f, N=0.5f, H=1.5f, L=2.5f; preserved as TH12 difficulty table; default preview N=0.5f
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
-    ins_507(0, 4);
-    ins_502(0, 4, 2);
-    ins_522(0, 3, 5, 20, 13, 1, 1, 1, 2);
-    ins_504(0, [-9998.0f], 0.0f);
-    ins_521(0, 0.5f, 0.5f, 1.5f, 2.5f, 1.0f, 1.0f, 1.0f, 1.0f);
-    ins_508(0, 21, -1);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
-    ins_509(0, 2, 0, 4096, 60, -999999, -999999.0f, -999999.0f);
-    ins_509(0, 3, 0, 4, 60, -999999, 0.016666668f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(0, 4);
+    ins_507(0, 2);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(0, 4, 2);
+    // dynamic bullet config lowering th15->th12: ins_625 -> ins_522
+    ins_522(0, 3, 5, 20, 13, 1, 1, 1, 2);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 0.0f, 0.13962634f);
+    // dynamic bullet config lowering th15->th12: ins_624 -> ins_521
+    ins_521(0, 0.5f, 0.5f, 1.5f, 2.5f, 1.0f, 1.0f, 1.0f, 1.0f);
     // dynamic bullet config lowering th15->th12: ins_608 -> ins_508
     ins_508(0, 21, -1);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 2, 0, 4096, 60, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 3, 0, 4, 60, -999999, 0.016666668f, -999999.0f);
     ins_83(60 + ([-10000] % 80));
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, [-9998.0f], 0.0f);
@@ -919,7 +893,7 @@ void GirlC01()
     // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(1, 1);
     // semantic op_key lowering th15->th12: unit.drop_extra
-    ins_407(2, 4);
+    ins_407(2, 2);
     // semantic op_key lowering th15->th12: unit.set_hurtbox
     ins_400(32.0f, 32.0f);
     // semantic op_key lowering th15->th12: unit.set_hitbox
@@ -953,15 +927,8 @@ void GirlC01_at()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C;
     ins_83(60);
-    // object BulletEmitter source_line=444 family=th13plus
-    // difficulty count.ways: E=1, N=1, H=2, LO=5; preserved as TH12 difficulty table; default preview N=1
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
-    ins_507(0, 1);
-    ins_502(0, 7, 6);
-    ins_522(0, 1, 1, 2, 5, 1, 1, 1, 1);
-    ins_504(0, 1.5707964f, 0.12217305f);
-    ins_505(0, %A, 0.0f);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
@@ -980,12 +947,14 @@ void GirlC01_at()
     ins_504(0, 1.5707964f, 0.12217305f);
     // dynamic bullet config lowering th15->th12: ins_605 -> ins_505
     ins_505(0, 1.6f, 1.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($B, 1, 3, 6, 12);
     goto GirlC01_at_860 @ 0;
     GirlC01_at_396:
-    // unsupported semantic op_key for th15->th12: unit.diff_f
-    // original: ins_536(%A, 1.0f, 1.5f, 2.0f, 3.0f);
+    // dynamic difficulty float lowering th15->th12: ins_536 -> ins_436
+    ins_436(%A, 1.0f, 1.5f, 2.0f, 3.0f);
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($C, 6, 12, 12, 12);
     goto GirlC01_at_716 @ 0;
@@ -1043,7 +1012,7 @@ void GirlD01()
     // semantic op_key lowering th15->th12: unit.drop_main
     ins_410(1);
     // semantic op_key lowering th15->th12: unit.drop_extra
-    ins_407(1, 4);
+    ins_407(1, 2);
     // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(2, 4);
     // semantic op_key lowering th15->th12: unit.set_hurtbox
@@ -1079,30 +1048,16 @@ void GirlD01_at()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
     ins_83(60);
-    // object BulletEmitter source_line=526 family=th13plus
-    // difficulty count.layers: E=2, N=6, H=6, LO=6; preserved as TH12 difficulty table; default preview N=6
-    // TH15 double flower spread lowered to two TH12 single-side flower slots: 0+2
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
+    // TH15 double flower spread lowered to two TH12 single-side flower slots: 0+2
     ins_507(0, 4);
-    ins_502(0, 6, 4);
-    ins_522(0, 10, 10, 10, 10, 2, 6, 6, 6);
-    ins_504(0, 0.0f, 0.05235988f);
-    ins_505(0, 1.6f, 1.6f);
     ins_500(2);
     ins_507(2, 2);
-    ins_502(2, 6, 4);
-    ins_522(2, 10, 10, 10, 10, 2, 6, 6, 6);
-    ins_504(2, 0.0f, 0.05235988f);
-    ins_505(2, 1.6f, 1.6f);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_509(2, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_509(0, 1, 0, 536870912, 60, -999999, 4.0f, -999999.0f);
-    ins_509(2, 1, 0, 536870912, 60, -999999, 4.0f, -999999.0f);
-    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(0, 4);
-    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502; mirrored to double-flower slot 2
     ins_502(0, 6, 4);
-    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
+    ins_502(2, 6, 4);
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; mirrored to double-flower slot 2; ranked args from source difficulty literals
     !E
     ins_506(0, 10, 2);
     !N
@@ -1112,11 +1067,28 @@ void GirlD01_at()
     !L
     ins_506(0, 10, 6);
     !*
-    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
+    !E
+    ins_506(2, 10, 2);
+    !N
+    ins_506(2, 10, 6);
+    !H
+    ins_506(2, 10, 6);
+    !L
+    ins_506(2, 10, 6);
+    !*
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504; mirrored to double-flower slot 2
     ins_504(0, 0.0f, 0.05235988f);
-    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505
+    ins_504(2, 0.0f, 0.05235988f);
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; mirrored to double-flower slot 2
     ins_505(0, 1.6f, 1.6f);
+    ins_505(2, 1.6f, 1.6f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509; mirrored to double-flower slot 2
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    ins_509(2, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     unless ([-9959] == 3) goto GirlD01_at_460 @ 0;
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509; mirrored to double-flower slot 2
+    ins_509(0, 1, 0, 536870912, 60, -999999, 4.0f, -999999.0f);
+    ins_509(2, 1, 0, 536870912, 60, -999999, 4.0f, -999999.0f);
     GirlD01_at_460:
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($A, 2, 3, 6, 10);
@@ -1148,15 +1120,8 @@ void GirlD01_at2()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C, D, E, F;
     ins_83(60);
-    // object BulletEmitter source_line=568 family=th13plus
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(1);
-    ins_507(1, 1);
-    ins_502(1, 17, 3);
-    ins_506(1, 1, 1);
-    ins_504(1, %C, 0.08726646f);
-    ins_505(1, %B, 0.0f);
-    ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_509(1, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(1, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
@@ -1167,12 +1132,16 @@ void GirlD01_at2()
     ins_504(1, 0.0f, 0.05235988f);
     // dynamic bullet config lowering th15->th12: ins_605 -> ins_505
     ins_505(1, 1.6f, 1.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(1, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($D, 2, 4, 4, 4);
     goto GirlD01_at2_1096 @ 0;
     GirlD01_at2_360:
-    // unsupported semantic op_key for th15->th12: unit.diff_f
-    // original: ins_536(%B, 1.1f, 1.1f, 1.5f, 2.1f);
+    // dynamic difficulty float lowering th15->th12: ins_536 -> ins_436
+    ins_436(%B, 1.1f, 1.1f, 1.5f, 2.1f);
     %C = 1.570796f;
     $A = 8;
     // semantic op_key lowering th15->th12: unit.diff_i
@@ -1234,7 +1203,7 @@ void GirlD02()
     // semantic op_key lowering th15->th12: unit.drop_main
     ins_410(1);
     // semantic op_key lowering th15->th12: unit.drop_extra
-    ins_407(1, 4);
+    ins_407(1, 2);
     // semantic op_key lowering th15->th12: unit.drop_extra
     ins_407(2, 4);
     // semantic op_key lowering th15->th12: unit.set_hurtbox
@@ -1270,29 +1239,16 @@ void GirlD02_at()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
     ins_83(60);
-    // object BulletEmitter source_line=644 family=th13plus
-    // difficulty count.layers: E=2, N=6, H=8, LO=6; preserved as TH12 difficulty table; default preview N=6
-    // difficulty speed.first: E=1.6f, N=1.6f, H=3.0f, LO=4.0f; preserved as TH12 difficulty table; default preview N=1.6f
-    // TH15 double flower spread lowered to two TH12 single-side flower slots: 0+2
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
+    // TH15 double flower spread lowered to two TH12 single-side flower slots: 0+2
     ins_507(0, 4);
-    ins_502(0, 6, 2);
-    ins_522(0, 8, 8, 8, 8, 2, 6, 8, 6);
-    ins_504(0, 0.0f, 0.05235988f);
-    ins_521(0, 1.6f, 1.6f, 3.0f, 4.0f, 1.6f, 1.6f, 1.6f, 1.6f);
     ins_500(2);
     ins_507(2, 2);
-    ins_502(2, 6, 2);
-    ins_522(2, 8, 8, 8, 8, 2, 6, 8, 6);
-    ins_504(2, 0.0f, 0.05235988f);
-    ins_521(2, 1.6f, 1.6f, 3.0f, 4.0f, 1.6f, 1.6f, 1.6f, 1.6f);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_509(2, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(0, 4);
-    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
+    // dynamic bullet config lowering th15->th12: ins_602 -> ins_502; mirrored to double-flower slot 2
     ins_502(0, 6, 2);
-    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
+    ins_502(2, 6, 2);
+    // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; mirrored to double-flower slot 2; ranked args from source difficulty literals
     !E
     ins_506(0, 8, 2);
     !N
@@ -1302,9 +1258,19 @@ void GirlD02_at()
     !L
     ins_506(0, 8, 6);
     !*
-    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
+    !E
+    ins_506(2, 8, 2);
+    !N
+    ins_506(2, 8, 6);
+    !H
+    ins_506(2, 8, 8);
+    !L
+    ins_506(2, 8, 6);
+    !*
+    // dynamic bullet config lowering th15->th12: ins_604 -> ins_504; mirrored to double-flower slot 2
     ins_504(0, 0.0f, 0.05235988f);
-    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; ranked args from source difficulty literals
+    ins_504(2, 0.0f, 0.05235988f);
+    // dynamic bullet config lowering th15->th12: ins_605 -> ins_505; mirrored to double-flower slot 2; ranked args from source difficulty literals
     !E
     ins_505(0, 1.6f, 1.6f);
     !N
@@ -1314,6 +1280,18 @@ void GirlD02_at()
     !L
     ins_505(0, 4.0f, 1.6f);
     !*
+    !E
+    ins_505(2, 1.6f, 1.6f);
+    !N
+    ins_505(2, 1.6f, 1.6f);
+    !H
+    ins_505(2, 3.0f, 1.6f);
+    !L
+    ins_505(2, 4.0f, 1.6f);
+    !*
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509; mirrored to double-flower slot 2
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    ins_509(2, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($A, 2, 5, 8, 4);
     goto GirlD02_at_596 @ 0;
@@ -1344,15 +1322,8 @@ void GirlD02_at2()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C, D, E, F;
     ins_83(60);
-    // object BulletEmitter source_line=692 family=th13plus
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(1);
-    ins_507(1, 1);
-    ins_502(1, 17, 3);
-    ins_506(1, 1, 1);
-    ins_504(1, %C, 0.08726646f);
-    ins_505(1, %B, 0.0f);
-    ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_509(1, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(1, 1);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
@@ -1363,12 +1334,16 @@ void GirlD02_at2()
     ins_504(1, 0.0f, 0.05235988f);
     // dynamic bullet config lowering th15->th12: ins_605 -> ins_505
     ins_505(1, 1.6f, 1.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(1, 1, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($D, 2, 4, 4, 4);
     goto GirlD02_at2_1096 @ 0;
     GirlD02_at2_360:
-    // unsupported semantic op_key for th15->th12: unit.diff_f
-    // original: ins_536(%B, 1.1f, 1.1f, 1.5f, 2.1f);
+    // dynamic difficulty float lowering th15->th12: ins_536 -> ins_436
+    ins_436(%B, 1.1f, 1.1f, 1.5f, 2.1f);
     %C = 1.570796f;
     $A = 8;
     // semantic op_key lowering th15->th12: unit.diff_i
@@ -2142,27 +2117,22 @@ void Phantom01_at()
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // object BulletEmitter source_line=1200 family=th13plus
-    // difficulty count.layers: E=1, N=1, H=1, L=8; preserved as TH12 difficulty table; default preview N=1
-    // difficulty count.ways: E=1, N=1, H=1, L=1; preserved as TH12 difficulty table; default preview N=1
-    // difficulty speed.step: E=1.0f, N=1.0f, H=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
-    // difficulty speed.first: E=1.0f, N=1.0f, H=3.0f, L=3.0f; preserved as TH12 difficulty table; default preview N=1.0f
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
-    ins_507(0, 0);
-    ins_502(0, 4, 4);
-    ins_522(0, 1, 1, 1, 1, 1, 1, 1, 8);
-    ins_504(0, 0.0f, 0.0f);
-    ins_521(0, 1.0f, 1.0f, 3.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    ins_508(0, 21, -1);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(0, 4, 4);
+    // dynamic bullet config lowering th15->th12: ins_625 -> ins_522
+    ins_522(0, 1, 1, 1, 1, 1, 1, 1, 8);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 0.0f, 0.0f);
+    // dynamic bullet config lowering th15->th12: ins_624 -> ins_521
+    ins_521(0, 1.0f, 1.0f, 3.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // dynamic bullet config lowering th15->th12: ins_608 -> ins_508
     ins_508(0, 21, -1);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($A, 1, 1, 1, 2);
     goto Phantom01_at_504 @ 0;
@@ -2232,27 +2202,22 @@ void Phantom02_at()
 {
     // Timeline lowering structured -> th12; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
-    // object BulletEmitter source_line=1245 family=th13plus
-    // difficulty count.layers: E=1, N=1, H=4, L=8; preserved as TH12 difficulty table; default preview N=1
-    // difficulty count.ways: E=1, N=3, H=3, L=3; preserved as TH12 difficulty table; default preview N=3
-    // difficulty speed.step: E=1.0f, N=1.0f, H=1.0f, L=1.0f; preserved as TH12 difficulty table; default preview N=1.0f
-    // difficulty speed.first: E=1.0f, N=2.0f, H=3.0f, L=4.0f; preserved as TH12 difficulty table; default preview N=2.0f
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
-    ins_507(0, 0);
-    ins_502(0, 6, 6);
-    ins_522(0, 1, 3, 3, 3, 1, 1, 4, 8);
-    ins_504(0, 0.0f, 0.017453292f);
-    ins_521(0, 1.0f, 2.0f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    ins_508(0, 21, -1);
-    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 0);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(0, 6, 6);
+    // dynamic bullet config lowering th15->th12: ins_625 -> ins_522
+    ins_522(0, 1, 3, 3, 3, 1, 1, 4, 8);
     // dynamic bullet config lowering th15->th12: ins_604 -> ins_504
     ins_504(0, 0.0f, 0.017453292f);
+    // dynamic bullet config lowering th15->th12: ins_624 -> ins_521
+    ins_521(0, 1.0f, 2.0f, 3.0f, 4.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     // dynamic bullet config lowering th15->th12: ins_608 -> ins_508
     ins_508(0, 21, -1);
+    // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
+    ins_509(0, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_83(120 + ([-10000] % 100));
     // semantic op_key lowering th15->th12: bullet.fire
     ins_501(0);

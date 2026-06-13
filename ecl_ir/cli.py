@@ -10,7 +10,7 @@ from .backend import choose_difficulty, compile_bullet_emitter, compile_ir_op_ev
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
 from .reference import validate_opcode_args
-from .semantics import generation_for_game, remap_raw_arg_by_semantic, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509
+from .semantics import generation_for_game, remap_raw_arg_by_semantic, spread_semantic, th12_double_flower_pair, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509
 from .luastg_backend import emit_luastg_file
 from .luastg_lifter import emit_luastg_ir_json
 from .luastg_normalizer import emit_normalized_json, normalize_luastg_file
@@ -404,7 +404,17 @@ def is_fire_instruction(ins) -> bool:
 
 
 def should_preserve_dynamic_bullet_config(ins) -> bool:
-    return getattr(ins, "opcode", None) in {502, 503, 504, 505, 506, 507, 508, 602, 603, 604, 605, 606, 607, 608}
+    return getattr(ins, "opcode", None) in {502, 503, 504, 505, 506, 507, 508, 600, 602, 603, 604, 605, 606, 607, 608, 609, 611, 612, 624, 625, 627}
+
+
+def should_emit_semantic_object_in_timeline(obj, source_game: str, target: str) -> bool:
+    if (
+        getattr(obj, "kind", None) == "BulletEmitter"
+        and generation_for_game(source_game) == "th13_plus"
+        and generation_for_game(target) == "th12"
+    ):
+        return False
+    return True
 
 
 def emit_function_body(function_objects: list[object], target: str) -> list[str]:
@@ -452,6 +462,8 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
         line_no = int(event.get("line", 0) or 0)
         if line_no in object_starts:
             for obj in sorted(object_starts[line_no], key=lambda item: getattr(item, "kind", "")):
+                if not should_emit_semantic_object_in_timeline(obj, source_game, target):
+                    continue
                 lines.append(f"    // object {obj.kind} source_line={obj.source_line} family={obj.family}")
                 for line in compile_object(obj, target).splitlines():
                     lines.append(f"    {line}")
@@ -558,18 +570,38 @@ class BulletLoweringState:
     double_flower_aux: dict[str, str]
     transform_next_index: dict[str, int]
 
+    def activate_double_flower(self, emitter_id: str) -> str | None:
+        aux_id = th12_aux_emitter_id(emitter_id)
+        if aux_id:
+            self.double_flower_aux[emitter_id] = aux_id
+            self.transform_next_index[aux_id] = self.transform_next_index.get(emitter_id, 0)
+        return aux_id
+
+    def deactivate_double_flower(self, emitter_id: str) -> None:
+        self.double_flower_aux.pop(emitter_id, None)
+
+    def aux_for(self, emitter_id: str) -> str | None:
+        return self.double_flower_aux.get(emitter_id)
+
     def next_transform_index(self, emitter_id: str) -> int:
         index = self.transform_next_index.get(emitter_id, 0)
         self.transform_next_index[emitter_id] = index + 1
+        aux_id = self.aux_for(emitter_id)
+        if aux_id:
+            self.transform_next_index[aux_id] = index + 1
         return index
 
     def observe_transform_index(self, emitter_id: str, index: object) -> None:
         text = str(index)
         if re.fullmatch(r"-?\d+", text):
             self.transform_next_index[emitter_id] = max(self.transform_next_index.get(emitter_id, 0), int(text) + 1)
+            aux_id = self.aux_for(emitter_id)
+            if aux_id:
+                self.transform_next_index[aux_id] = self.transform_next_index[emitter_id]
 
     def reset_transform_index(self, emitter_id: str) -> None:
         self.transform_next_index[emitter_id] = 0
+        self.deactivate_double_flower(emitter_id)
 
 
 def make_bullet_lowering_state(function_objects: list[object], source_game: str, target: str) -> BulletLoweringState | None:
@@ -602,7 +634,49 @@ def lower_bullet_fire_opcode(opcode: int, args: list[object], source_game: str, 
     return None
 
 
-def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str, target: str, difficulty_literals: object = None) -> list[str] | None:
+def emitter_arg_replaced(args: list[str], emitter_id: str) -> list[str]:
+    if not args:
+        return args
+    return [emitter_id, *args[1:]]
+
+
+def ranked_or_plain_lines(
+    opcode: int,
+    args: list[str],
+    difficulty_literals: object,
+    comment: str,
+    extra_ranked: list[tuple[int, list[str]]] | None = None,
+    extra_plain: list[tuple[int, list[str]]] | None = None,
+) -> list[str]:
+    ranked = emit_ranked_raw_instruction(opcode, args, difficulty_literals)
+    if ranked:
+        lines = [comment + "; ranked args from source difficulty literals", *ranked]
+        for extra_opcode, extra_args in extra_ranked or []:
+            extra = emit_ranked_raw_instruction(extra_opcode, extra_args, difficulty_literals)
+            if extra:
+                lines.extend(extra)
+            else:
+                lines.append(f"    ins_{extra_opcode}({', '.join(extra_args)});")
+        return lines
+    lines = [comment, f"    ins_{opcode}({', '.join(args)});"]
+    for extra_opcode, extra_args in extra_plain or []:
+        lines.append(f"    ins_{extra_opcode}({', '.join(extra_args)});")
+    return lines
+
+
+def lower_bullet_create_opcode(opcode: int, args: list[object], source_game: str, target: str, bullet_state: BulletLoweringState | None) -> list[str] | None:
+    if opcode != 600 or generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
+        return None
+    emitter_id = str(args[0]) if args else "0"
+    if bullet_state:
+        bullet_state.reset_transform_index(emitter_id)
+    return [
+        f"    // dynamic bullet create lowering {source_game}->{target}: ins_600 -> ins_500",
+        f"    ins_500({emitter_id});",
+    ]
+
+
+def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str, target: str, difficulty_literals: object = None, bullet_state: BulletLoweringState | None = None) -> list[str] | None:
     if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
     mapping = {
@@ -613,19 +687,44 @@ def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str
         606: 506,
         607: 507,
         608: 508,
+        624: 521,
+        625: 522,
     }
     mapped = mapping.get(opcode)
     if mapped is None:
         return None
     rendered_args = [str(arg) for arg in args]
+    if opcode == 607 and len(rendered_args) >= 2:
+        spread = spread_semantic(source_game, rendered_args[1])
+        flower_pair = th12_double_flower_pair(spread)
+        if flower_pair and bullet_state:
+            emitter_id = rendered_args[0]
+            aux_id = bullet_state.activate_double_flower(emitter_id)
+            if aux_id:
+                primary_args = [emitter_id, flower_pair[0]]
+                aux_args = [aux_id, flower_pair[1]]
+                return [
+                    f"    // TH15 double flower spread lowered to two TH12 single-side flower slots: {emitter_id}+{aux_id}",
+                    f"    ins_507({', '.join(primary_args)});",
+                    f"    ins_500({aux_id});",
+                    f"    ins_507({', '.join(aux_args)});",
+                ]
+        if bullet_state and rendered_args:
+            bullet_state.deactivate_double_flower(rendered_args[0])
     rendered_args = remap_raw_arg_by_semantic(source_game, target, opcode, mapped, rendered_args)
-    ranked = emit_ranked_raw_instruction(mapped, rendered_args, difficulty_literals)
-    if ranked:
-        return [f"    // dynamic bullet config lowering {source_game}->{target}: ins_{opcode} -> ins_{mapped}; ranked args from source difficulty literals", *ranked]
-    return [
-        f"    // dynamic bullet config lowering {source_game}->{target}: ins_{opcode} -> ins_{mapped}",
-        f"    ins_{mapped}({', '.join(rendered_args)});",
-    ]
+    aux_id = bullet_state.aux_for(str(args[0])) if bullet_state and args else None
+    aux_args = emitter_arg_replaced(rendered_args, aux_id) if aux_id else None
+    comment = f"    // dynamic bullet config lowering {source_game}->{target}: ins_{opcode} -> ins_{mapped}"
+    if aux_args:
+        comment = f"    // dynamic bullet config lowering {source_game}->{target}: ins_{opcode} -> ins_{mapped}; mirrored to double-flower slot {aux_id}"
+    return ranked_or_plain_lines(
+        mapped,
+        rendered_args,
+        difficulty_literals,
+        comment,
+        extra_ranked=[(mapped, aux_args)] if aux_args else None,
+        extra_plain=[(mapped, aux_args)] if aux_args else None,
+    )
 
 
 def lower_bullet_transform_opcode(opcode: int, args: list[object], source_game: str, target: str, difficulty_literals: object = None, bullet_state: BulletLoweringState | None = None) -> list[str] | None:
@@ -642,14 +741,65 @@ def lower_bullet_transform_opcode(opcode: int, args: list[object], source_game: 
         else:
             index = 0
         converted = th13_append_transform_to_th12_509(args, index, source_game)
+    elif opcode == 612 and len(args) == 11:
+        if bullet_state:
+            index = bullet_state.next_transform_index(str(args[0]))
+        else:
+            index = 0
+        et_id, channel, mode, a, b, _c, _d, r, s, _m, _n = [str(arg) for arg in args]
+        # TH12 has no 11-argument etEx2 form. Preserve the core transform fields
+        # that TH12's 509 can express: et, sequence index, channel, mode, a/b/r/s.
+        converted = th13_append_transform_to_th12_509([et_id, channel, mode, a, b, r, s], index, source_game)
     if not converted:
         return None
-    ranked = emit_ranked_raw_instruction(509, converted, difficulty_literals)
+    aux_id = bullet_state.aux_for(str(args[0])) if bullet_state and args else None
+    aux_converted = emitter_arg_replaced(converted, aux_id) if aux_id else None
+    comment = f"    // dynamic bullet transform lowering {source_game}->{target}: ins_{opcode} -> ins_509"
+    if aux_converted:
+        comment = f"    // dynamic bullet transform lowering {source_game}->{target}: ins_{opcode} -> ins_509; mirrored to double-flower slot {aux_id}"
+    return ranked_or_plain_lines(
+        509,
+        converted,
+        difficulty_literals,
+        comment,
+        extra_ranked=[(509, aux_converted)] if aux_converted else None,
+        extra_plain=[(509, aux_converted)] if aux_converted else None,
+    )
+
+
+def lower_th13_misc_bullet_opcode(opcode: int, args: list[object], source_game: str, target: str, difficulty_literals: object = None, bullet_state: BulletLoweringState | None = None) -> list[str] | None:
+    if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
+        return None
+    if opcode == 627 and len(args) == 2:
+        rendered = [str(arg) for arg in args]
+        aux_id = bullet_state.aux_for(rendered[0]) if bullet_state else None
+        aux_rendered = emitter_arg_replaced(rendered, aux_id) if aux_id else None
+        comment = f"    // dynamic bullet distance lowering {source_game}->{target}: ins_627 -> ins_524"
+        if aux_rendered:
+            comment = f"    // dynamic bullet distance lowering {source_game}->{target}: ins_627 -> ins_524; mirrored to double-flower slot {aux_id}"
+        return ranked_or_plain_lines(
+            524,
+            rendered,
+            difficulty_literals,
+            comment,
+            extra_ranked=[(524, aux_rendered)] if aux_rendered else None,
+            extra_plain=[(524, aux_rendered)] if aux_rendered else None,
+        )
+    return None
+
+
+def lower_th13_diff_float_opcode(opcode: int, args: list[object], source_game: str, target: str, difficulty_literals: object = None) -> list[str] | None:
+    if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
+        return None
+    if opcode != 536 or len(args) != 5:
+        return None
+    rendered = [str(arg) for arg in args]
+    ranked = emit_ranked_raw_instruction(436, rendered, difficulty_literals)
     if ranked:
-        return [f"    // dynamic bullet transform lowering {source_game}->{target}: ins_{opcode} -> ins_509; ranked args from source difficulty literals", *ranked]
+        return [f"    // dynamic difficulty float lowering {source_game}->{target}: ins_536 -> ins_436; ranked args from source difficulty literals", *ranked]
     return [
-        f"    // dynamic bullet transform lowering {source_game}->{target}: ins_{opcode} -> ins_509",
-        f"    ins_509({', '.join(converted)});",
+        f"    // dynamic difficulty float lowering {source_game}->{target}: ins_536 -> ins_436",
+        f"    ins_436({', '.join(rendered)});",
     ]
 
 
@@ -775,14 +925,6 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
     if kind == "instruction":
         opcode = event.get("opcode")
         args = event.get("args", [])
-        if (
-            int(opcode or -1) == 600
-            and bullet_state
-            and generation_for_game(source_game) == "th13_plus"
-            and generation_for_game(target) == "th12"
-            and args
-        ):
-            bullet_state.reset_transform_index(str(args[0]))
         if opcode in {23, 24}:
             wait = str(event.get("args", [""])[0]) if event.get("args") else ""
             if wait.startswith("["):
@@ -815,10 +957,13 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
             if collapsed != wait:
                 return wrap_event_rank([f"    // dynamic wait expression collapsed for timer syntax: {wait}", f"    +{collapsed}:"], event, target)
             return wrap_event_rank([f"    +{wait}:"], event, target)
+        create_lowered = lower_bullet_create_opcode(int(opcode or -1), list(args), source_game, target, bullet_state)
+        if create_lowered:
+            return wrap_event_rank(create_lowered, event, target)
         fire_lowered = lower_bullet_fire_opcode(int(opcode or -1), list(args), source_game, target, bullet_state)
         if fire_lowered:
             return wrap_event_rank(fire_lowered, event, target)
-        config_lowered = lower_bullet_config_opcode(int(opcode or -1), list(args), source_game, target, event.get("difficulty_literals", []))
+        config_lowered = lower_bullet_config_opcode(int(opcode or -1), list(args), source_game, target, event.get("difficulty_literals", []), bullet_state)
         if config_lowered:
             if any(line.strip().startswith("!") for line in config_lowered):
                 return config_lowered
@@ -828,6 +973,16 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
             if any(line.strip().startswith("!") for line in transform_lowered):
                 return transform_lowered
             return wrap_event_rank(transform_lowered, event, target)
+        misc_bullet_lowered = lower_th13_misc_bullet_opcode(int(opcode or -1), list(args), source_game, target, event.get("difficulty_literals", []), bullet_state)
+        if misc_bullet_lowered:
+            if any(line.strip().startswith("!") for line in misc_bullet_lowered):
+                return misc_bullet_lowered
+            return wrap_event_rank(misc_bullet_lowered, event, target)
+        diff_float_lowered = lower_th13_diff_float_opcode(int(opcode or -1), list(args), source_game, target, event.get("difficulty_literals", []))
+        if diff_float_lowered:
+            if any(line.strip().startswith("!") for line in diff_float_lowered):
+                return diff_float_lowered
+            return wrap_event_rank(diff_float_lowered, event, target)
         lowered = lower_raw_instruction_event(int(opcode or -1), list(args), text, source_game, target, event.get("difficulty_literals", []), event.get("ir_op"))
         if lowered:
             if any(line.strip().startswith("!") for line in lowered):

@@ -129,7 +129,7 @@ void Boss1_at(var A, var B, var C)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var D, E, F, G, H;
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
@@ -179,7 +179,7 @@ void Boss1_at(var A, var B, var C)
     !*
     Boss1_at_724:
     if ($G--) goto Boss1_at_500 @ 0;
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
@@ -262,10 +262,10 @@ void Boss1_at2()
     !L
     ins_83(150);
     !*
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(1);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(1, 5);
+    ins_507(1, 3);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(1, 19, 3);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
@@ -420,7 +420,7 @@ void Boss2_at(var A, var B, var C)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var D, E, F, G;
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
@@ -490,10 +490,10 @@ void Boss2_at2()
     !L
     ins_83(100);
     !*
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(1);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507(1, 5);
+    ins_507(1, 3);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502(1, 12, 6);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
@@ -520,8 +520,8 @@ void Boss2_at2()
     !*
     // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
     ins_509(1, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.distance
-    // dropped source-specific semantic op for th12: bullet.distance(1, 64.0f)
+    // dynamic bullet distance lowering th15->th12: ins_627 -> ins_524
+    ins_524(1, 64.0f);
     $C = 600;
     goto Boss2_at2_812 @ 0;
     Boss2_at2_664:
@@ -659,7 +659,7 @@ void BossCard1_at(var A)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var B, C;
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500(0);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507(0, 1);
@@ -721,14 +721,14 @@ void BossCard1_at2(var A, var B)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var C, D, E, F, G;
-    // unsupported semantic op_key for th15->th12: unit.diff_f
-    // original: ins_536(%C, 0.5235988f, 0.5235988f, 0.5235988f, 3.883222f);
+    // dynamic difficulty float lowering th15->th12: ins_536 -> ins_436
+    ins_436(%C, 0.5235988f, 0.5235988f, 0.5235988f, 3.883222f);
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($D, 16, 16, 16, 16);
     $E = 1000;
     goto BossCard1_at2_1404 @ 0;
     BossCard1_at2_172:
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500($A);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507; ranked args from source difficulty literals
     !E
@@ -764,10 +764,10 @@ void BossCard1_at2(var A, var B)
     ins_509($A, 2, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
     ins_509($A, 3, 0, 268435456, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.transform2
-    // dropped source-specific semantic op for th12: bullet.transform2($A, 0, 16, 60, 1, 0, 0, %B, -999999.0f, -999999.0f, -999999.0f)
+    // dynamic bullet transform lowering th15->th12: ins_612 -> ins_509
+    ins_509($A, 4, 0, 16, 60, 1, %B, -999999.0f);
     // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
-    ins_509($A, 4, 0, 2048, 12, 2, -999999.0f, -999999.0f);
+    ins_509($A, 5, 0, 2048, 11, 2, -999999.0f, -999999.0f);
     $F = 1;
     // semantic op_key lowering th15->th12: unit.diff_i
     ins_435($G, 6, 20, 40, 60);
@@ -944,7 +944,7 @@ void BossCard2_at(var A, var B)
     // Timeline lowering structured -> th12; raw-order boss/bullet-safe path
     // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.
     var C, D;
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500($A);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
     ins_507($A, 1);
@@ -1014,10 +1014,10 @@ void BossCard2_at2(var A, var B)
     !L
     ins_83(100);
     !*
-    // semantic op_key lowering th15->th12: bullet.et_new
+    // dynamic bullet create lowering th15->th12: ins_600 -> ins_500
     ins_500($A);
     // dynamic bullet config lowering th15->th12: ins_607 -> ins_507
-    ins_507($A, 5);
+    ins_507($A, 3);
     // dynamic bullet config lowering th15->th12: ins_602 -> ins_502
     ins_502($A, 12, 6);
     // dynamic bullet config lowering th15->th12: ins_606 -> ins_506; ranked args from source difficulty literals
@@ -1044,8 +1044,8 @@ void BossCard2_at2(var A, var B)
     !*
     // dynamic bullet transform lowering th15->th12: ins_611 -> ins_509
     ins_509($A, 0, 0, 2, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th15->th12: bullet.distance
-    // dropped source-specific semantic op for th12: bullet.distance($A, 64.0f)
+    // dynamic bullet distance lowering th15->th12: ins_627 -> ins_524
+    ins_524($A, 64.0f);
     $G = 60000;
     goto BossCard2_at2_1180 @ 0;
     BossCard2_at2_744:

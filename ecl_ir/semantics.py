@@ -278,8 +278,8 @@ BULLET_TRANSFORM_MODE_BY_SEMANTIC = {mode.semantic: mode for mode in BULLET_TRAN
 SPREAD_STYLES: tuple[SemanticValue, ...] = (
     SemanticValue("single_flower.right.aimed", {GEN_TH12: "2", GEN_TH10_TH11: "2"}),
     SemanticValue("single_flower.right.fixed", {GEN_TH12: "3", GEN_TH10_TH11: "3"}),
-    SemanticValue("single_flower.left.aimed", {GEN_TH13_PLUS: "2", GEN_TH12: "4", GEN_TH10_TH11: "4"}),
-    SemanticValue("single_flower.left.fixed", {GEN_TH13_PLUS: "3", GEN_TH12: "5", GEN_TH10_TH11: "5"}),
+    SemanticValue("single_flower.left.aimed", {GEN_TH13_PLUS: "2", GEN_TH12: "2", GEN_TH10_TH11: "2"}),
+    SemanticValue("single_flower.left.fixed", {GEN_TH13_PLUS: "3", GEN_TH12: "3", GEN_TH10_TH11: "3"}),
     SemanticValue("single_flower.offset_left.aimed", {GEN_TH13_PLUS: "4", GEN_TH12: "4", GEN_TH10_TH11: "4"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11)),
     SemanticValue("single_flower.offset_left.fixed", {GEN_TH13_PLUS: "5", GEN_TH12: "5", GEN_TH10_TH11: "5"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11)),
     SemanticValue("double_flower.aimed", {GEN_TH13_PLUS: "9", GEN_TH12: "4", GEN_TH10_TH11: "4"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11)),
@@ -346,11 +346,18 @@ def remap_bullet_transform_mode(source_game: str, target: str, mode: Any) -> str
     return encode_bullet_transform_mode(bullet_transform_mode_semantic(source_game, mode), target, mode)
 
 
+def remap_shape_change_arg(source_game: str, target: str, mode: Any, shape: Any) -> str:
+    if bullet_transform_mode_semantic(source_game, mode) != "shape_change":
+        return str(shape)
+    return encode_bullet_shape(bullet_shape_semantic(source_game, shape), target, shape)
+
+
 def th13_append_transform_to_th12_509(args: list[object], index: int, source_game: str = "th15") -> list[str] | None:
     if len(args) != 7:
         return None
     et_id, channel, mode, a, b, r, s = [str(arg) for arg in args]
     mapped_mode = remap_bullet_transform_mode(source_game, "th12", mode)
+    a = remap_shape_change_arg(source_game, "th12", mode, a)
     # TH13+ ins_611 appends a transform and omits the transform index.
     # TH12 ins_509 needs that index explicitly: et, index, channel, mode, a, b, r, s.
     return [et_id, str(index), channel, mapped_mode, a, b, r, s]
@@ -361,6 +368,7 @@ def th13_transform_set_to_th12_509(args: list[object], source_game: str = "th15"
         return None
     converted = [str(arg) for arg in args]
     converted[3] = remap_bullet_transform_mode(source_game, "th12", converted[3])
+    converted[4] = remap_shape_change_arg(source_game, "th12", args[3], converted[4])
     return converted
 
 
