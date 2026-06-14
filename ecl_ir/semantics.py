@@ -78,6 +78,43 @@ def lifted_raw_coverage_policy(kind: str, source_game: str, target: str, family:
 
 # Opcode semantics are registered by meaning first, then encoded per generation.
 SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
+    SemanticOpcode("flow.nop", {GEN_TH13_PLUS: 0, GEN_TH12: 0, GEN_TH10_TH11: 0}),
+    SemanticOpcode("flow.kill_async", {GEN_TH13_PLUS: 17, GEN_TH12: 17, GEN_TH10_TH11: 17}),
+    SemanticOpcode("flow.kill_all_async", {GEN_TH13_PLUS: 21, GEN_TH12: 21}),
+    SemanticOpcode("flow.wait", {GEN_TH13_PLUS: 23, GEN_TH12: 83, GEN_TH10_TH11: 83}),
+    # TH10/11 docs omit these stack VM opcodes, but original scripts use them
+    # with the same ABI as TH12 and TH13+ for arithmetic, comparisons, and
+    # helper math. Keep them semantic so loops like Ecl_EtBreak keep mutating
+    # their counters after cross-generation lowering.
+    SemanticOpcode("flow.seti", {GEN_TH13_PLUS: 43, GEN_TH12: 43, GEN_TH10_TH11: 43}),
+    SemanticOpcode("flow.setf", {GEN_TH13_PLUS: 45, GEN_TH12: 45, GEN_TH10_TH11: 45}),
+    SemanticOpcode("flow.addi", {GEN_TH13_PLUS: 50, GEN_TH12: 50, GEN_TH10_TH11: 50}),
+    SemanticOpcode("flow.addf", {GEN_TH13_PLUS: 51, GEN_TH12: 51, GEN_TH10_TH11: 51}),
+    SemanticOpcode("flow.subi", {GEN_TH13_PLUS: 52, GEN_TH12: 52, GEN_TH10_TH11: 52}),
+    SemanticOpcode("flow.subf", {GEN_TH13_PLUS: 53, GEN_TH12: 53, GEN_TH10_TH11: 53}),
+    SemanticOpcode("flow.muli", {GEN_TH13_PLUS: 54, GEN_TH12: 54, GEN_TH10_TH11: 54}),
+    SemanticOpcode("flow.mulf", {GEN_TH13_PLUS: 55, GEN_TH12: 55, GEN_TH10_TH11: 55}),
+    SemanticOpcode("flow.divi", {GEN_TH13_PLUS: 56, GEN_TH12: 56, GEN_TH10_TH11: 56}),
+    SemanticOpcode("flow.divf", {GEN_TH13_PLUS: 57, GEN_TH12: 57, GEN_TH10_TH11: 57}),
+    SemanticOpcode("flow.modi", {GEN_TH13_PLUS: 58, GEN_TH12: 58, GEN_TH10_TH11: 58}),
+    SemanticOpcode("flow.eqi", {GEN_TH13_PLUS: 59, GEN_TH12: 59, GEN_TH10_TH11: 59}),
+    SemanticOpcode("flow.eqf", {GEN_TH13_PLUS: 60, GEN_TH12: 60, GEN_TH10_TH11: 60}),
+    SemanticOpcode("flow.neqi", {GEN_TH13_PLUS: 61, GEN_TH12: 61, GEN_TH10_TH11: 61}),
+    SemanticOpcode("flow.neqf", {GEN_TH13_PLUS: 62, GEN_TH12: 62, GEN_TH10_TH11: 62}),
+    SemanticOpcode("flow.lessi", {GEN_TH13_PLUS: 63, GEN_TH12: 63, GEN_TH10_TH11: 63}),
+    SemanticOpcode("flow.lessf", {GEN_TH13_PLUS: 64, GEN_TH12: 64, GEN_TH10_TH11: 64}),
+    SemanticOpcode("flow.leqi", {GEN_TH13_PLUS: 65, GEN_TH12: 65, GEN_TH10_TH11: 65}),
+    SemanticOpcode("flow.leqf", {GEN_TH13_PLUS: 66, GEN_TH12: 66, GEN_TH10_TH11: 66}),
+    SemanticOpcode("flow.greateri", {GEN_TH13_PLUS: 67, GEN_TH12: 67, GEN_TH10_TH11: 67}),
+    SemanticOpcode("flow.greaterf", {GEN_TH13_PLUS: 68, GEN_TH12: 68, GEN_TH10_TH11: 68}),
+    SemanticOpcode("flow.geqi", {GEN_TH13_PLUS: 69, GEN_TH12: 69, GEN_TH10_TH11: 69}),
+    SemanticOpcode("flow.geqf", {GEN_TH13_PLUS: 70, GEN_TH12: 70, GEN_TH10_TH11: 70}),
+    SemanticOpcode("flow.deci", {GEN_TH13_PLUS: 78, GEN_TH12: 78, GEN_TH10_TH11: 78}),
+    SemanticOpcode("flow.stack_sin", {GEN_TH13_PLUS: 79, GEN_TH12: 79, GEN_TH10_TH11: 79}),
+    SemanticOpcode("flow.stack_cos", {GEN_TH13_PLUS: 80, GEN_TH12: 80, GEN_TH10_TH11: 80}),
+    SemanticOpcode("flow.circle_pos", {GEN_TH13_PLUS: 81, GEN_TH12: 81, GEN_TH10_TH11: 81}),
+    SemanticOpcode("flow.valid_rad", {GEN_TH13_PLUS: 82, GEN_TH12: 82, GEN_TH10_TH11: 82}),
+    SemanticOpcode("flow.get_angle", {GEN_TH13_PLUS: 87, GEN_TH12: 87, GEN_TH10_TH11: 87}),
     SemanticOpcode("enemy.create", {GEN_TH13_PLUS: 300, GEN_TH12: 256}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
     SemanticOpcode("enemy.create_async", {GEN_TH13_PLUS: 301, GEN_TH12: 257}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
     SemanticOpcode("animation.select", {GEN_TH13_PLUS: 302, GEN_TH12: 258}, {(GEN_TH13_PLUS, GEN_TH12): (0,)}),
@@ -92,41 +129,55 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("enemy.create_main_func", {GEN_TH13_PLUS: 311, GEN_TH12: 267}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
     SemanticOpcode("enemy.create_async_main_func", {GEN_TH13_PLUS: 312, GEN_TH12: 268}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
     SemanticOpcode("enemy.byakuren_butterfly", {GEN_TH12: 281}),
-    SemanticOpcode("movement.position.set", {GEN_TH13_PLUS: 400, GEN_TH12: 300}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
-    SemanticOpcode("movement.position.tween", {GEN_TH13_PLUS: 401, GEN_TH12: 301}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3)}),
-    SemanticOpcode("movement.position_rel.set", {GEN_TH13_PLUS: 402, GEN_TH12: 302}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
-    SemanticOpcode("movement.position_rel.tween", {GEN_TH13_PLUS: 403, GEN_TH12: 303}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3)}),
-    SemanticOpcode("movement.velocity.set", {GEN_TH13_PLUS: 404, GEN_TH12: 304}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
-    SemanticOpcode("movement.velocity.tween", {GEN_TH13_PLUS: 405, GEN_TH12: 305}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3)}),
-    SemanticOpcode("movement.velocity_rel.set", {GEN_TH13_PLUS: 406, GEN_TH12: 306}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
-    SemanticOpcode("movement.velocity_rel.tween", {GEN_TH13_PLUS: 407, GEN_TH12: 307}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3)}),
-    SemanticOpcode("movement.ellipse.set", {GEN_TH13_PLUS: 420, GEN_TH12: 320}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
-    SemanticOpcode("movement.ellipse.tween", {GEN_TH13_PLUS: 421, GEN_TH12: 321}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
-    SemanticOpcode("movement.ellipse_rel.set", {GEN_TH13_PLUS: 422, GEN_TH12: 322}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
-    SemanticOpcode("movement.ellipse_rel.tween", {GEN_TH13_PLUS: 423, GEN_TH12: 323}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
+    SemanticOpcode("movement.position.set", {GEN_TH13_PLUS: 400, GEN_TH12: 300, GEN_TH10_TH11: 280}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
+    SemanticOpcode("movement.position.tween", {GEN_TH13_PLUS: 401, GEN_TH12: 301, GEN_TH10_TH11: 281}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3)}),
+    SemanticOpcode("movement.position_rel.set", {GEN_TH13_PLUS: 402, GEN_TH12: 302, GEN_TH10_TH11: 282}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
+    SemanticOpcode("movement.position_rel.tween", {GEN_TH13_PLUS: 403, GEN_TH12: 303, GEN_TH10_TH11: 283}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3)}),
+    SemanticOpcode("movement.velocity.set", {GEN_TH13_PLUS: 404, GEN_TH12: 304, GEN_TH10_TH11: 284}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
+    SemanticOpcode("movement.velocity.tween", {GEN_TH13_PLUS: 405, GEN_TH12: 305, GEN_TH10_TH11: 285}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3)}),
+    SemanticOpcode("movement.velocity_rel.set", {GEN_TH13_PLUS: 406, GEN_TH12: 306, GEN_TH10_TH11: 286}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
+    SemanticOpcode("movement.velocity_rel.tween", {GEN_TH13_PLUS: 407, GEN_TH12: 307, GEN_TH10_TH11: 287}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3)}),
+    SemanticOpcode("movement.circle.set", {GEN_TH13_PLUS: 408, GEN_TH12: 308, GEN_TH10_TH11: 288}),
+    SemanticOpcode("movement.circle.tween", {GEN_TH13_PLUS: 409, GEN_TH12: 309, GEN_TH10_TH11: 289}),
+    SemanticOpcode("movement.circle_rel.set", {GEN_TH13_PLUS: 410, GEN_TH12: 310, GEN_TH10_TH11: 290}),
+    SemanticOpcode("movement.circle_rel.tween", {GEN_TH13_PLUS: 411, GEN_TH12: 311, GEN_TH10_TH11: 291}),
+    SemanticOpcode("movement.move_rand", {GEN_TH13_PLUS: 412, GEN_TH12: 312, GEN_TH10_TH11: 292}),
+    SemanticOpcode("movement.move_rand_rel", {GEN_TH13_PLUS: 413, GEN_TH12: 313, GEN_TH10_TH11: 293}),
+    SemanticOpcode("movement.ellipse.set", {GEN_TH13_PLUS: 420, GEN_TH12: 320, GEN_TH10_TH11: 300}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
+    SemanticOpcode("movement.ellipse.tween", {GEN_TH13_PLUS: 421, GEN_TH12: 321, GEN_TH10_TH11: 301}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
+    SemanticOpcode("movement.ellipse_rel.set", {GEN_TH13_PLUS: 422, GEN_TH12: 322, GEN_TH10_TH11: 302}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
+    SemanticOpcode("movement.ellipse_rel.tween", {GEN_TH13_PLUS: 423, GEN_TH12: 323, GEN_TH10_TH11: 303}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
     SemanticOpcode("movement.mirror_mode", {GEN_TH13_PLUS: 424, GEN_TH12: 324}, {(GEN_TH13_PLUS, GEN_TH12): (0,)}),
-    SemanticOpcode("movement.bezier", {GEN_TH13_PLUS: 425, GEN_TH12: 325}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
-    SemanticOpcode("movement.bezier_rel", {GEN_TH13_PLUS: 426, GEN_TH12: 326}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
+    SemanticOpcode("movement.bezier", {GEN_TH13_PLUS: 425, GEN_TH12: 325, GEN_TH10_TH11: 305}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
+    SemanticOpcode("movement.bezier_rel", {GEN_TH13_PLUS: 426, GEN_TH12: 326, GEN_TH10_TH11: 306}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
     SemanticOpcode("movement.reset", {GEN_TH13_PLUS: 427, GEN_TH12: 327}, {(GEN_TH13_PLUS, GEN_TH12): ()}),
-    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(500, 506)),
-    SemanticOpcode("unit.drop_clear", {GEN_TH13_PLUS: 506, GEN_TH12: 406}),
-    SemanticOpcode("unit.drop_extra", {GEN_TH13_PLUS: 507, GEN_TH12: 407}),
-    SemanticOpcode("unit.drop_area", {GEN_TH13_PLUS: 508, GEN_TH12: 408}),
-    SemanticOpcode("unit.drop_items", {GEN_TH13_PLUS: 509, GEN_TH12: 409}),
-    SemanticOpcode("unit.drop_main", {GEN_TH13_PLUS: 510, GEN_TH12: 410}),
-    SemanticOpcode("boss.life_set", {GEN_TH13_PLUS: 511, GEN_TH12: 411}),
-    SemanticOpcode("boss.set_boss", {GEN_TH13_PLUS: 512, GEN_TH12: 412}),
-    SemanticOpcode("boss.timer_reset", {GEN_TH13_PLUS: 513, GEN_TH12: 413}),
-    SemanticOpcode("boss.set_interrupt", {GEN_TH13_PLUS: 514, GEN_TH12: 414}),
-    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(515, 519)),
-    SemanticOpcode("unit.dialog_wait", {GEN_TH13_PLUS: 519, GEN_TH12: 419}),
-    SemanticOpcode("unit.boss_wait", {GEN_TH13_PLUS: 520, GEN_TH12: 420}),
-    SemanticOpcode("boss.set_timeout", {GEN_TH13_PLUS: 521, GEN_TH12: 421}),
-    SemanticOpcode("unit.property.22", {GEN_TH13_PLUS: 522, GEN_TH12: 422}),
-    SemanticOpcode("boss.spell_end", {GEN_TH13_PLUS: 523, GEN_TH12: 423}),
-    SemanticOpcode("boss.set_chapter", {GEN_TH13_PLUS: 524, GEN_TH12: 424}),
-    SemanticOpcode("enemy.enm_kill_all", {GEN_TH13_PLUS: 525, GEN_TH12: 425}),
-    SemanticOpcode("unit.property.27", {GEN_TH13_PLUS: 527, GEN_TH12: 427}),
+    SemanticOpcode("unit.set_hurtbox", {GEN_TH13_PLUS: 500, GEN_TH12: 400, GEN_TH10_TH11: 320}),
+    SemanticOpcode("unit.set_hitbox", {GEN_TH13_PLUS: 501, GEN_TH12: 401, GEN_TH10_TH11: 321}),
+    SemanticOpcode("unit.flag_set", {GEN_TH13_PLUS: 502, GEN_TH12: 402, GEN_TH10_TH11: 322}),
+    SemanticOpcode("unit.flag_clear", {GEN_TH13_PLUS: 503, GEN_TH12: 403, GEN_TH10_TH11: 323}),
+    SemanticOpcode("unit.move_limit", {GEN_TH13_PLUS: 504, GEN_TH12: 404, GEN_TH10_TH11: 324}),
+    SemanticOpcode("movement.move_limit_reset", {GEN_TH13_PLUS: 505, GEN_TH12: 405, GEN_TH10_TH11: 325}),
+    SemanticOpcode("unit.drop_clear", {GEN_TH13_PLUS: 506, GEN_TH12: 406, GEN_TH10_TH11: 326}),
+    SemanticOpcode("unit.drop_extra", {GEN_TH13_PLUS: 507, GEN_TH12: 407, GEN_TH10_TH11: 327}),
+    SemanticOpcode("unit.drop_area", {GEN_TH13_PLUS: 508, GEN_TH12: 408, GEN_TH10_TH11: 328}),
+    SemanticOpcode("unit.drop_items", {GEN_TH13_PLUS: 509, GEN_TH12: 409, GEN_TH10_TH11: 329}),
+    SemanticOpcode("unit.drop_main", {GEN_TH13_PLUS: 510, GEN_TH12: 410, GEN_TH10_TH11: 330}),
+    SemanticOpcode("boss.life_set", {GEN_TH13_PLUS: 511, GEN_TH12: 411, GEN_TH10_TH11: 331}),
+    SemanticOpcode("boss.set_boss", {GEN_TH13_PLUS: 512, GEN_TH12: 412, GEN_TH10_TH11: 332}),
+    SemanticOpcode("boss.timer_reset", {GEN_TH13_PLUS: 513, GEN_TH12: 413, GEN_TH10_TH11: 333}),
+    SemanticOpcode("boss.set_interrupt", {GEN_TH13_PLUS: 514, GEN_TH12: 414, GEN_TH10_TH11: 334}),
+    SemanticOpcode("unit.set_invuln", {GEN_TH13_PLUS: 515, GEN_TH12: 415, GEN_TH10_TH11: 335}),
+    SemanticOpcode("unit.play_sound", {GEN_TH13_PLUS: 516, GEN_TH12: 416, GEN_TH10_TH11: 336}),
+    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(517, 518)),
+    SemanticOpcode("unit.dialog_read", {GEN_TH13_PLUS: 518, GEN_TH12: 418, GEN_TH10_TH11: 338}),
+    SemanticOpcode("unit.dialog_wait", {GEN_TH13_PLUS: 519, GEN_TH12: 419, GEN_TH10_TH11: 339}),
+    SemanticOpcode("unit.boss_wait", {GEN_TH13_PLUS: 520, GEN_TH12: 420, GEN_TH10_TH11: 340}),
+    SemanticOpcode("boss.set_timeout", {GEN_TH13_PLUS: 521, GEN_TH12: 421, GEN_TH10_TH11: 341}),
+    SemanticOpcode("boss.spell_ex", {GEN_TH13_PLUS: 522, GEN_TH12: 422, GEN_TH10_TH11: 342}),
+    SemanticOpcode("boss.spell_end", {GEN_TH13_PLUS: 523, GEN_TH12: 423, GEN_TH10_TH11: 343}),
+    SemanticOpcode("boss.set_chapter", {GEN_TH13_PLUS: 524, GEN_TH12: 424, GEN_TH10_TH11: 344}),
+    SemanticOpcode("enemy.enm_kill_all", {GEN_TH13_PLUS: 525, GEN_TH12: 425, GEN_TH10_TH11: 345}),
+    SemanticOpcode("unit.life_marker", {GEN_TH13_PLUS: 527, GEN_TH12: 427, GEN_TH10_TH11: 347}),
     SemanticOpcode("unit.property.28", {GEN_TH13_PLUS: 528, GEN_TH12: 428}),
     SemanticOpcode("unit.property.29", {GEN_TH13_PLUS: 529, GEN_TH12: 429}),
     SemanticOpcode("unit.property.30", {GEN_TH13_PLUS: 530, GEN_TH12: 430}),
@@ -136,10 +187,10 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("unit.property.34", {GEN_TH13_PLUS: 534, GEN_TH12: 434}),
     SemanticOpcode("unit.diff_i", {GEN_TH13_PLUS: 535, GEN_TH12: 435}),
     SemanticOpcode("unit.diff_f", {GEN_TH13_PLUS: 536, GEN_TH12: 436}),
-    SemanticOpcode("boss.spell", {GEN_TH13_PLUS: 537, GEN_TH12: 437}),
+    SemanticOpcode("boss.spell", {GEN_TH13_PLUS: 537, GEN_TH12: 437, GEN_TH10_TH11: 357}),
     SemanticOpcode("boss.spell2", {GEN_TH13_PLUS: 538, GEN_TH12: 438}),
-    SemanticOpcode("boss.spell3", {GEN_TH13_PLUS: 539, GEN_TH12: 439}),
-    SemanticOpcode("unit.stars", {GEN_TH13_PLUS: 540, GEN_TH12: 440}),
+    SemanticOpcode("boss.spell3", {GEN_TH13_PLUS: 539, GEN_TH12: 439, GEN_TH10_TH11: 359}),
+    SemanticOpcode("unit.stars", {GEN_TH13_PLUS: 540, GEN_TH12: 440, GEN_TH10_TH11: 360}),
     SemanticOpcode("unit.property.42", {GEN_TH13_PLUS: 542, GEN_TH12: 442}),
     SemanticOpcode("unit.property.43", {GEN_TH13_PLUS: 543, GEN_TH12: 443}),
     SemanticOpcode("unit.property.44", {GEN_TH13_PLUS: 544, GEN_TH12: 444}),
@@ -152,7 +203,7 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("unit.effect.54", {GEN_TH13_PLUS: 554, GEN_TH12: 454}),
     SemanticOpcode("unit.effect.55", {GEN_TH13_PLUS: 555, GEN_TH12: 455}),
     SemanticOpcode("unit.effect.56", {GEN_TH13_PLUS: 556, GEN_TH12: 456}),
-    *tuple(SemanticOpcode(f"bullet.emitter.{op - 600:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(600, 610)),
+    *tuple(SemanticOpcode(f"bullet.emitter.{op - 600:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100, GEN_TH10_TH11: op - 200}) for op in range(600, 610)),
 )
 
 UNSUPPORTED_SEMANTIC_OPCODES: dict[tuple[str, int, str], str] = {
@@ -244,33 +295,33 @@ add_reference_name_opcode_maps()
 
 BULLET_SHAPES: tuple[SemanticValue, ...] = (
     SemanticValue("point", {GEN_TH13_PLUS: "0", GEN_TH12: "0", GEN_TH10_TH11: "0", GEN_TH06_TH08: "0"}),
-    SemanticValue("point_highlight", {GEN_TH13_PLUS: "1", GEN_TH12: "1", GEN_TH10_TH11: "1", GEN_TH06_TH08: "0"}),
-    SemanticValue("grape", {GEN_TH13_PLUS: "2", GEN_TH12: "2", GEN_TH10_TH11: "2", GEN_TH06_TH08: "2"}),
-    SemanticValue("orb_small", {GEN_TH13_PLUS: "4", GEN_TH12: "3", GEN_TH10_TH11: "3", GEN_TH06_TH08: "3"}),
-    SemanticValue("orb_small_highlight", {GEN_TH13_PLUS: "5", GEN_TH12: "4", GEN_TH10_TH11: "4", GEN_TH06_TH08: "3"}),
-    SemanticValue("orb_ring", {GEN_TH13_PLUS: "6", GEN_TH12: "5", GEN_TH10_TH11: "5", GEN_TH06_TH08: "6"}),
-    SemanticValue("orb_ring_highlight", {GEN_TH13_PLUS: "7", GEN_TH12: "6", GEN_TH10_TH11: "6", GEN_TH06_TH08: "6"}),
-    SemanticValue("rice", {GEN_TH13_PLUS: "8", GEN_TH12: "7", GEN_TH10_TH11: "7", GEN_TH06_TH08: "7"}),
-    SemanticValue("chain", {GEN_TH13_PLUS: "9", GEN_TH12: "8", GEN_TH10_TH11: "8", GEN_TH06_TH08: "8"}),
-    SemanticValue("needle", {GEN_TH13_PLUS: "10", GEN_TH12: "9", GEN_TH10_TH11: "9", GEN_TH06_TH08: "9"}),
-    SemanticValue("amulet", {GEN_TH13_PLUS: "11", GEN_TH12: "10", GEN_TH10_TH11: "10", GEN_TH06_TH08: "10"}),
-    SemanticValue("scale", {GEN_TH13_PLUS: "12", GEN_TH12: "11", GEN_TH10_TH11: "11", GEN_TH06_TH08: "11"}),
-    SemanticValue("bell", {GEN_TH13_PLUS: "13", GEN_TH12: "12", GEN_TH10_TH11: "12", GEN_TH06_TH08: "9"}),
-    SemanticValue("cancel_effect", {GEN_TH13_PLUS: "14", GEN_TH12: "13", GEN_TH10_TH11: "13", GEN_TH06_TH08: "13"}),
-    SemanticValue("bacillus", {GEN_TH13_PLUS: "15", GEN_TH12: "14", GEN_TH10_TH11: "14", GEN_TH06_TH08: "14"}),
-    SemanticValue("small_star", {GEN_TH13_PLUS: "16", GEN_TH12: "15", GEN_TH10_TH11: "15", GEN_TH06_TH08: "8"}),
-    SemanticValue("coin", {GEN_TH13_PLUS: "17", GEN_TH12: "16", GEN_TH10_TH11: "16", GEN_TH06_TH08: "16"}),
-    SemanticValue("orb_medium", {GEN_TH13_PLUS: "18", GEN_TH12: "17", GEN_TH10_TH11: "17", GEN_TH06_TH08: "8"}),
-    SemanticValue("orb_medium_highlight", {GEN_TH13_PLUS: "19", GEN_TH12: "18", GEN_TH10_TH11: "18", GEN_TH06_TH08: "8"}),
-    SemanticValue("ellipse", {GEN_TH13_PLUS: "20", GEN_TH12: "19", GEN_TH10_TH11: "19", GEN_TH06_TH08: "19"}),
-    SemanticValue("knife", {GEN_TH13_PLUS: "21", GEN_TH12: "20", GEN_TH10_TH11: "20", GEN_TH06_TH08: "20"}),
-    SemanticValue("butterfly", {GEN_TH13_PLUS: "22", GEN_TH12: "21", GEN_TH10_TH11: "21", GEN_TH06_TH08: "21"}),
-    SemanticValue("big_star", {GEN_TH13_PLUS: "23", GEN_TH12: "22", GEN_TH10_TH11: "22", GEN_TH06_TH08: "8"}),
+    SemanticValue("point_highlight", {GEN_TH13_PLUS: "1", GEN_TH12: "1", GEN_TH06_TH08: "0"}),
+    SemanticValue("grape", {GEN_TH13_PLUS: "2", GEN_TH12: "2"}),
+    SemanticValue("orb_small", {GEN_TH13_PLUS: "4", GEN_TH12: "3", GEN_TH10_TH11: "1", GEN_TH06_TH08: "3"}),
+    SemanticValue("orb_small_highlight", {GEN_TH13_PLUS: "5", GEN_TH12: "4", GEN_TH06_TH08: "3"}),
+    SemanticValue("orb_ring", {GEN_TH13_PLUS: "6", GEN_TH12: "5", GEN_TH10_TH11: "2", GEN_TH06_TH08: "6"}),
+    SemanticValue("orb_ring_highlight", {GEN_TH13_PLUS: "7", GEN_TH12: "6", GEN_TH06_TH08: "6"}),
+    SemanticValue("rice", {GEN_TH13_PLUS: "8", GEN_TH12: "7", GEN_TH10_TH11: "3", GEN_TH06_TH08: "7"}),
+    SemanticValue("chain", {GEN_TH13_PLUS: "9", GEN_TH12: "8", GEN_TH10_TH11: "4", GEN_TH06_TH08: "8"}),
+    SemanticValue("needle", {GEN_TH13_PLUS: "10", GEN_TH12: "9", GEN_TH10_TH11: "5", GEN_TH06_TH08: "9"}),
+    SemanticValue("amulet", {GEN_TH13_PLUS: "11", GEN_TH12: "10", GEN_TH10_TH11: "6", GEN_TH06_TH08: "10"}),
+    SemanticValue("scale", {GEN_TH13_PLUS: "12", GEN_TH12: "11", GEN_TH10_TH11: "7", GEN_TH06_TH08: "11"}),
+    SemanticValue("bell", {GEN_TH13_PLUS: "13", GEN_TH12: "12", GEN_TH10_TH11: "8", GEN_TH06_TH08: "9"}),
+    SemanticValue("cancel_effect", {GEN_TH13_PLUS: "14", GEN_TH12: "13", GEN_TH10_TH11: "9", GEN_TH06_TH08: "13"}),
+    SemanticValue("bacillus", {GEN_TH13_PLUS: "15", GEN_TH12: "14", GEN_TH10_TH11: "10", GEN_TH06_TH08: "14"}),
+    SemanticValue("small_star", {GEN_TH13_PLUS: "16", GEN_TH12: "15", GEN_TH10_TH11: "11", GEN_TH06_TH08: "8"}),
+    SemanticValue("coin", {GEN_TH13_PLUS: "17", GEN_TH12: "16", GEN_TH10_TH11: "23", GEN_TH06_TH08: "16"}),
+    SemanticValue("orb_medium", {GEN_TH13_PLUS: "18", GEN_TH12: "17", GEN_TH10_TH11: "12", GEN_TH06_TH08: "8"}),
+    SemanticValue("orb_medium_highlight", {GEN_TH13_PLUS: "19", GEN_TH12: "18", GEN_TH10_TH11: "19", GEN_TH06_TH08: "8"}),
+    SemanticValue("ellipse", {GEN_TH13_PLUS: "20", GEN_TH12: "19", GEN_TH10_TH11: "13", GEN_TH06_TH08: "19"}),
+    SemanticValue("knife", {GEN_TH13_PLUS: "21", GEN_TH12: "20", GEN_TH10_TH11: "14", GEN_TH06_TH08: "20"}),
+    SemanticValue("butterfly", {GEN_TH13_PLUS: "22", GEN_TH12: "21", GEN_TH10_TH11: "15", GEN_TH06_TH08: "21"}),
+    SemanticValue("big_star", {GEN_TH13_PLUS: "23", GEN_TH12: "22", GEN_TH10_TH11: "16", GEN_TH06_TH08: "8"}),
     SemanticValue("big_star_reverse", {GEN_TH13_PLUS: "24", GEN_TH12: "22", GEN_TH10_TH11: "22", GEN_TH06_TH08: "8"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11, GEN_TH06_TH08)),
     SemanticValue("light_orb", {GEN_TH13_PLUS: "33", GEN_TH12: "23"}),
     SemanticValue("light_flame", {GEN_TH13_PLUS: "25", GEN_TH12: "24"}),
-    SemanticValue("heart", {GEN_TH13_PLUS: "29", GEN_TH12: "25", GEN_TH10_TH11: "25", GEN_TH06_TH08: "25"}),
-    SemanticValue("orb_large", {GEN_TH13_PLUS: "32", GEN_TH12: "26"}),
+    SemanticValue("heart", {GEN_TH13_PLUS: "29", GEN_TH12: "25", GEN_TH10_TH11: "27", GEN_TH06_TH08: "25"}),
+    SemanticValue("orb_large", {GEN_TH13_PLUS: "32", GEN_TH12: "26", GEN_TH10_TH11: "17"}),
     SemanticValue("rose", {GEN_TH13_PLUS: "34", GEN_TH12: "27"}, lossy_targets=(GEN_TH13_PLUS,)),
     SemanticValue("drop", {GEN_TH13_PLUS: "34", GEN_TH12: "28"}),
     SemanticValue("purple_flame", {GEN_TH13_PLUS: "26", GEN_TH12: "29"}),
@@ -529,6 +580,8 @@ def remap_raw_arg_by_semantic(source_game: str, target: str, source_opcode: int,
     mapped = args[:]
     source_generation = generation_for_game(source_game)
     target_generation = generation_for_game(target)
+    semantic_map = opcode_map_for(source_game, target, source_opcode)
+    semantic_key = semantic_map.semantic if semantic_map is not None else ""
     if source_generation == GEN_TH13_PLUS and target_generation == GEN_TH12 and source_opcode == 302 and target_opcode == 258 and len(mapped) == 1:
         # ANM bank ids moved by one between these generations for the stage files we lower.
         if mapped[0] == "2":
@@ -536,12 +589,12 @@ def remap_raw_arg_by_semantic(source_game: str, target: str, source_opcode: int,
         elif mapped[0] == "3":
             mapped[0] = "2"
     elif source_opcode in {256, 257, 260, 261, 265, 266, 267, 268, 300, 301, 304, 305, 309, 310, 311, 312} and source_opcode != target_opcode and len(mapped) >= 6:
-        mapped[5] = remap_drop_type(source_game, target, mapped[5])
-    elif source_opcode in {602, 502} and source_opcode != target_opcode and len(mapped) >= 3:
+        mapped[5] = remap_create_item_policy(source_game, target, mapped[5])
+    elif semantic_key == "bullet.emitter.02" and source_opcode != target_opcode and len(mapped) >= 3:
         mapped[1] = encode_bullet_shape(bullet_shape_semantic(source_game, mapped[1]), target, mapped[1])
-    elif source_opcode in {607, 507} and source_opcode != target_opcode and len(mapped) >= 2:
+    elif semantic_key == "bullet.emitter.07" and source_opcode != target_opcode and len(mapped) >= 2:
         mapped[1] = encode_spread_style(spread_semantic(source_game, mapped[1]), target, mapped[1])
-    elif source_opcode in {609, 509} and source_opcode != target_opcode and len(mapped) >= 5:
+    elif semantic_key == "bullet.emitter.09" and source_opcode != target_opcode and len(mapped) >= 5:
         source_mode = mapped[3]
         mapped[3] = remap_bullet_transform_mode(source_game, target, source_mode)
         mapped[4] = remap_shape_change_arg(source_game, target, source_mode, mapped[4])
@@ -549,7 +602,7 @@ def remap_raw_arg_by_semantic(source_game: str, target: str, source_opcode: int,
             for index in range(6, len(mapped)):
                 if mapped[index] == "-999.0f":
                     mapped[index] = "-999999.0f"
-    elif source_generation == GEN_TH12 and target_generation == GEN_TH13_PLUS and source_opcode in {407, 410}:
+    if semantic_key in {"unit.drop_extra", "unit.drop_main"} and source_opcode != target_opcode:
         drop_type_index = 0
         if len(mapped) > drop_type_index:
             mapped[drop_type_index] = remap_drop_type(source_game, target, mapped[drop_type_index])
@@ -560,4 +613,13 @@ def remap_drop_type(source_game: str, target: str, value: str) -> str:
     text = str(value).strip()
     if generation_for_game(source_game) == generation_for_game(target):
         return text
+    return encode_drop_type(drop_type_semantic(source_game, text), target, text)
+
+
+def remap_create_item_policy(source_game: str, target: str, value: str) -> str:
+    text = str(value).strip()
+    if generation_for_game(source_game) == generation_for_game(target):
+        return text
+    if generation_for_game(source_game) == GEN_TH10_TH11 and generation_for_game(target) == GEN_TH13_PLUS:
+        return "0" if text == "0" else "1"
     return encode_drop_type(drop_type_semantic(source_game, text), target, text)

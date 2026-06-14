@@ -300,7 +300,16 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                     signature="ot",
                     source=f"{info.source}; signature forced to thecl format ot",
                 )
-        for opcode in (505, 506, 513, 519, 520, 523, 525, 545):
+        info = result[game].get(17)
+        if info and info.name == "killAsync":
+            result[game][17] = OpcodeInfo(
+                game=game,
+                opcode=17,
+                name=info.name,
+                signature="S",
+                source=f"{info.source}; signature forced from original TH13+ usage",
+            )
+        for opcode in (505, 506, 509, 513, 519, 520, 523, 525, 545):
             info = result[game].get(opcode)
             if info:
                 result[game][opcode] = OpcodeInfo(
@@ -310,6 +319,15 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                     signature="",
                     source=f"{info.source}; signature forced from no-arg unit/boss semantic",
                 )
+        info = result[game].get(512)
+        if info and info.name == "setBoss":
+            result[game][512] = OpcodeInfo(
+                game=game,
+                opcode=512,
+                name=info.name,
+                signature="S",
+                source=f"{info.source}; signature forced from setBoss semantic layout",
+            )
         info = result[game].get(514)
         if info and info.name == "setInterrupt":
             result[game][514] = OpcodeInfo(

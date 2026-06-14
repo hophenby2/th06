@@ -7,12 +7,12 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from .anm_catalog import choose_script
-from .backend import choose_difficulty, compile_bullet_emitter, compile_ir_op_event, compile_object, definition_emitter_state, first_difficulty_group, normalize_difficulty, wrap_ranked_lines
+from .anm_catalog import choose_script, remap_set_script
+from .backend import choose_difficulty, compile_bullet_emitter, compile_ir_op_event, compile_object, definition_emitter_state, first_difficulty_group, normalize_difficulty, parse_int_literal, wrap_ranked_lines
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
 from .reference import validate_opcode_args
-from .semantics import generation_for_game, lifted_raw_coverage_policy, remap_raw_arg_by_semantic, spread_semantic, unsupported_bullet_transform_mode_reason
+from .semantics import bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, lifted_raw_coverage_policy, opcode_map_for, remap_raw_arg_by_semantic, spread_semantic, unsupported_bullet_transform_mode_reason
 from .spread_ir import add_float_expr, double_flower_aux_config_args, double_flower_center_delta, double_flower_lowering_for_th12, halve_double_flower_layer_args, negated_float_expr, th12_aux_emitter_id
 from .transform_ir import BulletTransformIR, TransformTimelineState, build_th12_to_th13plus_slot_maps_from_args, lower_transform_opcode_to_instruction
 from .luastg_backend import emit_luastg_file
@@ -407,6 +407,7 @@ def should_emit_resource(resource: str, target: str) -> bool:
 def apply_resource_plans(resources: dict[str, list[str]], objects: list[object], target: str) -> dict[str, list[str]]:
     target_generation = generation_for_game(target)
     result = {key: list(value) for key, value in resources.items()}
+    result = align_stage_resources_to_target(result, objects, target)
     for obj in objects:
         if getattr(obj, "kind", None) != "ResourcePlan":
             continue
@@ -425,6 +426,37 @@ def apply_resource_plans(resources: dict[str, list[str]], objects: list[object],
                 for entry in entries:
                     if entry not in current:
                         current.append(entry)
+    return result
+
+
+def align_stage_resources_to_target(resources: dict[str, list[str]], objects: list[object], target: str) -> dict[str, list[str]]:
+    if generation_for_game(target) != "th13_plus":
+        return resources
+    source_path = ""
+    source_game = ""
+    for obj in objects:
+        source_path = str(getattr(obj, "source", "") or getattr(obj, "fields", {}).get("source", "") or source_path)
+        source_game = str(getattr(obj, "game", "") or source_game)
+        if source_path and source_game:
+            break
+    if generation_for_game(source_game) not in {"th10_th11", "th12"}:
+        return resources
+    name = Path(source_path).name.lower()
+    match = re.fullmatch(r"stage(\d\d)\.decl", name)
+    if not match:
+        return resources
+    stage = match.group(1)
+    result = {key: list(value) for key, value in resources.items()}
+    anim_entries = result.get("anim", [])
+    result["anim"] = ["enemy.anm", f"st{stage}enm.anm"] if anim_entries else [f"st{stage}enm.anm"]
+    ecli_entries = result.get("ecli", [])
+    if ecli_entries:
+        target_stage = Path(f"E:/fork/th062/{target}/st{stage}.decl")
+        if target_stage.exists():
+            target_program = parse_decl(str(target_stage))
+            target_ecli = target_program.resources.get("ecli", [])
+            if target_ecli:
+                result["ecli"] = target_ecli
     return result
 
 
@@ -571,6 +603,16 @@ def object_for_timeline_compile(obj, bullet_state: BulletLoweringState | None):
 
 def emit_function_body(function_objects: list[object], target: str) -> list[str]:
     timelines = [obj for obj in function_objects if getattr(obj, "kind", None) == "Timeline"]
+    if (
+        target == "th15"
+        and timelines
+        and getattr(timelines[0], "game", "") == "th10"
+        and getattr(timelines[0], "function", "") == "MapleEnemy"
+    ):
+        return [
+            "    // omitted TH10 MapleEnemy visual helper for TH15 stability",
+            "    return;",
+        ]
     helper = next((obj for obj in function_objects if getattr(obj, "kind", None) == "HelperRoutine" and helper_applies(obj, target)), None)
     if helper is not None:
         return emit_helper_routine_body(helper, target)
@@ -851,6 +893,12 @@ def make_bullet_lowering_state_from_events(events: list[dict[str, object]], sour
 
 
 def lower_bullet_fire_opcode(opcode: int, args: list[object], source_game: str, target: str, bullet_state: BulletLoweringState | None) -> list[str] | None:
+    if opcode == 401 and generation_for_game(source_game) == "th10_th11" and generation_for_game(target) == "th13_plus":
+        emitter_id = str(args[0]) if args else "0"
+        return [
+            f"    // dynamic bullet fire lowering {source_game}->{target}: ins_401 -> ins_601",
+            f"    ins_601({emitter_id});",
+        ]
     if opcode == 611 and generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
         emitter_id = str(args[0]) if args else "0"
         if bullet_state:
@@ -930,6 +978,29 @@ def lower_bullet_create_opcode(opcode: int, args: list[object], source_game: str
 
 
 def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str, target: str, difficulty_literals: object = None, bullet_state: BulletLoweringState | None = None) -> list[str] | None:
+    if generation_for_game(source_game) == "th10_th11" and generation_for_game(target) == "th13_plus":
+        mapping = {
+            400: 600,
+            402: 602,
+            404: 604,
+            405: 605,
+            406: 606,
+            407: 607,
+        }
+        mapped = mapping.get(opcode)
+        if mapped is None:
+            return None
+        rendered_args = [str(arg) for arg in args]
+        if opcode == 402 and len(rendered_args) >= 3:
+            rendered_args[1] = encode_bullet_shape(bullet_shape_semantic(source_game, rendered_args[1]), target, rendered_args[1])
+        elif opcode == 407 and len(rendered_args) >= 2:
+            rendered_args[1] = encode_spread_style(spread_semantic(source_game, rendered_args[1]), target, rendered_args[1])
+        return ranked_or_plain_lines(
+            mapped,
+            rendered_args,
+            difficulty_literals,
+            f"    // dynamic bullet config lowering {source_game}->{target}: ins_{opcode} -> ins_{mapped}",
+        )
     if opcode == 502 and generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus" and len(args) >= 3:
         emitter_id = str(args[0])
         if bullet_state and emitter_id in bullet_state.curve_laser_emitters:
@@ -1041,6 +1112,26 @@ def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str
 
 
 def lower_bullet_transform_opcode(opcode: int, args: list[object], source_game: str, target: str, difficulty_literals: object = None, bullet_state: BulletLoweringState | None = None) -> list[str] | None:
+    if generation_for_game(source_game) == "th10_th11" and generation_for_game(target) == "th13_plus":
+        if opcode != 409 or len(args) != 8:
+            return None
+        transform_ir = BulletTransformIR.from_opcode(source_game, opcode, [str(arg) for arg in args])
+        if not transform_ir or transform_ir.unsupported_reason(target):
+            reason = unsupported_bullet_transform_mode_reason(source_game, target, str(args[3]) if len(args) > 3 else "")
+            return [
+                f"    // dropped unsupported bullet transform mode from ins_409: {reason}",
+                f"    // original args: {', '.join(str(arg) for arg in args)}",
+            ]
+        target_instruction = transform_ir.lower_to(target)
+        if not target_instruction:
+            return None
+        return ranked_or_plain_lines(
+            target_instruction.opcode,
+            target_instruction.args,
+            difficulty_literals,
+            f"    // dynamic bullet transform lowering {source_game}->{target}: ins_409 -> ins_{target_instruction.opcode}",
+        )
+
     if generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
         if opcode != 509 or len(args) != 8:
             return None
@@ -1261,6 +1352,14 @@ def th12_stage06_to_th15_mainfront_boundary(event: dict[str, object], source_gam
 
 def lower_raw_instruction_event(opcode: int, args: list[object], text: str, source_game: str, target: str, difficulty_literals: object = None, ir_op: dict[str, object] | None = None, context: dict[str, object] | None = None) -> list[str]:
     if ir_op:
+        semantic_map = opcode_map_for(source_game, target, opcode)
+        if semantic_map is not None and str(ir_op.get("op_key") or "").startswith("raw."):
+            ir_op = {
+                **ir_op,
+                "op_key": semantic_map.semantic,
+                "source_game": source_game,
+                "source_opcode": opcode,
+            }
         semantic_line = compile_ir_op_event(ir_op, target, context=context)
         if semantic_line:
             rendered = [line if line.startswith("    ") else f"    {line}" for line in semantic_line.splitlines()]
@@ -1301,10 +1400,11 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         return []
     if kind == "instruction":
         opcode = event.get("opcode")
+        opcode_int = int(opcode) if opcode is not None else -1
         args = event.get("args", [])
         if (
             is_th12_stage06_to_th15_context(source_game, target, context)
-            and int(opcode or -1) in {256, 257}
+            and opcode_int in {256, 257}
             and args
             and str(args[0]).strip('"') == "Boss"
             and str(context.get("function", "")) == "main"
@@ -1345,48 +1445,49 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
             if collapsed != wait:
                 return wrap_event_rank([f"    // dynamic wait expression collapsed for timer syntax: {wait}", f"    +{collapsed}:"], event, target)
             return wrap_event_rank([f"    +{wait}:"], event, target)
-        create_lowered = lower_bullet_create_opcode(int(opcode or -1), list(args), source_game, target, bullet_state)
+        create_lowered = lower_bullet_create_opcode(opcode_int, list(args), source_game, target, bullet_state)
         if create_lowered:
             return wrap_event_rank(create_lowered, event, target)
-        if generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus" and int(opcode or -1) == 509 and len(args) >= 4:
+        if generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus" and opcode_int == 509 and len(args) >= 4:
             reason = unsupported_bullet_transform_mode_reason(source_game, target, args[3])
             if reason:
                 return wrap_event_rank([
                     f"    // dropped unsupported bullet transform mode from ins_509: {reason}",
                     f"    // original: {text}",
                 ], event, target)
-        fire_lowered = lower_bullet_fire_opcode(int(opcode or -1), list(args), source_game, target, bullet_state)
+        fire_lowered = lower_bullet_fire_opcode(opcode_int, list(args), source_game, target, bullet_state)
         if fire_lowered:
             return wrap_event_rank(fire_lowered, event, target)
-        config_lowered = lower_bullet_config_opcode(int(opcode or -1), list(args), source_game, target, event.get("difficulty_literals", []), bullet_state)
+        config_lowered = lower_bullet_config_opcode(opcode_int, list(args), source_game, target, event.get("difficulty_literals", []), bullet_state)
         if config_lowered:
             if any(line.strip().startswith("!") for line in config_lowered):
                 return config_lowered
             return wrap_event_rank(config_lowered, event, target)
-        transform_lowered = lower_bullet_transform_opcode(int(opcode or -1), list(args), source_game, target, event.get("difficulty_literals", []), bullet_state)
+        transform_lowered = lower_bullet_transform_opcode(opcode_int, list(args), source_game, target, event.get("difficulty_literals", []), bullet_state)
         if transform_lowered:
             if any(line.strip().startswith("!") for line in transform_lowered):
                 return transform_lowered
             return wrap_event_rank(transform_lowered, event, target)
-        misc_bullet_lowered = lower_th13_misc_bullet_opcode(int(opcode or -1), list(args), source_game, target, event.get("difficulty_literals", []), bullet_state)
+        misc_bullet_lowered = lower_th13_misc_bullet_opcode(opcode_int, list(args), source_game, target, event.get("difficulty_literals", []), bullet_state)
         if misc_bullet_lowered:
             if any(line.strip().startswith("!") for line in misc_bullet_lowered):
                 return misc_bullet_lowered
             return wrap_event_rank(misc_bullet_lowered, event, target)
-        diff_float_lowered = lower_th13_diff_float_opcode(int(opcode or -1), list(args), source_game, target, event.get("difficulty_literals", []))
+        diff_float_lowered = lower_th13_diff_float_opcode(opcode_int, list(args), source_game, target, event.get("difficulty_literals", []))
         if diff_float_lowered:
             if any(line.strip().startswith("!") for line in diff_float_lowered):
                 return diff_float_lowered
             return wrap_event_rank(diff_float_lowered, event, target)
-        lowered = lower_raw_instruction_event(int(opcode or -1), list(args), text, source_game, target, event.get("difficulty_literals", []), event.get("ir_op"), context)
+        lowered = lower_raw_instruction_event(opcode_int, list(args), text, source_game, target, event.get("difficulty_literals", []), event.get("ir_op"), context)
         if lowered:
             if any(line.strip().startswith("!") for line in lowered):
                 return lowered
             return wrap_event_rank(lowered, event, target)
         return wrap_event_rank([f"    // unlifted instruction: {text}"], event, target)
     if kind == "time":
-        # +N: is a compile-time timestamp accepted by TH10+ thecl, not a wait opcode.
-        # It must be preserved for TH12; only TH13+ ins_23/24 waits are lowered to ins_83.
+        wait = str(event.get("time") or "").strip()
+        if generation_for_game(source_game) in {"th10_th11", "th12"} and generation_for_game(target) == "th13_plus" and wait:
+            return wrap_event_rank([f"    ins_23({literal_time_value(wait)});"], event, target)
         return wrap_event_rank([f"    {text}"], event, target)
     if kind == "label":
         return [f"    {text}"]
@@ -1401,6 +1502,13 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         and str(event.get("function", "")).startswith("EffChargePoint")
     ):
         return wrap_event_rank([f"    // dropped TH13+ charge-point effect call for TH12 stability: {text}"], event, target)
+    if (
+        target == "th15"
+        and source_game == "th10"
+        and kind in {"call", "async_call"}
+        and str(event.get("function", "")) == "MapleEnemy"
+    ):
+        return wrap_event_rank(["    // omitted TH10 MapleEnemy visual helper create for TH15 stability"], event, target)
     if kind in {"goto", "conditional_goto", "call", "async_call", "return", "var", "assign"}:
         suffix = "" if text.endswith(";") else ";"
         statement_text = remap_call_statement_text(event, source_game, target, context) if kind in {"call", "async_call"} else f"{text}{suffix}"
@@ -1412,15 +1520,26 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
             return wrap_event_rank([*boundary, f"    {statement_text}"], event, target)
         return wrap_event_rank([f"    {statement_text}"], event, target)
     if kind == "raw":
-        if re.fullmatch(r"[%$]?[A-Za-z_][A-Za-z0-9_]*|[-+]?\d+(?:\.\d+)?f?", text):
-            return wrap_event_rank([f"    {text};"], event, target)
+        raw_expr = text.strip()
+        if raw_expr.endswith(";"):
+            raw_expr = raw_expr[:-1].strip()
+        if re.fullmatch(r"[%$]?[A-Za-z_][A-Za-z0-9_]*|[-+]?\d+(?:\.\d+)?f?", raw_expr):
+            return wrap_event_rank([f"    {raw_expr};"], event, target)
         return [f"    // raw: {text}"]
     return []
-
 
 def remap_call_statement_text(event: dict[str, object], source_game: str, target: str, context: dict[str, object] | None = None) -> str:
     text = str(event.get("text") or "")
     suffix = "" if text.endswith(";") else ";"
+    if source_game != target and source_game in {"th10", "th11"} and generation_for_game(target) == "th13_plus":
+        source_path = str(context.get("source_path", "") if context else "").replace("\\", "/")
+        function = str(event.get("function", ""))
+        args = [str(arg) for arg in event.get("args", [])]
+        if is_stage_decl_path(source_path) and function_uses_stage_enemy_anm_args(function) and args:
+            remapped = remap_th10_stage_enemy_call_anm_args(args, target)
+            if remapped != args:
+                async_suffix = " async" if event.get("kind") == "async_call" else ""
+                return f"@{function}({', '.join(remapped)}){async_suffix};"
     if source_game != target and source_game == "th12" and target == "th15":
         source_path = str(context.get("source_path", "") if context else "").replace("\\", "/")
         function = str(event.get("function", ""))
@@ -1432,6 +1551,45 @@ def remap_call_statement_text(event: dict[str, object], source_game: str, target
                 async_suffix = " async" if event.get("kind") == "async_call" else ""
                 return f"@{function}({', '.join(args)}){async_suffix};"
     return f"{text}{suffix}"
+
+
+def is_stage_decl_path(path: str) -> bool:
+    name = path.rsplit("/", 1)[-1].lower()
+    return name.startswith("stage") or name.startswith("st")
+
+
+def function_uses_stage_enemy_anm_args(function: str) -> bool:
+    return bool(re.fullmatch(r"(?:[BGRY])?(?:Girl|SpCir|Cir)[A-Za-z0-9_]*|Ecl_Girl[A-Za-z0-9_]*", function))
+
+
+TH10_STAGE_MAIN_ARG_TO_TH13PLUS = {
+    "0": "0",
+    "5": "5",
+    "10": "35",
+    "15": "40",
+    "20": "20",
+    "25": "25",
+    "30": "35",
+    "35": "40",
+    "49": "147",
+    "50": "152",
+    "51": "157",
+    "52": "162",
+}
+
+def remap_th10_stage_enemy_call_anm_args(args: list[str], target: str) -> list[str]:
+    if generation_for_game(target) != "th13_plus":
+        return args
+    remapped = list(args)
+    first = str(remapped[0]).strip()
+    if first in TH10_STAGE_MAIN_ARG_TO_TH13PLUS:
+        remapped[0] = TH10_STAGE_MAIN_ARG_TO_TH13PLUS[first]
+    if len(remapped) >= 2:
+        second = str(remapped[1]).strip()
+        parsed = parse_int_literal(second)
+        if parsed is not None:
+            remapped[1] = str(remap_set_script("th10", target, 1, parsed, "stage", "stage_enemy", "sprite").script)
+    return remapped
 
 
 def remap_th12_stage_enemy_main_arg_to_target(value: str, target: str) -> str | None:

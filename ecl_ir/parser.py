@@ -115,6 +115,7 @@ def parse_decl(path: str | Path) -> Program:
     program = Program(source=str(path), game=infer_game(path))
     current: Function | None = None
     pending_diff: str | None = None
+    active_diff: str | None = None
     pending_literal_groups: list[dict[str, str]] = []
     current_literals: dict[str, str] = {}
     resource_name: str | None = None
@@ -153,9 +154,11 @@ def parse_decl(path: str | Path) -> Program:
                 if current_literals:
                     pending_literal_groups.append(current_literals)
                     current_literals = {}
+                active_diff = None
                 pending_diff = None
                 continue
             if not line:
+                active_diff = pending_diff
                 continue
             if is_difficulty_literal_statement(line, line_no):
                 if pending_diff in current_literals and current_literals:
@@ -164,11 +167,13 @@ def parse_decl(path: str | Path) -> Program:
                 current_literals[pending_diff] = line[:-1].strip()
                 pending_diff = None
                 continue
+            active_diff = None
         elif pending_diff and is_difficulty_literal_statement(line, line_no):
             if pending_diff in current_literals and current_literals:
                 pending_literal_groups.append(current_literals)
                 current_literals = {}
             current_literals[pending_diff] = line[:-1].strip()
+            active_diff = None
             pending_diff = None
             continue
 
@@ -177,6 +182,7 @@ def parse_decl(path: str | Path) -> Program:
             current = Function(func_match.group(1), func_match.group(2).strip())
             program.functions.append(current)
             pending_diff = None
+            active_diff = None
             pending_literal_groups = []
             current_literals = {}
             continue
@@ -187,6 +193,7 @@ def parse_decl(path: str | Path) -> Program:
         if line == "}" and current is not None:
             current = None
             pending_diff = None
+            active_diff = None
             pending_literal_groups = []
             current_literals = {}
             continue
@@ -194,7 +201,8 @@ def parse_decl(path: str | Path) -> Program:
         if not line:
             continue
 
-        stmt = classify_statement(statement_line, line_no, pending_diff)
+        stmt_diff = pending_diff or active_diff
+        stmt = classify_statement(statement_line, line_no, stmt_diff)
         if current is not None and pending_literal_groups:
             stmt.attrs["difficulty_literals"] = list(pending_literal_groups)
         if current is not None:
@@ -209,7 +217,7 @@ def parse_decl(path: str | Path) -> Program:
                 args=split_args(ins_match.group(2)),
                 raw=raw_line.rstrip(),
                 line_no=line_no,
-                difficulty=pending_diff,
+                difficulty=stmt_diff,
                 difficulty_literals=[*pending_literal_groups, current_literals] if current_literals else list(pending_literal_groups),
             )
             current.body.append(ins)

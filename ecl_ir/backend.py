@@ -61,7 +61,9 @@ def difficulty_comment(field: str, value) -> str | None:
 
 
 
-def normalize_difficulty(difficulty: dict[str, str]) -> dict[str, str]:
+def normalize_difficulty(difficulty: object) -> dict[str, str]:
+    if not isinstance(difficulty, dict):
+        return {}
     normalized: dict[str, str] = {}
     for key, value in difficulty.items():
         if key == "*":
@@ -128,13 +130,21 @@ def emit_checked_instruction(target: str, opcode: int, args: list[object]) -> st
     return f"ins_{opcode}({', '.join(rendered)});"
 
 
-def as_float_expr(value: object) -> str:
+def as_float_expr(value: object) -> object:
+    if isinstance(value, dict):
+        result = dict(value)
+        if "placeholder" in result:
+            result["placeholder"] = as_float_expr(result["placeholder"])
+        if isinstance(result.get("difficulty"), dict):
+            result["difficulty"] = {rank: as_float_expr(val) for rank, val in result["difficulty"].items()}
+        return result
     text = str(value).strip()
     if re.fullmatch(r"[-+]?\d+", text):
         return f"{text}.0f"
     text = re.sub(r"(?<![\w.])([-+]?\d+)(?![\w.])\s*/", lambda m: f"{m.group(1)}.0f /", text)
-    text = re.sub(r"/\s*\(?([-+]?\d+)\)?(?![\w.])", lambda m: f"/ _f({m.group(1)})", text)
+    text = re.sub(r"/\s*([-+]?\d+)(?![\w.])", lambda m: f"/ _f({m.group(1)})", text)
     text = re.sub(r"(?<![\w.])([-+]?\d+\.\d+)(?![\w.])", lambda m: m.group(1) + ("" if m.group(1).endswith("f") else "f"), text)
+    text = re.sub(r"_f\(_S\(([^()]*)\)\s*/\s*_f\(([-+]?\d+)\)\)", r"_f(_S(\1)) / _f(\2)", text)
     return text
 
 
@@ -157,6 +167,32 @@ def as_int_expr(value: object):
 
 def normalize_target_args_for_op_key(op_key: str, target: str, args: list[str]) -> list[str]:
     normalized = [str(arg) for arg in args]
+    if target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+        float_indices_by_op = {
+            "movement.position.set": {0, 1},
+            "movement.position.tween": {2, 3},
+            "movement.position_rel.set": {0, 1},
+            "movement.position_rel.tween": {2, 3},
+            "movement.velocity.set": {0, 1},
+            "movement.velocity.tween": {2, 3},
+            "movement.velocity_rel.set": {0, 1},
+            "movement.velocity_rel.tween": {2, 3},
+            "movement.circle.set": {0, 1, 2, 3},
+            "movement.circle.tween": {2, 3, 4},
+            "movement.circle_rel.set": {0, 1, 2, 3},
+            "movement.circle_rel.tween": {2, 3, 4},
+            "movement.move_rand": {2},
+            "movement.move_rand_rel": {2},
+            "movement.ellipse.set": {0, 1, 2, 3, 4, 5},
+            "movement.ellipse.tween": {2, 3, 4, 5, 6},
+            "movement.ellipse_rel.set": {0, 1, 2, 3, 4, 5},
+            "movement.ellipse_rel.tween": {2, 3, 4, 5, 6},
+            "movement.bezier": {1, 2, 3, 4, 5, 6},
+            "movement.bezier_rel": {1, 2, 3, 4, 5, 6},
+        }
+        for index in float_indices_by_op.get(op_key, set()):
+            if index < len(normalized):
+                normalized[index] = str(as_float_expr(normalized[index]))
     if target == "th12" and op_key in {
         "movement.position.tween", "movement.position_rel.tween",
         "movement.velocity.tween", "movement.velocity_rel.tween",
@@ -355,7 +391,7 @@ def anm_role_hint(event: dict[str, object], context: dict[str, object] | None = 
     function = str(context.get("function", "") if context else "")
     if any(token in name for token in ("boss", "mbs", "bs")):
         return "boss"
-    if function.startswith("Boss") or function in {"HPWait", "MBossCard1LaserHit"}:
+    if function.startswith(("Boss", "MBoss", "MainBoss", "MainMBoss")) or function in {"HPWait", "MBossCard1LaserHit"}:
         return "boss"
     if source_game and name.startswith(("stage", "st")):
         return "stage"
@@ -366,7 +402,7 @@ def remap_anm_args(event: dict[str, object], target: str, args: list[str], conte
     source_game = str(event.get("source_game") or "")
     if not source_game or source_game == target:
         return args
-    op_key = str(event.get("op_key") or "")
+    op_key = canonical_anm_op_key(str(event.get("op_key") or ""))
     role_hint = anm_role_hint(event, context)
     if op_key == "anm.select" and len(args) == 1:
         source_bank = parse_int_literal(args[0])
@@ -382,6 +418,8 @@ def remap_anm_args(event: dict[str, object], target: str, args: list[str], conte
         chosen = remap_play_script(source_game, target, source_bank, source_script, role_hint, purpose)
         return [str(chosen.bank), str(chosen.script), *args[2:]]
     if op_key in {"anm.set_sprite", "anm.set_main"} and len(args) == 2:
+        if role_hint == "boss" and op_key == "anm.set_sprite" and args[0].strip() == "4" and generation_for_game(target) == "th13_plus":
+            return ["3", "-1"]
         script = parse_int_literal(args[1])
         if script is None:
             if role_hint == "boss":
@@ -395,9 +433,56 @@ def remap_anm_args(event: dict[str, object], target: str, args: list[str], conte
         if source_bank is None:
             return args
         set_kind = "main" if op_key == "anm.set_main" else "sprite"
-        purpose = "boss_aux" if role_hint == "boss" and set_kind == "sprite" else "stage_enemy" if role_hint == "stage" else "main"
+        purpose = anm_set_purpose(event, role_hint, set_kind, args)
         return [args[0], str(remap_set_script(source_game, target, source_bank, script, role_hint, purpose, set_kind).script)]
     return args
+
+
+def canonical_anm_op_key(op_key: str) -> str:
+    if op_key.startswith("animation."):
+        return "anm." + op_key.removeprefix("animation.")
+    return op_key
+
+
+def anm_select_prefix_for_event(event: dict[str, object], target: str, context: dict[str, object] | None = None) -> list[str]:
+    source_game = str(event.get("source_game") or "")
+    if not source_game or source_game == target:
+        return []
+    op_key = canonical_anm_op_key(str(event.get("op_key") or ""))
+    if op_key not in {"anm.set_main", "anm.set_sprite"}:
+        return []
+    role_hint = anm_role_hint(event, context)
+    if not role_hint:
+        return []
+    bank = None
+    args = [str(arg) for arg in event.get("args", [])]
+    if len(args) == 2:
+        script = parse_int_literal(args[1])
+        source_bank = target_bank_for_role(source_game, role_hint)
+        if script is not None and source_bank is not None:
+            set_kind = "main" if op_key == "anm.set_main" else "sprite"
+            purpose = anm_set_purpose(event, role_hint, set_kind, args)
+            bank = remap_set_script(source_game, target, source_bank, script, role_hint, purpose, set_kind).bank
+    if bank is None:
+        bank = target_bank_for_role(target, role_hint)
+    select_opcode = target_opcode_for_op_key("anm.select", target)
+    if bank is None or select_opcode is None or not is_opcode_supported(target, select_opcode):
+        return []
+    return [f"ins_{select_opcode}({bank});"]
+
+
+def anm_set_purpose(event: dict[str, object], role_hint: str | None, set_kind: str, args: list[str]) -> str:
+    if role_hint == "stage":
+        return "stage_enemy"
+    if role_hint == "boss" and set_kind == "sprite":
+        if args:
+            slot = str(args[0]).strip()
+            if slot == "1":
+                return "boss_sprite"
+            if slot == "2":
+                return "boss_sprite_secondary"
+        return "boss_aux"
+    return "main"
 
 
 def drop_th12_stage6_stage_mboss_boss_anm(event: dict[str, object], target: str, context: dict[str, object] | None = None) -> str | None:
@@ -420,9 +505,9 @@ def compile_special_semantic_event(event: dict[str, object], target: str, contex
     op_key = str(event.get("op_key") or "")
     args = [str(arg) for arg in event.get("args", [])]
     if op_key == "boss.spell_ex" and target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
-        if len(args) >= 4:
+        if len(args) > 4:
             return f"ins_537({', '.join(args[:4])});"
-        return f"// unsupported boss.spell_ex arity for {target}: {', '.join(args)}"
+        return None
     if (
         op_key == "anm.set_sprite"
         and anm_role_hint(event, context) == "boss"
@@ -459,10 +544,15 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
     op_key = str(event.get("op_key") or "")
     if not op_key:
         return None
+    args = [str(arg) for arg in event.get("args", [])]
+    if target == "th15" and str(event.get("source_game") or "") == "th10" and op_key.startswith("enemy.create") and args and args[0].strip('"') == "MapleEnemy":
+        return "// omitted TH10 MapleEnemy visual helper create for TH15 stability"
+    source_opcode = int(event.get("source_opcode") or -1)
+    if op_key.startswith("raw.") and source_opcode == 1 and is_opcode_supported(target, 1):
+        return "ins_1();"
     if dropped := drop_th12_stage6_stage_mboss_boss_anm(event, target, context):
         return dropped
     source_game = str(event.get("source_game") or "")
-    source_opcode = int(event.get("source_opcode") or -1)
     if target == "th12" and source_game in {"th13", "th14", "th15", "th16", "th17", "th18"} and source_opcode in {611, 612}:
         return compile_lossy_semantic_fallback(event, target)
     if op_key == "flow.call_async" and str(event.get("source_game") or "") in {"th06", "th07", "th08"} and str(event.get("args", ["", ""])[-1]) == "-1":
@@ -479,31 +569,34 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
         return lowered
     if lowered := compile_special_semantic_event(event, target, context):
         return lowered
-    opcode = target_opcode_for_op_key(op_key, target)
     semantic_map = opcode_map_for(source_game, target, source_opcode) if source_game and source_opcode >= 0 else None
-    if opcode is None and semantic_map is not None:
+    semantic_op_key = (semantic_map.semantic if semantic_map is not None and semantic_map.semantic else op_key) if op_key.startswith("raw.") else canonical_anm_op_key(op_key)
+    opcode = target_opcode_for_op_key(semantic_op_key, target)
+    if opcode is None and op_key.startswith("raw.") and semantic_map is not None:
         opcode = semantic_map.target_opcode
     if opcode is None or not is_opcode_supported(target, opcode) or not target_opcode_is_safe(target, opcode):
         return compile_lossy_semantic_fallback(event, target)
-    args = [str(arg) for arg in event.get("args", [])]
     if semantic_map is not None and semantic_map.arg_order is not None:
         args = [args[index] for index in semantic_map.arg_order if index < len(args)]
     if source_game and source_opcode >= 0:
         args = remap_raw_arg_by_semantic(source_game, target, source_opcode, opcode, args)
-    args = remap_anm_args(event, target, args, context)
-    adapted_args = adapt_args_for_op_key(op_key, source_game, source_opcode, target, opcode, args)
+    args = remap_anm_args({**event, "op_key": semantic_op_key}, target, args, context)
+    adapted_args = adapt_args_for_op_key(semantic_op_key, source_game, source_opcode, target, opcode, args)
     if adapted_args is None:
         return None
-    args = normalize_target_args_for_op_key(op_key, target, adapted_args)
+    args = normalize_target_args_for_op_key(semantic_op_key, target, adapted_args)
     error = validate_opcode_args(target, opcode, args)
     if error:
         return compile_lossy_semantic_fallback(event, target)
     line = emit_checked_instruction(target, opcode, args)
-    prefix = boss_phase_prefix_ops(op_key, target)
+    prefix = [
+        *anm_select_prefix_for_event({**event, "op_key": semantic_op_key}, target, context),
+        *boss_phase_prefix_ops(semantic_op_key, target),
+    ]
     if prefix:
         line = "\n".join(prefix + [line])
     if comment:
-        return f"// {comment}: {op_key} -> ins_{opcode}\n{line}"
+        return f"// {comment}: {semantic_op_key} -> ins_{opcode}\n{line}"
     return line
 
 
@@ -544,13 +637,16 @@ def maybe_difficulty_table(value) -> dict[str, str] | None:
 
 
 def resolved_arg(value, default: str) -> str:
+    if isinstance(value, dict):
+        return str(value.get("placeholder", default))
     return v(value, default)
 
 
 def emit_instruction_with_ranked_args(opcode: int, args: list[object], defaults: list[str]) -> list[str]:
     if not any(maybe_difficulty_table(value) for value in args):
         return [f"ins_{opcode}({', '.join(str(resolved_arg(value, defaults[idx])) for idx, value in enumerate(args))});"]
-    lines: list[str] = []
+    default_args = [str(resolved_arg(value, defaults[idx])) for idx, value in enumerate(args)]
+    lines: list[str] = [f"ins_{opcode}({', '.join(default_args)});"]
     for rank in ("E", "N", "H", "L"):
         ranked_args: list[str] = []
         has_rank = False
@@ -765,6 +861,8 @@ def strip_line_comments(text: str) -> str:
 
 
 def object_difficulty(obj) -> str | None:
+    if getattr(obj, "kind", None) == "BulletEmitter":
+        return None
     raw = getattr(obj, "raw", []) or []
     difficulties = [getattr(ins, "difficulty", None) for ins in raw if getattr(ins, "difficulty", None)]
     if difficulties and all(item == difficulties[0] for item in difficulties):
@@ -814,8 +912,10 @@ def compile_named_op(obj, target: str, table_by_family: dict[str, dict[str, int]
         "op_key": obj.fields.get("op_key"),
         "source_game": getattr(obj, "game", ""),
         "source_opcode": getattr(obj.raw[0], "opcode", -1) if getattr(obj, "raw", None) else -1,
-        "args": obj.fields.get("args", []),
+        "args": semantic_object_args(obj, target),
     }
+    if getattr(obj, "kind", None) == "Enemy":
+        event = semantic_enemy_create_event(obj, target, event)
     context = {"function": getattr(obj, "function", ""), "source_path": getattr(obj, "source", "") or obj.fields.get("source", "")}
     lowered = compile_ir_op_event(event, target, f"{obj.kind} lowering {obj.family} -> {target}", context)
     if lowered:
@@ -829,6 +929,33 @@ def compile_named_op(obj, target: str, table_by_family: dict[str, dict[str, int]
         return compile_raw_comment(obj, target) + f"\n// unsupported legacy semantic op for {target}: {semantic}"
     args = remap_named_args(obj, target, semantic, obj.fields.get("args", []))
     return f"// legacy {obj.kind} lowering without op_key {obj.family} -> {target}: {semantic}\n" + emit_checked_instruction(target, opcode, args)
+
+
+def semantic_enemy_create_event(obj, target: str, event: dict[str, object]) -> dict[str, object]:
+    fields = getattr(obj, "fields", {}) or {}
+    create = fields.get("create")
+    if not isinstance(create, dict):
+        return event
+    op_key = enemy_create_op_key_for_target(create, target, str(event.get("op_key") or ""))
+    if not op_key:
+        return event
+    return {**event, "op_key": op_key, "create": create}
+
+
+def enemy_create_op_key_for_target(create: dict[str, object], target: str, fallback: str) -> str:
+    if str(create.get("role") or "") != "stage_enemy":
+        return fallback
+    if generation_for_game(target) not in {"th10_th11", "th12", "th13_plus"}:
+        return fallback
+    suffix = "_func" if create.get("func") else ""
+    if create.get("mirror"):
+        return f"enemy.create_mirror{suffix}"
+    return f"enemy.create{suffix}"
+
+
+def semantic_object_args(obj, target: str) -> list[str]:
+    args = [str(arg) for arg in (getattr(obj, "fields", {}) or {}).get("args", [])]
+    return args
 
 
 def remap_named_args(obj, target: str, semantic: str, args: list[str]) -> list[str]:

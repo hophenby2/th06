@@ -49,8 +49,19 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_13: ArgLayout(("duration", "mode", "angular_speed", "radius", "radius_delta"), {}),
     },
     "movement.move_limit_reset": {
+        GEN_10: ArgLayout((), {}),
         GEN_12: ArgLayout((), {}),
         GEN_13: ArgLayout((), {}),
+    },
+    "movement.move_rand": {
+        GEN_10: ArgLayout(("duration", "mode", "speed"), {}),
+        GEN_12: ArgLayout(("duration", "mode", "speed"), {}),
+        GEN_13: ArgLayout(("duration", "mode", "speed"), {}),
+    },
+    "movement.move_rand_rel": {
+        GEN_10: ArgLayout(("duration", "mode", "speed"), {}),
+        GEN_12: ArgLayout(("duration", "mode", "speed"), {}),
+        GEN_13: ArgLayout(("duration", "mode", "speed"), {}),
     },
 
     "movement.ellipse.set": {
@@ -72,6 +83,16 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_10: ArgLayout(("duration", "mode", "angular_speed", "radius", "radius_delta", "ellipse_angle", "ellipse_ratio"), {}),
         GEN_12: ArgLayout(("duration", "mode", "angular_speed", "radius", "radius_delta", "ellipse_angle", "ellipse_ratio"), {}),
         GEN_13: ArgLayout(("duration", "mode", "angular_speed", "radius", "radius_delta", "ellipse_angle", "ellipse_ratio"), {}),
+    },
+    "movement.bezier": {
+        GEN_10: ArgLayout(("duration", "x1", "y1", "x2", "y2", "x3", "y3"), {}),
+        GEN_12: ArgLayout(("duration", "x1", "y1", "x2", "y2", "x3", "y3"), {}),
+        GEN_13: ArgLayout(("duration", "x1", "y1", "x2", "y2", "x3", "y3"), {}),
+    },
+    "movement.bezier_rel": {
+        GEN_10: ArgLayout(("duration", "x1", "y1", "x2", "y2", "x3", "y3"), {}),
+        GEN_12: ArgLayout(("duration", "x1", "y1", "x2", "y2", "x3", "y3"), {}),
+        GEN_13: ArgLayout(("duration", "x1", "y1", "x2", "y2", "x3", "y3"), {}),
     },
     "movement.move_dir": {
         GEN_OLD: ArgLayout(("angle", "speed"), {}),
@@ -121,6 +142,16 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
     },
     "flow.delete": {
         GEN_OLD: ArgLayout((), {}),
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "flow.kill_async": {
+        GEN_10: ArgLayout(("slot",), {}),
+        GEN_12: ArgLayout(("slot",), {"slot": "0"}),
+        GEN_13: ArgLayout(("slot",), {"slot": "0"}),
+    },
+    "flow.kill_all_async": {
         GEN_10: ArgLayout((), {}),
         GEN_12: ArgLayout((), {}),
         GEN_13: ArgLayout((), {}),
@@ -250,8 +281,99 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_13: ArgLayout(("radius", "color"), {"radius": "0.0f", "color": "0"}),
     },
     "unit.boss_wait": {
+        GEN_10: ArgLayout((), {}),
         GEN_12: ArgLayout((), {}),
         GEN_13: ArgLayout((), {}),
+    },
+    "unit.move_limit": {
+        GEN_10: ArgLayout(("x", "y", "width", "height"), {}),
+        GEN_12: ArgLayout(("x", "y", "width", "height"), {}),
+        GEN_13: ArgLayout(("x", "y", "width", "height"), {}),
+    },
+    "unit.drop_clear": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "unit.drop_extra": {
+        GEN_10: ArgLayout(("type", "amount"), {}),
+        GEN_12: ArgLayout(("type", "amount"), {}),
+        GEN_13: ArgLayout(("type", "amount"), {}),
+    },
+    "unit.drop_area": {
+        GEN_10: ArgLayout(("width", "height"), {}),
+        GEN_12: ArgLayout(("width", "height"), {}),
+        GEN_13: ArgLayout(("width", "height"), {}),
+    },
+    "unit.drop_items": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "unit.drop_main": {
+        GEN_10: ArgLayout(("type",), {}),
+        GEN_12: ArgLayout(("type",), {}),
+        GEN_13: ArgLayout(("type",), {}),
+    },
+    "boss.life_set": {
+        GEN_10: ArgLayout(("life",), {}),
+        GEN_12: ArgLayout(("life",), {}),
+        GEN_13: ArgLayout(("life",), {}),
+    },
+    "boss.set_boss": {
+        GEN_10: ArgLayout(("boss_id",), {}),
+        GEN_12: ArgLayout(("boss_id",), {}),
+        GEN_13: ArgLayout(("boss_id",), {}),
+    },
+    "boss.timer_reset": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "unit.set_invuln": {
+        GEN_10: ArgLayout(("time",), {}),
+        GEN_12: ArgLayout(("time",), {}),
+        GEN_13: ArgLayout(("time",), {}),
+    },
+    "unit.play_sound": {
+        GEN_10: ArgLayout(("sound",), {}),
+        GEN_12: ArgLayout(("sound",), {}),
+        GEN_13: ArgLayout(("sound",), {}),
+    },
+    "unit.dialog_read": {
+        GEN_10: ArgLayout(("msg",), {}),
+        GEN_12: ArgLayout(("msg",), {}),
+        GEN_13: ArgLayout(("msg",), {}),
+    },
+    "unit.dialog_wait": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "boss.spell_end": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "boss.set_chapter": {
+        GEN_10: ArgLayout(("chapter",), {}),
+        GEN_12: ArgLayout(("chapter",), {}),
+        GEN_13: ArgLayout(("chapter",), {}),
+    },
+    "enemy.enm_kill_all": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "unit.life_marker": {
+        GEN_10: ArgLayout(("slot", "life", "color"), {}),
+        GEN_12: ArgLayout(("slot", "life", "color"), {}),
+        GEN_13: ArgLayout(("slot", "life", "color"), {}),
+    },
+    "unit.stars": {
+        GEN_10: ArgLayout(("count",), {}),
+        GEN_12: ArgLayout(("count",), {}),
+        GEN_13: ArgLayout(("count",), {}),
     },
     "unit.death_wait": {
         GEN_10: ArgLayout((), {}),
@@ -299,8 +421,18 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_12: ArgLayout(("phase", "life", "time", "sub"), {"phase": "0", "life": "0", "time": "0"}),
         GEN_13: ArgLayout(("phase", "life", "time", "sub"), {"phase": "0", "life": "0", "time": "0"}),
     },
+    "boss.set_timeout": {
+        GEN_10: ArgLayout(("mode", "sub"), {"mode": "0"}),
+        GEN_12: ArgLayout(("mode", "sub"), {"mode": "0"}),
+        GEN_13: ArgLayout(("mode", "sub"), {"mode": "0"}),
+    },
     "boss.spell": {
         GEN_OLD: ArgLayout(("phase", "spell_id", "score", "name", "user", "desc1", "desc2"), {"timeout": "0"}),
+        GEN_10: ArgLayout(("phase", "timeout", "score", "name"), {"phase": "0", "timeout": "0", "score": "0", "name": '""'}),
+        GEN_12: ArgLayout(("phase", "timeout", "score", "name"), {"phase": "0", "timeout": "0", "score": "0", "name": '""'}),
+        GEN_13: ArgLayout(("phase", "timeout", "score", "name"), {"phase": "0", "timeout": "0", "score": "0", "name": '""'}),
+    },
+    "boss.spell_ex": {
         GEN_10: ArgLayout(("phase", "timeout", "score", "name"), {"phase": "0", "timeout": "0", "score": "0", "name": '""'}),
         GEN_12: ArgLayout(("phase", "timeout", "score", "name"), {"phase": "0", "timeout": "0", "score": "0", "name": '""'}),
         GEN_13: ArgLayout(("phase", "timeout", "score", "name"), {"phase": "0", "timeout": "0", "score": "0", "name": '""'}),

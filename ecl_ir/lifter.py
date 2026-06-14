@@ -65,6 +65,16 @@ def with_rank(value: str, difficulty: str | None) -> object:
 
 def merge_ranked_value(current: object, value: object, difficulty: str | None) -> object:
     if not difficulty or difficulty == "*":
+        if isinstance(value, dict) and isinstance(value.get("difficulty"), dict) and current not in (None, ""):
+            merged = dict(value)
+            if isinstance(current, dict) and isinstance(current.get("difficulty"), dict):
+                difficulty_values = dict(current["difficulty"])
+                difficulty_values.update(value["difficulty"])
+                merged["difficulty"] = difficulty_values
+                merged["placeholder"] = current.get("placeholder", value.get("placeholder"))
+            else:
+                merged["placeholder"] = current
+            return merged
         return value
     if isinstance(current, dict) and isinstance(current.get("difficulty"), dict):
         merged = dict(current["difficulty"])
@@ -73,9 +83,15 @@ def merge_ranked_value(current: object, value: object, difficulty: str | None) -
     merged = {}
     if current not in (None, ""):
         # Keep the previous non-ranked value as fallback preview only.
-        pass
+        if isinstance(current, dict):
+            merged.update(current.get("difficulty", {}))
+            placeholder = current.get("placeholder", value)
+        else:
+            placeholder = current
+    else:
+        placeholder = value
     merged[difficulty] = value
-    return {"placeholder": value, "difficulty": merged}
+    return {"placeholder": placeholder, "difficulty": merged}
 
 
 def set_ranked_field(container: dict, key: str, value: object, difficulty: str | None) -> None:
@@ -380,8 +396,28 @@ def lift_th10_function(game: str, func: Function) -> list[BulletEmitter]:
         emitter_id = arg(ins.args, 0, "0")
         emitter = active.get(emitter_id)
         if not emitter:
-            continue
-        if ins.opcode in {402, 404, 405, 406, 407, 408, 409, 410, 411}:
+            if ins.opcode == 403:
+                emitter = BulletEmitter(game=game, function=func.name, source_line=ins.line_no, id=emitter_id, family="th10_slot")
+                emitter.origin = {"mode": "enemy", "x": "0", "y": "0"}
+                active[emitter_id] = emitter
+                emitters.append(emitter)
+            else:
+                continue
+        elif emitter.fire_lines and ins.opcode in {402, 403, 404, 405, 406, 407, 408, 409, 410, 411}:
+            previous = emitter
+            emitter = BulletEmitter(game=game, function=func.name, source_line=ins.line_no, id=emitter_id, family="th10_slot")
+            emitter.origin = deepcopy(previous.origin)
+            emitter.appearance = deepcopy(previous.appearance)
+            emitter.aim = deepcopy(previous.aim)
+            emitter.count = deepcopy(previous.count)
+            emitter.speed = deepcopy(previous.speed)
+            emitter.sound = deepcopy(previous.sound)
+            emitter.flags = deepcopy(previous.flags)
+            emitter.semantics = deepcopy(previous.semantics)
+            emitter.transforms = deepcopy(previous.transforms)
+            active[emitter_id] = emitter
+            emitters.append(emitter)
+        if ins.opcode in {402, 403, 404, 405, 406, 407, 408, 409, 410, 411}:
             emitter.raw.append(ins)
             append_emitter_op(emitter, ins)
             apply_th10(emitter, ins)
@@ -392,8 +428,12 @@ def apply_th10(emitter: BulletEmitter, ins: Instruction) -> None:
     args = ins.args
     op = ins.opcode
     if op == 402:
-        set_ranked_field(emitter.appearance, "style", arg(args, 1), ins.difficulty)
+        shape = with_difficulty(arg(args, 1), ins.difficulty_literals)
+        set_ranked_field(emitter.appearance, "style", shape, ins.difficulty)
         set_ranked_field(emitter.appearance, "color", arg(args, 2), ins.difficulty)
+        update_shape_semantics(emitter, shape)
+    elif op == 403:
+        set_origin_base(emitter, {"mode": "offset", "x": arg(args, 1, "0.0f"), "y": arg(args, 2, "0.0f")})
     elif op == 404:
         set_ranked_field(emitter.aim, "base_angle", arg(args, 1, "0"), ins.difficulty)
         set_ranked_field(emitter.aim, "angle_step", arg(args, 2, "0"), ins.difficulty)
@@ -404,8 +444,10 @@ def apply_th10(emitter: BulletEmitter, ins: Instruction) -> None:
         set_ranked_field(emitter.count, "ways", with_difficulty(arg(args, 1, "1"), ins.difficulty_literals), ins.difficulty)
         set_ranked_field(emitter.count, "layers", arg(args, 2, "1"), ins.difficulty)
     elif op == 407:
-        set_ranked_field(emitter.aim, "mode_raw", arg(args, 1, "0"), ins.difficulty)
+        style = with_difficulty(arg(args, 1, "0"), ins.difficulty_literals)
+        set_ranked_field(emitter.aim, "mode_raw", style, ins.difficulty)
         emitter.aim["mode"] = aim_mode_name(arg(args, 1, "0"))
+        update_spread_semantics(emitter, style, "th10")
     elif op == 408:
         emitter.sound["id"] = arg(args, 1)
     elif op == 409:

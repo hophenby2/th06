@@ -248,7 +248,14 @@ def lift_movements(program: Program, func: Function) -> list[MovementOp]:
         }
         family = "th12"
     elif program.game in {"th10", "th11"}:
-        movement_names = {300: "moveEllipse", 320: "movePos", 321: "movePosTime", 322: "moveVel", 323: "moveVelTime", 327: "moveReset"}
+        movement_names = {
+            280: "movePos", 281: "movePosTime", 282: "movePosRel", 283: "movePosRelTime",
+            284: "moveVel", 285: "moveVelTime", 286: "moveVelRel", 287: "moveVelRelTime",
+            288: "moveCircle", 289: "moveCircleTime", 290: "moveCircleRel", 291: "moveCircleRelTime",
+            292: "moveRandom", 293: "moveRandomRel",
+            300: "moveEllipse", 301: "moveEllipseTime", 302: "moveEllipseRel", 303: "moveEllipseRelTime",
+            305: "moveBezier", 306: "moveBezierRel",
+        }
         family = "th10"
     else:
         return objects
@@ -311,11 +318,23 @@ def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
     for ins in func.body:
         if ins.opcode in animation:
             obj = make_obj(AnimationOp, program, func, ins, family)
-            obj.fields.update({"op": animation[ins.opcode], "op_key": op_key_for_opcode(program.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
+            op_name = animation[ins.opcode]
+            op_key = op_key_for_opcode(program.game, ins.opcode)
+            if op_name == "anmSetMain" and len(ins.args) >= 2 and str(ins.args[0]).strip() != "0":
+                op_name = "anmSetSprite"
+                op_key = "animation.set_sprite"
+            obj.fields.update({"op": op_name, "op_key": op_key, "args": ins.args, "difficulty": ins.difficulty})
+            if op_name in {"anmSetMain", "anmSetSprite"} and len(ins.args) >= 2:
+                obj.fields["display"] = {
+                    "kind": "main" if op_name == "anmSetMain" else "sprite",
+                    "slot": ins.args[0],
+                    "script": ins.args[1],
+                }
             objects.append(obj)
         elif ins.opcode in enemy:
             obj = make_obj(EnemyOp, program, func, ins, family)
             obj.fields.update({"op": enemy[ins.opcode], "op_key": op_key_for_opcode(program.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
+            obj.fields["create"] = enemy_create_semantics(program, func, ins, enemy[ins.opcode])
             if program.game == "th12" and ins.args and ins.args[0].strip('"') == "BossCard6_atLine":
                 obj.fields.update({
                     "semantic": "flying_bowl_line_visual",
@@ -324,6 +343,35 @@ def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
                 })
             objects.append(obj)
     return objects
+
+
+def enemy_create_semantics(program: Program, func: Function, ins: Instruction, op_name: str) -> dict[str, object]:
+    sub = a(ins, 0, "")
+    sub_name = sub.strip().strip('"')
+    role = "boss" if enemy_create_is_boss(sub_name, func.name, program.source) else "stage_enemy"
+    return {
+        "sub": sub,
+        "x": a(ins, 1, "0.0f"),
+        "y": a(ins, 2, "0.0f"),
+        "life": a(ins, 3, "0"),
+        "score": a(ins, 4, "0"),
+        "item": a(ins, 5, "0"),
+        "role": role,
+        "position_mode": "absolute" if "A" in op_name else "relative",
+        "mirror": "M" in op_name,
+        "func": op_name.endswith("F"),
+    }
+
+
+def enemy_create_is_boss(sub_name: str, function: str, source: str) -> bool:
+    lowered = sub_name.lower()
+    if lowered in {"boss", "mboss"} or lowered.startswith(("boss", "mboss")):
+        return True
+    function_lower = function.lower()
+    if function_lower.startswith(("boss", "mboss")) and lowered in {"", "main"}:
+        return True
+    source_name = source.replace("\\", "/").rsplit("/", 1)[-1].lower()
+    return any(token in source_name for token in ("boss", "mbs", "bs")) and lowered in {"boss", "mboss"}
 
 
 def lift_boss_patterns(program: Program, func: Function) -> list[BossPattern]:

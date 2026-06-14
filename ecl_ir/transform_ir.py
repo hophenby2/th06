@@ -281,6 +281,13 @@ def bullet_transform_instructions(transform: BulletTransform, source_game: str, 
         return None
     if transform.raw_opcode in {609, 610, 611, 612} and args:
         return [LoweredInstruction(transform.raw_opcode, args)]
+    if generation_for_game(source_game) == "th10_th11" and generation_for_game(target) == "th13_plus":
+        if transform.raw_opcode == 409 and len(args) == 8:
+            ir = BulletTransformIR.from_opcode(source_game, transform.raw_opcode, args)
+            if not ir or ir.unsupported_reason(target):
+                return None
+            lowered = ir.lower_to(target)
+            return [lowered] if lowered else None
     if generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
         if transform.raw_opcode == 509 and len(args) == 8:
             ir = BulletTransformIR.from_opcode(source_game, transform.raw_opcode, args)

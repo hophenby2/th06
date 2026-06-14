@@ -286,12 +286,43 @@ TARGET_ROLE_BANK: dict[str, dict[str, int]] = {
 PURPOSE_FALLBACKS: dict[str, tuple[int, ...]] = {
     "main": (0, 5, 6, 7, 20, 25, 30, 35, 40, 50, 53),
     "stage_enemy": (0, 5, 25, 35, 40, 20, 30, 10, 15, 50, 51, 52, 53),
-    "stage_blue": (5, 0, 25, 35, 40, 20, 30, 10, 15),
-    "stage_green": (35, 40, 25, 5, 0, 20, 30, 10, 15),
-    "stage_red": (25, 5, 0, 35, 40, 20, 30, 10, 15),
-    "stage_yellow": (40, 35, 25, 5, 0, 20, 30, 10, 15),
+    "stage_blue": (0, 5, 25, 35, 40, 20, 30, 10, 15, 93, 96, 99),
+    "stage_green": (35, 40, 25, 5, 0, 20, 30, 10, 15, 93, 96, 99),
+    "stage_red": (5, 25, 0, 35, 40, 20, 30, 10, 15, 93, 96, 99),
+    "stage_yellow": (40, 35, 25, 5, 0, 20, 30, 10, 15, 93, 96, 99),
     "boss_aux": (6, 7, 0, 5, 14, 20, 21, 22, 23, 24),
+    "boss_sprite": (107, 105, 99, 93, 132, 124, 120, 116, 112),
+    "boss_sprite_secondary": (116, 120, 112, 132, 124, 107, 105, 99, 93),
     "familiar": (6, 7, 0, 5, 14, 20, 21, 22, 23, 24),
+}
+
+SOURCE_SET_PURPOSES: dict[tuple[str, str, str, int, int], str] = {
+    ("th10", "stage", "main", 1, 45): "stage_blue",
+    ("th10", "stage", "main", 1, 46): "stage_red",
+    ("th10", "stage", "main", 1, 47): "stage_green",
+    ("th10", "stage", "main", 1, 48): "stage_yellow",
+    ("th10", "stage", "sprite", 1, 45): "stage_blue",
+    ("th10", "stage", "sprite", 1, 46): "stage_red",
+    ("th10", "stage", "sprite", 1, 47): "stage_green",
+    ("th10", "stage", "sprite", 1, 48): "stage_yellow",
+    ("th10", "boss", "sprite", 2, 370): "boss_sprite",
+    ("th11", "stage", "main", 1, 45): "stage_blue",
+    ("th11", "stage", "main", 1, 46): "stage_red",
+    ("th11", "stage", "main", 1, 47): "stage_green",
+    ("th11", "stage", "main", 1, 48): "stage_yellow",
+    ("th11", "stage", "sprite", 1, 45): "stage_blue",
+    ("th11", "stage", "sprite", 1, 46): "stage_red",
+    ("th11", "stage", "sprite", 1, 47): "stage_green",
+    ("th11", "stage", "sprite", 1, 48): "stage_yellow",
+    ("th11", "boss", "sprite", 2, 370): "boss_sprite",
+    ("th12", "stage", "main", 1, 50): "stage_blue",
+    ("th12", "stage", "main", 1, 51): "stage_red",
+    ("th12", "stage", "main", 1, 52): "stage_green",
+    ("th12", "stage", "main", 1, 53): "stage_yellow",
+    ("th12", "stage", "sprite", 1, 50): "stage_blue",
+    ("th12", "stage", "sprite", 1, 51): "stage_red",
+    ("th12", "stage", "sprite", 1, 52): "stage_green",
+    ("th12", "stage", "sprite", 1, 53): "stage_yellow",
 }
 
 PLAY_PURPOSE_FALLBACKS: dict[str, tuple[int, ...]] = {
@@ -340,19 +371,26 @@ def remap_anm_bank(source_game: str, target_game: str, source_bank: int, role_hi
 
 
 def choose_script(game: str, role: str, purpose: str = "main", preferred: int | None = None, kind: str = "set") -> AnmScriptRef | None:
-    bank = target_bank_for_role(game, role)
     catalog = role_catalog(game, role)
-    if bank is None or catalog is None:
+    if catalog is None:
         return None
-    scripts = scripts_for_set_kind(game, role, bank, kind)
-    if not scripts:
-        return None
-    if preferred is not None and preferred in scripts:
-        return AnmScriptRef(bank, preferred)
+    candidate_banks = list(catalog.select_banks)
+    default_bank = target_bank_for_role(game, role)
+    if default_bank is not None:
+        candidate_banks = [default_bank, *[bank for bank in candidate_banks if bank != default_bank]]
+    if preferred is not None:
+        for bank in candidate_banks:
+            if preferred in scripts_for_set_kind(game, role, bank, kind):
+                return AnmScriptRef(bank, preferred)
     for candidate in PURPOSE_FALLBACKS.get(purpose, ()):
-        if candidate in scripts:
-            return AnmScriptRef(bank, candidate)
-    return AnmScriptRef(bank, scripts[0])
+        for bank in candidate_banks:
+            if candidate in scripts_for_set_kind(game, role, bank, kind):
+                return AnmScriptRef(bank, candidate)
+    for bank in candidate_banks:
+        scripts = scripts_for_set_kind(game, role, bank, kind)
+        if scripts:
+            return AnmScriptRef(bank, scripts[0])
+    return None
 
 
 def choose_play_script(game: str, role: str, purpose: str = "spawn", preferred: int | None = None) -> AnmScriptRef | None:
@@ -395,6 +433,7 @@ def remap_set_script(source_game: str, target_game: str, source_bank: int, sourc
     scripts = scripts_for_set_kind(target_game, role or "", target_bank, kind)
     if source_script in scripts:
         return AnmScriptRef(target_bank, source_script)
+    purpose = SOURCE_SET_PURPOSES.get((source_game, role or "", kind, source_bank, source_script), purpose)
     chosen = choose_script(target_game, role or "", purpose, source_script, kind)
     if chosen is not None:
         return chosen

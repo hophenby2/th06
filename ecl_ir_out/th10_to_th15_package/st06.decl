@@ -1,0 +1,4600 @@
+// source: E:\fork\th062\th10\stage06.decl
+// source game: th10
+// target: th15
+// whole-file lowering is a structured draft; verify target-game scheduling and resources
+anim { "enemy.anm"; "st06enm.anm"; }
+ecli { "default.ecl"; "st06bs.ecl"; }
+
+void BCir00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(2);
+    @Cir00(147, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void BCir01()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(2);
+    @Cir01(147, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void BCir01b()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(2);
+    @Cir01b(147, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void BGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(2);
+    @Girl00(20, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void Boss()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: boss.set_boss
+    ins_512(0);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(22);
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(48.0f, 48.0f);
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(32.0f, 32.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // semantic op_key lowering th10->th15: boss.life_set
+    ins_511(11500);
+    // object Movement source_line=45 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(0.0f, 128.0f);
+    // object Animation source_line=46 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(14);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: unit.flag_clear
+    ins_503(16);
+    // semantic op_key lowering th10->th15: unit.flag_clear
+    ins_503(2);
+    // object Animation source_line=52 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Animation source_line=53 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(0, 6);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: unit.dialog_wait
+    ins_519();
+    // semantic op_key lowering th10->th15: flow.kill_async
+    ins_17(0);
+    // object Animation source_line=57 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Animation source_line=58 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(3);
+    ins_306(0, 0);
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    ins_23(1);
+    // semantic op_key lowering th10->th15: unit.dialog_wait
+    ins_519();
+    // unsupported semantic op_key for th10->th15: unit.move_limit
+    // original: ins_324(0.0f, 128.0f, 280.0f, 96.0f);
+    // semantic op_key lowering th10->th15: unit.stars
+    ins_540(4);
+    // object Animation source_line=64 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Animation source_line=65 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=66 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    @Boss1();
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void Boss1()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // semantic op_key lowering th10->th15: boss.timer_reset
+    ins_513();
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 2500, 4200, "BossCard1");
+    // semantic op_key lowering th10->th15: unit.life_marker
+    ins_527(0, 2500.0f, -24448);
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(24);
+    // object Animation source_line=77 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(120);
+    ins_23(20);
+    [-9981.0f] = [-9989.0f];
+    // object Animation source_line=81 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(41);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    @Boss1_at() async;
+    goto Boss1_356 @ 140;
+    Boss1_340:
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Boss1_356:
+    if (1) goto Boss1_340 @ 80;
+    return;
+    // detected loops:
+    // - backedge_loop Boss1_340 lines 87..91 condition=1
+}
+
+void Boss1_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // object BulletEmitter source_line=98 family=th10_slot
+    ins_600(0);
+    ins_607(0, 3);
+    ins_602(0, 8, 2);
+    ins_606(0, 1, 1);
+    ins_604(0, [-9998.0f], 0.028049935f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 32.0f, -24.0f);
+    ins_609(0, 0, 1, 8, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(0, 24, 48, 48, 48, 1, 1, 1, 1);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(0, 2.2f, 2.2f, 2.2f, 3.2f, 1.5f, 1.5f, 1.5f, 1.5f);
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.411
+    // original: ins_411(1, 0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(1, 8, 4);
+    // object BulletEmitter source_line=108 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, [-9998.0f], 0.028049935f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, -32.0f, -24.0f);
+    %C = 3.141593f;
+    goto Boss1_at_620 @ 0;
+    Boss1_at_460:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th10->th15: unit.diff_wait
+    ins_548(15, 15, 10, 10);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    // semantic op_key lowering th10->th15: unit.diff_wait
+    ins_548(15, 15, 10, 10);
+    Boss1_at_620:
+    if (1) goto Boss1_at_460 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop Boss1_at_460 lines 111..119 condition=1
+}
+
+void Boss2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // semantic op_key lowering th10->th15: boss.life_set
+    ins_511(11500);
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 2500, 4200, "BossCard2");
+    // semantic op_key lowering th10->th15: unit.life_marker
+    ins_527(0, 2500.0f, -24448);
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(25);
+    // semantic op_key lowering th10->th15: unit.stars
+    ins_540(3);
+    unless ([-9986] == 0) goto Boss2_292 @ 0;
+    // semantic op_key lowering th10->th15: bullet.cancel_radius
+    ins_615(640.0f);
+    goto Boss2_312 @ 0;
+    Boss2_292:
+    // semantic op_key lowering th10->th15: bullet.clear_radius
+    ins_616(640.0f);
+    Boss2_312:
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // semantic op_key lowering th10->th15: boss.spell_end
+    ins_523();
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.21
+    // original: ins_21();
+    // semantic op_key lowering th10->th15: unit.laser_cancel
+    ins_545();
+    // object BulletEmitter source_line=140 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 0, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 0.0f, 0.0f);
+    // object BulletEmitter source_line=141 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, 0.0f, 0.0f);
+    // object BulletEmitter source_line=142 family=th10_slot
+    ins_600(2);
+    ins_607(2, 1);
+    ins_602(2, 0, 0);
+    ins_606(2, 1, 1);
+    ins_604(2, 0.0f, 0.0f);
+    ins_605(2, 1.0f, 0.0f);
+    ins_603(2, 0.0f, 0.0f);
+    // object BulletEmitter source_line=143 family=th10_slot
+    ins_600(3);
+    ins_607(3, 1);
+    ins_602(3, 0, 0);
+    ins_606(3, 1, 1);
+    ins_604(3, 0.0f, 0.0f);
+    ins_605(3, 1.0f, 0.0f);
+    ins_603(3, 0.0f, 0.0f);
+    // object BulletEmitter source_line=144 family=th10_slot
+    ins_600(4);
+    ins_607(4, 1);
+    ins_602(4, 0, 0);
+    ins_606(4, 1, 1);
+    ins_604(4, 0.0f, 0.0f);
+    ins_605(4, 1.0f, 0.0f);
+    ins_603(4, 0.0f, 0.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(180);
+    unless ([-9986] == 0) goto Boss2_720 @ 0;
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(1, 16);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(2, 10);
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(64.0f, 64.0f);
+    // semantic op_key lowering th10->th15: unit.drop_items
+    ins_509();
+    Boss2_720:
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(15);
+    // object Movement source_line=154 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 0, 0.0f, 192.0f);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // unsupported semantic op_key for th10->th15: unit.move_limit
+    // original: ins_324(0.0f, 128.0f, 64.0f, 96.0f);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(41);
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // object Animation source_line=160 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Enemy source_line=163 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirR", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=164 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirG", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=165 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirB", 0.0f, 0.0f, 240, 1000, 0);
+    ins_23(30);
+    // object Animation source_line=167 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, 6);
+    // object Animation source_line=168 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, -1);
+    ins_23(30);
+    // object Animation source_line=170 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=171 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(15);
+    @Boss2_at() async;
+    @Boss2_at2() async;
+    goto Boss2_1304 @ 360;
+    Boss2_1260:
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    ins_23(120);
+    // object Movement source_line=180 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(40, 0, 2.0f);
+    Boss2_1304:
+    if (1) goto Boss2_1260 @ 180;
+    return;
+    // detected loops:
+    // - backedge_loop Boss2_1260 lines 176..182 condition=1
+}
+
+void Boss2_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    %A = _f(0);
+    // object BulletEmitter source_line=190 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 10, 6);
+    ins_606(0, 1, 1);
+    ins_604(0, -2.3561945f, 0.19634955f);
+    ins_605(0, 3.5f, 1.4f);
+    ins_603(0, -48.0f, -32.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 1, 0, 8192, 160, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 2, 0, 128, 60, 1, 0.0f, 3.5f);
+    ins_609(0, 2, 0, 128, 60, 1, 0.0f, 4.5f);
+    ins_609(0, 2, 0, 128, 60, 1, 0.0f, 5.5f);
+    ins_609(0, 2, 0, 128, 60, 1, 0.0f, 6.5f);
+    ins_609(0, 2, 0, 128, 60, 1, 0.0f, 3.5f);
+    ins_609(0, 2, 0, 128, 60, 1, 0.0f, 4.5f);
+    ins_609(0, 2, 0, 128, 60, 1, %B, 5.5f);
+    ins_609(0, 2, 0, 128, 60, 1, %B, 6.5f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(0, 4, 4, 8, 16, 1, 1, 1, 1);
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.411
+    // original: ins_411(1, 0);
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.411
+    // original: ins_411(2, 0);
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.411
+    // original: ins_411(3, 0);
+    // object BulletEmitter source_line=211 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, -0.7853982f, 0.19634955f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, 48.0f, -32.0f);
+    ins_609(1, 2, 0, 128, 60, 1, 0.0f, 3.5f);
+    ins_609(1, 2, 0, 128, 60, 1, 0.0f, 4.5f);
+    ins_609(1, 2, 0, 128, 60, 1, %B, 5.5f);
+    ins_609(1, 2, 0, 128, 60, 1, %B, 6.5f);
+    // object BulletEmitter source_line=212 family=th10_slot
+    ins_600(2);
+    ins_607(2, 1);
+    ins_602(2, 10, 2);
+    ins_606(2, 1, 1);
+    ins_604(2, -2.7488935f, 0.19634955f);
+    ins_605(2, 1.0f, 0.0f);
+    ins_603(2, -56.0f, -24.0f);
+    ins_609(2, 2, 0, 128, 60, 1, 0.0f, 3.5f);
+    ins_609(2, 2, 0, 128, 60, 1, 0.0f, 4.5f);
+    ins_609(2, 2, 0, 128, 60, 1, %B, 5.5f);
+    ins_609(2, 2, 0, 128, 60, 1, %B, 6.5f);
+    // object BulletEmitter source_line=213 family=th10_slot
+    ins_600(3);
+    ins_607(3, 1);
+    ins_602(3, 10, 2);
+    ins_606(3, 1, 1);
+    ins_604(3, -0.3926991f, 0.19634955f);
+    ins_605(3, 1.0f, 0.0f);
+    ins_603(3, 56.0f, -24.0f);
+    ins_609(3, 2, 0, 128, 60, 1, 0.0f, 3.5f);
+    ins_609(3, 2, 0, 128, 60, 1, 0.0f, 4.5f);
+    ins_609(3, 2, 0, 128, 60, 1, %B, 5.5f);
+    ins_609(3, 2, 0, 128, 60, 1, %B, 6.5f);
+    goto Boss2_at_2452 @ 8;
+    Boss2_at_892:
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($C, 6, 10, 10, 10);
+    %B = _f(0);
+    goto Boss2_at_1588 @ 4;
+    Boss2_at_992:
+    unless ([-9959] >= 2) goto Boss2_at_1456 @ 0;
+    Boss2_at_1456:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    %B = %B + 0.017453f;
+    ins_23(4);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Boss2_at_1588:
+    if ($C--) goto Boss2_at_992 @ 0;
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(10);
+    !E
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(16);
+    !*
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($C, 6, 10, 10, 10);
+    %B = _f(0);
+    goto Boss2_at_2368 @ 8;
+    Boss2_at_1772:
+    unless ([-9959] >= 2) goto Boss2_at_2236 @ 4;
+    Boss2_at_2236:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(2);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(3);
+    %B = %B - 0.017453f;
+    ins_23(4);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Boss2_at_2368:
+    if ($C--) goto Boss2_at_1772 @ 4;
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(10);
+    !E
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(16);
+    !*
+    Boss2_at_2452:
+    if (1) goto Boss2_at_892 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Boss2_at_992 lines 224..250 condition=$C--
+    // - counter_loop Boss2_at_1772 lines 258..284 condition=$C--
+    // - backedge_loop Boss2_at_892 lines 220..290 condition=1
+}
+
+void Boss2_at2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    %A = _f(0);
+    // object BulletEmitter source_line=298 family=th10_slot
+    ins_600(4);
+    ins_607(4, 1);
+    ins_602(4, 10, 10);
+    ins_606(4, 2, 1);
+    ins_604(4, 1.5707964f, 1.5707964f);
+    ins_605(4, 5.5f, 1.4f);
+    ins_609(4, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    goto Boss2_at2_464 @ 15;
+    Boss2_at2_304:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(4);
+    // object BulletEmitter source_line=309 family=th10_slot
+    ins_600(4);
+    ins_607(4, 1);
+    ins_602(4, 10, 10);
+    ins_606(4, 2, 1);
+    ins_604(4, 1.5707964f, 1.3744467f);
+    ins_605(4, 5.5f, 1.4f);
+    ins_609(4, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(4);
+    // object BulletEmitter source_line=311 family=th10_slot
+    ins_600(4);
+    ins_607(4, 1);
+    ins_602(4, 10, 10);
+    ins_606(4, 2, 1);
+    ins_604(4, 1.5707964f, 1.1780972f);
+    ins_605(4, 5.5f, 1.4f);
+    ins_609(4, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(4);
+    ins_23(15);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Boss2_at2_464:
+    if (1) goto Boss2_at2_304 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop Boss2_at2_304 lines 306..316 condition=1
+}
+
+void Boss3()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    unless ([-9959] <= 1) goto Boss3_232 @ 0;
+    // semantic op_key lowering th10->th15: boss.life_set
+    ins_511(12900);
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 2900, 4200, "BossCard3");
+    // semantic op_key lowering th10->th15: unit.life_marker
+    ins_527(0, 2900.0f, -24448);
+    goto Boss3_324 @ 0;
+    Boss3_232:
+    // semantic op_key lowering th10->th15: boss.life_set
+    ins_511(12900);
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 2900, 4200, "BossCard3H");
+    // semantic op_key lowering th10->th15: unit.life_marker
+    ins_527(0, 2900.0f, -24448);
+    Boss3_324:
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(26);
+    // semantic op_key lowering th10->th15: unit.stars
+    ins_540(2);
+    unless ([-9986] == 0) goto Boss3_488 @ 0;
+    // semantic op_key lowering th10->th15: bullet.cancel_radius
+    ins_615(640.0f);
+    goto Boss3_508 @ 0;
+    Boss3_488:
+    // semantic op_key lowering th10->th15: bullet.clear_radius
+    ins_616(640.0f);
+    Boss3_508:
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // semantic op_key lowering th10->th15: boss.spell_end
+    ins_523();
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.21
+    // original: ins_21();
+    // semantic op_key lowering th10->th15: unit.laser_cancel
+    ins_545();
+    // object BulletEmitter source_line=344 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 0, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 0.0f, 0.0f);
+    // object BulletEmitter source_line=345 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, 0.0f, 0.0f);
+    // object BulletEmitter source_line=346 family=th10_slot
+    ins_600(2);
+    ins_607(2, 1);
+    ins_602(2, 0, 0);
+    ins_606(2, 1, 1);
+    ins_604(2, 0.0f, 0.0f);
+    ins_605(2, 1.0f, 0.0f);
+    ins_603(2, 0.0f, 0.0f);
+    // object BulletEmitter source_line=347 family=th10_slot
+    ins_600(3);
+    ins_607(3, 1);
+    ins_602(3, 0, 0);
+    ins_606(3, 1, 1);
+    ins_604(3, 0.0f, 0.0f);
+    ins_605(3, 1.0f, 0.0f);
+    ins_603(3, 0.0f, 0.0f);
+    // object BulletEmitter source_line=348 family=th10_slot
+    ins_600(4);
+    ins_607(4, 1);
+    ins_602(4, 0, 0);
+    ins_606(4, 1, 1);
+    ins_604(4, 0.0f, 0.0f);
+    ins_605(4, 1.0f, 0.0f);
+    ins_603(4, 0.0f, 0.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    unless ([-9986] == 0) goto Boss3_916 @ 0;
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(1, 16);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(2, 10);
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(48.0f, 48.0f);
+    // semantic op_key lowering th10->th15: unit.drop_items
+    ins_509();
+    Boss3_916:
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(15);
+    // object Animation source_line=358 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=359 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // object Animation source_line=360 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, 6);
+    // object Animation source_line=361 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, -1);
+    ins_23(30);
+    // object Movement source_line=363 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 128.0f);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // unsupported semantic op_key for th10->th15: unit.move_limit
+    // original: ins_324(0.0f, 96.0f, 280.0f, 64.0f);
+    @Boss3_at() async;
+    goto Boss3_1212 @ 270;
+    Boss3_1168:
+    ins_23(120);
+    // object Movement source_line=371 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(40, 0, 1.0f);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Boss3_1212:
+    if (1) goto Boss3_1168 @ 90;
+    return;
+    // detected loops:
+    // - backedge_loop Boss3_1168 lines 369..375 condition=1
+}
+
+void Boss3_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    %A = _f(0);
+    // object BulletEmitter source_line=383 family=th10_slot
+    ins_600(0);
+    ins_607(0, 3);
+    ins_602(0, 10, 6);
+    ins_606(0, 4, 8);
+    ins_604(0, %A, -0.018925257f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 0.0f, 0.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 1, 0, 2048, 1, -999999, 1.0f, -999999.0f);
+    ins_609(0, 1, 0, 2048, 1, -999999, 1.0f, -999999.0f);
+    ins_609(0, 1, 0, 2048, 1, -999999, 1.5f, -999999.0f);
+    ins_609(0, 1, 0, 2048, 1, -999999, 1.8f, -999999.0f);
+    ins_609(0, 2, 0, 16384, 5, 2, -999999.0f, -999999.0f);
+    goto Boss3_at_880 @ 0;
+    Boss3_at_128:
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(0, 1.8f, 1.8f, 2.2f, 2.5f, 1.4f, 1.4f, 1.4f, 1.8f);
+    $B = 8;
+    goto Boss3_at_836 @ 0;
+    Boss3_at_660:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    %A = %A + 0.19635f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%A);
+    // semantic op_key lowering th10->th15: unit.diff_wait
+    ins_548(40, 20, 15, 13);
+    Boss3_at_836:
+    if ($B--) goto Boss3_at_660 @ 0;
+    Boss3_at_880:
+    if (1) goto Boss3_at_128 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Boss3_at_660 lines 405..412 condition=$B--
+    // - backedge_loop Boss3_at_128 lines 385..414 condition=1
+}
+
+void Boss4()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // semantic op_key lowering th10->th15: boss.life_set
+    ins_511(12200);
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 3200, 5400, "BossCard4");
+    // semantic op_key lowering th10->th15: unit.life_marker
+    ins_527(0, 3200.0f, -24448);
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(27);
+    // semantic op_key lowering th10->th15: unit.stars
+    ins_540(1);
+    unless ([-9986] == 0) goto Boss4_292 @ 0;
+    // semantic op_key lowering th10->th15: bullet.cancel_radius
+    ins_615(640.0f);
+    goto Boss4_312 @ 0;
+    Boss4_292:
+    // semantic op_key lowering th10->th15: bullet.clear_radius
+    ins_616(640.0f);
+    Boss4_312:
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // semantic op_key lowering th10->th15: boss.spell_end
+    ins_523();
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.21
+    // original: ins_21();
+    // semantic op_key lowering th10->th15: unit.laser_cancel
+    ins_545();
+    // object BulletEmitter source_line=435 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 0, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 0.0f, 0.0f);
+    // object BulletEmitter source_line=436 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, 0.0f, 0.0f);
+    // object BulletEmitter source_line=437 family=th10_slot
+    ins_600(2);
+    ins_607(2, 1);
+    ins_602(2, 0, 0);
+    ins_606(2, 1, 1);
+    ins_604(2, 0.0f, 0.0f);
+    ins_605(2, 1.0f, 0.0f);
+    ins_603(2, 0.0f, 0.0f);
+    // object BulletEmitter source_line=438 family=th10_slot
+    ins_600(3);
+    ins_607(3, 1);
+    ins_602(3, 0, 0);
+    ins_606(3, 1, 1);
+    ins_604(3, 0.0f, 0.0f);
+    ins_605(3, 1.0f, 0.0f);
+    ins_603(3, 0.0f, 0.0f);
+    // object BulletEmitter source_line=439 family=th10_slot
+    ins_600(4);
+    ins_607(4, 1);
+    ins_602(4, 0, 0);
+    ins_606(4, 1, 1);
+    ins_604(4, 0.0f, 0.0f);
+    ins_605(4, 1.0f, 0.0f);
+    ins_603(4, 0.0f, 0.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(90);
+    unless ([-9986] == 0) goto Boss4_720 @ 0;
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(1, 20);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(2, 12);
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(48.0f, 48.0f);
+    // semantic op_key lowering th10->th15: unit.drop_items
+    ins_509();
+    Boss4_720:
+    // object Animation source_line=448 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=449 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // object Animation source_line=450 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, 6);
+    // object Animation source_line=451 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, -1);
+    ins_23(30);
+    // object Movement source_line=453 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 128.0f);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // unsupported semantic op_key for th10->th15: unit.move_limit
+    // original: ins_324(0.0f, 112.0f, 128.0f, 64.0f);
+    goto Boss4_2932 @ 1050;
+    Boss4_920:
+    // semantic op_key lowering th10->th15: unit.flag_clear
+    ins_503(3);
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // object Animation source_line=461 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    // object Animation source_line=462 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=463 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // object Animation source_line=464 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, 6);
+    // object Animation source_line=465 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, -1);
+    // object Animation source_line=466 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(3);
+    ins_306(0, 0);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(15);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(41);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(3);
+    // object Animation source_line=475 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=476 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // object Animation source_line=477 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, 6);
+    // object Animation source_line=478 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, -1);
+    // object Animation source_line=479 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(3);
+    ins_306(0, 0);
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // object Enemy source_line=481 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirR4", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=482 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirG4", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=483 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirB4", 0.0f, 0.0f, 240, 1000, 0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60);
+    @Boss4_at() async;
+    ins_23(120);
+    // object Movement source_line=487 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(120, 0, 1.0f);
+    ins_23(120);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: unit.flag_clear
+    ins_503(3);
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // object Animation source_line=492 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=493 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // object Animation source_line=494 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, 6);
+    // object Animation source_line=495 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, -1);
+    // object Animation source_line=496 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(3);
+    ins_306(0, 0);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(41);
+    // object Animation source_line=501 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(3);
+    // object Animation source_line=505 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=506 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // object Animation source_line=507 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, 6);
+    // object Animation source_line=508 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, -1);
+    // object Animation source_line=509 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(3);
+    ins_306(0, 0);
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // object Enemy source_line=511 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirR4", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=512 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirG4", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=513 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirB4", 0.0f, 0.0f, 240, 1000, 0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60);
+    @Boss4_at2() async;
+    ins_23(60);
+    // object Movement source_line=517 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(120, 0, 1.0f);
+    ins_23(120);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: unit.flag_clear
+    ins_503(3);
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // object Animation source_line=522 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=523 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // object Animation source_line=524 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, 6);
+    // object Animation source_line=525 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, -1);
+    // object Animation source_line=526 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(3);
+    ins_306(0, 0);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(41);
+    // object Animation source_line=531 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(3);
+    // object Animation source_line=535 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=536 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // object Animation source_line=537 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, 6);
+    // object Animation source_line=538 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, -1);
+    // object Animation source_line=539 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(3);
+    ins_306(0, 0);
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // object Enemy source_line=541 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirR4", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=542 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirG4", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=543 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirB4", 0.0f, 0.0f, 240, 1000, 0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60);
+    @Boss4_at3() async;
+    ins_23(60);
+    // object Movement source_line=547 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(120, 0, 1.0f);
+    ins_23(120);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Boss4_2932:
+    if (1) goto Boss4_920 @ 90;
+    return;
+    // detected loops:
+    // - backedge_loop Boss4_920 lines 458..551 condition=1
+}
+
+void Boss4_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BulletEmitter source_line=557 family=th10_slot
+    ins_600(0);
+    ins_607(0, 2);
+    ins_602(0, 32, 1);
+    ins_606(0, 1, 1);
+    ins_604(0, 1.5707964f, -0.31415927f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 0.0f, 0.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(0, 1, 1, 3, 3, 6, 10, 12, 12);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(0, 6.8f, 6.8f, 6.8f, 7.8f, 1.4f, 1.4f, 1.4f, 1.4f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60);
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.411
+    // original: ins_411(1, 0);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(1, -1.5707964f, 0.31415927f);
+    // object BulletEmitter source_line=570 family=th10_slot
+    ins_600(0);
+    ins_607(0, 2);
+    ins_602(0, 32, 1);
+    ins_606(0, 1, 1);
+    ins_604(0, 1.5707964f, -0.31415927f);
+    !H
+    ins_604(0, 1.5707964f, -0.2617994f);
+    !L
+    ins_604(0, 1.5707964f, -0.2617994f);
+    !*
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 0.0f, 0.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    !HL
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(1, -1.5707964f, 0.19634955f);
+    !*
+    // object BulletEmitter source_line=573 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(50);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(40);
+    // object BulletEmitter source_line=577 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(30);
+    // object BulletEmitter source_line=579 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 0, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(20);
+    // object BulletEmitter source_line=581 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(10);
+    // object BulletEmitter source_line=583 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 0, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(5);
+    // object BulletEmitter source_line=585 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    return;
+}
+
+void Boss4_at2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    // object BulletEmitter source_line=592 family=th10_slot
+    ins_600(0);
+    ins_607(0, 2);
+    ins_602(0, 21, 1);
+    ins_606(0, 1, 1);
+    ins_604(0, 1.5707964f, -0.31415927f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 1, 0, 128, 60, 1, 0.0f, 3.0f);
+    ins_609(0, 1, 0, 128, 60, 1, 0.0f, 3.0f);
+    ins_609(0, 1, 0, 128, 60, 1, 0.0f, 5.0f);
+    ins_609(0, 1, 0, 128, 60, 1, 0.0f, 6.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(0, 1, 1, 1, 1, 10, 10, 10, 10);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(0, 8.0f, 8.0f, 8.0f, 8.0f, 1.4f, 1.4f, 1.4f, 1.4f);
+    // object BulletEmitter source_line=608 family=th10_slot
+    ins_600(1);
+    ins_607(1, 2);
+    ins_602(1, 21, 1);
+    ins_606(1, 1, 1);
+    ins_604(1, -1.5707964f, 0.31415927f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_609(1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(1, 1, 0, 128, 60, 1, 0.0f, 3.0f);
+    ins_609(1, 1, 0, 128, 60, 1, 0.0f, 3.0f);
+    ins_609(1, 1, 0, 128, 60, 1, 0.0f, 5.0f);
+    ins_609(1, 1, 0, 128, 60, 1, 0.0f, 6.0f);
+    ins_609(1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(1, 1, 1, 1, 1, 10, 10, 10, 10);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(1, 8.0f, 8.0f, 8.0f, 8.0f, 1.4f, 1.4f, 1.4f, 1.4f);
+    // semantic op_key lowering th10->th15: unit.diff_f
+    ins_536(%B, -0.3926991f, -0.19634955f, -0.19634955f, -0.19634955f);
+    // object BulletEmitter source_line=625 family=th10_slot
+    ins_600(2);
+    ins_607(2, 2);
+    ins_602(2, 21, 2);
+    ins_606(2, 1, 1);
+    ins_604(2, 1.5707964f, %B);
+    ins_605(2, 1.0f, 0.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(2, 1, 1, 1, 1, 8, 16, 16, 24);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(2, 4.0f, 4.0f, 6.0f, 8.0f, 1.4f, 1.4f, 1.4f, 1.4f);
+    // semantic op_key lowering th10->th15: unit.diff_f
+    ins_536(%B, 0.3926991f, 0.19634955f, 0.19634955f, 0.19634955f);
+    // object BulletEmitter source_line=633 family=th10_slot
+    ins_600(3);
+    ins_607(3, 2);
+    ins_602(3, 21, 2);
+    ins_606(3, 1, 1);
+    ins_604(3, -1.5707964f, %B);
+    ins_605(3, 1.0f, 0.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(3, 1, 1, 1, 1, 8, 16, 16, 24);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(3, 4.0f, 4.0f, 6.0f, 8.0f, 1.4f, 1.4f, 1.4f, 1.4f);
+    $A = 4;
+    goto Boss4_at2_1644 @ 40;
+    Boss4_at2_1564:
+    ins_23(10);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    ins_23(10);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    ins_23(10);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(2);
+    ins_23(10);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(3);
+    Boss4_at2_1644:
+    if ($A--) goto Boss4_at2_1564 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Boss4_at2_1564 lines 642..652 condition=$A--
+}
+
+void Boss4_at3()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    %A = 1.570796f;
+    // object BulletEmitter source_line=660 family=th10_slot
+    ins_600(0);
+    ins_607(0, 3);
+    ins_602(0, 18, 5);
+    ins_606(0, 1, 1);
+    ins_604(0, %A, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 1, 0, 64, 60, 1, 0.0f, 0.01f);
+    ins_609(0, 1, 0, 64, 60, 1, 0.0f, 5.0f);
+    ins_609(0, 1, 0, 64, 60, 1, 0.0f, 5.0f);
+    ins_609(0, 1, 0, 64, 60, 1, 0.0f, 6.0f);
+    ins_609(0, 1, 0, 64, 60, 1, 0.0f, 6.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(0, 1, 1, 1, 1, 1, 4, 6, 10);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(0, 4.6f, 4.6f, 6.6f, 7.6f, 0.6f, 0.6f, 0.6f, 0.6f);
+    $B = 160;
+    goto Boss4_at3_792 @ 1;
+    Boss4_at3_632:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    %A = %A + 3.883222f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%A);
+    ins_23(1);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Boss4_at3_792:
+    if ($B--) goto Boss4_at3_632 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Boss4_at3_632 lines 679..687 condition=$B--
+}
+
+void BossCard1()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D;
+    // semantic op_key lowering th10->th15: unit.diff_f
+    ins_536(%B, 0.2617994f, 0.19634955f, 0.19634955f, 0.19634955f);
+    %C = _f(0);
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(43);
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 4200, "Boss2");
+    !EN
+    // semantic op_key lowering th10->th15: boss.spell
+    ins_537(77, 4200, 1000000, "神祭「エクスパンデッド・オンバシラ」");
+    !*
+    !H
+    // semantic op_key lowering th10->th15: boss.spell3
+    ins_539(79, 4200, 1000000, "奇祭「目処梃子乱舞」");
+    !*
+    !L
+    // unsupported semantic op_key for th10->th15: boss.spell_ex
+    // original: ins_342(80, 4200, 1000000, "奇祭「目処梃子乱舞」");
+    !*
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.21
+    // original: ins_21();
+    // object Movement source_line=706 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 128.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(90);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(7);
+    // object Enemy source_line=709 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // object Animation source_line=711 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    // object Animation source_line=712 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(3);
+    ins_306(0, 0);
+    // object BulletEmitter source_line=713 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 0, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 0.0f, 0.0f);
+    // object BulletEmitter source_line=714 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, 0.0f, 0.0f);
+    // object BulletEmitter source_line=715 family=th10_slot
+    ins_600(2);
+    ins_607(2, 1);
+    ins_602(2, 0, 0);
+    ins_606(2, 1, 1);
+    ins_604(2, 0.0f, 0.0f);
+    ins_605(2, 1.0f, 0.0f);
+    ins_603(2, 0.0f, 0.0f);
+    // object BulletEmitter source_line=716 family=th10_slot
+    ins_600(3);
+    ins_607(3, 1);
+    ins_602(3, 0, 0);
+    ins_606(3, 1, 1);
+    ins_604(3, 0.0f, 0.0f);
+    ins_605(3, 1.0f, 0.0f);
+    ins_603(3, 0.0f, 0.0f);
+    // object BulletEmitter source_line=717 family=th10_slot
+    ins_600(4);
+    ins_607(4, 1);
+    ins_602(4, 0, 0);
+    ins_606(4, 1, 1);
+    ins_604(4, 0.0f, 0.0f);
+    ins_605(4, 1.0f, 0.0f);
+    ins_603(4, 0.0f, 0.0f);
+    ins_23(90);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // unsupported semantic op_key for th10->th15: unit.move_limit
+    // original: ins_324(0.0f, 96.0f, 280.0f, 32.0f);
+    goto BossCard1_984 @ 490;
+    BossCard1_772:
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // object Enemy source_line=725 family=th10_th11
+    !EN
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard1_at", 0.0f, 0.0f, 240, 1000, 0);
+    !*
+    // object Enemy source_line=727 family=th10_th11
+    !HL
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard1_atH", 0.0f, 0.0f, 240, 1000, 0);
+    !*
+    @BossCard1_at2() async;
+    // object Movement source_line=730 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(50, 0, 3.0f);
+    ins_23(400);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCard1_984:
+    if (1) goto BossCard1_772 @ 90;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard1_772 lines 722..734 condition=1
+}
+
+void BossCard1_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D;
+    $D = 11;
+    %B = _f(192);
+    %C = _f(24);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(148);
+    // object Movement source_line=745 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(0.0f, -64.0f);
+    goto BossCard1_at_636 @ 0;
+    BossCard1_at_224:
+    // object Movement source_line=748 family=th10
+    // movement lowering th10 -> th15: movement.position_rel.set -> ins_402
+    ins_402(_f(0) - %B, 0.0f);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(16);
+    // unsupported semantic op_key for th10->th15: laser.on
+    // original: ins_428(13, 1, 1.5707964f, %C, 0, 512.0f, 0, 46.0f);
+    // object Movement source_line=751 family=th10
+    // movement lowering th10 -> th15: movement.position_rel.set -> ins_402
+    ins_402(%B, 0.0f);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(16);
+    // unsupported semantic op_key for th10->th15: laser.on
+    // original: ins_428(13, 1, 1.5707964f, %C, 0, 512.0f, 0, 46.0f);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(15);
+    %B = %B - 16.6f;
+    %C = %C - 2.0f;
+    BossCard1_at_636:
+    if ($D--) goto BossCard1_at_224 @ 0;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - counter_loop BossCard1_at_224 lines 747..758 condition=$D--
+}
+
+void BossCard1_at2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    $C = 8;
+    %A = _f(192);
+    %B = _f(24);
+    // object BulletEmitter source_line=768 family=th10_slot
+    ins_600(1);
+    ins_607(1, 3);
+    ins_602(1, 11, 6);
+    ins_606(1, 1, 1);
+    ins_604(1, 1.5707964f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_609(1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(1, 1, 0, 128, 40, 3, 0.0f, 1.0f);
+    ins_609(1, 1, 0, 128, 40, 3, 0.0f, 1.0f);
+    ins_609(1, 1, 0, 128, 40, 3, 0.0f, 1.0f);
+    ins_609(1, 1, 0, 128, 40, 3, 0.0f, 1.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(1, 3, 8, 8, 16, 1, 1, 1, 1);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(1, 4.0f, 4.0f, 4.0f, 4.0f, 1.4f, 1.4f, 1.4f, 1.4f);
+    goto BossCard1_at2_676 @ 0;
+    BossCard1_at2_624:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    // semantic op_key lowering th10->th15: unit.diff_wait
+    ins_548(80, 60, 60, 40);
+    BossCard1_at2_676:
+    if ($C--) goto BossCard1_at2_624 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard1_at2_624 lines 785..789 condition=$C--
+}
+
+void BossCard1_atH()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D;
+    $D = 11;
+    %B = _f(192);
+    %C = _f(24);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(148);
+    // object BulletEmitter source_line=800 family=th10_slot
+    ins_600(2);
+    ins_607(2, 3);
+    ins_602(2, 4, 2);
+    ins_606(2, 1, 1);
+    ins_604(2, 1.5707964f, 0.0f);
+    ins_605(2, 1.0f, 0.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(2, 3, 8, 8, 8, 1, 1, 1, 1);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(2, 0.6f, 0.6f, 0.6f, 0.6f, 1.4f, 1.4f, 1.4f, 1.4f);
+    // object Movement source_line=806 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(0.0f, -64.0f);
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 0, 0, 32768, 20, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 0, 1024, 1, -999999, -999999.0f, -999999.0f);
+    goto BossCard1_atH_1096 @ 0;
+    BossCard1_atH_524:
+    // object Movement source_line=811 family=th10
+    // movement lowering th10 -> th15: movement.position_rel.set -> ins_402
+    ins_402(_f(0) - %B, 0.0f);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(16);
+    // unsupported semantic op_key for th10->th15: laser.on
+    // original: ins_428(13, 1, 1.5707964f, %C, 0, 512.0f, 0, 46.0f);
+    @BossCard1_atH2(_f(0) - %B, %C) async;
+    // object Movement source_line=815 family=th10
+    // movement lowering th10 -> th15: movement.position_rel.set -> ins_402
+    ins_402(%B, 0.0f);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(16);
+    // unsupported semantic op_key for th10->th15: laser.on
+    // original: ins_428(13, 1, 1.5707964f, %C, 0, 512.0f, 0, 46.0f);
+    @BossCard1_atH2(%B, %C) async;
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(15);
+    %B = %B - 16.4f;
+    %C = %C - 2.0f;
+    BossCard1_atH_1096:
+    if ($D--) goto BossCard1_atH_524 @ 0;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - counter_loop BossCard1_atH_524 lines 810..823 condition=$D--
+}
+
+void BossCard1_atH2(var A, var B)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var C;
+    $C = _S(_f(448) / %B);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23($C);
+    // object BulletEmitter source_line=832 family=th10_slot
+    ins_600(2);
+    ins_607(2, 1);
+    ins_602(2, 0, 0);
+    ins_606(2, 1, 1);
+    ins_604(2, 0.0f, 0.0f);
+    ins_605(2, 1.0f, 0.0f);
+    ins_603(2, %A - [-9997.0f], _f(448) - [-9996.0f]);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(2);
+    return;
+}
+
+void BossCard2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(44);
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 4200, "Boss3");
+    !EN
+    // semantic op_key lowering th10->th15: boss.spell
+    ins_537(81, 4200, 1000000, "筒粥「神の粥」");
+    !*
+    !H
+    // semantic op_key lowering th10->th15: boss.spell3
+    ins_539(83, 4200, 1000000, "忘穀「アンリメンバードクロップ」");
+    !*
+    !L
+    // unsupported semantic op_key for th10->th15: boss.spell_ex
+    // original: ins_342(84, 4200, 1000000, "神穀「ディバイニングクロップ」");
+    !*
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.21
+    // original: ins_21();
+    // semantic op_key lowering th10->th15: movement.move_limit_reset
+    ins_505();
+    // object Movement source_line=851 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 192.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(7);
+    // object Enemy source_line=854 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // object BulletEmitter source_line=856 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 0, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 0.0f, 0.0f);
+    // object BulletEmitter source_line=857 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, 0.0f, 0.0f);
+    // object BulletEmitter source_line=858 family=th10_slot
+    ins_600(2);
+    ins_607(2, 1);
+    ins_602(2, 0, 0);
+    ins_606(2, 1, 1);
+    ins_604(2, 0.0f, 0.0f);
+    ins_605(2, 1.0f, 0.0f);
+    ins_603(2, 0.0f, 0.0f);
+    // object BulletEmitter source_line=859 family=th10_slot
+    ins_600(3);
+    ins_607(3, 1);
+    ins_602(3, 0, 0);
+    ins_606(3, 1, 1);
+    ins_604(3, 0.0f, 0.0f);
+    ins_605(3, 1.0f, 0.0f);
+    ins_603(3, 0.0f, 0.0f);
+    // object BulletEmitter source_line=860 family=th10_slot
+    ins_600(4);
+    ins_607(4, 1);
+    ins_602(4, 0, 0);
+    ins_606(4, 1, 1);
+    ins_604(4, 0.0f, 0.0f);
+    ins_605(4, 1.0f, 0.0f);
+    ins_603(4, 0.0f, 0.0f);
+    ins_23(90);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Enemy source_line=863 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirR2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=864 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirG2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=865 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirB2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Animation source_line=866 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=867 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    @BossCard2_at() async;
+    goto BossCard2_908 @ 90;
+    BossCard2_888:
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(100);
+    BossCard2_908:
+    if (1) goto BossCard2_888 @ 90;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard2_888 lines 871..874 condition=1
+}
+
+void BossCard2_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    // object BulletEmitter source_line=881 family=th10_slot
+    ins_600(0);
+    ins_607(0, 3);
+    ins_602(0, 20, 1);
+    ins_606(0, 1, 1);
+    ins_604(0, %D, 0.028049935f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 32.0f, -24.0f);
+    ins_609(0, 0, 1, 8, -999999, -999999, -999999.0f, -999999.0f);
+    ins_610(0, 1, 0, 16, 60, -999999, 0, 0, -0.093333334f, -999999.0f, -999999.0f, -999999.0f);
+    ins_609(0, 2, 0, 16384, 3, 2, -999999.0f, -999999.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(0, 34, 50, 50, 50, 1, 1, 1, 1);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(0, 6.4f, 6.4f, 6.4f, 6.4f, 1.5f, 1.5f, 1.5f, 1.5f);
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.411
+    // original: ins_411(1, 0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(1, 20, 2);
+    // object BulletEmitter source_line=893 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 20, 5);
+    ins_606(1, 1, 1);
+    ins_604(1, %E, 0.028049935f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, -32.0f, -24.0f);
+    ins_609(1, 2, 0, 16384, 3, 4, -999999.0f, -999999.0f);
+    ins_609(1, 2, 0, 16384, 3, 10, -999999.0f, -999999.0f);
+    unless ([-9959] >= 2) goto BossCard2_at_696 @ 0;
+    BossCard2_at_696:
+    unless ([-9950]) goto BossCard2_at_944 @ 0;
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.411
+    // original: ins_411(2, 0);
+    // object BulletEmitter source_line=901 family=th10_slot
+    ins_600(2);
+    ins_607(2, 1);
+    ins_602(2, 20, 3);
+    ins_606(2, 50, 1);
+    ins_604(2, _f(_S(%D + %E)) / _f(2), 0.028049935f);
+    !L
+    ins_604(2, _f(_S(%D + %E)) / _f(2), 0.028049935f);
+    !*
+    ins_605(2, 1.0f, 0.0f);
+    ins_603(2, 0.0f, -48.0f);
+    ins_609(2, 2, 0, 16384, 3, 6, -999999.0f, -999999.0f);
+    ins_610(2, 1, 0, 16, 60, -999999, 0, 0, -0.08833333f, -999999.0f, -999999.0f, -999999.0f);
+    BossCard2_at_944:
+    %C = 3.141593f;
+    %D = [-9998.0f];
+    %E = [-9998.0f];
+    goto BossCard2_at_1456 @ 0;
+    BossCard2_at_1088:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(25);
+    %D = [-9998.0f];
+    %E = [-9998.0f];
+    !L
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(2);
+    !*
+    // semantic op_key lowering th10->th15: unit.diff_wait
+    ins_548(25, 25, 10, 25);
+    BossCard2_at_1456:
+    if (1) goto BossCard2_at_1088 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard2_at_1088 lines 911..925 condition=1
+}
+
+void BossCard3()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F, G, H, I;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($H, 16, 32, 32, 32);
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(45);
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 4200, "Boss4");
+    !EN
+    // semantic op_key lowering th10->th15: boss.spell
+    ins_537(85, 4200, 1000000, "贄符「御射山御狩神事」");
+    !*
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.21
+    // original: ins_21();
+    // object Movement source_line=939 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 144.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(7);
+    // object Enemy source_line=942 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // object BulletEmitter source_line=944 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 0, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 0.0f, 0.0f);
+    // object BulletEmitter source_line=945 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, 0.0f, 0.0f);
+    // object BulletEmitter source_line=946 family=th10_slot
+    ins_600(2);
+    ins_607(2, 1);
+    ins_602(2, 0, 0);
+    ins_606(2, 1, 1);
+    ins_604(2, 0.0f, 0.0f);
+    ins_605(2, 1.0f, 0.0f);
+    ins_603(2, 0.0f, 0.0f);
+    // object BulletEmitter source_line=947 family=th10_slot
+    ins_600(3);
+    ins_607(3, 1);
+    ins_602(3, 0, 0);
+    ins_606(3, 1, 1);
+    ins_604(3, 0.0f, 0.0f);
+    ins_605(3, 1.0f, 0.0f);
+    ins_603(3, 0.0f, 0.0f);
+    // object BulletEmitter source_line=948 family=th10_slot
+    ins_600(4);
+    ins_607(4, 1);
+    ins_602(4, 0, 0);
+    ins_606(4, 1, 1);
+    ins_604(4, 0.0f, 0.0f);
+    ins_605(4, 1.0f, 0.0f);
+    ins_603(4, 0.0f, 0.0f);
+    ins_23(80);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Animation source_line=951 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=952 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // object Enemy source_line=954 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirR2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=955 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirG2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=956 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirB2", 0.0f, 0.0f, 240, 1000, 0);
+    goto BossCard3_1684 @ 680;
+    BossCard3_748:
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    [-9981.0f] = [-9998.0f];
+    [-9980.0f] = 0.05236f;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($I, 5, 5, 6, 7);
+    %E = 6.2831855f / _f($I);
+    goto BossCard3_1116 @ 80;
+    BossCard3_984:
+    // object Enemy source_line=966 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard3Dummy", 0.0f, 0.0f, 20, 20, 0);
+    [-9981.0f] = [-9981.0f] + %E;
+    BossCard3_1116:
+    if ($I--) goto BossCard3_984 @ 80;
+    ins_23(120);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(41);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(15);
+    ins_23(120);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    [-9981.0f] = [-9998.0f];
+    [-9980.0f] = -0.05236f;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($I, 5, 5, 6, 7);
+    %E = 6.2831855f / _f($I);
+    goto BossCard3_1584 @ 380;
+    BossCard3_1452:
+    // object Enemy source_line=983 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard3Dummy", 0.0f, 0.0f, 20, 20, 0);
+    [-9981.0f] = [-9981.0f] + %E;
+    BossCard3_1584:
+    if ($I--) goto BossCard3_1452 @ 380;
+    ins_23(120);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(41);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(15);
+    ins_23(120);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCard3_1684:
+    if (1) goto BossCard3_748 @ 80;
+    return;
+    // detected loops:
+    // - counter_loop BossCard3_984 lines 965..969 condition=$I--
+    // - counter_loop BossCard3_1452 lines 982..986 condition=$I--
+    // - backedge_loop BossCard3_748 lines 958..994 condition=1
+}
+
+void BossCard3Dummy()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(148);
+    %D = [-9981.0f] - 3.1415927f;
+    %E = [-9980.0f] * _f(8);
+    // object Movement source_line=1004 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404([-9981.0f], 2.0f);
+    // object Movement source_line=1005 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(600, 7, [-9980.0f], 0.03f);
+    // object BulletEmitter source_line=1006 family=th10_slot
+    ins_600(0);
+    ins_607(0, 2);
+    ins_602(0, 21, 1);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.7853982f);
+    ins_605(0, 0.001f, 1.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_610(0, 2, 0, 16, 60, -999999, 0, 0, 0.06f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(0, 2, 0, 16, 60, -999999, 0, 0, 0.06f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(0, 2, 0, 16, 60, -999999, 0, 0, 0.08f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(0, 2, 0, 16, 60, -999999, 0, 0, 0.1f, -999999.0f, -999999.0f, -999999.0f);
+    ins_609(0, 1, 0, 67108864, $C, -999999, 0.8f, 6.2831855f / %F);
+    // object BulletEmitter source_line=1022 family=th10_slot
+    ins_600(1);
+    ins_607(1, 3);
+    ins_602(1, 18, 3);
+    ins_606(1, 1, 1);
+    ins_604(1, %D, 0.0f);
+    ins_605(1, 0.001f, 1.0f);
+    ins_609(1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(1, 1, 0, 32768, 30, -999999, -999999.0f, -999999.0f);
+    ins_610(1, 2, 0, 16, 60, -999999, 0, 0, 0.03f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(1, 2, 0, 16, 60, -999999, 0, 0, 0.03f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(1, 2, 0, 16, 60, -999999, 0, 0, 0.04f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(1, 2, 0, 16, 60, -999999, 0, 0, 0.05f, -999999.0f, -999999.0f, -999999.0f);
+    ins_609(1, 3, 1, 67108864, 60, -999999, 0.02f, 0.0f);
+    $C = 300;
+    $B = 15;
+    // semantic op_key lowering th10->th15: unit.diff_f
+    ins_536(%F, 32.0f, 6.0f, 6.0f, 6.0f);
+    goto BossCard3Dummy_2272 @ 8;
+    BossCard3Dummy_1292:
+    ins_23(2);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    $C = $C - 4;
+    ins_23(2);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    %D = %D + %E;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%D);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    $C = $C - 4;
+    ins_23(2);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object BulletEmitter source_line=1059 family=th10_slot
+    ins_600(0);
+    ins_607(0, 2);
+    ins_602(0, 21, 1);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.7853982f);
+    ins_605(0, 0.001f, 1.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_610(0, 2, 0, 16, 60, -999999, 0, 0, 0.06f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(0, 2, 0, 16, 60, -999999, 0, 0, 0.06f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(0, 2, 0, 16, 60, -999999, 0, 0, 0.08f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(0, 2, 0, 16, 60, -999999, 0, 0, 0.1f, -999999.0f, -999999.0f, -999999.0f);
+    ins_609(0, 1, 0, 67108864, $C, -999999, 0.8f, 6.2831855f / %F);
+    ins_609(0, 1, 0, 67108864, $C, -999999, 0.8f, -6.2831855f / %F);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    $C = $C - 4;
+    %F = %F + _f(7);
+    ins_23(2);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    %D = %D + %E;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%D);
+    // object BulletEmitter source_line=1067 family=th10_slot
+    ins_600(1);
+    ins_607(1, 3);
+    ins_602(1, 18, 3);
+    ins_606(1, 1, 1);
+    ins_604(1, %D, 0.0f);
+    ins_605(1, 0.001f, 1.0f);
+    ins_609(1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(1, 1, 0, 32768, 30, -999999, -999999.0f, -999999.0f);
+    ins_610(1, 2, 0, 16, 60, -999999, 0, 0, 0.03f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(1, 2, 0, 16, 60, -999999, 0, 0, 0.03f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(1, 2, 0, 16, 60, -999999, 0, 0, 0.04f, -999999.0f, -999999.0f, -999999.0f);
+    ins_610(1, 2, 0, 16, 60, -999999, 0, 0, 0.05f, -999999.0f, -999999.0f, -999999.0f);
+    ins_609(1, 3, 1, 67108864, 60, -999999, 0.02f, 0.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    $C = $C - 4;
+    BossCard3Dummy_2272:
+    if ($B--) goto BossCard3Dummy_1292 @ 0;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - counter_loop BossCard3Dummy_1292 lines 1044..1071 condition=$B--
+}
+
+void BossCard3H()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F, G, H, I;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($H, 16, 32, 32, 32);
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(45);
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 3600, "Boss4");
+    !H
+    // semantic op_key lowering th10->th15: boss.spell3
+    ins_539(87, 3600, 1000000, "神秘「葛井の清水」");
+    !*
+    !L
+    // unsupported semantic op_key for th10->th15: boss.spell_ex
+    // original: ins_342(88, 3600, 1000000, "神秘「ヤマトトーラス」");
+    !*
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.21
+    // original: ins_21();
+    // object Movement source_line=1087 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 144.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(7);
+    // object Enemy source_line=1090 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // object BulletEmitter source_line=1092 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 0, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 0.0f, 0.0f);
+    // object BulletEmitter source_line=1093 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, 0.0f, 0.0f);
+    // object BulletEmitter source_line=1094 family=th10_slot
+    ins_600(2);
+    ins_607(2, 1);
+    ins_602(2, 0, 0);
+    ins_606(2, 1, 1);
+    ins_604(2, 0.0f, 0.0f);
+    ins_605(2, 1.0f, 0.0f);
+    ins_603(2, 0.0f, 0.0f);
+    // object BulletEmitter source_line=1095 family=th10_slot
+    ins_600(3);
+    ins_607(3, 1);
+    ins_602(3, 0, 0);
+    ins_606(3, 1, 1);
+    ins_604(3, 0.0f, 0.0f);
+    ins_605(3, 1.0f, 0.0f);
+    ins_603(3, 0.0f, 0.0f);
+    // object BulletEmitter source_line=1096 family=th10_slot
+    ins_600(4);
+    ins_607(4, 1);
+    ins_602(4, 0, 0);
+    ins_606(4, 1, 1);
+    ins_604(4, 0.0f, 0.0f);
+    ins_605(4, 1.0f, 0.0f);
+    ins_603(4, 0.0f, 0.0f);
+    ins_23(80);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // unsupported semantic op_key for th10->th15: unit.move_limit
+    // original: ins_324(0.0f, 96.0f, 64.0f, 64.0f);
+    // object Animation source_line=1100 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=1101 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // object Enemy source_line=1103 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirR2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=1104 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirG2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=1105 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirB2", 0.0f, 0.0f, 240, 1000, 0);
+    @BossCard3H_at() async;
+    goto BossCard3H_916 @ 200;
+    BossCard3H_868:
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60);
+    ins_23(120);
+    // object Movement source_line=1111 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(40, 0, 2.0f);
+    BossCard3H_916:
+    if (1) goto BossCard3H_868 @ 80;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard3H_868 lines 1108..1113 condition=1
+}
+
+void BossCard3H_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    %A = 2.356194f;
+    // object BulletEmitter source_line=1121 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 21, 5);
+    ins_606(0, 1, 1);
+    ins_604(0, %A, [-9998.0f] / _f(10));
+    ins_605(0, 3.9f, 1.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 1, 1, 1048576, 3, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 1, 1, 1048576, 4, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(0, 2, 2, 2, 2, 1, 1, 1, 1);
+    unless ([-9951]) goto BossCard3H_at_420 @ 0;
+    goto BossCard3H_at_468 @ 0;
+    BossCard3H_at_420:
+    BossCard3H_at_468:
+    goto BossCard3H_at_1284 @ 0;
+    BossCard3H_at_492:
+    %A = 2.356194f;
+    $B = 50;
+    goto BossCard3H_at_844 @ 0;
+    BossCard3H_at_624:
+    %A = %A + 0.034907f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%A);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(4);
+    BossCard3H_at_844:
+    if ($B--) goto BossCard3H_at_624 @ 0;
+    %A = 0.785398f;
+    $B = 50;
+    goto BossCard3H_at_1240 @ 0;
+    BossCard3H_at_992:
+    // object BulletEmitter source_line=1152 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 21, 4);
+    ins_606(0, 1, 1);
+    ins_604(0, %A, [-9998.0f] / _f(10));
+    ins_605(0, 3.9f, 1.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 1, 1, 1048576, 3, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 1, 1, 1048576, 4, -999999, -999999.0f, -999999.0f);
+    %A = %A - 0.034907f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%A);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(4);
+    BossCard3H_at_1240:
+    if ($B--) goto BossCard3H_at_992 @ 0;
+    BossCard3H_at_1284:
+    if (1) goto BossCard3H_at_492 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard3H_at_624 lines 1140..1147 condition=$B--
+    // - counter_loop BossCard3H_at_992 lines 1151..1159 condition=$B--
+    // - backedge_loop BossCard3H_at_492 lines 1135..1161 condition=1
+}
+
+void BossCard4()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F, G;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($G, 16, 32, 32, 32);
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(46);
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 6000, "BossCard5");
+    !EN
+    // semantic op_key lowering th10->th15: boss.spell
+    ins_537(89, 6000, 1000000, "天流「お天水の奇跡」");
+    !*
+    !HL
+    // semantic op_key lowering th10->th15: boss.spell3
+    ins_539(91, 6000, 1000000, "天竜「雨の源泉」");
+    !*
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.21
+    // original: ins_21();
+    // object Movement source_line=1177 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 144.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(7);
+    // object Enemy source_line=1180 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // object BulletEmitter source_line=1182 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 0, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_603(0, 0.0f, 0.0f);
+    // object BulletEmitter source_line=1183 family=th10_slot
+    ins_600(1);
+    ins_607(1, 1);
+    ins_602(1, 0, 0);
+    ins_606(1, 1, 1);
+    ins_604(1, 0.0f, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, 0.0f, 0.0f);
+    // object BulletEmitter source_line=1184 family=th10_slot
+    ins_600(2);
+    ins_607(2, 1);
+    ins_602(2, 0, 0);
+    ins_606(2, 1, 1);
+    ins_604(2, 0.0f, 0.0f);
+    ins_605(2, 1.0f, 0.0f);
+    ins_603(2, 0.0f, 0.0f);
+    // object BulletEmitter source_line=1185 family=th10_slot
+    ins_600(3);
+    ins_607(3, 1);
+    ins_602(3, 0, 0);
+    ins_606(3, 1, 1);
+    ins_604(3, 0.0f, 0.0f);
+    ins_605(3, 1.0f, 0.0f);
+    ins_603(3, 0.0f, 0.0f);
+    // object BulletEmitter source_line=1186 family=th10_slot
+    ins_600(4);
+    ins_607(4, 1);
+    ins_602(4, 0, 0);
+    ins_606(4, 1, 1);
+    ins_604(4, 0.0f, 0.0f);
+    ins_605(4, 1.0f, 0.0f);
+    ins_603(4, 0.0f, 0.0f);
+    // semantic op_key lowering th10->th15: unit.flag_clear
+    ins_503(3);
+    // object Animation source_line=1188 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(3);
+    ins_306(0, 0);
+    // object Animation source_line=1189 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=1190 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // object Animation source_line=1191 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, 6);
+    // object Animation source_line=1192 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(3, -1);
+    ins_23(80);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Animation source_line=1195 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=1196 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // object Enemy source_line=1198 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirR2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=1199 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirG2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=1200 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirB2", 0.0f, 0.0f, 240, 1000, 0);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(41);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(15);
+    // unsupported semantic op_key for th10->th15: unit.move_limit
+    // original: ins_324(0.0f, 112.0f, 128.0f, 64.0f);
+    unless ([-9959] >= 1) goto BossCard4_2232 @ 290;
+    [-9981.0f] = 0.03927f;
+    [-9980.0f] = 3.141593f;
+    [-9985] = 2;
+    // object Enemy source_line=1209 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("BossCard4Dummy", -160.0f, 0.0f, 240, 1000, 0);
+    ins_23(30);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    [-9981.0f] = -0.03927f;
+    [-9980.0f] = 0.0f;
+    [-9985] = 13;
+    // object Enemy source_line=1215 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("BossCard4Dummy2", -96.0f, 0.0f, 240, 1000, 0);
+    ins_23(30);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    [-9981.0f] = 0.03927f;
+    [-9980.0f] = 1.570796f;
+    [-9985] = 10;
+    // object Enemy source_line=1221 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("BossCard4Dummy2", -32.0f, 0.0f, 240, 1000, 0);
+    ins_23(30);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    [-9981.0f] = -0.03927f;
+    [-9980.0f] = 0.0f;
+    [-9985] = 8;
+    // object Enemy source_line=1227 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("BossCard4Dummy2", 32.0f, 0.0f, 240, 1000, 0);
+    ins_23(30);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    [-9981.0f] = 0.03927f;
+    [-9980.0f] = 0.0f;
+    [-9985] = 6;
+    // object Enemy source_line=1233 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("BossCard4Dummy2", 96.0f, 0.0f, 240, 1000, 0);
+    ins_23(30);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    [-9981.0f] = -0.03927f;
+    [-9980.0f] = 1.570796f;
+    [-9985] = 4;
+    // object Enemy source_line=1239 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("BossCard4Dummy", 160.0f, 0.0f, 240, 1000, 0);
+    goto BossCard4_2984 @ 380;
+    BossCard4_2232:
+    [-9981.0f] = -0.03927f;
+    [-9980.0f] = 3.141593f;
+    [-9985] = 2;
+    // object Enemy source_line=1245 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("BossCard4Dummy", -160.0f, 0.0f, 240, 1000, 0);
+    ins_23(30);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    [-9981.0f] = 0.03927f;
+    [-9980.0f] = 0.0f;
+    [-9985] = 13;
+    // object Enemy source_line=1251 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("BossCard4Dummy2", -64.0f, 0.0f, 240, 1000, 0);
+    ins_23(30);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    [-9981.0f] = -0.03927f;
+    [-9980.0f] = 0.0f;
+    [-9985] = 8;
+    // object Enemy source_line=1257 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("BossCard4Dummy2", 64.0f, 0.0f, 240, 1000, 0);
+    ins_23(30);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    [-9981.0f] = 0.03927f;
+    [-9980.0f] = 3.141593f;
+    [-9985] = 4;
+    // object Enemy source_line=1263 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("BossCard4Dummy", 160.0f, 0.0f, 240, 1000, 0);
+    BossCard4_2984:
+    goto BossCard4_3052 @ 500;
+    BossCard4_3008:
+    // object Movement source_line=1267 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(120, 0, 1.0f);
+    ins_23(120);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCard4_3052:
+    if (1) goto BossCard4_3008 @ 380;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard4_3008 lines 1266..1271 condition=1
+}
+
+void BossCard4Dummy()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    %B = [-9980.0f];
+    $C = 30;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(148);
+    // object BulletEmitter source_line=1281 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 18, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 1.5707964f, 0.7853982f);
+    ins_605(0, 10.0f, 1.0f);
+    ins_603(0, [-9987.0f] * _f(16), _f(-12) - ([-9999.0f] * _f(6)));
+    ins_609(0, 1, 0, 16384, 3, [-9985], -999999.0f, -999999.0f);
+    ins_609(0, 1, 0, 16384, 7, [-9985], -999999.0f, -999999.0f);
+    ins_609(0, 0, 0, 64, 60, 1, %B, 0.6f + ([-9987.0f] * 0.2f));
+    ins_609(0, 0, 0, 64, 60, 1, %B, 1.0f + ([-9987.0f] * 0.2f));
+    ins_609(0, 0, 0, 64, 60, 1, %B, 1.0f + ([-9987.0f] * 0.2f));
+    ins_609(0, 0, 0, 64, 60, 1, %B, 1.6f + ([-9987.0f] * 0.2f));
+    unless (([-9985] != 2) && ([-9985] != 4)) goto BossCard4Dummy_516 @ 0;
+    goto BossCard4Dummy_564 @ 0;
+    BossCard4Dummy_516:
+    BossCard4Dummy_564:
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(16);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(132);
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%B);
+    goto BossCard4Dummy_1532 @ 0;
+    BossCard4Dummy_648:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    %B = %B - [-9981.0f];
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%B);
+    // semantic op_key lowering th10->th15: unit.diff_wait
+    ins_548(5, 5, 3, 3);
+    BossCard4Dummy_1532:
+    if (1) goto BossCard4Dummy_648 @ 0;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - backedge_loop BossCard4Dummy_648 lines 1297..1313 condition=1
+}
+
+void BossCard4Dummy2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    %B = [-9980.0f];
+    $C = 30;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(148);
+    // object BulletEmitter source_line=1323 family=th10_slot
+    ins_600(0);
+    ins_607(0, 1);
+    ins_602(0, 18, 0);
+    ins_606(0, 1, 1);
+    ins_604(0, 1.5707964f, 0.7853982f);
+    ins_605(0, 10.0f, 1.0f);
+    ins_603(0, [-9987.0f] * _f(16), _f(-12) - ([-9999.0f] * _f(6)));
+    ins_609(0, 1, 0, 16384, 3, [-9985], -999999.0f, -999999.0f);
+    ins_609(0, 0, 0, 128, 60, 1, 0.0f, 0.6f + ([-9987.0f] * 0.2f));
+    ins_609(0, 0, 0, 128, 60, 1, 0.0f, 1.2f);
+    ins_609(0, 0, 0, 128, 60, 1, 0.0f, 1.5f);
+    ins_609(0, 0, 0, 128, 60, 1, 0.0f, 1.8f);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(16);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(132);
+    goto BossCard4Dummy2_1012 @ 0;
+    BossCard4Dummy2_404:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    %B = %B - [-9981.0f];
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%B);
+    // semantic op_key lowering th10->th15: unit.diff_wait
+    ins_548(5, 8, 8, 8);
+    BossCard4Dummy2_1012:
+    if (1) goto BossCard4Dummy2_404 @ 0;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - backedge_loop BossCard4Dummy2_404 lines 1333..1349 condition=1
+}
+
+void BossCard5()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    // semantic op_key lowering th10->th15: boss.life_set
+    ins_511(8200);
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 9000, "BossDead");
+    // semantic op_key lowering th10->th15: unit.life_marker
+    ins_527(0, 8200.0f, -24448);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(90);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(7);
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.21
+    // original: ins_21();
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // unsupported semantic op_key for th10->th15: enemy.unknown364
+    // original: ins_364(0);
+    unless ([-9986] == 0) goto BossCard5_344 @ 0;
+    // semantic op_key lowering th10->th15: bullet.cancel_radius
+    ins_615(640.0f);
+    goto BossCard5_364 @ 0;
+    BossCard5_344:
+    // semantic op_key lowering th10->th15: bullet.clear_radius
+    ins_616(640.0f);
+    BossCard5_364:
+    // semantic op_key lowering th10->th15: boss.spell_end
+    ins_523();
+    // semantic op_key lowering th10->th15: movement.move_limit_reset
+    ins_505();
+    // object Movement source_line=1372 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(90, 4, 0.0f, 160.0f);
+    // semantic op_key lowering th10->th15: unit.stars
+    ins_540(0);
+    unless ([-9986] == 0) goto BossCard5_632 @ 0;
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(1, 46);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(2, 20);
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(48.0f, 48.0f);
+    // semantic op_key lowering th10->th15: unit.drop_items
+    ins_509();
+    BossCard5_632:
+    ins_23(90);
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(47);
+    !EN
+    // semantic op_key lowering th10->th15: boss.spell
+    ins_537(93, 9000, 1000000, "「マウンテン・オブ・フェイス」");
+    !*
+    !HL
+    // semantic op_key lowering th10->th15: boss.spell3
+    ins_539(95, 9000, 1000000, "「風神様の神徳」");
+    !*
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // object Animation source_line=1389 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Animation source_line=1392 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(1, 107);
+    // object Animation source_line=1393 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(1);
+    ins_303(2, 116);
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // unsupported semantic op_key for th10->th15: enemy.bomb_shield
+    // original: ins_366(1, 25);
+    // object Enemy source_line=1396 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirR2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=1397 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirG2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=1398 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirB2", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=1399 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirR4", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=1400 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirG4", 0.0f, 0.0f, 240, 1000, 0);
+    // object Enemy source_line=1401 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCirB4", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = 1.570796f;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($B, 140, 120, 100, 50);
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535([-9982], 0, 4, 8, 12);
+    [-9978.0f] = 1.0f;
+    goto BossCard5_7828 @ 150;
+    BossCard5_1408:
+    [-9983] = 160;
+    [-9985] = 2;
+    // object Enemy source_line=1410 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_atN", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1413 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_atN", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1416 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_atN", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1419 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_atN", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1422 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_atN", 0.0f, 0.0f, 240, 1000, 0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60);
+    [-9979.0f] = _f(96);
+    [-9984] = 40;
+    [-9981.0f] = [-9981.0f] + 3.141593f;
+    [-9985] = 4;
+    // object Enemy source_line=1428 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1431 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1434 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1437 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1440 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23([-9984]);
+    [-9979.0f] = ([-9979.0f] * 0.809f) + ([-9979.0f] * 0.588f);
+    [-9984] = 40;
+    [-9981.0f] = [-9981.0f] + 3.141593f;
+    [-9985] = 6;
+    // object Enemy source_line=1446 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1449 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1452 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1455 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1458 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23([-9984]);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23($B);
+    unless ($B > 60) goto BossCard5_4216 @ 150;
+    $B = $B - 10;
+    BossCard5_4216:
+    [-9981.0f] = [-9998.0f];
+    unless ([-9982] < 25) goto BossCard5_4412 @ 150;
+    [-9982] = [-9982] + 2;
+    BossCard5_4412:
+    [-9978.0f] = [-9978.0f] * -1.0f;
+    [-9983] = 160;
+    [-9985] = 9;
+    // object Enemy source_line=1471 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_atN", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1474 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_atN", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1477 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_atN", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1480 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_atN", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1483 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_atN", 0.0f, 0.0f, 240, 1000, 0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60);
+    [-9979.0f] = _f(96);
+    [-9984] = 40;
+    [-9981.0f] = [-9981.0f] + 3.141593f;
+    [-9985] = 10;
+    // object Enemy source_line=1489 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1492 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1495 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1498 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1501 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23([-9984]);
+    [-9979.0f] = ([-9979.0f] * 0.809f) + ([-9979.0f] * 0.588f);
+    [-9984] = 40;
+    [-9981.0f] = [-9981.0f] + 3.141593f;
+    [-9985] = 8;
+    // object Enemy source_line=1507 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1510 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1513 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1516 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    [-9981.0f] = [-9981.0f] + 1.256637f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82([-9981.0f]);
+    // object Enemy source_line=1519 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BossCard5_at2", 0.0f, 0.0f, 240, 1000, 0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23([-9984]);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23($B);
+    unless ([-9959] <= 1) goto BossCard5_7400 @ 150;
+    unless ($B > 60) goto BossCard5_7376 @ 150;
+    $B = $B - 10;
+    BossCard5_7376:
+    goto BossCard5_7556 @ 150;
+    BossCard5_7400:
+    unless ($B > 10) goto BossCard5_7556 @ 150;
+    $B = $B - 10;
+    BossCard5_7556:
+    [-9981.0f] = [-9998.0f];
+    unless ([-9982] < 25) goto BossCard5_7752 @ 150;
+    [-9982] = [-9982] + 2;
+    BossCard5_7752:
+    [-9978.0f] = [-9978.0f] * -1.0f;
+    BossCard5_7828:
+    if (1) goto BossCard5_1408 @ 150;
+    %A = 3.141593f;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard5_1408 lines 1407..1537 condition=1
+}
+
+void BossCard5_at2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F, G;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(20);
+    !E
+    %F = 0.007f + (_f([-9982]) * 0.00023f);
+    !*
+    !N
+    %F = 0.014f + (_f([-9982]) * 0.00023f);
+    !*
+    !H
+    %F = 0.016f + (_f([-9982]) * 0.00023f);
+    !*
+    !L
+    %F = 0.019f + (_f([-9982]) * 0.00023f);
+    !*
+    // object BulletEmitter source_line=1555 family=th10_slot
+    ins_600(0);
+    ins_607(0, 3);
+    ins_602(0, 11, [-9985]);
+    ins_606(0, 1, 1);
+    ins_604(0, %D, 0.0f);
+    ins_605(0, 0.001f, 1.5f);
+    ins_609(0, 0, 1, 2, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 1, 0, 4096, 10000, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 3, 0, 32, 120, -999999, %F, 0.0f);
+    ins_609(0, 2, 0, 32768, [-9983], -999999, -999999.0f, -999999.0f);
+    %D = [-9981.0f];
+    %D = %D + (([-9978.0f] * 3.1415927f) / _f(2));
+    %E = 3.1415927f / _f([-9984]);
+    %E = %E * [-9978.0f];
+    // object Movement source_line=1568 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(%D, %E, [-9979.0f] * 0.588f, 0.0f);
+    // semantic op_key lowering th10->th15: flow.circle_pos
+    ins_81(%B, %C, [-9981.0f], [-9979.0f] * -0.809f);
+    // unsupported semantic op_key for th10->th15: movement.move_add_rel
+    // original: ins_299(%B, %C);
+    $G = [-9984];
+    !E
+    $G = $G / 2;
+    !*
+    %D = %D - 3.141593f;
+    %E = %E * _f(5);
+    %E = %E / _f(8);
+    goto BossCard5_at2_2696 @ 0;
+    BossCard5_at2_1712:
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(1);
+    !E
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(1);
+    !*
+    %D = %D + %E;
+    !E
+    %D = %D + %E;
+    !*
+    unless ([-9953]) goto BossCard5_at2_2248 @ 0;
+    unless (($G % 2) == 1) goto BossCard5_at2_2224 @ 0;
+    %D = %D + (%E * _f(31));
+    BossCard5_at2_2224:
+    goto BossCard5_at2_2476 @ 0;
+    BossCard5_at2_2248:
+    unless (($G % 4) == 3) goto BossCard5_at2_2476 @ 0;
+    %D = %D + (%E * _f(3));
+    BossCard5_at2_2476:
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%D);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    [-9983] = [-9983] - 1;
+    !E
+    [-9983] = [-9983] - 1;
+    !*
+    BossCard5_at2_2696:
+    if ($G--) goto BossCard5_at2_1712 @ 0;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - counter_loop BossCard5_at2_1712 lines 1579..1606 condition=$G--
+}
+
+void BossCard5_atN()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F, G;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(20);
+    !E
+    %F = 0.007f + (_f([-9982]) * 0.00023f);
+    !*
+    !N
+    %F = 0.013f + (_f([-9982]) * 0.00023f);
+    !*
+    !H
+    %F = 0.014f + (_f([-9982]) * 0.00023f);
+    !*
+    !L
+    %F = 0.017f + (_f([-9982]) * 0.00023f);
+    !*
+    // object BulletEmitter source_line=1623 family=th10_slot
+    ins_600(0);
+    ins_607(0, 3);
+    ins_602(0, 11, [-9985]);
+    ins_606(0, 1, 1);
+    ins_604(0, %D, 0.0f);
+    ins_605(0, 0.001f, 1.5f);
+    ins_609(0, 0, 1, 2, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 1, 0, 4096, 10000, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 3, 0, 32, 120, -999999, %F, 0.0f);
+    ins_609(0, 2, 0, 32768, [-9983], -999999, -999999.0f, -999999.0f);
+    %D = [-9981.0f] + (6.2831855f / _f(10));
+    %E = 5.026548f;
+    %E = %E * [-9978.0f];
+    %E = %E / _f(60);
+    // object Movement source_line=1636 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(%D, %E, 48.0f, 0.0f);
+    // semantic op_key lowering th10->th15: flow.circle_pos
+    ins_81(%B, %C, [-9981.0f], -48.0f);
+    // unsupported semantic op_key for th10->th15: movement.move_add_rel
+    // original: ins_299(%B, %C);
+    $G = 60;
+    %D = %D - 3.141593f;
+    %E = %E * _f(5);
+    %E = %E / _f(8);
+    goto BossCard5_atN_2004 @ 0;
+    BossCard5_atN_1488:
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(1);
+    %D = %D + %E;
+    unless (($G % 4) == 3) goto BossCard5_atN_1860 @ 0;
+    %D = %D + (%E * _f(3));
+    BossCard5_atN_1860:
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%D);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    [-9983] = [-9983] - 1;
+    BossCard5_atN_2004:
+    if ($G--) goto BossCard5_atN_1488 @ 0;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - counter_loop BossCard5_atN_1488 lines 1644..1656 condition=$G--
+}
+
+void BossCirB()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(7);
+    // object Animation source_line=1664 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Movement source_line=1665 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(2.6179938f, 0.15707964f, 320.0f, -5.3333335f);
+    ins_23(2);
+    // object Animation source_line=1667 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(0, 6);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void BossCirB2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(7);
+    // object Animation source_line=1676 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Movement source_line=1677 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 2.0f);
+    // object Movement source_line=1678 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(2.6179938f, 0.0052359877f, 0.0f, 2.0f);
+    // object Movement source_line=1679 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(2.6179938f, 0.05235988f, 0.0f, 2.0f);
+    @BossCirR2_cir_cpos() async;
+    ins_23(2);
+    // object Animation source_line=1682 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(0, 6);
+    ins_23(60);
+    // object Movement source_line=1684 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    // object Movement source_line=1685 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    goto BossCirB2_332 @ 10062;
+    BossCirB2_316:
+    ins_23(10000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCirB2_332:
+    if (1) goto BossCirB2_316 @ 62;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - backedge_loop BossCirB2_316 lines 1687..1691 condition=1
+}
+
+void BossCirB4()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(7);
+    // object Animation source_line=1699 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Movement source_line=1700 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 2.0f);
+    // object Movement source_line=1701 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(2.6179938f, -0.0052359877f, 0.0f, 1.0f);
+    // object Movement source_line=1702 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(2.6179938f, -0.05235988f, 0.0f, 1.0f);
+    @BossCirR2_cir_cpos() async;
+    ins_23(2);
+    // object Animation source_line=1705 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(0, 6);
+    ins_23(60);
+    // object Movement source_line=1707 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    // object Movement source_line=1708 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    goto BossCirB4_332 @ 10062;
+    BossCirB4_316:
+    ins_23(10000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCirB4_332:
+    if (1) goto BossCirB4_316 @ 62;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - backedge_loop BossCirB4_316 lines 1710..1714 condition=1
+}
+
+void BossCirG()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(7);
+    // object Animation source_line=1722 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Movement source_line=1723 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(0.5235988f, 0.15707964f, 320.0f, -5.3333335f);
+    ins_23(2);
+    // object Animation source_line=1725 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(0, 6);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void BossCirG2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(7);
+    // object Animation source_line=1734 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Movement source_line=1735 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(0.5235988f, 0.0052359877f, 0.0f, 2.0f);
+    // object Movement source_line=1736 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(0.5235988f, 0.05235988f, 0.0f, 2.0f);
+    @BossCirR2_cir_cpos() async;
+    ins_23(2);
+    // object Animation source_line=1739 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(0, 6);
+    ins_23(60);
+    // object Movement source_line=1741 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    // object Movement source_line=1742 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    goto BossCirG2_308 @ 10062;
+    BossCirG2_292:
+    ins_23(10000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCirG2_308:
+    if (1) goto BossCirG2_292 @ 62;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - backedge_loop BossCirG2_292 lines 1744..1748 condition=1
+}
+
+void BossCirG4()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(7);
+    // object Animation source_line=1756 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Movement source_line=1757 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(0.5235988f, -0.0052359877f, 0.0f, 1.0f);
+    // object Movement source_line=1758 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(0.5235988f, -0.05235988f, 0.0f, 1.0f);
+    @BossCirR2_cir_cpos() async;
+    ins_23(2);
+    // object Animation source_line=1761 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(0, 6);
+    ins_23(60);
+    // object Movement source_line=1763 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    // object Movement source_line=1764 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    goto BossCirG4_308 @ 10062;
+    BossCirG4_292:
+    ins_23(10000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCirG4_308:
+    if (1) goto BossCirG4_292 @ 62;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - backedge_loop BossCirG4_292 lines 1766..1770 condition=1
+}
+
+void BossCirR()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(7);
+    // object Animation source_line=1778 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Movement source_line=1779 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(-1.5707964f, 0.15707964f, 320.0f, -5.3333335f);
+    ins_23(2);
+    // object Animation source_line=1781 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(0, 6);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void BossCirR2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(7);
+    // object Animation source_line=1790 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Movement source_line=1791 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(-1.5707964f, 0.0052359877f, 0.0f, 2.0f);
+    // object Movement source_line=1792 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(-1.5707964f, 0.05235988f, 0.0f, 2.0f);
+    @BossCirR2_cir_cpos() async;
+    ins_23(2);
+    // object Animation source_line=1795 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(0, 6);
+    ins_23(60);
+    // object Movement source_line=1797 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    // object Movement source_line=1798 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    goto BossCirR2_308 @ 10062;
+    BossCirR2_292:
+    ins_23(10000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCirR2_308:
+    if (1) goto BossCirR2_292 @ 62;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - backedge_loop BossCirR2_292 lines 1800..1804 condition=1
+}
+
+void BossCirR2_cir_cpos()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    goto BossCirR2_cir_cpos_100 @ 1;
+    BossCirR2_cir_cpos_60:
+    // semantic op_key lowering th10->th15: movement.move_add
+    ins_418([-9963.0f], [-9962.0f]);
+    ins_23(1);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCirR2_cir_cpos_100:
+    if (1) goto BossCirR2_cir_cpos_60 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop BossCirR2_cir_cpos_60 lines 1811..1816 condition=1
+}
+
+void BossCirR4()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(7);
+    // object Animation source_line=1824 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(3);
+    // object Movement source_line=1825 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(-1.5707964f, -0.0052359877f, 0.0f, 1.0f);
+    // object Movement source_line=1826 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(-1.5707964f, -0.05235988f, 0.0f, 1.0f);
+    @BossCirR2_cir_cpos() async;
+    ins_23(2);
+    // object Animation source_line=1829 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(3);
+    ins_303(0, 6);
+    ins_23(60);
+    // object Movement source_line=1831 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    // object Movement source_line=1832 family=th10
+    // movement lowering th10 -> th15: movement.circle.set -> ins_408
+    ins_408(-999999.0f, -999999.0f, -999999.0f, 0.0f);
+    goto BossCirR4_308 @ 10062;
+    BossCirR4_292:
+    ins_23(10000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCirR4_308:
+    if (1) goto BossCirR4_292 @ 62;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - backedge_loop BossCirR4_292 lines 1834..1838 condition=1
+}
+
+void BossDead()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(68);
+    // object Animation source_line=1846 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(18);
+    // object Animation source_line=1848 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    // object Movement source_line=1849 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404([-9998.0f], 0.4f);
+    unless ([-9986] == 0) goto BossDead_308 @ 0;
+    // object Enemy source_line=1851 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak2", 0.0f, 0.0f, 9999, 0, 0);
+    goto BossDead_364 @ 0;
+    BossDead_308:
+    // object Enemy source_line=1854 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak2_ni", 0.0f, 0.0f, 9999, 0, 0);
+    BossDead_364:
+    // semantic op_key lowering th10->th15: enemy.enm_kill_all
+    ins_525();
+    // unsupported semantic op_key for th10->th15: enemy.game_speed
+    // original: ins_367(0.5f);
+    ins_23(60);
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.410
+    // original: ins_410();
+    // semantic op_key lowering th10->th15: boss.spell_end
+    ins_523();
+    // unsupported semantic op_key for th10->th15: enemy.game_speed
+    // original: ins_367(0.25f);
+    // semantic op_key lowering th10->th15: boss.set_boss
+    ins_512(-1);
+    // unsupported semantic op_key for th10->th15: unit.set_screen_shake
+    // original: ins_337(30, 12, 0);
+    // object Animation source_line=1864 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    // object Animation source_line=1865 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(0, 28);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(18);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(16);
+    // object Movement source_line=1868 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(0.0f, 0.0f);
+    $B = 40;
+    goto BossDead_696 @ 61;
+    BossDead_676:
+    ins_23(1);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(16);
+    BossDead_696:
+    if ($B--) goto BossDead_676 @ 60;
+    // unsupported semantic op_key for th10->th15: enemy.game_speed
+    // original: ins_367(1.0f);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - counter_loop BossDead_676 lines 1871..1875 condition=$B--
+}
+
+void Cir00(var A, var B)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=1882 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=1883 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(0, $A);
+    // object Animation source_line=1884 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(1, $B);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(32);
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // object Movement source_line=1888 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 3.0f);
+    @Cir00_at() async;
+    ins_23(60);
+    // object Movement source_line=1891 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(40, 0, -0.7853982f, 1.5f);
+    ins_23(6000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    return;
+}
+
+void Cir00_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BulletEmitter source_line=1899 family=th10_slot
+    ins_600(0);
+    ins_607(0, 2);
+    ins_602(0, 4, 6);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.06544985f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(0, 3, 3, 7, 11, 1, 1, 1, 1);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(0, 2.4f, 4.0f, 5.0f, 6.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(([-10000] % 60) + 30);
+    goto Cir00_at_616 @ 0;
+    Cir00_at_472:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th10->th15: unit.diff_wait
+    ins_548(([-10000] % 60) + 90, 60, 30, 20);
+    Cir00_at_616:
+    if (1) goto Cir00_at_472 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop Cir00_at_472 lines 1909..1913 condition=1
+}
+
+void Cir01(var A, var B)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=1919 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=1920 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(0, $A);
+    // object Animation source_line=1921 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(1, $B);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(32);
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // object Movement source_line=1925 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(0.0f, 4.0f);
+    @Cir01_at() async;
+    ins_23(60);
+    // object Movement source_line=1928 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(40, 0, -0.3926991f, -999999.0f);
+    ins_23(6000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    return;
+}
+
+void Cir01_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BulletEmitter source_line=1936 family=th10_slot
+    ins_600(0);
+    ins_607(0, 2);
+    ins_602(0, 8, 6);
+    ins_606(0, 1, 1);
+    ins_604(0, 0.0f, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 0, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(0, 24, 48, 48, 48, 1, 1, 2, 3);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(0, 1.0f, 1.0f, 2.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60 + ([-10000] % 60));
+    goto Cir01_at_512 @ 0;
+    Cir01_at_472:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(60);
+    Cir01_at_512:
+    if (1) goto Cir01_at_472 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop Cir01_at_472 lines 1946..1950 condition=1
+}
+
+void Cir01b(var A, var B)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=1956 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=1957 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(0, $A);
+    // object Animation source_line=1958 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(1, $B);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(32);
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // object Movement source_line=1962 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(0.0f, 4.0f);
+    @Cir01_at() async;
+    ins_23(60);
+    // object Movement source_line=1965 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(40, 0, 0.3926991f, 1.5f);
+    ins_23(6000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    return;
+}
+
+void GCir00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(3);
+    @Cir00(157, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void GCir01()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(3);
+    @Cir01(157, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void GCir01b()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(3);
+    @Cir01b(157, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void GGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(3);
+    @Girl00(35, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void Girl00(var A, var B)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=2005 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=2006 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(0, $A);
+    // object Animation source_line=2007 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(1, $B);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(36);
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(2, 2);
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(16.0f, 16.0f);
+    // object Movement source_line=2014 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410([-9981.0f], [-9980.0f], 0.0f, 1.5f);
+    ins_23(40);
+    // object Movement source_line=2016 family=th10
+    // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
+    ins_410(-999999.0f, [-9980.0f], -999999.0f, 0.0f);
+    ins_23(60);
+    // object Movement source_line=2018 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404([-9956.0f], 0.0f);
+    // object Movement source_line=2019 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 0, -999999.0f, 2.0f);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: unit.flag_clear
+    ins_503(4);
+    ins_23(6000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    return;
+}
+
+void Girl00_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BulletEmitter source_line=2029 family=th10_slot
+    ins_600(0);
+    ins_607(0, 2);
+    ins_602(0, 9, 2);
+    ins_606(0, 16, 1);
+    ins_604(0, 0.0f, 0.06544985f);
+    ins_605(0, 0.3f, 1.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    return;
+}
+
+void Girl01()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=2043 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=2044 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, 40);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(32);
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(40.0f, 40.0f);
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(1, 4);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(2, 3);
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(32.0f, 32.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(120);
+    // unsupported semantic op_key for th10->th15: enemy.unknown361
+    // original: ins_361(120);
+    // object Movement source_line=2054 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 5.0f);
+    // object Movement source_line=2055 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 4, -999999.0f, 0.0f);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    [-9981.0f] = [-9998.0f];
+    [-9980.0f] = 0.05236f;
+    @Girl01_at() async;
+    @Girl01_at2(6, 0.0f, 0.049087387f) async;
+    @Girl01_at2(2, 3.1415927f, -0.049087387f) async;
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    [-9981.0f] = [-9998.0f];
+    [-9980.0f] = -0.05236f;
+    @Girl01_at() async;
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    [-9981.0f] = [-9998.0f];
+    [-9980.0f] = 0.05236f;
+    @Girl01_at() async;
+    ins_23(60);
+    // object Movement source_line=2074 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(40, 4, 1.5707964f, 2.0f);
+    // unsupported semantic op_key for th10->th15: raw.th10_th11.21
+    // original: ins_21();
+    ins_23(6000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void Girl01_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(41);
+    // object Enemy source_line=2085 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", 0.0f, 0.0f, 120, 1000, 1);
+    [-9981.0f] = [-9981.0f] + 1.570796f;
+    // object Enemy source_line=2087 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", 0.0f, 0.0f, 120, 1000, 1);
+    [-9981.0f] = [-9981.0f] + 1.570796f;
+    // object Enemy source_line=2089 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", 0.0f, 0.0f, 120, 1000, 1);
+    [-9981.0f] = [-9981.0f] + 1.570796f;
+    // object Enemy source_line=2091 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", 0.0f, 0.0f, 120, 1000, 1);
+    return;
+}
+
+void Girl01_at2(var A, var B, var C)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object BulletEmitter source_line=2097 family=th10_slot
+    ins_600(0);
+    ins_607(0, 3);
+    ins_602(0, 10, $A);
+    ins_606(0, 1, 1);
+    ins_604(0, %B, 0.0f);
+    ins_605(0, 1.0f, 0.0f);
+    ins_609(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(0, 8, 8, 8, 8, 1, 1, 2, 2);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(0, 1.5f, 2.8f, 3.5f, 5.0f, 0.8f, 0.8f, 2.8f, 2.8f);
+    goto Girl01_at2_572 @ 0;
+    Girl01_at2_312:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    %B = %B + %C;
+    !E
+    %B = %B + %C;
+    !*
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%B);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(8);
+    !E
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(8);
+    !*
+    Girl01_at2_572:
+    if (1) goto Girl01_at2_312 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop Girl01_at2_312 lines 2105..2118 condition=1
+}
+
+void Girl02()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=2125 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=2126 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, 40);
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(32);
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(40.0f, 40.0f);
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(4, 2);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(1, 4);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(2, 3);
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(32.0f, 32.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(600);
+    // unsupported semantic op_key for th10->th15: enemy.unknown361
+    // original: ins_361(120);
+    // object Movement source_line=2137 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 5.0f);
+    // object Movement source_line=2138 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 4, -999999.0f, 0.0f);
+    ins_23(60);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    @Girl02_at() async;
+    ins_23(700);
+    // object Movement source_line=2143 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(40, 4, -1.5707964f, 1.0f);
+    ins_23(6000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void Girl02_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    $A = 10;
+    $B = 6;
+    // object BulletEmitter source_line=2154 family=th10_slot
+    ins_600(1);
+    ins_607(1, 3);
+    ins_602(1, 0, 4);
+    ins_606(1, 1, 1);
+    ins_604(1, %C, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, [-9987.0f] * 32.0f, [-9987.0f] * 32.0f);
+    ins_609(1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(1, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th10->th15: bullet.count_by_difficulty
+    ins_625(1, 1, 1, 2, 2, 1, 1, 1, 1);
+    // unsupported semantic op_key for th10->th15: bullet.speed_by_difficulty
+    // original: ins_435(1, 1.2f, 1.2f, 2.2f, 3.2f, 1.0f, 1.0f, 1.0f, 1.0f);
+    goto Girl02_at_2388 @ 0;
+    Girl02_at_440:
+    $A = 60;
+    %C = [-9998.0f];
+    goto Girl02_at_1356 @ 0;
+    Girl02_at_572:
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(1);
+    !E
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(1);
+    !*
+    %C = %C + (([-9998.0f] / _f(80)) + (3.1415927f / _f(80)));
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    %C = %C + (([-9998.0f] / _f(80)) + (3.1415927f / _f(80)));
+    // object BulletEmitter source_line=2178 family=th10_slot
+    ins_600(1);
+    ins_607(1, 3);
+    ins_602(1, 0, 4);
+    ins_606(1, 1, 1);
+    ins_604(1, %C, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, [-9987.0f] * 32.0f, [-9987.0f] * 32.0f);
+    ins_609(1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(1, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    Girl02_at_1356:
+    if ($A--) goto Girl02_at_572 @ 0;
+    $A = 60;
+    %C = [-9998.0f];
+    // object BulletEmitter source_line=2185 family=th10_slot
+    ins_600(1);
+    ins_607(1, 3);
+    ins_602(1, 0, 6);
+    ins_606(1, 1, 1);
+    ins_604(1, %C, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, [-9987.0f] * 32.0f, [-9987.0f] * 32.0f);
+    ins_609(1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(1, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    goto Girl02_at_2316 @ 0;
+    Girl02_at_1532:
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(1);
+    !E
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(1);
+    !*
+    %C = %C - (([-9998.0f] / _f(80)) + (3.1415927f / _f(80)));
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    %C = %C - (([-9998.0f] / _f(80)) + (3.1415927f / _f(80)));
+    // object BulletEmitter source_line=2197 family=th10_slot
+    ins_600(1);
+    ins_607(1, 3);
+    ins_602(1, 0, 6);
+    ins_606(1, 1, 1);
+    ins_604(1, %C, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, [-9987.0f] * 32.0f, [-9987.0f] * 32.0f);
+    ins_609(1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(1, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    Girl02_at_2316:
+    if ($A--) goto Girl02_at_1532 @ 0;
+    // object BulletEmitter source_line=2202 family=th10_slot
+    ins_600(1);
+    ins_607(1, 3);
+    ins_602(1, 0, 6);
+    ins_606(1, 1, 1);
+    ins_604(1, %C, 0.0f);
+    ins_605(1, 1.0f, 0.0f);
+    ins_603(1, 0.0f, 0.0f);
+    ins_609(1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f);
+    ins_609(1, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    Girl02_at_2388:
+    if ($B--) goto Girl02_at_440 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Girl02_at_572 lines 2168..2182 condition=$A--
+    // - counter_loop Girl02_at_1532 lines 2187..2201 condition=$A--
+    // - counter_loop Girl02_at_440 lines 2163..2204 condition=$B--
+}
+
+void MainSub1()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    [-9985] = 6;
+    ins_23(160);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    @MainSub1a() async;
+    @MainSub1b() async;
+    ins_23(115);
+    // object Movement source_line=2216 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(-140.0f, 0.0f);
+    @MainSub1a() async;
+    @MainSub1b() async;
+    ins_23(115);
+    // object Movement source_line=2220 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(140.0f, 0.0f);
+    @MainSub1a() async;
+    @MainSub1b() async;
+    ins_23(115);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2225 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(0.0f, 0.0f);
+    @MainSub2() async;
+    return;
+}
+
+void MainSub1a()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Enemy source_line=2232 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2234 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2236 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2238 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2240 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2242 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2244 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GCir00", 0.0f, -24.0f, 20, 1000, 1);
+    return;
+}
+
+void MainSub1b()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    ins_23(8);
+    // object Enemy source_line=2251 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2253 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2255 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2257 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2259 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("RCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2261 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("RCir00", 0.0f, -24.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2263 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("GCir00", 0.0f, -24.0f, 20, 1000, 1);
+    return;
+}
+
+void MainSub2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    [-9985] = 6;
+    ins_23(300);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2272 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(-224.0f, 64.0f);
+    @MainSub2a() async;
+    @MainSub2b() async;
+    ins_23(115);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2277 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(224.0f, 96.0f);
+    @MainSub2c() async;
+    @MainSub2d() async;
+    ins_23(115);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2282 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(-224.0f, 128.0f);
+    @MainSub2a() async;
+    @MainSub2b() async;
+    ins_23(115);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2287 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(224.0f, 32.0f);
+    @MainSub2c() async;
+    @MainSub2d() async;
+    @MainSub3() async;
+    return;
+}
+
+void MainSub2a()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Enemy source_line=2296 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir01", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2298 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir01", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2300 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir01", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2302 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir01", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2304 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RCir01", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2306 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RCir01", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2308 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GCir01", 0.0f, 0.0f, 20, 1000, 1);
+    return;
+}
+
+void MainSub2b()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    ins_23(8);
+    // object Enemy source_line=2315 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir01b", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2317 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir01b", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2319 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir01b", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2321 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BCir01b", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2323 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RCir01b", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2325 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RCir01b", 0.0f, 0.0f, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2327 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GCir01b", 0.0f, 0.0f, 20, 1000, 1);
+    return;
+}
+
+void MainSub2c()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    %A = [-9997.0f];
+    %B = [-9996.0f];
+    // object Enemy source_line=2336 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir01", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2338 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir01", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2340 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir01", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2342 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir01", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2344 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("RCir01", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2346 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("RCir01", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2348 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("GCir01", %A, %B, 20, 1000, 1);
+    return;
+}
+
+void MainSub2d()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    %A = [-9997.0f];
+    %B = [-9996.0f];
+    ins_23(8);
+    // object Enemy source_line=2358 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir01b", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2360 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir01b", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2362 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir01b", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2364 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BCir01b", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2366 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("RCir01b", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2368 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("RCir01b", %A, %B, 20, 1000, 1);
+    ins_23(16);
+    // object Enemy source_line=2370 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("GCir01b", %A, %B, 20, 1000, 1);
+    return;
+}
+
+void MainSub3()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    ins_23(200);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2378 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(0.0f, 0.0f);
+    // object Enemy source_line=2379 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Girl01", 0.0f, -24.0f, 400, 1000, 1);
+    @MainSub4() async;
+    return;
+}
+
+void MainSub4()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    [-9985] = 6;
+    ins_23(200);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2389 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(-96.0f, 0.0f);
+    @MainSub1a() async;
+    @MainSub1b() async;
+    ins_23(115);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2394 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(96.0f, 0.0f);
+    @MainSub1a() async;
+    @MainSub1b() async;
+    ins_23(115);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2399 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(-128.0f, 0.0f);
+    @MainSub1a() async;
+    @MainSub1b() async;
+    ins_23(115);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2404 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(0.0f, 0.0f);
+    @MainSub5() async;
+    return;
+}
+
+void MainSub5()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    [-9985] = 6;
+    ins_23(160);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2414 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(-224.0f, 64.0f);
+    @MainSub2a() async;
+    @MainSub2b() async;
+    ins_23(115);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2419 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(224.0f, 96.0f);
+    @MainSub2c() async;
+    @MainSub2d() async;
+    ins_23(115);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2424 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(-224.0f, 128.0f);
+    @MainSub2a() async;
+    @MainSub2b() async;
+    ins_23(115);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=2429 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(224.0f, 32.0f);
+    @MainSub2c() async;
+    @MainSub2d() async;
+    ins_23(40);
+    // object Movement source_line=2433 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(0.0f, 0.0f);
+    // object Enemy source_line=2434 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Girl02", 0.0f, -24.0f, 1500, 1, 1);
+    // object Movement source_line=2435 family=th10
+    // movement lowering th10 -> th15: movement.position.set -> ins_400
+    ins_400(0.0f, 0.0f);
+    return;
+}
+
+void MainSubBoss()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    ins_23(3368);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    ins_23(300);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: unit.dialog_read
+    ins_518(0);
+    ins_23(1);
+    // semantic op_key lowering th10->th15: unit.dialog_wait
+    ins_519();
+    // object Enemy source_line=2448 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("Boss", -144.0f, -16.0f, 40, 10000000, 1);
+    ins_23(1);
+    // semantic op_key lowering th10->th15: unit.dialog_wait
+    ins_519();
+    // semantic op_key lowering th10->th15: unit.boss_wait
+    ins_520();
+    // semantic op_key lowering th10->th15: unit.dialog_read
+    ins_518(1);
+    ins_23(1);
+    // semantic op_key lowering th10->th15: unit.dialog_wait
+    ins_519();
+    return;
+}
+
+void MapleEnemy()
+{
+    // omitted TH10 MapleEnemy visual helper for TH15 stability
+    return;
+}
+
+void RCir00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(1);
+    @Cir00(152, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void RCir01()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(1);
+    @Cir01(152, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void RCir01b()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(1);
+    @Cir01b(152, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void RGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(1);
+    @Girl00(25, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void YCir00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(0);
+    @Cir00(162, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void YCir01()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(0);
+    @Cir01(162, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void YCir01b()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(0);
+    @Cir01b(162, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void YGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(0);
+    @Girl00(40, 93);
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+}
+
+void main()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // semantic op_key lowering th10->th15: unit.flag_set
+    ins_502(20);
+    // object Enemy source_line=2545 family=th10_th11
+    // omitted TH10 MapleEnemy visual helper create for TH15 stability
+    @MainSub1() async;
+    @MainSubBoss() async;
+    goto main_212 @ 10000;
+    main_196:
+    ins_23(10000);
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    main_212:
+    if (1) goto main_196 @ 0;
+    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    ins_1();
+    // detected loops:
+    // - backedge_loop main_196 lines 2549..2553 condition=1
+}
