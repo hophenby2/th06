@@ -16,14 +16,20 @@ class AnmRoleCatalog:
     select_banks: tuple[int, ...]
     set_scripts: dict[int, tuple[int, ...]]
     play_scripts: dict[int, tuple[int, ...]]
+    main_scripts: dict[int, tuple[int, ...]] | None = None
+    sprite_scripts: dict[int, tuple[int, ...]] | None = None
 
     def has_bank(self, bank: int) -> bool:
         return bank in self.select_banks or bank in self.set_scripts or bank in self.play_scripts
 
-    def has_set_script(self, bank: int, script: int) -> bool:
-        return script in self.set_scripts.get(bank, ())
+    def has_set_script(self, bank: int, script: int, kind: str = "set") -> bool:
+        return script in self.scripts_for_bank(bank, kind)
 
-    def scripts_for_bank(self, bank: int) -> tuple[int, ...]:
+    def scripts_for_bank(self, bank: int, kind: str = "set") -> tuple[int, ...]:
+        if kind == "main" and self.main_scripts is not None:
+            return self.main_scripts.get(bank, ())
+        if kind == "sprite" and self.sprite_scripts is not None:
+            return self.sprite_scripts.get(bank, ())
         return self.set_scripts.get(bank, ())
 
 
@@ -162,6 +168,96 @@ ANM_CATALOG: dict[str, dict[str, AnmRoleCatalog]] = {
     },
 }
 
+ANM_SET_KIND_CATALOG: dict[str, dict[str, dict[str, dict[int, tuple[int, ...]]]]] = {
+    "th10": {
+        "stage": {
+            "main": {1: _r(5, 40, 45, 46, 47, 48), 2: _r(0, 5, 6, 7, 9, 13, 19, 20)},
+            "sprite": {0: _r(370), 1: _r(45, 46, 47, 48, 370), 2: _r(0, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 26, 39)},
+        },
+        "boss": {"main": {}, "sprite": {}},
+    },
+    "th11": {
+        "stage": {
+            "main": {1: _r(40, 45, 46, 47, 48), 2: _r(0, 1, 7, 12)},
+            "sprite": {0: _r(92, 170, 175), 1: _r(45, 46, 47, 48, 63, 64, 65, 66, 67, 68, 102, 103, 108), 2: _r(0, 6, 12, 17)},
+        },
+        "boss": {
+            "main": {1: _r(20), 2: _r(0, 7, 11, 14, 27)},
+            "sprite": {0: _r(92, 170, 178, 181, 183, 185, 187, 192, 195), 1: _r(45, 46, 47, 48, 109, 113, 119), 2: _r(5, 8, 14, 23, 35)},
+        },
+    },
+    "th12": {
+        "stage": {
+            "main": {1: _r(40, 45, 50, 51, 52, 53, 98, 99), 2: _r(0, 8, 26, 30, 39, 41), 3: _r(0)},
+            "sprite": {0: _r(95, 158), 1: _r(50, 51, 52, 53, 98, 99), 2: _r(0, 7, 8, 9, 11, 12, 19, 22, 25, 26, 28, 29, 35, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 82)},
+        },
+        "boss": {
+            "main": {1: _r(0), 2: _r(0)},
+            "sprite": {0: _r(95, 158), 1: _r(142, 143, 144, 145), 2: _r(7, 21, 22, 53)},
+        },
+    },
+    "th13": {
+        "stage": {
+            "main": {2: _r(0, 5, 20, 25, 30, 35, 40), 3: _r(0)},
+            "sprite": {2: _r(53, 56, 65, 71, 78, 80, 82, 85, 88, 91)},
+        },
+        "boss": {
+            "main": {3: _r(0, 15), 4: _r(0), 5: _r(0)},
+            "sprite": {0: _r(235), 1: _r(53, 67, 105, 109, 113, 117, 129), 2: _r(82), 3: _r(0, 5, 6, 7, 8, 9, 10, 11, 12, 13), 4: _r(9, 10), 5: _r(6, 7)},
+        },
+    },
+    "th14": {
+        "stage": {
+            "main": {2: _r(0, 5, 10, 15, 20, 25, 30, 35, 40)},
+            "sprite": {2: _r(53, 56, 59, 79, 80, 83, 87, 88, 93, 96, 99)},
+        },
+        "boss": {
+            "main": {3: _r(0, 8, 14), 4: _r(0), 5: _r(0)},
+            "sprite": {1: _r(70, 106, 111, 115, 119, 123, 131), 2: _r(79, 87, 91), 3: _r(0, 5, 6, 7, 8, 9, 10, 11, 14, 15, 16)},
+        },
+    },
+    "th15": {
+        "stage": {
+            "main": {2: _r(0, 5, 20, 25, 35, 40, 147, 152, 157, 162, 167)},
+            "sprite": {2: _r(53, 56, 59, 62, 79, 87, 93, 96, 99)},
+        },
+        "boss": {
+            "main": {3: _r(0, 7, 14), 4: _r(0), 5: _r(0)},
+            "sprite": {1: _r(107, 112, 116, 120, 124, 132), 2: _r(53, 59, 93, 99, 105), 3: _r(0, 6, 20, 21, 22, 23, 24), 5: _r(6)},
+        },
+    },
+    "th16": {
+        "stage": {
+            "main": {2: _r(0, 5, 10, 15, 20, 25, 30, 35, 40, 152, 157, 162, 167)},
+            "sprite": {2: _r(53, 56, 79, 87, 93, 96, 99)},
+        },
+        "boss": {
+            "main": {3: _r(0), 4: _r(0), 5: _r(0)},
+            "sprite": {1: _r(79, 83, 86, 88, 90, 94, 107, 108, 113, 117, 120, 121, 125), 2: _r(53, 56), 3: _r(0, 6, 7), 4: _r(0)},
+        },
+    },
+    "th17": {
+        "stage": {
+            "main": {2: _r(0, 5, 10, 15, 20, 30, 35, 40, 172, 177, 202, 212)},
+            "sprite": {2: _r(53, 56, 59, 62, 79, 87, 91, 93, 99)},
+        },
+        "boss": {
+            "main": {3: _r(0), 4: _r(0)},
+            "sprite": {1: _r(103, 105, 110, 114), 2: _r(79, 91, 99), 3: _r(0, 6, 7, 8)},
+        },
+    },
+    "th18": {
+        "stage": {
+            "main": {2: _r(0, 5, 10, 15, 20, 25, 30, 35, 40, 184, 189, 214, 224)},
+            "sprite": {2: _r(53, 56, 59, 62, 65, 68, 77, 80, 91, 99, 103, 105, 111, 114)},
+        },
+        "boss": {
+            "main": {3: _r(0), 4: _r(0), 5: _r(0)},
+            "sprite": {1: _r(105, 110, 114), 2: _r(91, 251), 3: _r(0, 6, 22)},
+        },
+    },
+}
+
 
 SOURCE_BANK_ROLE_MAP: dict[str, dict[int, str]] = {
     "th10": {1: "stage", 2: "boss"},
@@ -189,7 +285,11 @@ TARGET_ROLE_BANK: dict[str, dict[str, int]] = {
 
 PURPOSE_FALLBACKS: dict[str, tuple[int, ...]] = {
     "main": (0, 5, 6, 7, 20, 25, 30, 35, 40, 50, 53),
-    "stage_enemy": (50, 51, 52, 53, 40, 45, 0, 5, 20, 25, 30, 35),
+    "stage_enemy": (0, 5, 25, 35, 40, 20, 30, 10, 15, 50, 51, 52, 53),
+    "stage_blue": (5, 0, 25, 35, 40, 20, 30, 10, 15),
+    "stage_green": (35, 40, 25, 5, 0, 20, 30, 10, 15),
+    "stage_red": (25, 5, 0, 35, 40, 20, 30, 10, 15),
+    "stage_yellow": (40, 35, 25, 5, 0, 20, 30, 10, 15),
     "boss_aux": (6, 7, 0, 5, 14, 20, 21, 22, 23, 24),
     "familiar": (6, 7, 0, 5, 14, 20, 21, 22, 23, 24),
 }
@@ -204,6 +304,16 @@ PLAY_PURPOSE_FALLBACKS: dict[str, tuple[int, ...]] = {
 
 def role_catalog(game: str, role: str) -> AnmRoleCatalog | None:
     return ANM_CATALOG.get(game, {}).get(role)
+
+
+def scripts_for_set_kind(game: str, role: str, bank: int, kind: str) -> tuple[int, ...]:
+    by_kind = ANM_SET_KIND_CATALOG.get(game, {}).get(role, {}).get(kind, {})
+    if bank in by_kind:
+        return by_kind[bank]
+    catalog = role_catalog(game, role)
+    if catalog is None:
+        return ()
+    return catalog.scripts_for_bank(bank, kind)
 
 
 def source_bank_role(game: str, bank: int) -> str | None:
@@ -229,12 +339,12 @@ def remap_anm_bank(source_game: str, target_game: str, source_bank: int, role_hi
     return source_bank
 
 
-def choose_script(game: str, role: str, purpose: str = "main", preferred: int | None = None) -> AnmScriptRef | None:
+def choose_script(game: str, role: str, purpose: str = "main", preferred: int | None = None, kind: str = "set") -> AnmScriptRef | None:
     bank = target_bank_for_role(game, role)
     catalog = role_catalog(game, role)
     if bank is None or catalog is None:
         return None
-    scripts = catalog.scripts_for_bank(bank)
+    scripts = scripts_for_set_kind(game, role, bank, kind)
     if not scripts:
         return None
     if preferred is not None and preferred in scripts:
@@ -279,13 +389,13 @@ def remap_play_script(source_game: str, target_game: str, source_bank: int, sour
     return AnmScriptRef(target_bank, source_script)
 
 
-def remap_set_script(source_game: str, target_game: str, source_bank: int, source_script: int, role_hint: str | None = None, purpose: str = "main") -> AnmScriptRef:
+def remap_set_script(source_game: str, target_game: str, source_bank: int, source_script: int, role_hint: str | None = None, purpose: str = "main", kind: str = "set") -> AnmScriptRef:
     role = role_hint or source_bank_role(source_game, source_bank)
     target_bank = remap_anm_bank(source_game, target_game, source_bank, role)
-    catalog = role_catalog(target_game, role or "")
-    if catalog and catalog.has_set_script(target_bank, source_script):
+    scripts = scripts_for_set_kind(target_game, role or "", target_bank, kind)
+    if source_script in scripts:
         return AnmScriptRef(target_bank, source_script)
-    chosen = choose_script(target_game, role or "", purpose, source_script)
+    chosen = choose_script(target_game, role or "", purpose, source_script, kind)
     if chosen is not None:
         return chosen
     return AnmScriptRef(target_bank, source_script)

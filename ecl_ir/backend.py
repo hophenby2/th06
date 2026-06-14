@@ -394,8 +394,9 @@ def remap_anm_args(event: dict[str, object], target: str, args: list[str], conte
             source_bank = target_bank_for_role(source_game, role_hint)
         if source_bank is None:
             return args
-        purpose = "boss_aux" if role_hint == "boss" and op_key == "anm.set_sprite" else "stage_enemy" if role_hint == "stage" else "main"
-        return [args[0], str(remap_set_script(source_game, target, source_bank, script, role_hint, purpose).script)]
+        set_kind = "main" if op_key == "anm.set_main" else "sprite"
+        purpose = "boss_aux" if role_hint == "boss" and set_kind == "sprite" else "stage_enemy" if role_hint == "stage" else "main"
+        return [args[0], str(remap_set_script(source_game, target, source_bank, script, role_hint, purpose, set_kind).script)]
     return args
 
 
@@ -429,7 +430,7 @@ def compile_special_semantic_event(event: dict[str, object], target: str, contex
         and args[0] in {str(slot) for slot in range(3, 13)}
         and args[1] in {"48", "49", "50", "51", "52", "53", "54", "55", "56", "57"}
     ):
-        chosen = choose_script(target, "boss", "familiar")
+        chosen = choose_script(target, "boss", "familiar", kind="sprite")
         if chosen is None:
             return None
         return "\n".join([
@@ -442,7 +443,7 @@ def compile_special_semantic_event(event: dict[str, object], target: str, contex
             return f"// unsupported byakuren butterfly helper arity for {target}: {', '.join(args)}"
         slot = args[0]
         switch = args[1] if len(args) > 1 else "0"
-        chosen = choose_script(target, "boss", "familiar")
+        chosen = choose_script(target, "boss", "familiar", kind="sprite")
         if chosen is None:
             return f"// unsupported byakuren butterfly helper for {target}: no boss familiar sprite in catalog"
         return "\n".join([
@@ -852,8 +853,9 @@ def remap_named_args(obj, target: str, semantic: str, args: list[str]) -> list[s
         script = parse_int_literal(args[1])
         source_bank = target_bank_for_role(source_game, role_hint)
         if script is not None and source_bank is not None:
-            purpose = "boss_aux" if role_hint == "boss" and semantic == "anmSetSprite" else "stage_enemy" if role_hint == "stage" else "main"
-            return [args[0], str(remap_set_script(source_game, target, source_bank, script, role_hint, purpose).script)]
+            set_kind = "main" if semantic == "anmSetMain" else "sprite"
+            purpose = "boss_aux" if role_hint == "boss" and set_kind == "sprite" else "stage_enemy" if role_hint == "stage" else "main"
+            return [args[0], str(remap_set_script(source_game, target, source_bank, script, role_hint, purpose, set_kind).script)]
     return args
 
 

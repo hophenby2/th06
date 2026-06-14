@@ -453,7 +453,7 @@ def emit_entry_aliases(objects: list[object], target: str, function_names: set[s
                     lines.append(f"    ins_410({z_index});")
                 preferred = setup.get("preferred_script")
                 preferred_script = preferred if isinstance(preferred, int) else None
-                chosen = choose_script(target, "stage", str(setup.get("purpose") or "stage_enemy"), preferred_script)
+                chosen = choose_script(target, "stage", str(setup.get("purpose") or "stage_enemy"), preferred_script, kind="main")
                 if chosen is not None:
                     lines.append(f"    ins_258({chosen.bank});")
                     lines.append(f"    ins_262({setup.get('main_slot', 1)}, {chosen.script});")
@@ -1403,7 +1403,7 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         return wrap_event_rank([f"    // dropped TH13+ charge-point effect call for TH12 stability: {text}"], event, target)
     if kind in {"goto", "conditional_goto", "call", "async_call", "return", "var", "assign"}:
         suffix = "" if text.endswith(";") else ";"
-        statement_text = f"{text}{suffix}"
+        statement_text = remap_call_statement_text(event, source_game, target, context) if kind in {"call", "async_call"} else f"{text}{suffix}"
         ranked = emit_ranked_text_from_literals(statement_text, event.get("difficulty_literals", []))
         if ranked:
             return ranked
@@ -1416,6 +1416,36 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
             return wrap_event_rank([f"    {text};"], event, target)
         return [f"    // raw: {text}"]
     return []
+
+
+def remap_call_statement_text(event: dict[str, object], source_game: str, target: str, context: dict[str, object] | None = None) -> str:
+    text = str(event.get("text") or "")
+    suffix = "" if text.endswith(";") else ";"
+    if source_game != target and source_game == "th12" and target == "th15":
+        source_path = str(context.get("source_path", "") if context else "").replace("\\", "/")
+        function = str(event.get("function", ""))
+        args = [str(arg) for arg in event.get("args", [])]
+        if source_path.endswith("/th12/stage06.decl") and function in {"Girl01", "Girl02"} and args:
+            remapped = remap_th12_stage_enemy_main_arg_to_target(args[0], target)
+            if remapped is not None:
+                args = [remapped, *args[1:]]
+                async_suffix = " async" if event.get("kind") == "async_call" else ""
+                return f"@{function}({', '.join(args)}){async_suffix};"
+    return f"{text}{suffix}"
+
+
+def remap_th12_stage_enemy_main_arg_to_target(value: str, target: str) -> str | None:
+    semantic_by_source = {
+        "21": "stage_blue",
+        "31": "stage_green",
+        "26": "stage_red",
+        "36": "stage_yellow",
+    }
+    purpose = semantic_by_source.get(str(value).strip())
+    if purpose is None:
+        return None
+    chosen = choose_script(target, "stage", purpose, kind="main")
+    return str(chosen.script) if chosen is not None else None
 
 
 def emit_semantic_object_block(objects: list[object], target: str) -> list[str]:
