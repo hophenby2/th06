@@ -3296,7 +3296,7 @@ void BossCard4_at2()
     // semantic op_key lowering th12->th15: unit.diff_f
     ins_536(%B, 0.033333335f, 0.033333335f, 0.041666668f, 0.05f);
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609(0, 3, 0, 4, 60, -999999, %B, -999999.0f);
+    ins_609(0, 4, 0, 4, 60, -999999, %B, -999999.0f);
     goto BossCard4_at2_2080 @ 0;
     BossCard4_at2_528:
     %A = 3.141593f;
@@ -3305,7 +3305,7 @@ void BossCard4_at2()
     goto BossCard4_at2_1160 @ 0;
     BossCard4_at2_628:
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_610
-    ins_610(0, 4, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
+    ins_610(0, 3, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
@@ -3336,7 +3336,7 @@ void BossCard4_at2()
     goto BossCard4_at2_1936 @ 0;
     BossCard4_at2_1404:
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_610
-    ins_610(0, 4, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
+    ins_610(0, 3, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601

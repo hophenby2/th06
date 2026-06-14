@@ -6,9 +6,11 @@ from copy import deepcopy
 
 from .model import BulletEmitter, BulletTransform
 from .op_ir import target_opcode_for_op_key
+from .origin_ir import bullet_origin_instructions
 from .reference import is_opcode_supported, validate_opcode_args
-from .semantics import boss_phase_prefix_ops, bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_bullet_transform_mode, remap_raw_arg_by_semantic, remap_shape_change_arg, th12_double_flower_pair, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509, unsupported_bullet_transform_mode_reason
-from .transform_ir import target_transform_args
+from .semantics import boss_phase_prefix_ops, bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_raw_arg_by_semantic, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509, unsupported_bullet_transform_mode_reason
+from .spread_ir import double_flower_lowering_for_th12, th12_aux_emitter_id
+from .transform_ir import bullet_transform_instructions, target_transform_args
 
 INT_SENTINEL = "-999999"
 FLOAT_SENTINEL = "-999999.0f"
@@ -626,22 +628,8 @@ def append_sound_lines(lines: list[str], target: str, e: BulletEmitter, emitter_
         lines.append(emit_checked_instruction(target, opcode, args))
 
 
-def th12_aux_emitter_id(emitter_id: str) -> str | None:
-    stripped = str(emitter_id).strip()
-    if not re.fullmatch(r"\d+", stripped):
-        return None
-    aux = int(stripped) + 2
-    if aux > 7:
-        return None
-    return str(aux)
-
-
 def spread_semantics(e: BulletEmitter) -> dict:
     return getattr(e, "semantics", {}).get("bullet", {}).get("spread", {})
-
-
-def target_flower_pair_from_semantics(e: BulletEmitter) -> tuple[str, str] | None:
-    return th12_double_flower_pair(spread_semantics(e))
 
 
 def fire_at_definition(emitter: BulletEmitter) -> bool:
@@ -663,7 +651,8 @@ def append_definition_fire(text: str, emitter: BulletEmitter, target: str) -> st
         return text
     lines.append(f"// LuaSTG direct bullet call lowered to target fire")
     lines.append(f"ins_{fire_opcode}({emitter_id});")
-    aux_id = th12_aux_emitter_id(str(emitter_id)) if target == "th12" and target_flower_pair_from_semantics(emitter) else None
+    double_flower = double_flower_lowering_for_th12(str(emitter_id), spread_semantics(emitter)) if target == "th12" else None
+    aux_id = double_flower.aux_emitter_id if double_flower else None
     if aux_id:
         lines.append(f"ins_{fire_opcode}({aux_id});")
     return "\n".join(lines)
@@ -1356,105 +1345,35 @@ def curve_laser_th13plus_transforms(transforms):
 
 
 def lower_transform_for_th13plus(transform, source_game: str, target: str, emitter_id: str) -> list[str] | None:
-    args = target_transform_args(transform)
-    if args is None:
+    lowered = bullet_transform_instructions(transform, source_game, target)
+    if lowered is None and target_transform_args(transform) is None:
         reason = (getattr(transform, "semantics", {}) or {}).get("drop_reason", "unsupported transform")
         return [f"// omitted transform from IR: {reason}; original ins_{transform.raw_opcode}({', '.join(str(arg) for arg in transform.raw_args)})"]
-    if transform.raw_opcode in {609, 610, 611, 612} and args:
-        return [f"ins_{transform.raw_opcode}({', '.join(args)});"]
-    if source_game == "th12" and transform.raw_opcode == 509 and len(args) == 8:
-        reason = unsupported_bullet_transform_mode_reason(source_game, target, args[3])
-        if reason:
-            return [f"// dropped unsupported bullet transform mode from ins_509: {reason}; original args: {', '.join(args)}"]
-        opcode, converted = th12_509_to_th13plus_transform(args, target)
-        return [f"ins_{opcode}({', '.join(converted)});"]
-    if source_game == "th12" and transform.raw_opcode == 510 and not args:
-        return ["ins_610();"]
-    if source_game == "th12" and transform.raw_opcode == 511 and len(args) == 2:
-        return [f"ins_611({', '.join(args)});"]
-    if source_game == "th12" and transform.raw_opcode == 512 and len(args) == 1:
-        return [f"ins_612({', '.join(args)});"]
-    if source_game == "th12" and transform.raw_opcode == 521 and len(args) == 9:
-        return emit_instruction_with_ranked_args(624, args, [emitter_id, "1.0f", "1.0f", "1.0f", "1.0f", "0.0f", "0.0f", "0.0f", "0.0f"])
-    if source_game == "th12" and transform.raw_opcode == 522 and len(args) == 9:
-        return emit_instruction_with_ranked_args(625, args, [emitter_id, "1", "1", "1", "1", "1", "1", "1", "1"])
+    if not lowered:
+        args = target_transform_args(transform) or [str(arg) for arg in transform.raw_args]
+        if transform.raw_opcode == 509:
+            reason = unsupported_bullet_transform_mode_reason(source_game, target, args[3] if len(args) > 3 else "")
+            if reason:
+                return [f"// dropped unsupported bullet transform mode from ins_509: {reason}; original args: {', '.join(args)}"]
+        return None
+    lines: list[str] = []
+    for instruction in lowered:
+        if instruction.opcode == 624 and len(instruction.args) == 9:
+            lines.extend(emit_instruction_with_ranked_args(624, instruction.args, [emitter_id, "1.0f", "1.0f", "1.0f", "1.0f", "0.0f", "0.0f", "0.0f", "0.0f"]))
+        elif instruction.opcode == 625 and len(instruction.args) == 9:
+            lines.extend(emit_instruction_with_ranked_args(625, instruction.args, [emitter_id, "1", "1", "1", "1", "1", "1", "1", "1"]))
+        else:
+            lines.append(f"ins_{instruction.opcode}({', '.join(instruction.args)});")
+    return lines
     return None
 
 
-def th12_509_to_th13plus_609(args: list[str], target: str) -> list[str]:
-    converted = args[:]
-    converted[3] = remap_bullet_transform_mode("th12", target, converted[3])
-    converted[4] = remap_shape_change_arg("th12", target, args[3], converted[4])
-    if generation_for_game(target) == "th13_plus":
-        converted = ["-999999.0f" if value == "-999.0f" and index >= 6 else value for index, value in enumerate(converted)]
-    return converted
-
-
-def th12_509_to_th13plus_transform(args: list[str], target: str) -> tuple[int, list[str]]:
-    converted = th12_509_to_th13plus_609(args, target)
-    if converted[3] == "16":
-        et_id, slot, channel, mode, a, b, r, s = converted
-        subtype = th12_pause_then_velocity_subtype(args[3])
-        if args[3] == "32":
-            r = th12_random_angle_expression_bound(r)
-        mode_flags = "0"
-        return 610, [et_id, slot, channel, mode, a, b, subtype, mode_flags, r, s, "-999999.0f", "-999999.0f"]
-    return 609, converted
-
-
-def th12_random_angle_expression_bound(expr: str) -> str:
-    normalized = str(expr).strip()
-    match = re.fullmatch(r"\[-9998\.0f\]\s*/\s*_f\(([-+]?\d+(?:\.\d+)?)\)", normalized)
-    if match:
-        return f"3.1415927f / _f({match.group(1)})"
-    match = re.fullmatch(r"\[-9998\.0f\]\s*/\s*([-+]?\d+(?:\.\d+)?f?)", normalized)
-    if match:
-        denom = match.group(1)
-        return f"3.1415927f / {denom}"
-    if normalized == "[-9998.0f]":
-        return "3.1415927f"
-    return expr
-
-
-def th12_pause_then_velocity_subtype(mode: str) -> str:
-    # TH12 has three separate modes for delayed velocity changes; TH13+ folds
-    # them into mode 16 and selects behavior with c.
-    return {
-        "16": "0",  # original direction + r, speed = s
-        "32": "6",  # random aimed direction within +/-r, speed = s
-        "64": "4",  # direction = r, speed = s
-    }.get(str(mode), "0")
-
-
 def th13plus_origin_lines(emitter_id: str, origin: dict[str, object]) -> list[str]:
-    mode = str(origin.get("mode", "enemy")) if origin else "enemy"
-    lines: list[str] = []
-    if mode == "offset":
-        lines.append(emit_checked_instruction("th15", 603, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))]))
-    elif mode == "polar":
-        lines.append(emit_checked_instruction("th15", 626, [emitter_id, str(origin.get("angle", "0.0f")), str(origin.get("radius", "0.0f"))]))
-    elif mode == "absolute":
-        lines.append(emit_checked_instruction("th15", 628, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))]))
-    if mode == "distance" or "distance" in origin:
-        lines.append(emit_checked_instruction("th15", 627, [emitter_id, str(origin.get("distance", "0.0f"))]))
-    return lines
+    return [emit_checked_instruction("th15", ins.opcode, ins.args) for ins in bullet_origin_instructions("th15", emitter_id, origin)]
 
 
 def th12_origin_lines(emitter_id: str, origin: dict[str, object]) -> list[str]:
-    mode = str(origin.get("mode", "enemy")) if origin else "enemy"
-    lines: list[str] = []
-    if mode == "offset":
-        lines.append(emit_checked_instruction("th12", 503, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))]))
-    elif mode == "polar":
-        lines.append(emit_checked_instruction("th12", 523, [emitter_id, str(origin.get("angle", "0.0f")), str(origin.get("radius", "0.0f"))]))
-    elif mode == "absolute":
-        if "distance" in origin:
-            lines.append(emit_checked_instruction("th12", 524, [emitter_id, str(origin.get("distance", "0.0f"))]))
-        lines.append(emit_checked_instruction("th12", 525, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))]))
-        return lines
-    if mode == "distance" or "distance" in origin:
-        lines.append(emit_checked_instruction("th12", 524, [emitter_id, str(origin.get("distance", "0.0f"))]))
-    return lines
+    return [emit_checked_instruction("th12", ins.opcode, ins.args) for ins in bullet_origin_instructions("th12", emitter_id, origin)]
 
 
 def emitter_has_curve_laser(e: BulletEmitter) -> bool:
@@ -1504,12 +1423,12 @@ def compile_th12(e: BulletEmitter) -> str:
         speed_step_value = e.speed.get("last_or_step")
     speed_step = v(speed_step_value, e.speed.get("last_or_step", "0.0f"))
 
-    double_flower = target_flower_pair_from_semantics(e)
-    aux_emitter_id = th12_aux_emitter_id(str(emitter_id)) if double_flower else None
+    double_flower = double_flower_lowering_for_th12(str(emitter_id), spread_semantics(e))
+    aux_emitter_id = double_flower.aux_emitter_id if double_flower else None
     if double_flower and aux_emitter_id:
         lines = [f"// TH15 double flower spread lowered to two TH12 single-side flower slots: {emitter_id}+{aux_emitter_id}"]
-        lines.extend(emit_th12_bullet_setup_lines(emitter_id, double_flower[0], style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step))
-        lines.extend(emit_th12_bullet_setup_lines(aux_emitter_id, double_flower[1], style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step))
+        lines.extend(emit_th12_bullet_setup_lines(emitter_id, double_flower.primary_style, style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step))
+        lines.extend(emit_th12_bullet_setup_lines(aux_emitter_id, double_flower.aux_style, style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step))
     else:
         lines = emit_th12_bullet_setup_lines(emitter_id, aim_raw_value, style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step)
 
