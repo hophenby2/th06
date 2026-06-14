@@ -97,6 +97,24 @@ def update_shape_semantics(emitter: BulletEmitter, shape: object) -> None:
     emitter.semantics.setdefault("bullet", {})["shape"] = bullet_shape_semantic(emitter.game, shape)
 
 
+def set_origin_base(emitter: BulletEmitter, base: dict[str, object]) -> None:
+    origin = emitter.origin or {}
+    distance = origin.get("distance")
+    if distance is not None and base.get("mode") not in {"distance", "polar"}:
+        base = dict(base)
+        base["distance"] = distance
+    emitter.origin = base
+
+
+def set_origin_distance(emitter: BulletEmitter, distance: object) -> None:
+    origin = dict(emitter.origin or {})
+    if origin and origin.get("mode") != "distance":
+        origin["distance"] = distance
+    else:
+        origin = {"mode": "distance", "distance": distance}
+    emitter.origin = origin
+
+
 def apply_th13plus(emitter: BulletEmitter, ins: Instruction) -> None:
     args = ins.args
     op = ins.opcode
@@ -111,7 +129,7 @@ def apply_th13plus(emitter: BulletEmitter, ins: Instruction) -> None:
         set_ranked_field(emitter.appearance, "color", with_difficulty(arg(args, 2), ins.difficulty_literals), ins.difficulty)
         update_shape_semantics(emitter, shape)
     elif op == 603:
-        emitter.origin = {"mode": "offset", "x": arg(args, 1, "0"), "y": arg(args, 2, "0")}
+        set_origin_base(emitter, {"mode": "offset", "x": arg(args, 1, "0"), "y": arg(args, 2, "0")})
     elif op == 604:
         set_ranked_field(emitter.aim, "base_angle", with_difficulty(arg(args, 1, "0"), ins.difficulty_literals), ins.difficulty)
         set_ranked_field(emitter.aim, "angle_step", with_difficulty(arg(args, 2, "0"), ins.difficulty_literals), ins.difficulty)
@@ -124,6 +142,12 @@ def apply_th13plus(emitter: BulletEmitter, ins: Instruction) -> None:
     elif op == 608:
         emitter.sound["id"] = arg(args, 1)
         emitter.sound["mode"] = arg(args, 2)
+    elif op == 626:
+        set_origin_base(emitter, {"mode": "polar", "angle": arg(args, 1, "0.0f"), "radius": arg(args, 2, "0.0f")})
+    elif op == 627:
+        set_origin_distance(emitter, arg(args, 1, "0.0f"))
+    elif op == 628:
+        set_origin_base(emitter, {"mode": "absolute", "x": arg(args, 1, "0.0f"), "y": arg(args, 2, "0.0f")})
     elif op in {609, 610, 611, 612}:
         emitter.transforms.append(
             BulletTransform(
@@ -163,7 +187,7 @@ def apply_th12(emitter: BulletEmitter, ins: Instruction) -> None:
         set_ranked_field(emitter.appearance, "color", with_difficulty(arg(args, 2), ins.difficulty_literals), ins.difficulty)
         update_shape_semantics(emitter, shape)
     elif op == 503:
-        emitter.origin = {"x": arg(args, 1, "0"), "y": arg(args, 2, "0")}
+        set_origin_base(emitter, {"mode": "offset", "x": arg(args, 1, "0"), "y": arg(args, 2, "0")})
     elif op == 504:
         set_ranked_field(emitter.aim, "base_angle", with_difficulty(arg(args, 1, "0"), ins.difficulty_literals), ins.difficulty)
         set_ranked_field(emitter.aim, "angle_step", with_difficulty(arg(args, 2, "0"), ins.difficulty_literals), ins.difficulty)
@@ -177,11 +201,11 @@ def apply_th12(emitter: BulletEmitter, ins: Instruction) -> None:
         emitter.sound["id"] = arg(args, 1)
         emitter.sound["mode"] = arg(args, 2)
     elif op == 523:
-        emitter.origin = {"mode": "polar", "angle": arg(args, 1, "0.0f"), "radius": arg(args, 2, "0.0f")}
+        set_origin_base(emitter, {"mode": "polar", "angle": arg(args, 1, "0.0f"), "radius": arg(args, 2, "0.0f")})
     elif op == 524:
-        emitter.origin = {"mode": "distance", "distance": arg(args, 1, "0.0f")}
+        set_origin_distance(emitter, arg(args, 1, "0.0f"))
     elif op == 525:
-        emitter.origin = {"mode": "absolute", "x": arg(args, 1, "0.0f"), "y": arg(args, 2, "0.0f")}
+        set_origin_base(emitter, {"mode": "absolute", "x": arg(args, 1, "0.0f"), "y": arg(args, 2, "0.0f")})
     elif op in {509, 510, 511, 512, 521, 522}:
         emitter.transforms.append(BulletTransform(index=arg(args, 1, "0"), action_type="etEx", raw_opcode=op, raw_args=args[:], difficulty=ins.difficulty))
     elif op == 501:
@@ -268,7 +292,7 @@ def lift_th13plus_function(game: str, func: Function) -> list[BulletEmitter]:
             continue
         emitter_id = arg(ins.args, 0, "0")
         emitter = active.get(emitter_id)
-        if emitter and ins.opcode in {601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 617, 618, 619, 620, 621, 622, 624, 625}:
+        if emitter and ins.opcode in {601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 617, 618, 619, 620, 621, 622, 624, 625, 626, 627, 628}:
             emitter.raw.append(ins)
             append_emitter_op(emitter, ins)
             apply_th13plus(emitter, ins)

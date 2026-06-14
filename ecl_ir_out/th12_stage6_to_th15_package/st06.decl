@@ -155,7 +155,7 @@ void Cir00Dead()
     ins_604(0, [-9998.0f] / _f(16), 0.0f);
     // semantic op_key lowering th12->th15: bullet.speed
     ins_605(0, ([-9999.0f] * 1.0f) + 2.0f, 0.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     Cir00Dead_692:
     if ($A--) goto Cir00Dead_468 @ 0;
@@ -188,7 +188,7 @@ void Cir00_at()
     Cir00_at_436:
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, [-9998.0f] / _f(8), 0.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(32, 18, 14, 12);
@@ -324,7 +324,7 @@ void Girl00_at()
     Girl00_at_448:
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, [-9998.0f], 0.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(80);
@@ -404,7 +404,7 @@ void Girl01_at()
     Girl01_at_468:
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, [-9998.0f], 0.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(80);
@@ -491,7 +491,7 @@ void Girl02_at()
     ins_23(20 + ([-10000] % 60));
     goto Girl02_at_572 @ 0;
     Girl02_at_444:
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(60, 60, 30, 2);
@@ -732,7 +732,7 @@ void MBossGirl00_at()
     $B = 10;
     goto MBossGirl00_at_504 @ 0;
     MBossGirl00_at_464:
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(3);
@@ -769,7 +769,7 @@ void MBossGirl01_at()
     $B = 10;
     goto MBossGirl01_at_504 @ 0;
     MBossGirl01_at_464:
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(3);

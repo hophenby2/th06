@@ -1428,15 +1428,33 @@ def th12_pause_then_velocity_subtype(mode: str) -> str:
 
 def th13plus_origin_lines(emitter_id: str, origin: dict[str, object]) -> list[str]:
     mode = str(origin.get("mode", "enemy")) if origin else "enemy"
+    lines: list[str] = []
     if mode == "offset":
-        return [emit_checked_instruction("th15", 603, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))])]
-    if mode == "polar":
-        return [emit_checked_instruction("th15", 626, [emitter_id, str(origin.get("angle", "0.0f")), str(origin.get("radius", "0.0f"))])]
-    if mode == "distance":
-        return [emit_checked_instruction("th15", 627, [emitter_id, str(origin.get("distance", "0.0f"))])]
-    if mode == "absolute":
-        return [emit_checked_instruction("th15", 628, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))])]
-    return []
+        lines.append(emit_checked_instruction("th15", 603, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))]))
+    elif mode == "polar":
+        lines.append(emit_checked_instruction("th15", 626, [emitter_id, str(origin.get("angle", "0.0f")), str(origin.get("radius", "0.0f"))]))
+    elif mode == "absolute":
+        lines.append(emit_checked_instruction("th15", 628, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))]))
+    if mode == "distance" or "distance" in origin:
+        lines.append(emit_checked_instruction("th15", 627, [emitter_id, str(origin.get("distance", "0.0f"))]))
+    return lines
+
+
+def th12_origin_lines(emitter_id: str, origin: dict[str, object]) -> list[str]:
+    mode = str(origin.get("mode", "enemy")) if origin else "enemy"
+    lines: list[str] = []
+    if mode == "offset":
+        lines.append(emit_checked_instruction("th12", 503, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))]))
+    elif mode == "polar":
+        lines.append(emit_checked_instruction("th12", 523, [emitter_id, str(origin.get("angle", "0.0f")), str(origin.get("radius", "0.0f"))]))
+    elif mode == "absolute":
+        if "distance" in origin:
+            lines.append(emit_checked_instruction("th12", 524, [emitter_id, str(origin.get("distance", "0.0f"))]))
+        lines.append(emit_checked_instruction("th12", 525, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))]))
+        return lines
+    if mode == "distance" or "distance" in origin:
+        lines.append(emit_checked_instruction("th12", 524, [emitter_id, str(origin.get("distance", "0.0f"))]))
+    return lines
 
 
 def emitter_has_curve_laser(e: BulletEmitter) -> bool:
@@ -1498,6 +1516,9 @@ def compile_th12(e: BulletEmitter) -> str:
     append_sound_lines(lines, "th12", e, str(emitter_id))
     if aux_emitter_id:
         append_sound_lines(lines, "th12", e, str(aux_emitter_id))
+    lines.extend(th12_origin_lines(str(emitter_id), e.origin))
+    if aux_emitter_id:
+        lines.extend(th12_origin_lines(str(aux_emitter_id), e.origin))
 
     for field, value in (("speed.first", speed_value), ("speed.step", speed_step_value), ("count.ways", ways_value), ("count.layers", layers_value)):
         comment = difficulty_comment(field, value)

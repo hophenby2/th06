@@ -171,17 +171,17 @@ void Boss1_at1()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, %A, 0.0f);
@@ -193,11 +193,11 @@ void Boss1_at1()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(3, %A, 0.0f);
     %A = %A + 0.060415f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(2);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(3);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(20, 20, 15, 11);
@@ -205,17 +205,17 @@ void Boss1_at1()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, %A, 0.0f);
@@ -226,13 +226,13 @@ void Boss1_at1()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(3, %A, 0.0f);
     %A = %A - 0.060415f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(2);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(3);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(20, 20, 15, 11);
@@ -308,17 +308,17 @@ void Boss1_at1b()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A - 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, %A, 0.0f);
@@ -330,11 +330,11 @@ void Boss1_at1b()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(3, %A, 0.0f);
     %A = %A - 0.060415f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(2);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(3);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(20, 20, 15, 11);
@@ -342,17 +342,17 @@ void Boss1_at1b()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     %A = %A + 0.03927f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, %A, 0.0f);
@@ -363,13 +363,13 @@ void Boss1_at1b()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(3, %A, 0.0f);
     %A = %A + 0.060415f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(2);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(3);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(20, 20, 15, 11);
@@ -759,7 +759,7 @@ void Boss2_at2()
     ins_610(1, 2, 0, 16, 60, 1, 4, 0, [-9989.0f], %E, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, [-9998.0f] / _f(5), 3.1415927f / _f($D));
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(20, 20, 20, 17);
@@ -1089,7 +1089,7 @@ void Boss3_at1()
     ins_603(0, %B, %C);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, %A);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     %A = %A + 0.19635f;
     // semantic op_key lowering th12->th15: flow.wait
@@ -1129,7 +1129,7 @@ void Boss3_at1e1()
     ins_603(1, %B, %C);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, %A, %A);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
     %A = %A + 0.19635f;
     !E
@@ -1172,7 +1172,7 @@ void Boss3_at1e2()
     ins_603(2, %B, %C);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(2, %A, %A);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(2);
     %A = %A - 0.19635f;
     !E
@@ -1215,7 +1215,7 @@ void Boss3_at1e3()
     ins_603(3, %B, %C);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(3, %A, %A);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(3);
     %A = %A - 0.19635f;
     !E
@@ -1261,7 +1261,7 @@ void Boss3_at1e4()
     ins_603(4, %B, %C);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(4, %A, %A);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(4);
     %A = %A + 0.19635f;
     !E
@@ -1623,7 +1623,7 @@ void Boss4_at1()
     ins_603(0, %B, %C);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, %A);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     %A = %A + 0.19635f;
     // semantic op_key lowering th12->th15: flow.wait
@@ -1664,7 +1664,7 @@ void Boss4_at1e1()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, %A, %A);
     unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e1_1080 @ 0;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
     Boss4_at1e1_1080:
     %A = %A + 0.19635f;
@@ -1685,7 +1685,7 @@ void Boss4_at1e1()
     ins_624(1, 3.0f, 3.0f, 3.0f, 5.0f, 1.2f, 1.2f, 1.2f, 1.2f);
     ins_609(1, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(1, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
     return;
     // detected loops:
@@ -1721,7 +1721,7 @@ void Boss4_at1e2()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(2, %A, %A);
     unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e2_1080 @ 0;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(2);
     Boss4_at1e2_1080:
     %A = %A - 0.19635f;
@@ -1742,7 +1742,7 @@ void Boss4_at1e2()
     ins_624(2, 3.0f, 3.0f, 3.0f, 5.0f, 1.2f, 1.2f, 1.2f, 1.2f);
     ins_609(2, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(2, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(2);
     return;
     // detected loops:
@@ -1778,7 +1778,7 @@ void Boss4_at1e3()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(3, %A, %A);
     unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e3_1080 @ 0;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(3);
     Boss4_at1e3_1080:
     %A = %A - 0.19635f;
@@ -1799,7 +1799,7 @@ void Boss4_at1e3()
     ins_624(3, 3.0f, 3.0f, 3.0f, 5.0f, 1.2f, 1.2f, 1.2f, 1.2f);
     ins_609(3, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(3, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(3);
     return;
     // detected loops:
@@ -1835,7 +1835,7 @@ void Boss4_at1e4()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(4, %A, %A);
     unless ((($D % 2) == 0) || ([-9959] >= 1)) goto Boss4_at1e4_1080 @ 0;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(4);
     Boss4_at1e4_1080:
     %A = %A + 0.19635f;
@@ -1856,7 +1856,7 @@ void Boss4_at1e4()
     ins_624(4, 3.0f, 3.0f, 3.0f, 5.0f, 1.2f, 1.2f, 1.2f, 1.2f);
     ins_609(4, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(4, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(4);
     return;
     // detected loops:
@@ -2279,11 +2279,12 @@ void BossCard1_at1()
     $C = 80;
     goto BossCard1_at1_796 @ 0;
     BossCard1_at1_552:
-    // semantic op_key lowering th12->th15: bullet.distance
-    ins_627(0, %B);
+    // dynamic bullet distance lowering th12->th15: defer ins_524 until base origin is known
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.18479957f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet distance lowering th12->th15: pending ins_524 -> ins_627 before fire
+    ins_627(0, %B);
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     %B = %B - _f(1);
     %A = %A - 0.15708f;
@@ -2294,11 +2295,12 @@ void BossCard1_at1()
     $D = 40;
     goto BossCard1_at1_1148 @ 0;
     BossCard1_at1_904:
-    // semantic op_key lowering th12->th15: bullet.distance
-    ins_627(0, %B);
+    // dynamic bullet distance lowering th12->th15: defer ins_524 until base origin is known
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.18479957f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet distance lowering th12->th15: pending ins_524 -> ins_627 before fire
+    ins_627(0, %B);
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     %B = %B - _f(1);
     %A = %A - 0.15708f;
@@ -2333,11 +2335,12 @@ void BossCard1_at1h()
     $C = 80;
     goto BossCard1_at1h_796 @ 0;
     BossCard1_at1h_552:
-    // semantic op_key lowering th12->th15: bullet.distance
-    ins_627(0, %B);
+    // dynamic bullet distance lowering th12->th15: defer ins_524 until base origin is known
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.007853982f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet distance lowering th12->th15: pending ins_524 -> ins_627 before fire
+    ins_627(0, %B);
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     %B = %B - _f(1);
     %A = %A + 0.15708f;
@@ -2348,11 +2351,12 @@ void BossCard1_at1h()
     $D = 40;
     goto BossCard1_at1h_1148 @ 0;
     BossCard1_at1h_904:
-    // semantic op_key lowering th12->th15: bullet.distance
-    ins_627(0, %B);
+    // dynamic bullet distance lowering th12->th15: defer ins_524 until base origin is known
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.007853982f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet distance lowering th12->th15: pending ins_524 -> ins_627 before fire
+    ins_627(0, %B);
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     %B = %B - _f(1);
     %A = %A + 0.15708f;
@@ -2386,11 +2390,12 @@ void BossCard1_at2()
     $C = 40;
     goto BossCard1_at2_748 @ 0;
     BossCard1_at2_504:
-    // semantic op_key lowering th12->th15: bullet.distance
-    ins_627(1, %B);
+    // dynamic bullet distance lowering th12->th15: defer ins_524 until base origin is known
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, %A, 0.14279966f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet distance lowering th12->th15: pending ins_524 -> ins_627 before fire
+    ins_627(1, %B);
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
     %B = %B - _f(1);
     %A = %A - 0.15708f;
@@ -2401,11 +2406,12 @@ void BossCard1_at2()
     $D = 40;
     goto BossCard1_at2_1100 @ 0;
     BossCard1_at2_856:
-    // semantic op_key lowering th12->th15: bullet.distance
-    ins_627(1, %B);
+    // dynamic bullet distance lowering th12->th15: defer ins_524 until base origin is known
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, %A, 0.1308997f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet distance lowering th12->th15: pending ins_524 -> ins_627 before fire
+    ins_627(1, %B);
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
     %B = %B - _f(1);
     %A = %A + 0.15708f;
@@ -2439,11 +2445,12 @@ void BossCard1_at2h()
     $C = 40;
     goto BossCard1_at2h_748 @ 0;
     BossCard1_at2h_504:
-    // semantic op_key lowering th12->th15: bullet.distance
-    ins_627(1, %B);
+    // dynamic bullet distance lowering th12->th15: defer ins_524 until base origin is known
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, %A, 0.14279966f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet distance lowering th12->th15: pending ins_524 -> ins_627 before fire
+    ins_627(1, %B);
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
     %B = %B - _f(1);
     %A = %A + 0.15708f;
@@ -2454,11 +2461,12 @@ void BossCard1_at2h()
     $D = 40;
     goto BossCard1_at2h_1100 @ 0;
     BossCard1_at2h_856:
-    // semantic op_key lowering th12->th15: bullet.distance
-    ins_627(1, %B);
+    // dynamic bullet distance lowering th12->th15: defer ins_524 until base origin is known
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, %A, 0.1308997f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet distance lowering th12->th15: pending ins_524 -> ins_627 before fire
+    ins_627(1, %B);
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
     %B = %B - _f(1);
     %A = %A - 0.15708f;
@@ -2566,10 +2574,11 @@ void BossCard2_at1(var A, var B, var C)
     ins_604(0, %A, 0.28559932f);
     ins_605(0, 1.0f, 0.0f);
     ins_628(0, %B, %C);
+    ins_627(0, 16.0f);
     ins_625(0, 1, 1, 1, 1, 1, 3, 3, 3);
     ins_624(0, 2.0f, 2.0f, 2.8f, 2.8f, 1.0f, 1.0f, 1.0f, 1.0f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     return;
 }
@@ -2720,13 +2729,13 @@ void BossCard3_at()
     ins_535($A, 200, 200, 200, 100);
     goto BossCard3_at_1208 @ 0;
     BossCard3_at_952:
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(2);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(3);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(4);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(5);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23($A);
@@ -3193,13 +3202,13 @@ void BossCard4_at()
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(5, %B, %C);
     %C = %C - 0.083776f;
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(2);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(3);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(4);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(5);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(3);
@@ -3246,13 +3255,13 @@ void BossCard4_at()
     unless (%A > (1.5707964f + (3.1415927f / _f(28)))) goto BossCard4_at_3068 @ 0;
     $E = 0;
     BossCard4_at_3068:
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(2);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(3);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(4);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(5);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(3);
@@ -3299,7 +3308,7 @@ void BossCard4_at2()
     ins_610(0, 4, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     !E
     %A = %A + 3.141593f;
@@ -3327,10 +3336,10 @@ void BossCard4_at2()
     goto BossCard4_at2_1936 @ 0;
     BossCard4_at2_1404:
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_610
-    ins_610(0, 5, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
+    ins_610(0, 4, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     !E
     %A = %A - 3.141593f;
@@ -3380,7 +3389,7 @@ void BossCard4_at3()
     ins_609(1, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     goto BossCard4_at3_428 @ 0;
     BossCard4_at3_376:
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(1);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(240, 120, 100, 60);
@@ -3485,7 +3494,7 @@ void BossCard4_at5()
     unless (%A <= -1.5707964f) goto BossCard4_at5_1284 @ 0;
     $B = 0;
     BossCard4_at5_1284:
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(6);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(6, 4, 2, 2);
@@ -3514,7 +3523,7 @@ void BossCard4_at6()
     ins_604(7, [-9998.0f], 0.28559932f);
     ins_605(7, 3.0f, 1.0f);
     ins_609(7, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(7);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(20);
@@ -3555,7 +3564,7 @@ void BossCard4_at7()
     ins_605(7, (%B / 64.0f) + ([-9999.0f] * 0.5f), 0.0f);
     // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(7, %B, [-9999.0f] * _f(192));
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(7);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(10);
@@ -3574,7 +3583,7 @@ void BossCard4_at7()
     %B = %B * _f(-1);
     // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(7, %B, [-9999.0f] * _f(192));
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(7);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(10);
@@ -3902,7 +3911,7 @@ void BossCard5_at(var A, var B, var C, var D)
     ins_609(0, 3, 0, 4, 60, -999999, 0.023333333f, -999999.0f);
     // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(0, %A, %B);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601(0);
     %A = %A + %E;
     %B = %B + %F;
@@ -4232,7 +4241,7 @@ void BossCard6_at(var A, var B, var C, var D, var E, var F, var G)
     ins_609($A, 6, 1, 8, 60000, 60, 0.0f, %D / 4.8f);
     // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628($A, %B, %C);
-    // semantic op_key lowering th12->th15: bullet.fire
+    // dynamic bullet fire lowering th12->th15: ins_501 -> ins_601
     ins_601($A);
     [-9983] = $G;
     // object Enemy source_line=2569 family=th12

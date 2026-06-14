@@ -697,7 +697,7 @@ def emit_raw_timeline_body(timeline, target: str, rewrites: list[object] | None 
     emitted_spelltest_skip = False
     source_game = getattr(timeline, "game", "unknown")
     if generation_for_game(source_game) == "th13_plus" and generation_for_game(target) == "th12":
-        bullet_state = BulletLoweringState({}, {}, TransformTimelineState(), {}, {}, set())
+        bullet_state = BulletLoweringState({}, {}, TransformTimelineState(), {}, {}, {}, set())
     elif generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
         bullet_state = make_bullet_lowering_state_from_events(timeline.fields.get("statements", []), source_game, target)
     else:
@@ -732,6 +732,7 @@ class BulletLoweringState:
     transform_timeline: TransformTimelineState
     double_flower_ways: dict[str, str]
     pending_curve_laser_offsets: dict[str, tuple[str, str]]
+    pending_origin_distance: dict[str, str]
     curve_laser_emitters: set[str]
 
     def activate_double_flower(self, emitter_id: str) -> str | None:
@@ -804,10 +805,16 @@ class BulletLoweringState:
     def pop_curve_laser_offset(self, emitter_id: str) -> tuple[str, str] | None:
         return self.pending_curve_laser_offsets.pop(emitter_id, None)
 
+    def observe_origin_distance(self, emitter_id: str, distance: object) -> None:
+        self.pending_origin_distance[emitter_id] = str(distance)
+
+    def pop_origin_distance(self, emitter_id: str) -> str | None:
+        return self.pending_origin_distance.pop(emitter_id, None)
+
 
 def make_bullet_lowering_state(function_objects: list[object], source_game: str, target: str) -> BulletLoweringState | None:
     if generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
-        return BulletLoweringState({}, {}, TransformTimelineState(), {}, {}, set())
+        return BulletLoweringState({}, {}, TransformTimelineState(), {}, {}, {}, set())
     if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
     aux: dict[str, str] = {}
@@ -820,7 +827,7 @@ def make_bullet_lowering_state(function_objects: list[object], source_game: str,
             aux_id = th12_aux_emitter_id(emitter_id)
             if aux_id:
                 aux[emitter_id] = aux_id
-    return BulletLoweringState(aux, {}, TransformTimelineState(), {}, {}, set())
+    return BulletLoweringState(aux, {}, TransformTimelineState(), {}, {}, {}, set())
 
 
 def make_bullet_lowering_state_from_events(events: list[dict[str, object]], source_game: str, target: str) -> BulletLoweringState | None:
@@ -841,8 +848,24 @@ def lower_bullet_fire_opcode(opcode: int, args: list[object], source_game: str, 
         emitter_id = str(args[0]) if args else "0"
         if bullet_state:
             bullet_state.pop_curve_laser_offset(emitter_id)
+            bullet_state.pop_origin_distance(emitter_id)
         lines = [f"    // dynamic curve laser fire lowering {source_game}->{target}: ins_611 -> ins_711"]
         lines.append(f"    ins_711({emitter_id});")
+        return lines
+    if opcode == 501 and generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
+        emitter_id = str(args[0]) if args else "0"
+        lines: list[str] = []
+        if bullet_state:
+            distance = bullet_state.pop_origin_distance(emitter_id)
+            if distance is not None:
+                lines.extend([
+                    f"    // dynamic bullet distance lowering {source_game}->{target}: pending ins_524 -> ins_627 before fire",
+                    f"    ins_627({emitter_id}, {distance});",
+                ])
+        lines.extend([
+            f"    // dynamic bullet fire lowering {source_game}->{target}: ins_501 -> ins_601",
+            f"    ins_601({emitter_id});",
+        ])
         return lines
     if opcode != 601 or generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
@@ -1001,6 +1024,18 @@ def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str
                 f"    // curve laser material lowering {source_game}->{target}: TH13+ curve laser uses visible sprite/color",
                 f"    ins_602({', '.join(rendered_args)});",
             ]
+    if opcode == 524 and generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus" and len(args) >= 2:
+        emitter_id = str(args[0])
+        if bullet_state:
+            bullet_state.observe_origin_distance(emitter_id, args[1])
+            return [
+                f"    // dynamic bullet distance lowering {source_game}->{target}: defer ins_524 until base origin is known",
+            ]
+        rendered_args = [str(arg) for arg in args]
+        return [
+            f"    // dynamic bullet distance lowering {source_game}->{target}: ins_524 -> ins_627",
+            f"    ins_627({', '.join(rendered_args)});",
+        ]
     if opcode == 525 and generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus" and len(args) >= 3:
         emitter_id = str(args[0])
         if bullet_state and emitter_id in bullet_state.curve_laser_emitters:
@@ -1009,13 +1044,20 @@ def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str
                 f"    // test TH12 absolute curve-laser origin lowering {source_game}->{target}: ins_525 -> ins_628",
                 f"    ins_628({', '.join(rendered_args)});",
             ]
+        distance = bullet_state.pop_origin_distance(emitter_id) if bullet_state else None
         if bullet_state:
             bullet_state.observe_absolute_origin(emitter_id, args[1], args[2])
         rendered_args = [str(arg) for arg in args]
-        return [
+        lines = [
             f"    // dynamic absolute bullet origin lowering {source_game}->{target}: ins_525 -> ins_628",
             f"    ins_628({', '.join(rendered_args)});",
         ]
+        if distance is not None:
+            lines.extend([
+                f"    // dynamic bullet distance lowering {source_game}->{target}: preserved preceding ins_524 after absolute base",
+                f"    ins_627({emitter_id}, {distance});",
+            ])
+        return lines
     if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
     mapping = {

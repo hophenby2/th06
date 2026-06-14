@@ -24,24 +24,31 @@ class TransformTimelineState:
     def __init__(self) -> None:
         self.next_index_by_emitter: dict[str, int] = {}
         self.next_start_by_emitter_channel: dict[tuple[str, str], str] = {}
+        self.index_by_emitter_source_slot: dict[tuple[str, str], str] = {}
 
     def reset_emitter(self, emitter_id: str) -> None:
         self.next_index_by_emitter[emitter_id] = 0
         for key in [key for key in self.next_start_by_emitter_channel if key[0] == emitter_id]:
             self.next_start_by_emitter_channel.pop(key, None)
+        for key in [key for key in self.index_by_emitter_source_slot if key[0] == emitter_id]:
+            self.index_by_emitter_source_slot.pop(key, None)
 
     def annotate_th12_to_th13plus_args(self, args: list[Any], source_game: str, target: str) -> tuple[list[str] | None, dict[str, Any]]:
         rendered = [str(arg) for arg in args]
         if generation_for_game(source_game) != "th12" or generation_for_game(target) != "th13_plus" or len(rendered) != 8:
             return rendered, {}
-        emitter_id, _slot, channel, mode, duration, start, _r, _s = rendered
+        emitter_id, source_slot, channel, mode, duration, start, _r, _s = rendered
         reason = unsupported_bullet_transform_mode_reason(source_game, target, mode)
         if reason:
             return None, {"drop": True, "drop_reason": reason}
-        effective_index = str(self.next_index_by_emitter.get(emitter_id, 0))
-        self.next_index_by_emitter[emitter_id] = int(effective_index) + 1
+        source_key = (emitter_id, source_slot)
+        effective_index = self.index_by_emitter_source_slot.get(source_key)
+        if effective_index is None:
+            effective_index = str(self.next_index_by_emitter.get(emitter_id, 0))
+            self.index_by_emitter_source_slot[source_key] = effective_index
+            self.next_index_by_emitter[emitter_id] = int(effective_index) + 1
         rendered[1] = effective_index
-        semantics: dict[str, Any] = {"compact_index": effective_index}
+        semantics: dict[str, Any] = {"compact_index": effective_index, "source_slot": source_slot}
         if mode == "8" and start == INT_SENTINEL:
             timeline_key = (emitter_id, channel)
             effective_start = self.next_start_by_emitter_channel.get(timeline_key, "0")
