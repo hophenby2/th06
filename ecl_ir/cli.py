@@ -7,6 +7,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from .anm_catalog import choose_script
 from .backend import choose_difficulty, compile_bullet_emitter, compile_ir_op_event, compile_object, definition_emitter_state, first_difficulty_group, normalize_difficulty, wrap_ranked_lines
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
@@ -450,8 +451,12 @@ def emit_entry_aliases(objects: list[object], target: str, function_names: set[s
                 z_index_after = setup.get("z_index_after")
                 if z_index is not None and not z_index_after:
                     lines.append(f"    ins_410({z_index});")
-                lines.append(f"    ins_258({setup.get('anm_bank', 1)});")
-                lines.append(f"    ins_262({setup.get('main_slot', 1)}, {setup.get('main_script', 50)});")
+                preferred = setup.get("preferred_script")
+                preferred_script = preferred if isinstance(preferred, int) else None
+                chosen = choose_script(target, "stage", str(setup.get("purpose") or "stage_enemy"), preferred_script)
+                if chosen is not None:
+                    lines.append(f"    ins_258({chosen.bank});")
+                    lines.append(f"    ins_262({setup.get('main_slot', 1)}, {chosen.script});")
                 if z_index is not None and z_index_after:
                     lines.append(f"    ins_410({z_index});")
             lines.extend([f"    @{real}();", "    return;", "}"])

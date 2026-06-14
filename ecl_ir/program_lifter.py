@@ -15,12 +15,13 @@ STAGE_ENTRY_ALIASES: dict[str, str] = {
     "MainSub12": "MainLatter2", "MainSub13": "MainLatter2",
 }
 
-TH12_STAGE_ENTRY_ANM_SETUP: dict[str, dict[str, int | None]] = {
-    # Values mirrored from th12/stage01.decl entry wrappers.
-    "B": {"anm_bank": 1, "main_slot": 1, "main_script": 50, "z_index": 2, "z_index_after": 0},
-    "G": {"anm_bank": 1, "main_slot": 1, "main_script": 52, "z_index": 9, "z_index_after": 0},
-    "R": {"anm_bank": 1, "main_slot": 1, "main_script": 51, "z_index": 1, "z_index_after": 1},
-    "Y": {"anm_bank": 1, "main_slot": 1, "main_script": 53, "z_index": None, "z_index_after": 0},
+STAGE_ENTRY_ANM_PURPOSE: dict[str, dict[str, int | str | None]] = {
+    # Script preferences are semantic colors; emitters clamp them through the
+    # target game's actually-used stage enemy sprite catalog.
+    "B": {"purpose": "stage_enemy", "preferred_script": 50, "z_index": 2, "z_index_after": 0},
+    "G": {"purpose": "stage_enemy", "preferred_script": 52, "z_index": 9, "z_index_after": 0},
+    "R": {"purpose": "stage_enemy", "preferred_script": 51, "z_index": 1, "z_index_after": 1},
+    "Y": {"purpose": "stage_enemy", "preferred_script": 53, "z_index": None, "z_index_after": 0},
 }
 
 BULLET_CLEAR_HELPERS = {"Ecl_EtBreak", "Ecl_EtBreak2", "Ecl_EtBreak2_ni", "Ecl_EtBreak_ni"}
@@ -83,7 +84,7 @@ def lift_entry_aliases(program: Program) -> list[EntryAlias]:
         "anm_setup": {
             alias: setup
             for alias in aliases
-            if (setup := TH12_STAGE_ENTRY_ANM_SETUP.get(alias[:1])) is not None
+            if (setup := STAGE_ENTRY_ANM_PURPOSE.get(alias[:1])) is not None
         },
         "reason": "target stage scheduler references named enemy entries that differ from source function names",
     }

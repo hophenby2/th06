@@ -52,7 +52,7 @@ void BGirl01()
     ins_302(2);
     // object Animation source_line=20 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(1, 50);
+    ins_306(1, 53);
     @Girl01(21, 1);
     // semantic op_key lowering th12->th15: flow.delete
     ins_1();
@@ -74,7 +74,7 @@ void BGirl02()
     ins_302(2);
     // object Animation source_line=32 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(1, 50);
+    ins_306(1, 53);
     @Girl02(21, 1);
     // semantic op_key lowering th12->th15: flow.delete
     ins_1();
@@ -95,7 +95,7 @@ void Cir00(var A, var B, var C)
     ins_302(2);
     // object Animation source_line=2727 family=th12
     // Animation lowering th12 -> th15: anm.play -> ins_307
-    ins_307(2, 141);
+    ins_307(1, 102);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(40);
     // object Animation source_line=2729 family=th12
@@ -221,7 +221,7 @@ void GGirl01()
     ins_302(2);
     // object Animation source_line=2807 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(1, 52);
+    ins_306(1, 53);
     @Girl01(31, 1);
     // semantic op_key lowering th12->th15: flow.delete
     ins_1();
@@ -237,7 +237,7 @@ void GGirl02()
     ins_302(2);
     // object Animation source_line=2816 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(1, 52);
+    ins_306(1, 53);
     @Girl02(31, 1);
     // semantic op_key lowering th12->th15: flow.delete
     ins_1();
@@ -253,13 +253,13 @@ void Girl00()
     ins_302(2);
     // object Animation source_line=2825 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(1, 98);
+    ins_306(1, 53);
     // object Animation source_line=2826 family=th12
     // Animation lowering th12 -> th15: anm.select -> ins_302
     ins_302(2);
     // object Animation source_line=2827 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(0, 41);
+    ins_306(0, 53);
     // semantic op_key lowering th12->th15: unit.flag_set
     ins_502(64);
     // semantic op_key lowering th12->th15: unit.set_hurtbox
@@ -1090,7 +1090,7 @@ void MapleEnemy()
     MapleEnemy_80:
     // object Animation source_line=3385 family=th12
     // Animation lowering th12 -> th15: anm.play_abs -> ins_308
-    ins_308(0, 102);
+    ins_308(1, 102);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(1);
     MapleEnemy_124:
@@ -1117,13 +1117,13 @@ void MbossGirl00()
     ins_302(2);
     // object Animation source_line=3399 family=th12
     // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(1, 50);
+    ins_303(1, 53);
     // object Animation source_line=3400 family=th12
     // Animation lowering th12 -> th15: anm.select -> ins_302
     ins_302(2);
     // object Animation source_line=3401 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(0, 26);
+    ins_306(0, 53);
     // semantic op_key lowering th12->th15: unit.flag_set
     ins_502(76);
     // semantic op_key lowering th12->th15: unit.set_hurtbox
@@ -1192,13 +1192,13 @@ void MbossGirl01()
     ins_302(2);
     // object Animation source_line=3440 family=th12
     // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(1, 50);
+    ins_303(1, 53);
     // object Animation source_line=3441 family=th12
     // Animation lowering th12 -> th15: anm.select -> ins_302
     ins_302(2);
     // object Animation source_line=3442 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(0, 26);
+    ins_306(0, 53);
     // semantic op_key lowering th12->th15: unit.flag_set
     ins_502(76);
     // semantic op_key lowering th12->th15: unit.set_hurtbox
@@ -1270,7 +1270,7 @@ void RGirl01()
     ins_302(2);
     // object Animation source_line=3483 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(1, 51);
+    ins_306(1, 53);
     @Girl01(26, 1);
     // semantic op_key lowering th12->th15: flow.delete
     ins_1();
@@ -1286,7 +1286,7 @@ void RGirl01n()
     ins_302(2);
     // object Animation source_line=3492 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(1, 51);
+    ins_306(1, 53);
     @Girl01(26, 1);
     // semantic op_key lowering th12->th15: flow.delete
     ins_1();
@@ -1308,7 +1308,7 @@ void RGirl02()
     ins_302(2);
     // object Animation source_line=3504 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(1, 51);
+    ins_306(1, 53);
     @Girl02(26, 1);
     // semantic op_key lowering th12->th15: flow.delete
     ins_1();
@@ -1324,7 +1324,7 @@ void RGirl02n()
     ins_302(2);
     // object Animation source_line=3513 family=th12
     // Animation lowering th12 -> th15: anm.set_main -> ins_306
-    ins_306(1, 51);
+    ins_306(1, 53);
     @Girl02(26, 1);
     // semantic op_key lowering th12->th15: flow.delete
     ins_1();

@@ -4,6 +4,7 @@ import re
 from .arg_adapter import adapt_args_for_op_key, adapt_values_for_generation
 from copy import deepcopy
 
+from .anm_catalog import choose_script, remap_anm_bank, remap_play_script, remap_set_script, target_bank_for_role
 from .model import BulletEmitter, BulletTransform
 from .op_ir import target_opcode_for_op_key
 from .origin_ir import bullet_origin_instructions
@@ -341,40 +342,60 @@ def compile_th08_anm_alias(event: dict[str, object], target: str) -> str | None:
     return None
 
 
-def th12_stage6_to_th15_anm_args(event: dict[str, object], target: str, args: list[str], context: dict[str, object] | None = None) -> list[str]:
-    if target != "th15" or str(event.get("source_game") or "") != "th12":
-        return args
-    if not str(context.get("source_path", "") if context else "").replace("\\", "/").endswith("/th12/stage06.decl"):
-        return args
+def parse_int_literal(value: str) -> int | None:
+    if re.fullmatch(r"-?\d+", str(value).strip()):
+        return int(str(value).strip())
+    return None
 
+
+def anm_role_hint(event: dict[str, object], context: dict[str, object] | None = None) -> str | None:
+    source_game = str(event.get("source_game") or "")
+    path = str(context.get("source_path", "") if context else "").replace("\\", "/").lower()
+    name = path.rsplit("/", 1)[-1]
     function = str(context.get("function", "") if context else "")
-    boss_like = function.startswith("Boss") or function in {"HPWait", "MBossCard1LaserHit"}
+    if any(token in name for token in ("boss", "mbs", "bs")):
+        return "boss"
+    if function.startswith("Boss") or function in {"HPWait", "MBossCard1LaserHit"}:
+        return "boss"
+    if source_game and name.startswith(("stage", "st")):
+        return "stage"
+    return None
+
+
+def remap_anm_args(event: dict[str, object], target: str, args: list[str], context: dict[str, object] | None = None) -> list[str]:
+    source_game = str(event.get("source_game") or "")
+    if not source_game or source_game == target:
+        return args
     op_key = str(event.get("op_key") or "")
-    if op_key == "anm.select" and len(args) == 1 and args[0] == "1":
-        # TH12 stage06 enemy sprites use stgenm06 bank 1.  TH15 stage6 enemy
-        # sprites are in st06enm.anm, selected as bank 2 in the original stage.
-        return ["2"]
-    if op_key == "anm.select" and len(args) == 1 and args[0] == "2" and boss_like:
-        # TH12 stage/boss ANM bank 2 corresponds to the external boss ANM bank 3
-        # used by TH15 st06bs.decl.
-        return ["3"]
-    if op_key == "anm.set_sprite" and boss_like and len(args) == 2 and args[0] in {str(slot) for slot in range(3, 13)} and args[1] in {"48", "49", "50", "51", "52", "53", "54", "55", "56", "57"}:
-        # These TH12 stage6 boss scripts are Byakuren's flower/wing slots.
-        # TH15 st06bs uses script 6 from bank 3 as a known-good extra boss slot.
-        return [args[0], "6"]
-    if op_key == "anm.set_sprite" and function in {"BossCard4Laser", "BossCard4Laser2"} and len(args) == 2 and args[0] == "0" and args[1] == "[-9982]":
-        # TH12 stage06 uses boss-bank script 69 for the four wall laser
-        # familiars.  That script is not valid in TH15 st06bs bank 3; script 6
-        # is already used as the safe boss-side auxiliary script for this
-        # conversion.
-        return ["0", "6"]
-    if op_key in {"anm.play", "anm.play_abs"} and len(args) >= 2 and args[0] == "1":
-        # anmPlay/anmPlayAbs carry their target ANM bank as an argument; remap it
-        # alongside anmSelect or repeated stage enemy effects can play from
-        # TH15 enemy.anm instead of st06enm.anm.
-        return ["2", *args[1:]]
-    if op_key in {"anm.play", "anm.play_abs"} and len(args) >= 2 and args[0] == "2" and boss_like:
-        return ["3", *args[1:]]
+    role_hint = anm_role_hint(event, context)
+    if op_key == "anm.select" and len(args) == 1:
+        source_bank = parse_int_literal(args[0])
+        if source_bank is None:
+            return args
+        return [str(remap_anm_bank(source_game, target, source_bank, role_hint))]
+    if op_key in {"anm.play", "anm.play_abs"} and len(args) >= 2:
+        source_bank = parse_int_literal(args[0])
+        source_script = parse_int_literal(args[1])
+        if source_bank is None or source_script is None:
+            return args
+        purpose = "boss_spawn" if role_hint == "boss" else "stage_spawn" if role_hint == "stage" else "spawn"
+        chosen = remap_play_script(source_game, target, source_bank, source_script, role_hint, purpose)
+        return [str(chosen.bank), str(chosen.script), *args[2:]]
+    if op_key in {"anm.set_sprite", "anm.set_main"} and len(args) == 2:
+        script = parse_int_literal(args[1])
+        if script is None:
+            if role_hint == "boss":
+                chosen = choose_script(target, "boss", "familiar")
+                if chosen is not None:
+                    return [args[0], str(chosen.script)]
+            return args
+        source_bank = target_bank_for_role(source_game, role_hint) if role_hint else None
+        if source_bank is None and role_hint:
+            source_bank = target_bank_for_role(source_game, role_hint)
+        if source_bank is None:
+            return args
+        purpose = "boss_aux" if role_hint == "boss" and op_key == "anm.set_sprite" else "stage_enemy" if role_hint == "stage" else "main"
+        return [args[0], str(remap_set_script(source_game, target, source_bank, script, role_hint, purpose).script)]
     return args
 
 
@@ -394,15 +415,6 @@ def drop_th12_stage6_stage_mboss_boss_anm(event: dict[str, object], target: str,
     return None
 
 
-def is_th12_stage6_boss_like_context(event: dict[str, object], target: str, context: dict[str, object] | None = None) -> bool:
-    if target != "th15" or str(event.get("source_game") or "") != "th12" or not context:
-        return False
-    if not str(context.get("source_path", "")).replace("\\", "/").endswith("/th12/stage06.decl"):
-        return False
-    function = str(context.get("function", ""))
-    return function.startswith("Boss") or function in {"HPWait", "MBossCard1LaserHit"}
-
-
 def compile_special_semantic_event(event: dict[str, object], target: str, context: dict[str, object] | None = None) -> str | None:
     op_key = str(event.get("op_key") or "")
     args = [str(arg) for arg in event.get("args", [])]
@@ -412,25 +424,31 @@ def compile_special_semantic_event(event: dict[str, object], target: str, contex
         return f"// unsupported boss.spell_ex arity for {target}: {', '.join(args)}"
     if (
         op_key == "anm.set_sprite"
-        and is_th12_stage6_boss_like_context(event, target, context)
+        and anm_role_hint(event, context) == "boss"
         and len(args) == 2
         and args[0] in {str(slot) for slot in range(3, 13)}
         and args[1] in {"48", "49", "50", "51", "52", "53", "54", "55", "56", "57"}
     ):
+        chosen = choose_script(target, "boss", "familiar")
+        if chosen is None:
+            return None
         return "\n".join([
-            "// approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script",
-            "ins_302(3);",
-            f"ins_303({args[0]}, 6);",
+            f"// boss auxiliary sprite lowered through target ANM catalog: bank {chosen.bank}, script {chosen.script}",
+            f"ins_{target_opcode_for_op_key('anm.select', target)}({chosen.bank});",
+            f"ins_{target_opcode_for_op_key('anm.set_sprite', target)}({args[0]}, {chosen.script});",
         ])
     if op_key == "enemy.byakuren_butterfly" and target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
         if not args:
             return f"// unsupported byakuren butterfly helper arity for {target}: {', '.join(args)}"
         slot = args[0]
         switch = args[1] if len(args) > 1 else "0"
+        chosen = choose_script(target, "boss", "familiar")
+        if chosen is None:
+            return f"// unsupported byakuren butterfly helper for {target}: no boss familiar sprite in catalog"
         return "\n".join([
-            "// approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script",
-            "ins_302(3);",
-            f"ins_303({slot}, 6);",
+            f"// boss familiar sprite lowered through target ANM catalog: bank {chosen.bank}, script {chosen.script}",
+            f"ins_{target_opcode_for_op_key('anm.select', target)}({chosen.bank});",
+            f"ins_{target_opcode_for_op_key('anm.set_sprite', target)}({slot}, {chosen.script});",
             f"// TH12 butterfly switch argument preserved for audit: {switch}",
         ])
     return None
@@ -471,7 +489,7 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
         args = [args[index] for index in semantic_map.arg_order if index < len(args)]
     if source_game and source_opcode >= 0:
         args = remap_raw_arg_by_semantic(source_game, target, source_opcode, opcode, args)
-    args = th12_stage6_to_th15_anm_args(event, target, args, context)
+    args = remap_anm_args(event, target, args, context)
     adapted_args = adapt_args_for_op_key(op_key, source_game, source_opcode, target, opcode, args)
     if adapted_args is None:
         return None
@@ -814,18 +832,28 @@ def compile_named_op(obj, target: str, table_by_family: dict[str, dict[str, int]
 
 def remap_named_args(obj, target: str, semantic: str, args: list[str]) -> list[str]:
     args = list(args)
-    if target == "th12" and getattr(obj, "family", "") == "th13plus" and semantic == "anmSelect" and args == ["2"]:
-        # TH15 st01 enemy sprites live in st01enm.anm at ANM index 2.
-        # TH12 stage01 has no st01enm.anm; index 2 points at stage/boss ANM, so use enemy.anm.
-        return ["1"]
-    if target == "th12" and getattr(obj, "family", "") == "th13plus" and semantic == "anmSelect" and args == ["3"]:
-        # TH13+ stage boss/midboss scripts commonly select stage boss ANM at index 3.
-        # TH12 stage01's boss ANM is selected with index 2; leaving 3 can crash at runtime.
-        return ["2"]
-    if target == "th12" and getattr(obj, "family", "") == "th13plus" and semantic in {"anmSetMain", "anmSetSprite"}:
-        # Keep script IDs for now; the important crash/visual fix is the ANM file index.
-        # A later sprite table can map TH15 st01enm script IDs to closer TH12 enemy.anm scripts.
+    source_game = getattr(obj, "game", "")
+    if not source_game or source_game == target:
         return args
+    context = {"function": getattr(obj, "function", ""), "source_path": getattr(obj, "source", "") or obj.fields.get("source", "")}
+    role_hint = anm_role_hint({"source_game": source_game}, context)
+    if semantic == "anmSelect" and len(args) == 1:
+        source_bank = parse_int_literal(args[0])
+        if source_bank is not None:
+            return [str(remap_anm_bank(source_game, target, source_bank, role_hint))]
+    if semantic in {"anmPlay", "anmPlayAbs"} and len(args) >= 2:
+        source_bank = parse_int_literal(args[0])
+        source_script = parse_int_literal(args[1])
+        if source_bank is not None and source_script is not None:
+            purpose = "boss_spawn" if role_hint == "boss" else "stage_spawn" if role_hint == "stage" else "spawn"
+            chosen = remap_play_script(source_game, target, source_bank, source_script, role_hint, purpose)
+            return [str(chosen.bank), str(chosen.script), *args[2:]]
+    if semantic in {"anmSetMain", "anmSetSprite"} and len(args) == 2 and role_hint:
+        script = parse_int_literal(args[1])
+        source_bank = target_bank_for_role(source_game, role_hint)
+        if script is not None and source_bank is not None:
+            purpose = "boss_aux" if role_hint == "boss" and semantic == "anmSetSprite" else "stage_enemy" if role_hint == "stage" else "main"
+            return [args[0], str(remap_set_script(source_game, target, source_bank, script, role_hint, purpose).script)]
     return args
 
 
