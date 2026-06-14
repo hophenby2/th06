@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from .backend import choose_difficulty, compile_bullet_emitter, compile_ir_op_event, compile_object, first_difficulty_group, normalize_difficulty, th12_aux_emitter_id, wrap_ranked_lines
+from .backend import choose_difficulty, compile_bullet_emitter, compile_ir_op_event, compile_object, first_difficulty_group, normalize_difficulty, th12_509_to_th13plus_transform, th12_aux_emitter_id, wrap_ranked_lines
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
 from .reference import validate_opcode_args
@@ -497,7 +497,7 @@ def is_fire_instruction(ins) -> bool:
 
 
 def should_preserve_dynamic_bullet_config(ins) -> bool:
-    return getattr(ins, "opcode", None) in {502, 503, 504, 505, 506, 507, 508, 600, 602, 603, 604, 605, 606, 607, 608, 609, 611, 612, 624, 625, 627}
+    return getattr(ins, "opcode", None) in {502, 503, 504, 505, 506, 507, 508, 523, 524, 525, 600, 602, 603, 604, 605, 606, 607, 608, 609, 611, 612, 624, 625, 626, 627, 628}
 
 
 def should_cover_lifted_raw_instruction(ins, obj, source_game: str, target: str) -> bool:
@@ -992,12 +992,7 @@ def lower_bullet_transform_opcode(opcode: int, args: list[object], source_game: 
                 f"    // dropped unsupported bullet transform mode from ins_509: {reason}",
                 f"    // original args: {', '.join(rendered)}",
             ]
-        converted = remap_raw_arg_by_semantic(source_game, target, opcode, 609, rendered)
-        target_opcode = 609
-        if converted[3] == "16":
-            et_id, slot, channel, mode, a, b, r, s = converted
-            converted = [et_id, slot, channel, mode, a, b, "0", "0", r, s, "-999999.0f", "-999999.0f"]
-            target_opcode = 610
+        target_opcode, converted = th12_509_to_th13plus_transform(rendered, target)
         return ranked_or_plain_lines(
             target_opcode,
             converted,

@@ -1302,6 +1302,7 @@ def compile_th13plus(e: BulletEmitter) -> str:
     lines.extend(emit_instruction_with_ranked_args(606, [emitter_id, ways_value, layers_value], ["0", "1", "1"]))
     lines.extend(emit_instruction_with_ranked_args(604, [emitter_id, as_float_expr(angle_value if angle_value is not None else "0.0f"), as_float_expr(angle_step_value if angle_step_value is not None else "0.0f")], ["0", "0.0f", "0.0f"]))
     lines.extend(emit_instruction_with_ranked_args(605, [emitter_id, speed_value, speed_step_value if speed_step_value is not None else e.speed.get("last_or_step")], ["0", "1.0f", e.speed.get("last_or_step", "0.0f")]))
+    lines.extend(th13plus_origin_lines(str(emitter_id), e.origin))
     if args := sound_args(e, emitter_id):
         lines.append(emit_checked_instruction("th15", 608, args))
     for field, value in (("speed.first", e.speed.get("first")), ("count.ways", e.count.get("ways"))):
@@ -1353,8 +1354,32 @@ def th12_509_to_th13plus_transform(args: list[str], target: str) -> tuple[int, l
     converted = th12_509_to_th13plus_609(args, target)
     if converted[3] == "16":
         et_id, slot, channel, mode, a, b, r, s = converted
-        return 610, [et_id, slot, channel, mode, a, b, "0", "0", r, s, "-999999.0f", "-999999.0f"]
+        subtype = th12_pause_then_velocity_subtype(args[3])
+        return 610, [et_id, slot, channel, mode, a, b, subtype, "0", r, s, "-999999.0f", "-999999.0f"]
     return 609, converted
+
+
+def th12_pause_then_velocity_subtype(mode: str) -> str:
+    # TH12 has three separate modes for delayed velocity changes; TH13+ folds
+    # them into mode 16 and selects behavior with c.
+    return {
+        "16": "0",  # original direction + r, speed = s
+        "32": "2",  # aimed direction + r, speed = s
+        "64": "4",  # direction = r, speed = s
+    }.get(str(mode), "0")
+
+
+def th13plus_origin_lines(emitter_id: str, origin: dict[str, object]) -> list[str]:
+    mode = str(origin.get("mode", "enemy")) if origin else "enemy"
+    if mode == "offset":
+        return [emit_checked_instruction("th15", 603, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))])]
+    if mode == "polar":
+        return [emit_checked_instruction("th15", 626, [emitter_id, str(origin.get("angle", "0.0f")), str(origin.get("radius", "0.0f"))])]
+    if mode == "distance":
+        return [emit_checked_instruction("th15", 627, [emitter_id, str(origin.get("distance", "0.0f"))])]
+    if mode == "absolute":
+        return [emit_checked_instruction("th15", 628, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))])]
+    return []
 
 
 def remap_bullet_spread_style_for_target(e: BulletEmitter, target: str):

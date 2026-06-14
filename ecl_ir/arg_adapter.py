@@ -133,6 +133,14 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_12: ArgLayout(("et_id", "x", "y"), {"et_id": "0"}),
         GEN_13: ArgLayout(("et_id", "x", "y"), {"et_id": "0"}),
     },
+    "bullet.et_offset_rad": {
+        GEN_12: ArgLayout(("et_id", "angle", "radius"), {"et_id": "0", "angle": "0.0f", "radius": "0.0f"}),
+        GEN_13: ArgLayout(("et_id", "angle", "radius"), {"et_id": "0", "angle": "0.0f", "radius": "0.0f"}),
+    },
+    "bullet.et_offset_abs": {
+        GEN_12: ArgLayout(("et_id", "x", "y"), {"et_id": "0", "x": "0.0f", "y": "0.0f"}),
+        GEN_13: ArgLayout(("et_id", "x", "y"), {"et_id": "0", "x": "0.0f", "y": "0.0f"}),
+    },
     "bullet.sound": {
         GEN_OLD: ArgLayout(("fire_sound", "transform_sound"), {"et_id": "0"}),
         GEN_10: ArgLayout(("et_id", "fire_sound", "transform_sound"), {"et_id": "0", "fire_sound": "-1", "transform_sound": "-1"}),
