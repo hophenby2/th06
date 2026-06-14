@@ -300,7 +300,7 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                     signature="ot",
                     source=f"{info.source}; signature forced to thecl format ot",
                 )
-        for opcode in (505, 513, 519, 520, 523, 525, 545):
+        for opcode in (505, 506, 513, 519, 520, 523, 525, 545):
             info = result[game].get(opcode)
             if info:
                 result[game][opcode] = OpcodeInfo(

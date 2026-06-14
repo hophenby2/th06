@@ -6,6 +6,7 @@ from collections.abc import Iterable
 from .model import BulletEmitter, BulletTransform, Function, Instruction, Program
 from .op_ir import op_event
 from .semantics import bullet_shape_semantic, spread_semantic
+from .transform_ir import annotate_th12_to_th13plus_transforms
 
 TH13PLUS_GAMES = {"th13", "th14", "th15", "th16", "th17", "th18"}
 TH12_GAMES = {"th12"}
@@ -218,6 +219,10 @@ def annotate_definition_prefix(emitter: BulletEmitter, apply_instruction) -> Non
         "transforms": [deepcopy(transform.__dict__) for transform in prefix.transforms],
         "raw_lines": [ins.line_no for ins in prefix.raw],
     }
+    emitter.semantics["definition_state"]["transforms"] = [
+        deepcopy(transform.__dict__)
+        for transform in annotate_th12_to_th13plus_transforms(prefix.transforms, emitter.game, "th15")
+    ]
 
 
 def aim_mode_name(raw: str) -> str:
@@ -291,6 +296,7 @@ def lift_th12_function(game: str, func: Function) -> list[BulletEmitter]:
             apply_th12(emitter, ins)
     for emitter in emitters:
         annotate_definition_prefix(emitter, apply_th12)
+        emitter.transforms = annotate_th12_to_th13plus_transforms(emitter.transforms, game, "th15")
     return emitters
 
 

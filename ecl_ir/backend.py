@@ -8,6 +8,7 @@ from .model import BulletEmitter, BulletTransform
 from .op_ir import target_opcode_for_op_key
 from .reference import is_opcode_supported, validate_opcode_args
 from .semantics import boss_phase_prefix_ops, bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_bullet_transform_mode, remap_raw_arg_by_semantic, remap_shape_change_arg, th12_double_flower_pair, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509, unsupported_bullet_transform_mode_reason
+from .transform_ir import target_transform_args
 
 INT_SENTINEL = "-999999"
 FLOAT_SENTINEL = "-999999.0f"
@@ -365,11 +366,6 @@ def th12_stage6_to_th15_anm_args(event: dict[str, object], target: str, args: li
         # is already used as the safe boss-side auxiliary script for this
         # conversion.
         return ["0", "6"]
-    if op_key == "anm.set_sprite" and function == "BossCard6_atLine" and len(args) == 2 and args == ["0", "82"]:
-        # TH12 script 82 is the flying-bowl line helper in Byakuren's last
-        # card.  It is not present in TH15 st06bs bank 3; use the same safe
-        # auxiliary boss script used for other imported boss-side helpers.
-        return ["0", "6"]
     if op_key in {"anm.play", "anm.play_abs"} and len(args) >= 2 and args[0] == "1":
         # anmPlay/anmPlayAbs carry their target ANM bank as an argument; remap it
         # alongside anmSelect or repeated stage enemy effects can play from
@@ -435,22 +431,6 @@ def compile_special_semantic_event(event: dict[str, object], target: str, contex
             f"ins_303({slot}, 6);",
             f"// TH12 butterfly switch argument preserved for audit: {switch}",
         ])
-    if (
-        op_key in {"enemy.create_abs", "enemy.create", "enemy.create_abs_func", "enemy.create_func"}
-        and target == "th15"
-        and is_th12_stage6_boss_like_context(event, target, context)
-        and args
-        and args[0].strip('"') == "BossCard6_atLine"
-    ):
-        return "// dropped TH12 flying-bowl line object for TH15; bullet independent drift transforms preserve the motion"
-    if (
-        op_key == "unit.func_set"
-        and target in {"th13", "th14", "th15", "th16", "th17", "th18"}
-        and is_th12_stage6_boss_like_context(event, target, context)
-        and str(context.get("function", "") if context else "") == "BossCard6_atLine"
-        and args == ["6"]
-    ):
-        return "// dropped TH12 flying-bowl line helper effect for TH15: unit.func_set(6)"
     return None
 
 
@@ -815,6 +795,8 @@ def target_family(target: str) -> str:
 
 
 def compile_named_op(obj, target: str, table_by_family: dict[str, dict[str, int]]) -> str:
+    if getattr(obj, "kind", None) == "Enemy" and obj.fields.get("semantic") == "flying_bowl_line_visual" and obj.fields.get("target_behavior") == "omit_visual_helper":
+        return "// omitted visual helper object: flying_bowl_line_visual; bullet motion is represented by emitter transforms"
     if getattr(obj, "kind", None) == "Animation" and obj.fields.get("op") == "anmPlayAttack":
         lowered = emit_target_op(target, "anm.play", ["0", "0"])
         if lowered:
@@ -1341,7 +1323,7 @@ def compile_th13plus(e: BulletEmitter) -> str:
         if comment:
             lines.insert(0, comment)
     curve_laser = e.game == "th12" and (emitter_has_curve_laser(e) or e.semantics.get("curve_laser_fire"))
-    transforms = curve_laser_th13plus_transforms(e.transforms) if curve_laser else th12_th13plus_transform_timeline(e.transforms, e.game, "th15")
+    transforms = curve_laser_th13plus_transforms(e.transforms) if curve_laser else e.transforms
     for transform in transforms:
         lowered = lower_transform_for_th13plus(transform, e.game, "th15", str(emitter_id))
         if lowered:
@@ -1349,45 +1331,6 @@ def compile_th13plus(e: BulletEmitter) -> str:
         else:
             lines.append(f"// unsupported transform from ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
     return "\n".join(lines)
-
-
-def th12_th13plus_transform_timeline(transforms, source_game: str, target: str):
-    if source_game != "th12" or generation_for_game(target) != "th13_plus":
-        return transforms
-    normalized = []
-    next_index_by_emitter: dict[str, int] = {}
-    next_start_by_emitter_channel: dict[tuple[str, str], str] = {}
-    for transform in transforms:
-        args = [str(arg) for arg in transform.raw_args]
-        if transform.raw_opcode != 509 or len(args) != 8:
-            normalized.append(transform)
-            continue
-        emitter_id, slot, channel, mode, duration, start, r, s = args
-        if unsupported_bullet_transform_mode_reason(source_game, target, mode):
-            continue
-        args = args[:]
-        if re.fullmatch(r"-?\d+", args[1]):
-            expected = next_index_by_emitter.get(emitter_id, 0)
-            args[1] = str(expected)
-            next_index_by_emitter[emitter_id] = expected + 1
-        if mode == "8" and start == INT_SENTINEL:
-            timeline_key = (emitter_id, channel)
-            args[5] = next_start_by_emitter_channel.get(timeline_key, "0")
-            next_start_by_emitter_channel[timeline_key] = add_int_expr(args[5], duration)
-        cloned = deepcopy(transform)
-        cloned.raw_args = args
-        normalized.append(cloned)
-    return normalized
-
-
-def add_int_expr(left: object, right: object) -> str:
-    left_s = str(left).strip()
-    right_s = str(right).strip()
-    if re.fullmatch(r"-?\d+", left_s) and re.fullmatch(r"-?\d+", right_s):
-        return str(int(left_s) + int(right_s))
-    if left_s == "0":
-        return right_s
-    return f"{left_s} + {right_s}"
 
 
 def curve_laser_th13plus_transforms(transforms):
@@ -1413,7 +1356,10 @@ def curve_laser_th13plus_transforms(transforms):
 
 
 def lower_transform_for_th13plus(transform, source_game: str, target: str, emitter_id: str) -> list[str] | None:
-    args = [str(arg) for arg in transform.raw_args]
+    args = target_transform_args(transform)
+    if args is None:
+        reason = (getattr(transform, "semantics", {}) or {}).get("drop_reason", "unsupported transform")
+        return [f"// omitted transform from IR: {reason}; original ins_{transform.raw_opcode}({', '.join(str(arg) for arg in transform.raw_args)})"]
     if transform.raw_opcode in {609, 610, 611, 612} and args:
         return [f"ins_{transform.raw_opcode}({', '.join(args)});"]
     if source_game == "th12" and transform.raw_opcode == 509 and len(args) == 8:

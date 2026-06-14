@@ -95,6 +95,7 @@ class BulletTransform:
     raw_opcode: int = 0
     raw_args: list[Any] = field(default_factory=list)
     difficulty: Optional[str] = None
+    semantics: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass

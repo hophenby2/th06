@@ -316,6 +316,12 @@ def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
         elif ins.opcode in enemy:
             obj = make_obj(EnemyOp, program, func, ins, family)
             obj.fields.update({"op": enemy[ins.opcode], "op_key": op_key_for_opcode(program.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
+            if program.game == "th12" and ins.args and ins.args[0].strip('"') == "BossCard6_atLine":
+                obj.fields.update({
+                    "semantic": "flying_bowl_line_visual",
+                    "target_behavior": "omit_visual_helper",
+                    "reason": "visual line helper; bullet motion is represented by transforms on the linked emitter",
+                })
             objects.append(obj)
     return objects
 

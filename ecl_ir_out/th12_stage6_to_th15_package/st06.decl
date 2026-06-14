@@ -27,8 +27,8 @@ void BCir00()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(2, 14);
     @Cir00(92, 50, 1);
@@ -41,8 +41,8 @@ void BGirl01()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_main
     ins_510(2);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -63,8 +63,8 @@ void BGirl02()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_main
     ins_510(2);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -266,8 +266,8 @@ void Girl00()
     ins_500(24.0f, 24.0f);
     // semantic op_key lowering th12->th15: unit.set_hitbox
     ins_501(16.0f, 16.0f);
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(2, 15);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -677,16 +677,16 @@ void MBoss1()
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(190);
     unless (([-9948] == 0) && ([-9949] == 0)) goto MBoss1_2728 @ 0;
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_main
     ins_510(8);
     // unsupported semantic op_key for th12->th15: unit.drop_items
     // original: ins_409();
     goto MBoss1_2780 @ 0;
     MBoss1_2728:
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_main
     ins_510(3);
     // unsupported semantic op_key for th12->th15: unit.drop_items
@@ -873,16 +873,16 @@ void MainSub00()
     ins_300("RGirl01", -224.0f, 96.0f, 800, 1000, 2);
     // object Enemy source_line=3256 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
-    ins_300("GGirl01", -224.0f, 128.0f, 800, 1000, 12);
+    ins_300("GGirl01", -224.0f, 128.0f, 800, 1000, 1);
     // object Enemy source_line=3257 family=th12
     // Enemy lowering th12 -> th15: enemy.create_mirror -> ins_304
     ins_304("BGirl01", 224.0f, 96.0f, 800, 1000, 2);
     // object Enemy source_line=3258 family=th12
     // Enemy lowering th12 -> th15: enemy.create_mirror -> ins_304
-    ins_304("YGirl01b", 224.0f, 128.0f, 800, 1000, 12);
+    ins_304("YGirl01b", 224.0f, 128.0f, 800, 1000, 1);
     // object Enemy source_line=3259 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
-    ins_300("Girl00", 0.0f, -32.0f, 1200, 1000, 12);
+    ins_300("Girl00", 0.0f, -32.0f, 1200, 1000, 1);
     return;
 }
 
@@ -905,10 +905,10 @@ void MainSub01()
     ins_23(60);
     // object Enemy source_line=3270 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
-    ins_300("BCir00", -96.0f, 160.0f, 400, 1000, 15);
+    ins_300("BCir00", -96.0f, 160.0f, 400, 1000, 1);
     // object Enemy source_line=3271 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
-    ins_300("BCir00", 96.0f, 160.0f, 400, 1000, 13);
+    ins_300("BCir00", 96.0f, 160.0f, 400, 1000, 1);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(300);
     // object Enemy source_line=3273 family=th12
@@ -921,10 +921,10 @@ void MainSub01()
     ins_23(60);
     // object Enemy source_line=3276 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
-    ins_300("BCir00", -76.0f, 128.0f, 400, 1000, 14);
+    ins_300("BCir00", -76.0f, 128.0f, 400, 1000, 2);
     // object Enemy source_line=3277 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
-    ins_300("BCir00", 76.0f, 128.0f, 400, 1000, 15);
+    ins_300("BCir00", 76.0f, 128.0f, 400, 1000, 1);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(60);
     // object Enemy source_line=3279 family=th12
@@ -959,7 +959,7 @@ void MainSub02()
     if ($B--) goto MainSub02_216 @ 0;
     // object Enemy source_line=3299 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
-    ins_300("YGirl02", %G, -32.0f, 400, 1000, 11);
+    ins_300("YGirl02", %G, -32.0f, 400, 1000, 2);
     %G = %G - _f(32);
     [-9981.0f] = [-9981.0f] - _f(32);
     // semantic op_key lowering th12->th15: flow.wait
@@ -984,7 +984,7 @@ void MainSub02()
     if ($D--) goto MainSub02_900 @ 0;
     // object Enemy source_line=3316 family=th12
     // Enemy lowering th12 -> th15: enemy.create_mirror -> ins_304
-    ins_304("YGirl02", %G, -32.0f, 400, 1000, 11);
+    ins_304("YGirl02", %G, -32.0f, 400, 1000, 2);
     %G = %G + _f(32);
     [-9981.0f] = [-9981.0f] + _f(32);
     // semantic op_key lowering th12->th15: flow.wait
@@ -1012,7 +1012,7 @@ void MainSub02()
     if ($F--) goto MainSub02_1648 @ 0;
     // object Enemy source_line=3336 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
-    ins_300("YGirl02", %G, -32.0f, 400, 1000, 11);
+    ins_300("YGirl02", %G, -32.0f, 400, 1000, 2);
     %G = %G - _f(32);
     [-9981.0f] = [-9981.0f] - _f(32);
     // semantic op_key lowering th12->th15: flow.wait
@@ -1037,7 +1037,7 @@ void MainSub02()
     if ($H--) goto MainSub02_2332 @ 0;
     // object Enemy source_line=3353 family=th12
     // Enemy lowering th12 -> th15: enemy.create_mirror -> ins_304
-    ins_304("YGirl02", %G, -32.0f, 400, 1000, 15);
+    ins_304("YGirl02", %G, -32.0f, 400, 1000, 1);
     %G = %G + _f(32);
     [-9981.0f] = [-9981.0f] + _f(32);
     // semantic op_key lowering th12->th15: flow.wait
@@ -1064,7 +1064,7 @@ void MainSub02()
     if ($I--) goto MainSub02_3060 @ 0;
     // object Enemy source_line=3372 family=th12
     // Enemy lowering th12 -> th15: enemy.create -> ins_300
-    ins_300("YGirl02", %G, -32.0f, 400, 1000, 11);
+    ins_300("YGirl02", %G, -32.0f, 400, 1000, 2);
     %G = %G - _f(32);
     [-9981.0f] = [-9981.0f] - _f(32);
     // semantic op_key lowering th12->th15: flow.wait
@@ -1106,8 +1106,8 @@ void MbossGirl00()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_main
     ins_510(2);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -1160,8 +1160,8 @@ void MbossGirl00Item()
     goto MbossGirl00Item_216 @ 0;
     MbossGirl00Item_60:
     unless ([-9930] >= 400) goto MbossGirl00Item_196 @ 0;
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(2, 1);
     // unsupported semantic op_key for th12->th15: unit.drop_items
@@ -1181,8 +1181,8 @@ void MbossGirl01()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_main
     ins_510(1);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -1245,8 +1245,8 @@ void RCir00()
     var A;
     // semantic op_key lowering th12->th15: unit.drop_main
     ins_510(1);
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 14);
     @Cir00(86, 51, 1);
@@ -1259,8 +1259,8 @@ void RGirl01()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_main
     ins_510(1);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -1297,8 +1297,8 @@ void RGirl02()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_main
     ins_510(1);
     // semantic op_key lowering th12->th15: unit.drop_extra

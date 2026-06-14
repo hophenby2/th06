@@ -438,8 +438,8 @@ void Boss2()
     // semantic op_key lowering th12->th15: unit.set_invuln
     ins_515(240);
     unless ([-9986] == 0) goto Boss2_784 @ 0;
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 50);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -861,8 +861,8 @@ void Boss3()
     // object Movement source_line=516 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(-114), %D + _f(54));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 20);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -874,8 +874,8 @@ void Boss3()
     // object Movement source_line=522 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(114), %D + _f(54));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 20);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -887,8 +887,8 @@ void Boss3()
     // object Movement source_line=528 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(-64), %D + _f(-80));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 20);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -900,8 +900,8 @@ void Boss3()
     // object Movement source_line=534 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(64), %D + _f(-80));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 20);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -913,8 +913,8 @@ void Boss3()
     // object Movement source_line=540 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C, %D);
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 20);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -1371,8 +1371,8 @@ void Boss4()
     // object Movement source_line=793 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(-114), %D + _f(54));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 10);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -1384,8 +1384,8 @@ void Boss4()
     // object Movement source_line=799 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(114), %D + _f(54));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 10);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -1397,8 +1397,8 @@ void Boss4()
     // object Movement source_line=805 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(-64), %D + _f(-80));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 10);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -1410,8 +1410,8 @@ void Boss4()
     // object Movement source_line=811 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(64), %D + _f(-80));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 10);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -1423,8 +1423,8 @@ void Boss4()
     // object Movement source_line=817 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C, %D);
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 20);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -1969,8 +1969,8 @@ void Boss5()
     // object Movement source_line=1134 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(-114), %D + _f(54));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 10);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -1982,8 +1982,8 @@ void Boss5()
     // object Movement source_line=1140 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(114), %D + _f(54));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 10);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -1995,8 +1995,8 @@ void Boss5()
     // object Movement source_line=1146 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(-64), %D + _f(-80));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 10);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -2008,8 +2008,8 @@ void Boss5()
     // object Movement source_line=1152 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C + _f(64), %D + _f(-80));
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 10);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -2021,8 +2021,8 @@ void Boss5()
     // object Movement source_line=1158 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(%C, %D);
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_extra
     ins_507(1, 20);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -2126,8 +2126,8 @@ void Boss6()
     // semantic op_key lowering th12->th15: unit.set_invuln
     ins_515(130);
     unless ([-9986] == 0) goto Boss6_1036 @ 0;
-    // unsupported semantic op_key for th12->th15: unit.drop_clear
-    // original: ins_406();
+    // semantic op_key lowering th12->th15: unit.drop_clear
+    ins_506();
     // semantic op_key lowering th12->th15: unit.drop_main
     ins_510(3);
     // semantic op_key lowering th12->th15: unit.drop_extra
@@ -4210,6 +4210,7 @@ void BossCard6_at(var A, var B, var C, var D, var E, var F, var G)
     ins_605($A, 1.0f, 0.0f);
     ins_624($A, 1.5f, 1.5f, 1.7f, 1.8f, 1.0f, 1.0f, 1.0f, 1.0f);
     ins_609($A, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
+    // omitted transform from IR: TH12 etEx mode 2097152 is jump-related and is not TH13+ mode 2097152; direct mapping can jump into invalid TH13+ transform slots; original ins_509($A, 1, 0, 2097152, $G, -999999, -999999.0f, -999999.0f)
     ins_609($A, 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     ins_609($A, 2, 0, 128, 300, -999999, -999999.0f, -999999.0f);
     ins_609($A, 3, 0, 256, 1600, 0, -999999.0f, -999999.0f);
@@ -4235,7 +4236,7 @@ void BossCard6_at(var A, var B, var C, var D, var E, var F, var G)
     ins_601($A);
     [-9983] = $G;
     // object Enemy source_line=2569 family=th12
-    // dropped TH12 flying-bowl line object for TH15; bullet independent drift transforms preserve the motion
+    // omitted visual helper object: flying_bowl_line_visual; bullet motion is represented by emitter transforms
     return;
 }
 
@@ -4249,7 +4250,7 @@ void BossCard6_atLine()
     ins_302(3);
     // object Animation source_line=2577 family=th12
     // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(0, 6);
+    ins_303(0, 82);
     // semantic op_key lowering th12->th15: unit.flag_set
     ins_502(271);
     // semantic op_key lowering th12->th15: flow.wait
@@ -4258,7 +4259,7 @@ void BossCard6_atLine()
     // movement lowering th12 -> th15: movement.velocity.set -> ins_404
     ins_404([-9981.0f], [-9980.0f]);
     // semantic op_key lowering th12->th15: unit.func_set
-    // dropped TH12 flying-bowl line helper effect for TH15: unit.func_set(6)
+    ins_632(6);
     goto BossCard6_atLine_208 @ 0;
     BossCard6_atLine_188:
     // semantic op_key lowering th12->th15: flow.wait

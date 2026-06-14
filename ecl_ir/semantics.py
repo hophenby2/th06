@@ -108,7 +108,12 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("movement.bezier", {GEN_TH13_PLUS: 425, GEN_TH12: 325}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
     SemanticOpcode("movement.bezier_rel", {GEN_TH13_PLUS: 426, GEN_TH12: 326}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
     SemanticOpcode("movement.reset", {GEN_TH13_PLUS: 427, GEN_TH12: 327}, {(GEN_TH13_PLUS, GEN_TH12): ()}),
-    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(500, 511)),
+    *tuple(SemanticOpcode(f"unit.property.{op - 500:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100}) for op in range(500, 506)),
+    SemanticOpcode("unit.drop_clear", {GEN_TH13_PLUS: 506, GEN_TH12: 406}),
+    SemanticOpcode("unit.drop_extra", {GEN_TH13_PLUS: 507, GEN_TH12: 407}),
+    SemanticOpcode("unit.drop_area", {GEN_TH13_PLUS: 508, GEN_TH12: 408}),
+    SemanticOpcode("unit.drop_items", {GEN_TH13_PLUS: 509, GEN_TH12: 409}),
+    SemanticOpcode("unit.drop_main", {GEN_TH13_PLUS: 510, GEN_TH12: 410}),
     SemanticOpcode("boss.life_set", {GEN_TH13_PLUS: 511, GEN_TH12: 411}),
     SemanticOpcode("boss.set_boss", {GEN_TH13_PLUS: 512, GEN_TH12: 412}),
     SemanticOpcode("boss.timer_reset", {GEN_TH13_PLUS: 513, GEN_TH12: 413}),
@@ -493,6 +498,8 @@ def remap_raw_arg_by_semantic(source_game: str, target: str, source_opcode: int,
             mapped[0] = "1"
         elif mapped[0] == "3":
             mapped[0] = "2"
+    elif source_opcode in {256, 257, 260, 261, 265, 266, 267, 268, 300, 301, 304, 305, 309, 310, 311, 312} and source_opcode != target_opcode and len(mapped) >= 6:
+        mapped[5] = remap_drop_type(source_game, target, mapped[5])
     elif source_opcode in {602, 502} and source_opcode != target_opcode and len(mapped) >= 3:
         mapped[1] = encode_bullet_shape(bullet_shape_semantic(source_game, mapped[1]), target, mapped[1])
     elif source_opcode in {607, 507} and source_opcode != target_opcode and len(mapped) >= 2:
@@ -505,4 +512,53 @@ def remap_raw_arg_by_semantic(source_game: str, target: str, source_opcode: int,
             for index in range(6, len(mapped)):
                 if mapped[index] == "-999.0f":
                     mapped[index] = "-999999.0f"
+    elif source_generation == GEN_TH12 and target_generation == GEN_TH13_PLUS and source_opcode in {407, 410}:
+        drop_type_index = 0
+        if len(mapped) > drop_type_index:
+            mapped[drop_type_index] = remap_drop_type(source_game, target, mapped[drop_type_index])
     return mapped
+
+
+def remap_drop_type(source_game: str, target: str, value: str) -> str:
+    source_generation = generation_for_game(source_game)
+    target_generation = generation_for_game(target)
+    text = str(value).strip()
+    if source_generation == target_generation:
+        return text
+    if source_generation == GEN_TH12 and target_generation == GEN_TH13_PLUS:
+        # TH12 UFO-specific item ids 10..18 do not represent the same runtime
+        # objects in TH13+.  Keep ordinary item ids stable and map obsolete UFO
+        # color/drop bundles to safe point-item equivalents.
+        table = {
+            "5": "6",   # bomb piece moved after life in TH13+
+            "6": "5",   # life moved before bomb piece in TH13+
+            "10": "1",  # fixed red -> point
+            "11": "2",  # fixed blue -> blue point
+            "12": "1",  # fixed green -> point
+            "13": "1",  # color-changing red -> point
+            "14": "2",  # color-changing blue -> blue point
+            "15": "1",  # color-changing green -> point
+            "16": "1",  # UFO red bundle -> point
+            "17": "2",  # UFO blue bundle -> blue point
+            "18": "1",  # UFO red/blue bundle -> point
+        }
+        return table.get(text, text)
+    if source_generation == GEN_TH13_PLUS and target_generation == GEN_TH12:
+        table = {
+            "5": "6",
+            "6": "5",
+            "10": "9",
+            "11": "9",
+            "12": "5",
+            "13": "9",
+            "14": "9",
+            "15": "5",
+            "16": "10",
+            "17": "11",
+            "18": "12",
+            "19": "13",
+            "20": "14",
+            "21": "15",
+        }
+        return table.get(text, text)
+    return text
