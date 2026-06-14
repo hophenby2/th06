@@ -468,55 +468,95 @@ void Boss2()
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(58);
     // object Animation source_line=315 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(3, 48);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(3, 6);
     // object Animation source_line=316 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(4, 57);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(4, 6);
     // object Animation source_line=317 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(5, 49);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(5, 6);
     // object Animation source_line=318 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(6, 50);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(6, 6);
     // object Animation source_line=319 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(7, 51);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(7, 6);
     // object Animation source_line=320 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(8, 52);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(8, 6);
     // object Animation source_line=321 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(9, 53);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(9, 6);
     // object Animation source_line=322 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(10, 54);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(10, 6);
     // object Animation source_line=323 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(11, 55);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(11, 6);
     // object Animation source_line=324 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(12, 56);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(3, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(4, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(5, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(6, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(7, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(8, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(9, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(10, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(11, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(12, 0);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(12, 6);
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(3, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(4, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(5, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(6, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(7, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(8, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(9, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(10, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(11, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(12, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
     @BossEyes() async;
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(60);
@@ -715,8 +755,8 @@ void Boss2_at2()
     $F = 6000;
     goto Boss2_at2_836 @ 0;
     Boss2_at2_520:
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(1, 2, 0, 64, 60, 1, [-9989.0f], %E)
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_610
+    ins_610(1, 2, 0, 16, 60, 1, 0, 0, [-9989.0f], %E, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(1, [-9998.0f] / _f(5), 3.1415927f / _f($D));
     // semantic op_key lowering th12->th15: bullet.fire
@@ -891,55 +931,95 @@ void Boss3()
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(58);
     // object Animation source_line=550 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(3, 48);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(3, 6);
     // object Animation source_line=551 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(4, 57);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(4, 6);
     // object Animation source_line=552 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(5, 49);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(5, 6);
     // object Animation source_line=553 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(6, 50);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(6, 6);
     // object Animation source_line=554 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(7, 51);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(7, 6);
     // object Animation source_line=555 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(8, 52);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(8, 6);
     // object Animation source_line=556 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(9, 53);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(9, 6);
     // object Animation source_line=557 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(10, 54);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(10, 6);
     // object Animation source_line=558 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(11, 55);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(11, 6);
     // object Animation source_line=559 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(12, 56);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(3, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(4, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(5, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(6, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(7, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(8, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(9, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(10, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(11, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(12, 0);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(12, 6);
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(3, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(4, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(5, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(6, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(7, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(8, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(9, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(10, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(11, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(12, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
     @BossEyes() async;
     // object Movement source_line=571 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
@@ -1035,7 +1115,7 @@ void Boss3_at1e1()
     ins_605(1, 1.0f, 0.7f);
     ins_609(1, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(1, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    ins_609(1, 2, 1, 4, 60, -999999, 0.033333335f, -999.0f);
+    ins_609(1, 2, 1, 4, 60, -999999, 0.033333335f, -999999.0f);
     %A = -1.5707964f + ([-9998.0f] / _f(16));
     // semantic op_key lowering th12->th15: unit.diff_i
     ins_535($D, 30, 60, 60, 60);
@@ -1078,7 +1158,7 @@ void Boss3_at1e2()
     ins_605(2, 1.0f, 0.7f);
     ins_609(2, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(2, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    ins_609(2, 2, 1, 4, 60, -999999, 0.033333335f, -999.0f);
+    ins_609(2, 2, 1, 4, 60, -999999, 0.033333335f, -999999.0f);
     %A = -1.5707964f + ([-9998.0f] / _f(16));
     // semantic op_key lowering th12->th15: unit.diff_i
     ins_535($D, 30, 60, 60, 60);
@@ -1121,7 +1201,7 @@ void Boss3_at1e3()
     ins_605(3, 1.0f, 0.7f);
     ins_609(3, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(3, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    ins_609(3, 2, 1, 4, 60, -999999, 0.033333335f, -999.0f);
+    ins_609(3, 2, 1, 4, 60, -999999, 0.033333335f, -999999.0f);
     %A = 0.0f + ([-9998.0f] / _f(16));
     // semantic op_key lowering th12->th15: unit.diff_i
     ins_535($D, 30, 60, 60, 60);
@@ -1167,7 +1247,7 @@ void Boss3_at1e4()
     ins_605(4, 1.0f, 0.7f);
     ins_609(4, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(4, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    ins_609(4, 2, 1, 4, 60, -999999, 0.033333335f, -999.0f);
+    ins_609(4, 2, 1, 4, 60, -999999, 0.033333335f, -999999.0f);
     %A = 3.1415927f + ([-9998.0f] / _f(16));
     // semantic op_key lowering th12->th15: unit.diff_i
     ins_535($D, 30, 60, 60, 60);
@@ -1361,55 +1441,95 @@ void Boss4()
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(58);
     // object Animation source_line=827 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(3, 48);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(3, 6);
     // object Animation source_line=828 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(4, 57);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(4, 6);
     // object Animation source_line=829 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(5, 49);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(5, 6);
     // object Animation source_line=830 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(6, 50);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(6, 6);
     // object Animation source_line=831 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(7, 51);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(7, 6);
     // object Animation source_line=832 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(8, 52);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(8, 6);
     // object Animation source_line=833 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(9, 53);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(9, 6);
     // object Animation source_line=834 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(10, 54);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(10, 6);
     // object Animation source_line=835 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(11, 55);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(11, 6);
     // object Animation source_line=836 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(12, 56);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(3, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(4, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(5, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(6, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(7, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(8, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(9, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(10, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(11, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(12, 0);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(12, 6);
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(3, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(4, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(5, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(6, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(7, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(8, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(9, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(10, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(11, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(12, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
     @BossEyes() async;
     // object Movement source_line=848 family=th12
     // movement lowering th12 -> th15: movement.position.tween -> ins_401
@@ -1529,7 +1649,7 @@ void Boss4_at1e1()
     ins_605(1, 1.2f, 1.0f);
     ins_609(1, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(1, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    ins_609(1, 2, 1, 4, 60, -999999, 0.033333335f, -999.0f);
+    ins_609(1, 2, 1, 4, 60, -999999, 0.033333335f, -999999.0f);
     %A = ([-9989.0f] + 3.1415927f) + ([-9998.0f] / _f(16));
     $D = 0;
     $E = 32;
@@ -1585,7 +1705,7 @@ void Boss4_at1e2()
     ins_605(2, 1.2f, 1.0f);
     ins_609(2, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(2, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    ins_609(2, 2, 1, 4, 60, -999999, 0.033333335f, -999.0f);
+    ins_609(2, 2, 1, 4, 60, -999999, 0.033333335f, -999999.0f);
     %A = ([-9989.0f] + 3.1415927f) + ([-9998.0f] / _f(16));
     $D = 0;
     $E = 32;
@@ -1641,7 +1761,7 @@ void Boss4_at1e3()
     ins_605(3, 1.2f, 1.0f);
     ins_609(3, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(3, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    ins_609(3, 2, 1, 4, 60, -999999, 0.033333335f, -999.0f);
+    ins_609(3, 2, 1, 4, 60, -999999, 0.033333335f, -999999.0f);
     %A = ([-9989.0f] - 1.5707964f) + ([-9998.0f] / _f(16));
     $D = 0;
     $E = 32;
@@ -1697,7 +1817,7 @@ void Boss4_at1e4()
     ins_605(4, 1.2f, 1.0f);
     ins_609(4, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(4, 1, 0, 256, 100, 0, -999999.0f, -999999.0f);
-    ins_609(4, 2, 1, 4, 60, -999999, 0.033333335f, -999.0f);
+    ins_609(4, 2, 1, 4, 60, -999999, 0.033333335f, -999999.0f);
     %A = ([-9989.0f] + 1.5707964f) + ([-9998.0f] / _f(16));
     $D = 0;
     $E = 32;
@@ -2149,7 +2269,7 @@ void BossCard1_at1()
     ins_625(0, 1, 1, 1, 1, 2, 4, 4, 4);
     ins_624(0, 2.0f, 2.2f, 2.5f, 2.5f, 1.2f, 1.0f, 1.0f, 1.0f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_609(0, 1, 0, 4, 60, -999999, 0.016666668f, -999.0f);
+    ins_609(0, 1, 0, 4, 60, -999999, 0.016666668f, -999999.0f);
     %A = 3.1415927f + ([-9998.0f] / _f(8));
     %B = _f(80);
     $C = 80;
@@ -2203,7 +2323,7 @@ void BossCard1_at1h()
     ins_625(0, 1, 1, 1, 1, 2, 4, 4, 4);
     ins_624(0, 2.0f, 2.5f, 2.5f, 2.5f, 1.2f, 1.0f, 1.0f, 1.0f);
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
-    ins_609(0, 1, 0, 4, 60, -999999, 0.016666668f, -999.0f);
+    ins_609(0, 1, 0, 4, 60, -999999, 0.016666668f, -999999.0f);
     %A = 3.1415927f + ([-9998.0f] / _f(8));
     %B = _f(80);
     $C = 80;
@@ -2632,12 +2752,12 @@ void BossCard3_at2()
     ins_701(0, 32, -1, -1, -1, 0);
     // semantic op_key lowering th12->th15: bullet.sound
     ins_608(0, 19, -1);
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(0, 0, 0, 512, 10, -999999, -999999.0f, -999999.0f)
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(0, 1, 0, 1024, 120, 0, -999999.0f, -999999.0f)
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(0, 2, 1, 8, 60000, -999999, 0.0f, 0.015707964f)
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609(0, 0, 0, 128, 10, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609(0, 1, 0, 256, 120, 0, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609(0, 2, 1, 8, 60000, -999999, 0.0f, 0.015707964f);
     %A = 2.356194f;
     // semantic op_key lowering th12->th15: unit.diff_f
     ins_536(%E, 128.0f, 64.0f, 64.0f, 64.0f);
@@ -2712,12 +2832,12 @@ void BossCard3_at2b()
     ins_701(0, 32, -1, -1, -1, 0);
     // semantic op_key lowering th12->th15: bullet.sound
     ins_608(0, 19, -1);
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(0, 0, 0, 512, 10, -999999, -999999.0f, -999999.0f)
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(0, 1, 0, 1024, 120, 0, -999999.0f, -999999.0f)
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(0, 2, 1, 8, 60000, -999999, 0.0f, 0.015707964f)
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609(0, 0, 0, 128, 10, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609(0, 1, 0, 256, 120, 0, -999999.0f, -999999.0f);
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609(0, 2, 1, 8, 60000, -999999, 0.0f, 0.015707964f);
     %A = -0.785398f;
     // semantic op_key lowering th12->th15: unit.diff_f
     ins_536(%E, 128.0f, 64.0f, 64.0f, 64.0f);
@@ -3161,8 +3281,8 @@ void BossCard4_at2()
     ins_609(0, 2, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: unit.diff_f
     ins_536(%B, 0.033333335f, 0.033333335f, 0.041666668f, 0.05f);
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(0, 4, 0, 4, 60, -999999, %B, -999.0f)
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609(0, 4, 0, 4, 60, -999999, %B, -999999.0f);
     goto BossCard4_at2_2080 @ 0;
     BossCard4_at2_528:
     %A = 3.141593f;
@@ -3170,8 +3290,8 @@ void BossCard4_at2()
     ins_535($C, 2, 6, 7, 8);
     goto BossCard4_at2_1160 @ 0;
     BossCard4_at2_628:
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(0, 3, 0, 32, 1, 1, [-9998.0f] / _f(16), [-9999.0f] * 1.0f)
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609(0, 3, 0, 32, 1, 1, [-9998.0f] / _f(16), [-9999.0f] * 1.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
@@ -3201,8 +3321,8 @@ void BossCard4_at2()
     ins_535($D, 2, 6, 7, 8);
     goto BossCard4_at2_1936 @ 0;
     BossCard4_at2_1404:
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(0, 3, 0, 32, 1, 1, [-9998.0f] / _f(16), [-9999.0f] * 1.0f)
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609(0, 3, 0, 32, 1, 1, [-9998.0f] / _f(16), [-9999.0f] * 1.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
@@ -3766,15 +3886,15 @@ void BossCard5_at(var A, var B, var C, var D)
     ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
     ins_609(0, 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     %K = 1.5707964f + ([-9998.0f] / _f(16));
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(0, 2, 0, 4096, 160, -999999, -999999.0f, -999999.0f)
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609(0, 2, 0, -2147483648, 160, -999999, -999999.0f, -999999.0f);
     $L = 61;
     goto BossCard5_at_1692 @ 0;
     BossCard5_at_1340:
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %K, 0.0f);
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform(0, 3, 0, 4, 60, -999999, 0.023333333f, -999.0f)
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609(0, 3, 0, 4, 60, -999999, 0.023333333f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.et_offset_abs
     ins_628(0, %A, %B);
     // semantic op_key lowering th12->th15: bullet.fire
@@ -3851,55 +3971,95 @@ void BossCard6()
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(58);
     // object Animation source_line=2414 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(3, 48);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(3, 6);
     // object Animation source_line=2415 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(4, 57);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(4, 6);
     // object Animation source_line=2416 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(5, 49);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(5, 6);
     // object Animation source_line=2417 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(6, 50);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(6, 6);
     // object Animation source_line=2418 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(7, 51);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(7, 6);
     // object Animation source_line=2419 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(8, 52);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(8, 6);
     // object Animation source_line=2420 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(9, 53);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(9, 6);
     // object Animation source_line=2421 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(10, 54);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(10, 6);
     // object Animation source_line=2422 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(11, 55);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(11, 6);
     // object Animation source_line=2423 family=th12
-    // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(12, 56);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(3, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(4, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(5, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(6, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(7, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(8, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(9, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(10, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(11, 0);
-    // unsupported semantic op_key for th12->th15: enemy.byakuren_butterfly
-    // original: ins_281(12, 0);
+    // approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(12, 6);
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(3, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(4, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(5, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(6, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(7, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(8, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(9, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(10, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(11, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
+    // semantic op_key lowering th12->th15: enemy.byakuren_butterfly
+    // approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script
+    ins_302(3);
+    ins_303(12, 6);
+    // TH12 butterfly switch argument preserved for audit: 0
     @BossEyes() async;
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(60);
@@ -4061,10 +4221,10 @@ void BossCard6_at(var A, var B, var C, var D, var E, var F, var G)
     ins_536(%I, 0.5f, 0.5f, 0.55f, 0.6f);
     [-9981.0f] = %H;
     [-9980.0f] = %I;
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform($A, 6, 1, 134217728, 60000, -999999, %H, %I)
-    // semantic op_key lowering th12->th15: bullet.transform
-    // dropped source-specific semantic op for th15: bullet.transform($A, 7, 1, 8, 60000, -999999, 0.0f, %D / 4.8f)
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609($A, 6, 1, 524288, 60000, -999999, %H, %I);
+    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
+    ins_609($A, 7, 1, 8, 60000, -999999, 0.0f, %D / 4.8f);
     // semantic op_key lowering th12->th15: bullet.et_offset_abs
     ins_628($A, %B, %C);
     // semantic op_key lowering th12->th15: bullet.fire

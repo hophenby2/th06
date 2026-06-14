@@ -982,6 +982,29 @@ def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str
 
 
 def lower_bullet_transform_opcode(opcode: int, args: list[object], source_game: str, target: str, difficulty_literals: object = None, bullet_state: BulletLoweringState | None = None) -> list[str] | None:
+    if generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
+        if opcode != 509 or len(args) != 8:
+            return None
+        rendered = [str(arg) for arg in args]
+        reason = unsupported_bullet_transform_mode_reason(source_game, target, rendered[3])
+        if reason:
+            return [
+                f"    // dropped unsupported bullet transform mode from ins_509: {reason}",
+                f"    // original args: {', '.join(rendered)}",
+            ]
+        converted = remap_raw_arg_by_semantic(source_game, target, opcode, 609, rendered)
+        target_opcode = 609
+        if converted[3] == "16":
+            et_id, slot, channel, mode, a, b, r, s = converted
+            converted = [et_id, slot, channel, mode, a, b, "0", "0", r, s, "-999999.0f", "-999999.0f"]
+            target_opcode = 610
+        return ranked_or_plain_lines(
+            target_opcode,
+            converted,
+            difficulty_literals,
+            f"    // dynamic bullet transform lowering {source_game}->{target}: ins_509 -> ins_{target_opcode}",
+        )
+
     if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
     converted: list[str] | None = None

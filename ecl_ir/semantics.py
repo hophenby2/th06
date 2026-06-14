@@ -91,6 +91,7 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("enemy.create_async_func", {GEN_TH13_PLUS: 310, GEN_TH12: 266}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
     SemanticOpcode("enemy.create_main_func", {GEN_TH13_PLUS: 311, GEN_TH12: 267}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
     SemanticOpcode("enemy.create_async_main_func", {GEN_TH13_PLUS: 312, GEN_TH12: 268}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
+    SemanticOpcode("enemy.byakuren_butterfly", {GEN_TH12: 281}),
     SemanticOpcode("movement.position.set", {GEN_TH13_PLUS: 400, GEN_TH12: 300}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
     SemanticOpcode("movement.position.tween", {GEN_TH13_PLUS: 401, GEN_TH12: 301}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3)}),
     SemanticOpcode("movement.position_rel.set", {GEN_TH13_PLUS: 402, GEN_TH12: 302}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
@@ -281,7 +282,9 @@ BULLET_TRANSFORM_MODES: tuple[SemanticValue, ...] = (
     SemanticValue("set_mist", {GEN_TH13_PLUS: "2", GEN_TH12: "2"}),
     SemanticValue("accel", {GEN_TH13_PLUS: "4", GEN_TH12: "4"}),
     SemanticValue("tangent_accel", {GEN_TH13_PLUS: "8", GEN_TH12: "8"}),
-    SemanticValue("pause_then_velocity", {GEN_TH13_PLUS: "16", GEN_TH12: "16"}),
+    SemanticValue("pause_then_velocity", {GEN_TH13_PLUS: "16", GEN_TH12: "64"}),
+    SemanticValue("pause_then_relative_velocity", {GEN_TH12: "16"}),
+    SemanticValue("pause_then_aimed_velocity", {GEN_TH12: "32"}),
     SemanticValue("bounce", {GEN_TH13_PLUS: "64", GEN_TH12: "256"}),
     SemanticValue("uncancelable_time", {GEN_TH13_PLUS: "128", GEN_TH12: "512"}),
     SemanticValue("offscreen_time", {GEN_TH13_PLUS: "256", GEN_TH12: "1024"}),
@@ -498,4 +501,8 @@ def remap_raw_arg_by_semantic(source_game: str, target: str, source_opcode: int,
         source_mode = mapped[3]
         mapped[3] = remap_bullet_transform_mode(source_game, target, source_mode)
         mapped[4] = remap_shape_change_arg(source_game, target, source_mode, mapped[4])
+        if source_generation == GEN_TH12 and target_generation == GEN_TH13_PLUS:
+            for index in range(6, len(mapped)):
+                if mapped[index] == "-999.0f":
+                    mapped[index] = "-999999.0f"
     return mapped

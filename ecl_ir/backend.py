@@ -355,6 +355,10 @@ def th12_stage6_to_th15_anm_args(event: dict[str, object], target: str, args: li
         # TH12 stage/boss ANM bank 2 corresponds to the external boss ANM bank 3
         # used by TH15 st06bs.decl.
         return ["3"]
+    if op_key == "anm.set_sprite" and boss_like and len(args) == 2 and args[0] in {str(slot) for slot in range(3, 13)} and args[1] in {"48", "49", "50", "51", "52", "53", "54", "55", "56", "57"}:
+        # These TH12 stage6 boss scripts are Byakuren's flower/wing slots.
+        # TH15 st06bs uses script 6 from bank 3 as a known-good extra boss slot.
+        return [args[0], "6"]
     if op_key in {"anm.play", "anm.play_abs"} and len(args) >= 2 and args[0] == "1":
         # anmPlay/anmPlayAbs carry their target ANM bank as an argument; remap it
         # alongside anmSelect or repeated stage enemy effects can play from
@@ -381,13 +385,45 @@ def drop_th12_stage6_stage_mboss_boss_anm(event: dict[str, object], target: str,
     return None
 
 
-def compile_special_semantic_event(event: dict[str, object], target: str) -> str | None:
+def is_th12_stage6_boss_like_context(event: dict[str, object], target: str, context: dict[str, object] | None = None) -> bool:
+    if target != "th15" or str(event.get("source_game") or "") != "th12" or not context:
+        return False
+    if not str(context.get("source_path", "")).replace("\\", "/").endswith("/th12/stage06.decl"):
+        return False
+    function = str(context.get("function", ""))
+    return function.startswith("Boss") or function in {"HPWait", "MBossCard1LaserHit"}
+
+
+def compile_special_semantic_event(event: dict[str, object], target: str, context: dict[str, object] | None = None) -> str | None:
     op_key = str(event.get("op_key") or "")
     args = [str(arg) for arg in event.get("args", [])]
     if op_key == "boss.spell_ex" and target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
         if len(args) >= 4:
             return f"ins_537({', '.join(args[:4])});"
         return f"// unsupported boss.spell_ex arity for {target}: {', '.join(args)}"
+    if (
+        op_key == "anm.set_sprite"
+        and is_th12_stage6_boss_like_context(event, target, context)
+        and len(args) == 2
+        and args[0] in {str(slot) for slot in range(3, 13)}
+        and args[1] in {"48", "49", "50", "51", "52", "53", "54", "55", "56", "57"}
+    ):
+        return "\n".join([
+            "// approximated TH12 Byakuren flower/wing sprite with a TH15 boss ANM script",
+            "ins_302(3);",
+            f"ins_303({args[0]}, 6);",
+        ])
+    if op_key == "enemy.byakuren_butterfly" and target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+        if not args:
+            return f"// unsupported byakuren butterfly helper arity for {target}: {', '.join(args)}"
+        slot = args[0]
+        switch = args[1] if len(args) > 1 else "0"
+        return "\n".join([
+            "// approximated TH12 Byakuren butterfly slot with a TH15 boss ANM script",
+            "ins_302(3);",
+            f"ins_303({slot}, 6);",
+            f"// TH12 butterfly switch argument preserved for audit: {switch}",
+        ])
     return None
 
 
@@ -413,7 +449,7 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
         return lowered
     if lowered := compile_th08_anm_alias(event, target):
         return lowered
-    if lowered := compile_special_semantic_event(event, target):
+    if lowered := compile_special_semantic_event(event, target, context):
         return lowered
     opcode = target_opcode_for_op_key(op_key, target)
     semantic_map = opcode_map_for(source_game, target, source_opcode) if source_game and source_opcode >= 0 else None
@@ -1289,8 +1325,8 @@ def lower_transform_for_th13plus(transform, source_game: str, target: str, emitt
         reason = unsupported_bullet_transform_mode_reason(source_game, target, args[3])
         if reason:
             return [f"// dropped unsupported bullet transform mode from ins_509: {reason}; original args: {', '.join(args)}"]
-        converted = th12_509_to_th13plus_609(args, target)
-        return [f"ins_609({', '.join(converted)});"]
+        opcode, converted = th12_509_to_th13plus_transform(args, target)
+        return [f"ins_{opcode}({', '.join(converted)});"]
     if source_game == "th12" and transform.raw_opcode == 510 and not args:
         return ["ins_610();"]
     if source_game == "th12" and transform.raw_opcode == 511 and len(args) == 2:
@@ -1308,7 +1344,17 @@ def th12_509_to_th13plus_609(args: list[str], target: str) -> list[str]:
     converted = args[:]
     converted[3] = remap_bullet_transform_mode("th12", target, converted[3])
     converted[4] = remap_shape_change_arg("th12", target, args[3], converted[4])
+    if generation_for_game(target) == "th13_plus":
+        converted = ["-999999.0f" if value == "-999.0f" and index >= 6 else value for index, value in enumerate(converted)]
     return converted
+
+
+def th12_509_to_th13plus_transform(args: list[str], target: str) -> tuple[int, list[str]]:
+    converted = th12_509_to_th13plus_609(args, target)
+    if converted[3] == "16":
+        et_id, slot, channel, mode, a, b, r, s = converted
+        return 610, [et_id, slot, channel, mode, a, b, "0", "0", r, s, "-999999.0f", "-999999.0f"]
+    return 609, converted
 
 
 def remap_bullet_spread_style_for_target(e: BulletEmitter, target: str):
