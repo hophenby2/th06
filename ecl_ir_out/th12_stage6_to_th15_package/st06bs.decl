@@ -3287,7 +3287,7 @@ void BossCard4_at2()
     // semantic op_key lowering th12->th15: unit.diff_f
     ins_536(%B, 0.033333335f, 0.033333335f, 0.041666668f, 0.05f);
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609(0, 4, 0, 4, 60, -999999, %B, -999999.0f);
+    ins_609(0, 3, 0, 4, 60, -999999, %B, -999999.0f);
     goto BossCard4_at2_2080 @ 0;
     BossCard4_at2_528:
     %A = 3.141593f;
@@ -3296,7 +3296,7 @@ void BossCard4_at2()
     goto BossCard4_at2_1160 @ 0;
     BossCard4_at2_628:
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_610
-    ins_610(0, 3, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
+    ins_610(0, 4, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
@@ -3327,7 +3327,7 @@ void BossCard4_at2()
     goto BossCard4_at2_1936 @ 0;
     BossCard4_at2_1404:
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_610
-    ins_610(0, 3, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
+    ins_610(0, 5, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
@@ -4210,11 +4210,10 @@ void BossCard6_at(var A, var B, var C, var D, var E, var F, var G)
     ins_605($A, 1.0f, 0.0f);
     ins_624($A, 1.5f, 1.5f, 1.7f, 1.8f, 1.0f, 1.0f, 1.0f, 1.0f);
     ins_609($A, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
-    // dropped unsupported bullet transform mode from ins_509: TH12 etEx mode 2097152 is jump-related and is not TH13+ mode 2097152; direct mapping can jump into invalid TH13+ transform slots; original args: $A, 1, 0, 2097152, $G, -999999, -999999.0f, -999999.0f
-    ins_609($A, 2, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
-    ins_609($A, 3, 0, 128, 300, -999999, -999999.0f, -999999.0f);
-    ins_609($A, 4, 0, 256, 1600, 0, -999999.0f, -999999.0f);
-    ins_609($A, 5, 1, 8, 60, -999999, -0.008333334f, %D);
+    ins_609($A, 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
+    ins_609($A, 2, 0, 128, 300, -999999, -999999.0f, -999999.0f);
+    ins_609($A, 3, 0, 256, 1600, 0, -999999.0f, -999999.0f);
+    ins_609($A, 4, 1, 8, 60, 0, -0.008333334f, %D);
     unless ($F != 0) goto BossCard6_at_636 @ 0;
     // semantic op_key lowering th12->th15: bullet.angle_to_player
     ins_623(%H, %B, %C);
@@ -4227,17 +4226,16 @@ void BossCard6_at(var A, var B, var C, var D, var E, var F, var G)
     [-9981.0f] = %H;
     [-9980.0f] = %I;
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609($A, 6, 1, 524288, 60000, -999999, %H, %I);
+    ins_609($A, 5, 1, 524288, 60000, -999999, %H, %I);
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609($A, 7, 1, 8, 60000, -999999, 0.0f, %D / 4.8f);
+    ins_609($A, 6, 1, 8, 60000, 60, 0.0f, %D / 4.8f);
     // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628($A, %B, %C);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601($A);
     [-9983] = $G;
     // object Enemy source_line=2569 family=th12
-    // Enemy lowering th12 -> th15: enemy.create_abs -> ins_301
-    ins_301("BossCard6_atLine", %B, %C, 100, 100, 0);
+    // dropped TH12 flying-bowl line object for TH15; bullet independent drift transforms preserve the motion
     return;
 }
 

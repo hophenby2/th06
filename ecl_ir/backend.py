@@ -436,6 +436,14 @@ def compile_special_semantic_event(event: dict[str, object], target: str, contex
             f"// TH12 butterfly switch argument preserved for audit: {switch}",
         ])
     if (
+        op_key in {"enemy.create_abs", "enemy.create", "enemy.create_abs_func", "enemy.create_func"}
+        and target == "th15"
+        and is_th12_stage6_boss_like_context(event, target, context)
+        and args
+        and args[0].strip('"') == "BossCard6_atLine"
+    ):
+        return "// dropped TH12 flying-bowl line object for TH15; bullet independent drift transforms preserve the motion"
+    if (
         op_key == "unit.func_set"
         and target in {"th13", "th14", "th15", "th16", "th17", "th18"}
         and is_th12_stage6_boss_like_context(event, target, context)
@@ -1333,7 +1341,7 @@ def compile_th13plus(e: BulletEmitter) -> str:
         if comment:
             lines.insert(0, comment)
     curve_laser = e.game == "th12" and (emitter_has_curve_laser(e) or e.semantics.get("curve_laser_fire"))
-    transforms = curve_laser_th13plus_transforms(e.transforms) if curve_laser else e.transforms
+    transforms = curve_laser_th13plus_transforms(e.transforms) if curve_laser else th12_th13plus_transform_timeline(e.transforms, e.game, "th15")
     for transform in transforms:
         lowered = lower_transform_for_th13plus(transform, e.game, "th15", str(emitter_id))
         if lowered:
@@ -1341,6 +1349,45 @@ def compile_th13plus(e: BulletEmitter) -> str:
         else:
             lines.append(f"// unsupported transform from ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
     return "\n".join(lines)
+
+
+def th12_th13plus_transform_timeline(transforms, source_game: str, target: str):
+    if source_game != "th12" or generation_for_game(target) != "th13_plus":
+        return transforms
+    normalized = []
+    next_index_by_emitter: dict[str, int] = {}
+    next_start_by_emitter_channel: dict[tuple[str, str], str] = {}
+    for transform in transforms:
+        args = [str(arg) for arg in transform.raw_args]
+        if transform.raw_opcode != 509 or len(args) != 8:
+            normalized.append(transform)
+            continue
+        emitter_id, slot, channel, mode, duration, start, r, s = args
+        if unsupported_bullet_transform_mode_reason(source_game, target, mode):
+            continue
+        args = args[:]
+        if re.fullmatch(r"-?\d+", args[1]):
+            expected = next_index_by_emitter.get(emitter_id, 0)
+            args[1] = str(expected)
+            next_index_by_emitter[emitter_id] = expected + 1
+        if mode == "8" and start == INT_SENTINEL:
+            timeline_key = (emitter_id, channel)
+            args[5] = next_start_by_emitter_channel.get(timeline_key, "0")
+            next_start_by_emitter_channel[timeline_key] = add_int_expr(args[5], duration)
+        cloned = deepcopy(transform)
+        cloned.raw_args = args
+        normalized.append(cloned)
+    return normalized
+
+
+def add_int_expr(left: object, right: object) -> str:
+    left_s = str(left).strip()
+    right_s = str(right).strip()
+    if re.fullmatch(r"-?\d+", left_s) and re.fullmatch(r"-?\d+", right_s):
+        return str(int(left_s) + int(right_s))
+    if left_s == "0":
+        return right_s
+    return f"{left_s} + {right_s}"
 
 
 def curve_laser_th13plus_transforms(transforms):

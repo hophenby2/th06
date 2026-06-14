@@ -8,7 +8,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from .backend import choose_difficulty, compile_bullet_emitter, compile_ir_op_event, compile_object, first_difficulty_group, normalize_difficulty, th12_509_to_th13plus_transform, th12_aux_emitter_id, wrap_ranked_lines
+from .backend import choose_difficulty, compile_bullet_emitter, compile_ir_op_event, compile_object, definition_emitter_state, first_difficulty_group, normalize_difficulty, th12_509_to_th13plus_transform, th12_aux_emitter_id, wrap_ranked_lines
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
 from .reference import validate_opcode_args
@@ -617,6 +617,8 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
                 compile_obj = object_for_timeline_compile(obj, bullet_state)
                 for line in compile_object(compile_obj, target).splitlines():
                     lines.append(f"    {line}")
+                if bullet_state:
+                    bullet_state.observe_th12_definition_transforms(compile_obj, source_game, target)
         if line_no in covered_lines:
             continue
         context = {"function": getattr(timeline, "function", ""), "source_path": getattr(timeline, "source", "")}
@@ -694,7 +696,7 @@ def emit_raw_timeline_body(timeline, target: str, rewrites: list[object] | None 
     emitted_spelltest_skip = False
     source_game = getattr(timeline, "game", "unknown")
     if generation_for_game(source_game) == "th13_plus" and generation_for_game(target) == "th12":
-        bullet_state = BulletLoweringState({}, {}, {}, {}, set())
+        bullet_state = BulletLoweringState({}, {}, {}, {}, {}, set())
     elif generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
         bullet_state = make_bullet_lowering_state_from_events(timeline.fields.get("statements", []), source_game, target)
     else:
@@ -726,6 +728,7 @@ def emit_raw_timeline_body(timeline, target: str, rewrites: list[object] | None 
 class BulletLoweringState:
     double_flower_aux: dict[str, str]
     transform_next_index: dict[str, int]
+    transform_next_start: dict[tuple[str, str], str]
     double_flower_ways: dict[str, str]
     pending_curve_laser_offsets: dict[str, tuple[str, str]]
     curve_laser_emitters: set[str]
@@ -762,7 +765,37 @@ class BulletLoweringState:
 
     def reset_transform_index(self, emitter_id: str) -> None:
         self.transform_next_index[emitter_id] = 0
+        for key in [key for key in self.transform_next_start if key[0] == emitter_id]:
+            self.transform_next_start.pop(key, None)
         self.deactivate_double_flower(emitter_id)
+
+    def normalize_th12_transform(self, args: list[str], source_game: str, target: str) -> list[str] | None:
+        if generation_for_game(source_game) != "th12" or generation_for_game(target) != "th13_plus" or len(args) != 8:
+            return args
+        rendered = args[:]
+        emitter_id, _slot, channel, mode, duration, start, _r, _s = rendered
+        if unsupported_bullet_transform_mode_reason(source_game, target, mode):
+            return None
+        rendered[1] = str(self.next_transform_index(emitter_id))
+        if mode == "8" and start == "-999999":
+            key = (emitter_id, channel)
+            rendered[5] = self.transform_next_start.get(key, "0")
+            self.transform_next_start[key] = add_int_expr(rendered[5], duration)
+        return rendered
+
+    def observe_th12_definition_transforms(self, obj: object, source_game: str, target: str) -> None:
+        if generation_for_game(source_game) != "th12" or generation_for_game(target) != "th13_plus":
+            return
+        if getattr(obj, "kind", None) != "BulletEmitter":
+            return
+        definition = definition_emitter_state(obj)
+        for transform in getattr(definition, "transforms", []) or []:
+            args = [str(arg) for arg in getattr(transform, "raw_args", [])]
+            if getattr(transform, "raw_opcode", None) != 509 or len(args) != 8:
+                continue
+            normalized = self.normalize_th12_transform(args, source_game, target)
+            if normalized is None:
+                continue
 
     def observe_count(self, emitter_id: str, ways: object) -> None:
         if self.aux_for(emitter_id):
@@ -780,7 +813,7 @@ class BulletLoweringState:
 
 def make_bullet_lowering_state(function_objects: list[object], source_game: str, target: str) -> BulletLoweringState | None:
     if generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
-        return BulletLoweringState({}, {}, {}, {}, set())
+        return BulletLoweringState({}, {}, {}, {}, {}, set())
     if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
     aux: dict[str, str] = {}
@@ -793,7 +826,7 @@ def make_bullet_lowering_state(function_objects: list[object], source_game: str,
             aux_id = th12_aux_emitter_id(emitter_id)
             if aux_id:
                 aux[emitter_id] = aux_id
-    return BulletLoweringState(aux, {}, {}, {}, set())
+    return BulletLoweringState(aux, {}, {}, {}, {}, set())
 
 
 def make_bullet_lowering_state_from_events(events: list[dict[str, object]], source_game: str, target: str) -> BulletLoweringState | None:
@@ -873,6 +906,16 @@ def add_float_expr(expr: str, delta: str) -> str:
     if delta.startswith("-"):
         return f"{text} - {delta[1:]}"
     return f"{text} + {delta}"
+
+
+def add_int_expr(left: object, right: object) -> str:
+    left_s = str(left).strip()
+    right_s = str(right).strip()
+    if re.fullmatch(r"-?\d+", left_s) and re.fullmatch(r"-?\d+", right_s):
+        return str(int(left_s) + int(right_s))
+    if left_s == "0":
+        return right_s
+    return f"{left_s} + {right_s}"
 
 
 def double_flower_center_delta(ways: str | None) -> str | None:
@@ -1071,6 +1114,14 @@ def lower_bullet_transform_opcode(opcode: int, args: list[object], source_game: 
         if curve_laser and bullet_state:
             rendered = rendered[:]
             rendered[1] = str(bullet_state.next_transform_index(rendered[0]))
+        elif bullet_state:
+            normalized = bullet_state.normalize_th12_transform(rendered, source_game, target)
+            if normalized is None:
+                return [
+                    f"    // dropped unsupported bullet transform mode from ins_509: {unsupported_bullet_transform_mode_reason(source_game, target, rendered[3])}",
+                    f"    // original args: {', '.join(rendered)}",
+                ]
+            rendered = normalized
         reason = unsupported_bullet_transform_mode_reason(source_game, target, rendered[3])
         if reason:
             return [
@@ -1263,6 +1314,23 @@ def th12_stage06_to_th15_mainfront_boundary(event: dict[str, object], source_gam
     ]
 
 
+def th12_stage06_to_th15_drop_flying_bowl_line(event: dict[str, object], source_game: str, target: str, context: dict[str, object] | None) -> list[str] | None:
+    if not is_th12_stage06_to_th15_context(source_game, target, context):
+        return None
+    if event.get("kind") != "instruction":
+        return None
+    if str(context.get("function", "")) != "BossCard6_at":
+        return None
+    if int(event.get("opcode") or -1) not in {256, 257, 260, 261, 265, 266, 267, 268}:
+        return None
+    args = event.get("args", [])
+    if not args or str(args[0]).strip('"') != "BossCard6_atLine":
+        return None
+    return [
+        "    // dropped TH12 flying-bowl line object for TH15; bullet independent drift transforms preserve the motion",
+    ]
+
+
 def lower_raw_instruction_event(opcode: int, args: list[object], text: str, source_game: str, target: str, difficulty_literals: object = None, ir_op: dict[str, object] | None = None, context: dict[str, object] | None = None) -> list[str]:
     if ir_op:
         semantic_line = compile_ir_op_event(ir_op, target, context=context)
@@ -1306,6 +1374,9 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
     if kind == "instruction":
         opcode = event.get("opcode")
         args = event.get("args", [])
+        flying_bowl_line = th12_stage06_to_th15_drop_flying_bowl_line(event, source_game, target, context)
+        if flying_bowl_line:
+            return wrap_event_rank(flying_bowl_line, event, target)
         if (
             is_th12_stage06_to_th15_context(source_game, target, context)
             and int(opcode or -1) in {256, 257}
