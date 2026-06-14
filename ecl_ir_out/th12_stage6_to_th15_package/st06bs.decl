@@ -841,8 +841,8 @@ void Boss3()
     ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
-    // unsupported semantic op_key for th12->th15: movement.move_limit_reset
-    // original: ins_405();
+    // semantic op_key lowering th12->th15: movement.move_limit_reset
+    ins_505();
     // object Movement source_line=508 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(0.0f, 192.0f);
@@ -1351,8 +1351,8 @@ void Boss4()
     ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
-    // unsupported semantic op_key for th12->th15: movement.move_limit_reset
-    // original: ins_405();
+    // semantic op_key lowering th12->th15: movement.move_limit_reset
+    ins_505();
     // object Movement source_line=785 family=th12
     // movement lowering th12 -> th15: movement.position.set -> ins_400
     ins_400(0.0f, 192.0f);
@@ -1945,8 +1945,8 @@ void Boss5()
     ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
-    // unsupported semantic op_key for th12->th15: movement.move_limit_reset
-    // original: ins_405();
+    // semantic op_key lowering th12->th15: movement.move_limit_reset
+    ins_505();
     !EN
     // semantic op_key lowering th12->th15: unit.life_marker
     ins_527(0, 3000.0f, -24448);
@@ -2117,8 +2117,8 @@ void Boss6()
     ins_545();
     // semantic op_key lowering th12->th15: unit.play_sound
     ins_516(28);
-    // unsupported semantic op_key for th12->th15: movement.move_limit_reset
-    // original: ins_405();
+    // semantic op_key lowering th12->th15: movement.move_limit_reset
+    ins_505();
     // semantic op_key lowering th12->th15: unit.life_marker
     ins_527(0, 7000.0f, -24448);
     // semantic op_key lowering th12->th15: unit.stars
@@ -2523,8 +2523,8 @@ void BossCard2()
     ins_515(60);
     // semantic op_key lowering th12->th15: boss.set_chapter
     ins_524(44);
-    // unsupported semantic op_key for th12->th15: movement.move_limit_reset
-    // original: ins_405();
+    // semantic op_key lowering th12->th15: movement.move_limit_reset
+    ins_505();
     // object Animation source_line=1460 family=th12
     // Animation lowering th12 -> th15: anm.play -> ins_307
     ins_307(0, 119);
@@ -2664,8 +2664,8 @@ void BossCard3()
     ins_515(60);
     // semantic op_key lowering th12->th15: boss.set_chapter
     ins_524(44);
-    // unsupported semantic op_key for th12->th15: movement.move_limit_reset
-    // original: ins_405();
+    // semantic op_key lowering th12->th15: movement.move_limit_reset
+    ins_505();
     +60:
     // object Animation source_line=1547 family=th12
     // Animation lowering th12 -> th15: anm.play -> ins_307
@@ -2963,8 +2963,8 @@ void BossCard4()
     ins_515(60);
     // semantic op_key lowering th12->th15: boss.set_chapter
     ins_524(44);
-    // unsupported semantic op_key for th12->th15: movement.move_limit_reset
-    // original: ins_405();
+    // semantic op_key lowering th12->th15: movement.move_limit_reset
+    ins_505();
     +60:
     // object Animation source_line=1739 family=th12
     // Animation lowering th12 -> th15: anm.play -> ins_307
@@ -3640,8 +3640,8 @@ void BossCard5()
     !*
     // semantic op_key lowering th12->th15: unit.set_invuln
     ins_515(70);
-    // unsupported semantic op_key for th12->th15: movement.move_limit_reset
-    // original: ins_405();
+    // semantic op_key lowering th12->th15: movement.move_limit_reset
+    ins_505();
     %B = _f(32);
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(60);
@@ -3969,8 +3969,8 @@ void BossCard6()
     !*
     // semantic op_key lowering th12->th15: unit.set_invuln
     ins_515(70);
-    // unsupported semantic op_key for th12->th15: movement.move_limit_reset
-    // original: ins_405();
+    // semantic op_key lowering th12->th15: movement.move_limit_reset
+    ins_505();
     // semantic op_key lowering th12->th15: flow.wait
     ins_23(60);
     // semantic op_key lowering th12->th15: unit.play_sound
@@ -4210,7 +4210,7 @@ void BossCard6_at(var A, var B, var C, var D, var E, var F, var G)
     ins_605($A, 1.0f, 0.0f);
     ins_624($A, 1.5f, 1.5f, 1.7f, 1.8f, 1.0f, 1.0f, 1.0f, 1.0f);
     ins_609($A, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
-    // dropped unsupported bullet transform mode from ins_509: TH12 etEx mode 2097152 is not TH13+ mode 2097152; the TH13+ value is velocity-over-time and corrupts TH12 transform chains; original args: $A, 1, 0, 2097152, $G, -999999, -999999.0f, -999999.0f
+    ins_609($A, 1, 0, 65536, $G, -999999, -999999.0f, -999999.0f);
     ins_609($A, 2, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
     ins_609($A, 3, 0, 128, 300, -999999, -999999.0f, -999999.0f);
     ins_609($A, 4, 0, 256, 1600, 0, -999999.0f, -999999.0f);

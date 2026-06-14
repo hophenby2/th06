@@ -48,6 +48,10 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_12: ArgLayout(("duration", "mode", "angular_speed", "radius", "radius_delta"), {}),
         GEN_13: ArgLayout(("duration", "mode", "angular_speed", "radius", "radius_delta"), {}),
     },
+    "movement.move_limit_reset": {
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
 
     "movement.ellipse.set": {
         GEN_10: ArgLayout(("theta", "angular_speed", "radius", "radius_delta", "ellipse_mode", "ellipse_angle", "ellipse_ratio"), {"ellipse_mode": "0"}),

@@ -246,6 +246,15 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                 signature="",
                 source=f"{info.source}; signature forced from no-arg laser cancel semantic",
             )
+        info = result["th12"].get(405)
+        if info and info.name == "moveLimitReset":
+            result["th12"][405] = OpcodeInfo(
+                game="th12",
+                opcode=405,
+                name=info.name,
+                signature="",
+                source=f"{info.source}; signature forced from no-arg move limit reset semantic",
+            )
         for opcode, signature in ((523, "Sff"), (524, "Sf"), (525, "Sff")):
             info = result["th12"].get(opcode)
             if info:
@@ -291,7 +300,7 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                     signature="ot",
                     source=f"{info.source}; signature forced to thecl format ot",
                 )
-        for opcode in (513, 519, 520, 523, 525, 545):
+        for opcode in (505, 513, 519, 520, 523, 525, 545):
             info = result[game].get(opcode)
             if info:
                 result[game][opcode] = OpcodeInfo(
