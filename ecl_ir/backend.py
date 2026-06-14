@@ -1335,12 +1335,6 @@ def curve_laser_th13plus_transforms(transforms):
                 continue
             args = args[:]
             args[1] = str(next_index)
-            if mode == "1024":
-                try:
-                    if int(args[4]) < 500:
-                        args[4] = "500"
-                except ValueError:
-                    pass
             if mode == "8" and args[5] == "-999999":
                 args[5] = "0"
             next_index += 1

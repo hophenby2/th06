@@ -1078,12 +1078,6 @@ def lower_bullet_transform_opcode(opcode: int, args: list[object], source_game: 
                 f"    // original args: {', '.join(rendered)}",
             ]
         target_opcode, converted = th12_509_to_th13plus_transform(rendered, target)
-        if rendered[3] == "1024" and converted[3] == "256":
-            try:
-                if int(str(converted[4]).strip()) < 500:
-                    converted[4] = "500"
-            except ValueError:
-                pass
         if curve_laser and rendered[3] == "8" and len(converted) >= 6 and converted[5] == "-999999":
             converted[5] = "0"
         return ranked_or_plain_lines(

@@ -2754,13 +2754,13 @@ void BossCard3_at2()
     // semantic op_key lowering th12->th15: laser.new
     ins_700(0, -1.0f, -1.0f, -1.0f, 16.0f);
     // semantic op_key lowering th12->th15: laser.timing
-    ins_701(0, 128, -1, -1, -1, 0);
+    ins_701(0, 32, -1, -1, -1, 0);
     // semantic op_key lowering th12->th15: bullet.sound
     ins_608(0, 19, -1);
     // dropped TH12 curve-laser uncancelable-time transform before TH15 lowering
     // original args: 0, 0, 0, 512, 10, -999999, -999999.0f, -999999.0f
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609(0, 0, 0, 256, 500, 0, -999999.0f, -999999.0f);
+    ins_609(0, 0, 0, 256, 120, 0, -999999.0f, -999999.0f);
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
     ins_609(0, 1, 1, 8, 60000, 0, 0.0f, 0.015707964f);
     %A = 2.356194f;
@@ -2834,13 +2834,13 @@ void BossCard3_at2b()
     // semantic op_key lowering th12->th15: laser.new
     ins_700(0, -1.0f, -1.0f, -1.0f, 16.0f);
     // semantic op_key lowering th12->th15: laser.timing
-    ins_701(0, 128, -1, -1, -1, 0);
+    ins_701(0, 32, -1, -1, -1, 0);
     // semantic op_key lowering th12->th15: bullet.sound
     ins_608(0, 19, -1);
     // dropped TH12 curve-laser uncancelable-time transform before TH15 lowering
     // original args: 0, 0, 0, 512, 10, -999999, -999999.0f, -999999.0f
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609(0, 0, 0, 256, 500, 0, -999999.0f, -999999.0f);
+    ins_609(0, 0, 0, 256, 120, 0, -999999.0f, -999999.0f);
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
     ins_609(0, 1, 1, 8, 60000, 0, 0.0f, 0.015707964f);
     %A = -0.785398f;
