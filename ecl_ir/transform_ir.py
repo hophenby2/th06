@@ -2,11 +2,19 @@ from __future__ import annotations
 
 import re
 from copy import deepcopy
+from dataclasses import dataclass
 from typing import Any
 
 from .model import BulletTransform
 from .origin_ir import LoweredInstruction
-from .semantics import generation_for_game, remap_bullet_transform_mode, remap_shape_change_arg, unsupported_bullet_transform_mode_reason
+from .semantics import (
+    bullet_shape_semantic,
+    bullet_transform_mode_semantic,
+    encode_bullet_shape,
+    encode_bullet_transform_mode,
+    generation_for_game,
+    unsupported_bullet_transform_mode_reason,
+)
 
 INT_SENTINEL = "-999999"
 
@@ -103,25 +111,154 @@ def target_transform_args(transform: BulletTransform) -> list[str] | None:
     return [str(arg) for arg in transform.raw_args]
 
 
-def th12_509_to_th13plus_609(args: list[str], target: str) -> list[str]:
-    converted = args[:]
-    converted[3] = remap_bullet_transform_mode("th12", target, converted[3])
-    converted[4] = remap_shape_change_arg("th12", target, args[3], converted[4])
-    if generation_for_game(target) == "th13_plus":
-        converted = ["-999999.0f" if value == "-999.0f" and index >= 6 else value for index, value in enumerate(converted)]
-    return converted
+@dataclass(frozen=True)
+class TransformLayout:
+    opcode: int
+    generation: str
+    fields: tuple[str, ...]
 
 
-def th12_509_to_th13plus_transform(args: list[str], target: str) -> LoweredInstruction:
-    converted = th12_509_to_th13plus_609(args, target)
-    if converted[3] == "16":
-        et_id, slot, channel, mode, a, b, r, s = converted
-        subtype = th12_pause_then_velocity_subtype(args[3])
-        if args[3] == "32":
-            r = th12_random_angle_expression_bound(r)
-        mode_flags = "0"
-        return LoweredInstruction(610, [et_id, slot, channel, mode, a, b, subtype, mode_flags, r, s, "-999999.0f", "-999999.0f"])
-    return LoweredInstruction(609, converted)
+TRANSFORM_LAYOUTS: dict[tuple[str, int], TransformLayout] = {
+    ("th10_th11", 409): TransformLayout(409, "th10_th11", ("emitter_id", "slot", "channel", "mode", "a", "b", "r", "s")),
+    ("th12", 509): TransformLayout(509, "th12", ("emitter_id", "slot", "channel", "mode", "a", "b", "r", "s")),
+    ("th13_plus", 609): TransformLayout(609, "th13_plus", ("emitter_id", "slot", "channel", "mode", "a", "b", "r", "s")),
+    ("th13_plus", 610): TransformLayout(610, "th13_plus", ("emitter_id", "slot", "channel", "mode", "a", "b", "c", "d", "r", "s", "m", "n")),
+    ("th13_plus", 611): TransformLayout(611, "th13_plus", ("emitter_id", "channel", "mode", "a", "b", "r", "s")),
+    ("th13_plus", 612): TransformLayout(612, "th13_plus", ("emitter_id", "channel", "mode", "a", "b", "c", "d", "r", "s", "m", "n")),
+}
+
+
+def transform_layout(game: str, opcode: int) -> TransformLayout | None:
+    return TRANSFORM_LAYOUTS.get((generation_for_game(game), opcode))
+
+
+def normalize_target_float_sentinel(value: str, target: str) -> str:
+    if generation_for_game(target) == "th13_plus" and value == "-999.0f":
+        return "-999999.0f"
+    return value
+
+
+@dataclass(frozen=True)
+class BulletTransformIR:
+    source_game: str
+    source_opcode: int
+    values: dict[str, str]
+    mode_semantic: str
+    shape_semantic: str | None = None
+    source_args: tuple[str, ...] = ()
+
+    @classmethod
+    def from_opcode(cls, source_game: str, opcode: int, args: list[Any]) -> "BulletTransformIR | None":
+        layout = transform_layout(source_game, opcode)
+        rendered = [str(arg) for arg in args]
+        if not layout or len(rendered) != len(layout.fields):
+            return None
+        values = dict(zip(layout.fields, rendered))
+        mode = values.get("mode", "0")
+        mode_semantic = bullet_transform_mode_semantic(source_game, mode)
+        shape_semantic = bullet_shape_semantic(source_game, values.get("a", "0")) if mode_semantic == "shape_change" else None
+        return cls(
+            source_game=source_game,
+            source_opcode=opcode,
+            values=values,
+            mode_semantic=mode_semantic,
+            shape_semantic=shape_semantic,
+            source_args=tuple(rendered),
+        )
+
+    def unsupported_reason(self, target: str) -> str | None:
+        return unsupported_bullet_transform_mode_reason(self.source_game, target, self.values.get("mode", "0"))
+
+    def with_slot(self, slot: str) -> "BulletTransformIR":
+        values = dict(self.values)
+        values["slot"] = slot
+        return BulletTransformIR(
+            source_game=self.source_game,
+            source_opcode=self.source_opcode,
+            values=values,
+            mode_semantic=self.mode_semantic,
+            shape_semantic=self.shape_semantic,
+            source_args=self.source_args,
+        )
+
+    def with_emitter(self, emitter_id: str) -> "BulletTransformIR":
+        values = dict(self.values)
+        values["emitter_id"] = emitter_id
+        return BulletTransformIR(
+            source_game=self.source_game,
+            source_opcode=self.source_opcode,
+            values=values,
+            mode_semantic=self.mode_semantic,
+            shape_semantic=self.shape_semantic,
+            source_args=self.source_args,
+        )
+
+    def encoded_a(self, target: str) -> str:
+        value = self.values.get("a", "-999999")
+        if self.mode_semantic != "shape_change":
+            return value
+        return encode_bullet_shape(self.shape_semantic or bullet_shape_semantic(self.source_game, value), target, value)
+
+    def encoded_mode(self, target: str) -> str:
+        return encode_bullet_transform_mode(self.mode_semantic, target, self.values.get("mode", "0"))
+
+    def base_fields_for(self, target: str) -> list[str]:
+        return [
+            self.values.get("emitter_id", "0"),
+            self.values.get("slot", "0"),
+            self.values.get("channel", "0"),
+            self.encoded_mode(target),
+            self.encoded_a(target),
+            self.values.get("b", "-999999"),
+            normalize_target_float_sentinel(self.values.get("r", "-999999.0f"), target),
+            normalize_target_float_sentinel(self.values.get("s", "-999999.0f"), target),
+        ]
+
+    def th13plus_pause_subtype(self) -> str:
+        return {
+            "pause_then_relative_velocity": "0",
+            "pause_then_aimed_velocity": "6",
+            "pause_then_velocity": "4",
+        }.get(self.mode_semantic, "0")
+
+    def lower_to(self, target: str) -> LoweredInstruction | None:
+        if self.unsupported_reason(target):
+            return None
+        target_generation = generation_for_game(target)
+        if target_generation == "th13_plus":
+            fields = self.base_fields_for(target)
+            if fields[3] == "16":
+                emitter_id, slot, channel, mode, a, b, r, s = fields
+                if self.mode_semantic == "pause_then_aimed_velocity":
+                    r = th12_random_angle_expression_bound(r)
+                return LoweredInstruction(
+                    610,
+                    [emitter_id, slot, channel, mode, a, b, self.th13plus_pause_subtype(), "0", r, s, "-999999.0f", "-999999.0f"],
+                )
+            return LoweredInstruction(609, fields)
+        if target_generation == "th12":
+            fields = self.base_fields_for(target)
+            return LoweredInstruction(509, fields)
+        if target_generation == "th10_th11":
+            fields = self.base_fields_for(target)
+            return LoweredInstruction(409, fields)
+        return None
+
+
+def bullet_transform_ir_from_opcode(source_game: str, opcode: int, args: list[Any], append_slot: int | str | None = None) -> BulletTransformIR | None:
+    transform = BulletTransformIR.from_opcode(source_game, opcode, args)
+    if not transform:
+        return None
+    if "slot" not in transform.values and append_slot is not None:
+        transform = transform.with_slot(str(append_slot))
+    return transform
+
+
+def lower_transform_opcode_to_instruction(source_game: str, target: str, opcode: int, args: list[Any], append_slot: int | str | None = None) -> LoweredInstruction | None:
+    transform = bullet_transform_ir_from_opcode(source_game, opcode, args, append_slot)
+    if not transform:
+        return None
+    return transform.lower_to(target)
 
 
 def th12_random_angle_expression_bound(expr: str) -> str:
@@ -138,14 +275,6 @@ def th12_random_angle_expression_bound(expr: str) -> str:
     return expr
 
 
-def th12_pause_then_velocity_subtype(mode: str) -> str:
-    return {
-        "16": "0",
-        "32": "6",
-        "64": "4",
-    }.get(str(mode), "0")
-
-
 def bullet_transform_instructions(transform: BulletTransform, source_game: str, target: str) -> list[LoweredInstruction] | None:
     args = target_transform_args(transform)
     if args is None:
@@ -154,10 +283,11 @@ def bullet_transform_instructions(transform: BulletTransform, source_game: str, 
         return [LoweredInstruction(transform.raw_opcode, args)]
     if generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
         if transform.raw_opcode == 509 and len(args) == 8:
-            reason = unsupported_bullet_transform_mode_reason(source_game, target, args[3])
-            if reason:
+            ir = BulletTransformIR.from_opcode(source_game, transform.raw_opcode, args)
+            if not ir or ir.unsupported_reason(target):
                 return None
-            return [th12_509_to_th13plus_transform(args, target)]
+            lowered = ir.lower_to(target)
+            return [lowered] if lowered else None
         if transform.raw_opcode == 510 and not args:
             return [LoweredInstruction(610, [])]
         if transform.raw_opcode == 511 and len(args) == 2:

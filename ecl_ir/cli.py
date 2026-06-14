@@ -11,9 +11,9 @@ from .backend import choose_difficulty, compile_bullet_emitter, compile_ir_op_ev
 from .object_lifter import lift_all_objects, summarize_by_kind
 from .parser import parse_decl
 from .reference import validate_opcode_args
-from .semantics import generation_for_game, lifted_raw_coverage_policy, remap_raw_arg_by_semantic, spread_semantic, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509, unsupported_bullet_transform_mode_reason
+from .semantics import generation_for_game, lifted_raw_coverage_policy, remap_raw_arg_by_semantic, spread_semantic, unsupported_bullet_transform_mode_reason
 from .spread_ir import add_float_expr, double_flower_aux_config_args, double_flower_center_delta, double_flower_lowering_for_th12, halve_double_flower_layer_args, negated_float_expr, th12_aux_emitter_id
-from .transform_ir import TransformTimelineState, build_th12_to_th13plus_slot_maps_from_args, th12_509_to_th13plus_transform
+from .transform_ir import BulletTransformIR, TransformTimelineState, build_th12_to_th13plus_slot_maps_from_args, lower_transform_opcode_to_instruction
 from .luastg_backend import emit_luastg_file
 from .luastg_lifter import emit_luastg_ir_json
 from .luastg_normalizer import emit_normalized_json, normalize_luastg_file
@@ -1063,7 +1063,12 @@ def lower_bullet_transform_opcode(opcode: int, args: list[object], source_game: 
                 f"    // dropped unsupported bullet transform mode from ins_509: {reason}",
                 f"    // original args: {', '.join(rendered)}",
             ]
-        target_instruction = th12_509_to_th13plus_transform(rendered, target)
+        transform_ir = BulletTransformIR.from_opcode(source_game, opcode, rendered)
+        if not transform_ir:
+            return None
+        target_instruction = transform_ir.lower_to(target)
+        if not target_instruction:
+            return None
         target_opcode = target_instruction.opcode
         converted = target_instruction.args
         if curve_laser and rendered[3] == "8" and len(converted) >= 6 and converted[5] == "-999999":
@@ -1077,40 +1082,38 @@ def lower_bullet_transform_opcode(opcode: int, args: list[object], source_game: 
 
     if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
-    converted: list[str] | None = None
+    lowered = None
     if opcode == 609 and len(args) == 8:
-        converted = th13_transform_set_to_th12_509(args, source_game)
-        if converted and bullet_state:
+        lowered = lower_transform_opcode_to_instruction(source_game, target, opcode, args)
+        if lowered and bullet_state:
             bullet_state.observe_transform_index(str(args[0]), args[1])
     elif opcode == 611 and len(args) == 7:
         if bullet_state:
             index = bullet_state.next_transform_index(str(args[0]))
         else:
             index = 0
-        converted = th13_append_transform_to_th12_509(args, index, source_game)
+        lowered = lower_transform_opcode_to_instruction(source_game, target, opcode, args, index)
     elif opcode == 612 and len(args) == 11:
         if bullet_state:
             index = bullet_state.next_transform_index(str(args[0]))
         else:
             index = 0
-        et_id, channel, mode, a, b, _c, _d, r, s, _m, _n = [str(arg) for arg in args]
-        # TH12 has no 11-argument etEx2 form. Preserve the core transform fields
-        # that TH12's 509 can express: et, sequence index, channel, mode, a/b/r/s.
-        converted = th13_append_transform_to_th12_509([et_id, channel, mode, a, b, r, s], index, source_game)
-    if not converted:
+        lowered = lower_transform_opcode_to_instruction(source_game, target, opcode, args, index)
+    if not lowered:
         return None
     aux_id = bullet_state.aux_for(str(args[0])) if bullet_state and args else None
+    converted = lowered.args
     aux_converted = emitter_arg_replaced(converted, aux_id) if aux_id else None
-    comment = f"    // dynamic bullet transform lowering {source_game}->{target}: ins_{opcode} -> ins_509"
+    comment = f"    // dynamic bullet transform lowering {source_game}->{target}: ins_{opcode} -> ins_{lowered.opcode}"
     if aux_converted:
-        comment = f"    // dynamic bullet transform lowering {source_game}->{target}: ins_{opcode} -> ins_509; mirrored to double-flower slot {aux_id}"
+        comment = f"    // dynamic bullet transform lowering {source_game}->{target}: ins_{opcode} -> ins_{lowered.opcode}; mirrored to double-flower slot {aux_id}"
     return ranked_or_plain_lines(
-        509,
+        lowered.opcode,
         converted,
         difficulty_literals,
         comment,
-        extra_ranked=[(509, aux_converted)] if aux_converted else None,
-        extra_plain=[(509, aux_converted)] if aux_converted else None,
+        extra_ranked=[(lowered.opcode, aux_converted)] if aux_converted else None,
+        extra_plain=[(lowered.opcode, aux_converted)] if aux_converted else None,
     )
 
 

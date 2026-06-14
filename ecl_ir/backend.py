@@ -8,9 +8,9 @@ from .model import BulletEmitter, BulletTransform
 from .op_ir import target_opcode_for_op_key
 from .origin_ir import bullet_origin_instructions
 from .reference import is_opcode_supported, validate_opcode_args
-from .semantics import boss_phase_prefix_ops, bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_raw_arg_by_semantic, th13_append_transform_to_th12_509, th13_transform_set_to_th12_509, unsupported_bullet_transform_mode_reason
+from .semantics import boss_phase_prefix_ops, bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_raw_arg_by_semantic, unsupported_bullet_transform_mode_reason
 from .spread_ir import double_flower_lowering_for_th12, th12_aux_emitter_id
-from .transform_ir import bullet_transform_instructions, target_transform_args
+from .transform_ir import bullet_transform_instructions, lower_transform_opcode_to_instruction, target_transform_args
 
 INT_SENTINEL = "-999999"
 FLOAT_SENTINEL = "-999999.0f"
@@ -1466,20 +1466,20 @@ def compile_th12(e: BulletEmitter) -> str:
                 aux_args = [aux_emitter_id, *transform.raw_args[1:]]
                 lines.extend(emit_instruction_with_ranked_args(522, aux_args, [aux_emitter_id, "1", "1", "1", "1", "1", "1", "1", "1"]))
         elif transform.raw_opcode == 609 and len(transform.raw_args) == 8:
-            converted = th13_transform_set_to_th12_509(transform.raw_args, e.game)
-            if not converted:
+            lowered = lower_transform_opcode_to_instruction(e.game, "th12", transform.raw_opcode, transform.raw_args)
+            if not lowered:
                 lines.append(f"// unsupported th13+ transform for th12; preserved source ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
                 continue
-            lines.append(f"ins_509({', '.join(converted)});")
+            lines.append(f"ins_{lowered.opcode}({', '.join(lowered.args)});")
             if str(transform.raw_args[0]) == str(emitter_id) and re.fullmatch(r"-?\d+", str(transform.raw_args[1])):
                 next_transform_index = max(next_transform_index, int(str(transform.raw_args[1])) + 1)
         elif transform.raw_opcode == 611 and len(transform.raw_args) == 7:
-            converted = th13_append_transform_to_th12_509(transform.raw_args, next_transform_index, e.game)
-            if converted:
-                lines.append(f"ins_509({', '.join(converted)});")
+            lowered = lower_transform_opcode_to_instruction(e.game, "th12", transform.raw_opcode, transform.raw_args, next_transform_index)
+            if lowered:
+                lines.append(f"ins_{lowered.opcode}({', '.join(lowered.args)});")
                 if aux_emitter_id and str(transform.raw_args[0]) == str(emitter_id):
-                    aux_converted = [aux_emitter_id, *converted[1:]]
-                    lines.append(f"ins_509({', '.join(aux_converted)});")
+                    aux_args = [aux_emitter_id, *lowered.args[1:]]
+                    lines.append(f"ins_{lowered.opcode}({', '.join(aux_args)});")
                 next_transform_index += 1
             else:
                 lines.append(f"// unsupported th13+ transform for th12; preserved source ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
@@ -1581,9 +1581,10 @@ def compile_th10_slot(e: BulletEmitter, target: str) -> str:
         if transform.raw_opcode == 409 and len(transform.raw_args) == 8:
             lines.append(f"ins_409({', '.join(str(arg) for arg in transform.raw_args)});")
         elif transform.raw_opcode in {509, 609, 610, 611, 612}:
-            converted = convert_transform_to_th10(transform.raw_opcode, [str(arg) for arg in transform.raw_args])
-            if converted:
-                lines.append(f"ins_409({', '.join(converted)});")
+            append_slot = "0" if transform.raw_opcode in {611, 612} else None
+            lowered = lower_transform_opcode_to_instruction(e.game, target, transform.raw_opcode, transform.raw_args, append_slot)
+            if lowered:
+                lines.append(f"ins_{lowered.opcode}({', '.join(lowered.args)});")
             else:
                 lines.append(f"// transform not representable in {target} slot backend: ins_{transform.raw_opcode}({', '.join(str(arg) for arg in transform.raw_args)});")
     if not e.fire_lines:
@@ -1591,20 +1592,6 @@ def compile_th10_slot(e: BulletEmitter, target: str) -> str:
     elif start_opcode != 401:
         lines.append(f"ins_401({emitter_id});")
     return "\n".join(lines)
-
-
-def convert_transform_to_th10(opcode: int, args: list[str]) -> list[str] | None:
-    if opcode == 409 and len(args) == 8:
-        return args
-    if opcode == 509 and len(args) == 8:
-        return args
-    if opcode == 609 and len(args) == 8:
-        return args
-    if opcode in {610, 612} and len(args) >= 12:
-        return [args[0], args[1], args[2], args[3], args[4], args[5], args[8], args[9]]
-    if opcode == 611 and len(args) >= 7:
-        return [args[0], "0", args[1], args[2], args[3], args[4], args[5], args[6]]
-    return None
 
 
 def mode_raw(mode: str | None, default: str = "1") -> str:
@@ -1621,8 +1608,3 @@ def mode_raw(mode: str | None, default: str = "1") -> str:
     }.get(mode or "", default)
 
 
-def convert_th13_transform_to_th12(opcode: int, args: list[str]) -> tuple[int, list[str]] | None:
-    mapping = {609: 509, 610: 510, 611: 511, 612: 512}
-    if opcode not in mapping:
-        return None
-    return mapping[opcode], args

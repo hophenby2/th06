@@ -282,6 +282,44 @@ for shape in BULLET_SHAPES:
         BULLET_SHAPE_BY_GENERATION_VALUE.setdefault((generation, value), shape)
 BULLET_SHAPE_BY_SEMANTIC = {shape.semantic: shape for shape in BULLET_SHAPES}
 
+DROP_TYPES: tuple[SemanticValue, ...] = (
+    SemanticValue("none", {GEN_TH13_PLUS: "0", GEN_TH12: "0", GEN_TH10_TH11: "0"}),
+    SemanticValue("point", {GEN_TH13_PLUS: "1", GEN_TH12: "1", GEN_TH10_TH11: "1"}),
+    SemanticValue("blue_point", {GEN_TH13_PLUS: "2", GEN_TH12: "2", GEN_TH10_TH11: "2"}),
+    SemanticValue("power_large", {GEN_TH13_PLUS: "3", GEN_TH12: "3", GEN_TH10_TH11: "3"}),
+    SemanticValue("life_piece", {GEN_TH13_PLUS: "5", GEN_TH12: "6"}),
+    SemanticValue("bomb_piece", {GEN_TH13_PLUS: "6", GEN_TH12: "5"}),
+    SemanticValue("full_power", {GEN_TH13_PLUS: "8", GEN_TH12: "8", GEN_TH10_TH11: "8"}),
+    SemanticValue("max_point_small", {GEN_TH13_PLUS: "9", GEN_TH12: "9"}),
+    SemanticValue("max_point_medium", {GEN_TH13_PLUS: "10", GEN_TH12: "9"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("max_point_large", {GEN_TH13_PLUS: "11", GEN_TH12: "9"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("spirit_bomb_piece", {GEN_TH13_PLUS: "12", GEN_TH12: "5"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("score_30", {GEN_TH13_PLUS: "12", GEN_TH12: "9"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("score_40", {GEN_TH13_PLUS: "13", GEN_TH12: "9"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("score_50", {GEN_TH13_PLUS: "14", GEN_TH12: "9"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("spirit_bomb_piece_alt", {GEN_TH13_PLUS: "15", GEN_TH12: "5"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("fixed_red", {GEN_TH13_PLUS: "1", GEN_TH12: "10"}, lossy_targets=(GEN_TH13_PLUS,)),
+    SemanticValue("fixed_blue", {GEN_TH13_PLUS: "2", GEN_TH12: "11"}, lossy_targets=(GEN_TH13_PLUS,)),
+    SemanticValue("fixed_green", {GEN_TH13_PLUS: "1", GEN_TH12: "12"}, lossy_targets=(GEN_TH13_PLUS,)),
+    SemanticValue("changing_red", {GEN_TH13_PLUS: "1", GEN_TH12: "13"}, lossy_targets=(GEN_TH13_PLUS,)),
+    SemanticValue("changing_blue", {GEN_TH13_PLUS: "2", GEN_TH12: "14"}, lossy_targets=(GEN_TH13_PLUS,)),
+    SemanticValue("changing_green", {GEN_TH13_PLUS: "1", GEN_TH12: "15"}, lossy_targets=(GEN_TH13_PLUS,)),
+    SemanticValue("ufo_red_bundle", {GEN_TH13_PLUS: "1", GEN_TH12: "16"}, lossy_targets=(GEN_TH13_PLUS,)),
+    SemanticValue("ufo_blue_bundle", {GEN_TH13_PLUS: "2", GEN_TH12: "17"}, lossy_targets=(GEN_TH13_PLUS,)),
+    SemanticValue("ufo_red_blue_bundle", {GEN_TH13_PLUS: "1", GEN_TH12: "18"}, lossy_targets=(GEN_TH13_PLUS,)),
+    SemanticValue("wolf_spirit", {GEN_TH13_PLUS: "16", GEN_TH12: "10"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("otter_spirit", {GEN_TH13_PLUS: "17", GEN_TH12: "11"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("eagle_spirit", {GEN_TH13_PLUS: "18", GEN_TH12: "12"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("red_spirit", {GEN_TH13_PLUS: "19", GEN_TH12: "13"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("blue_spirit", {GEN_TH13_PLUS: "20", GEN_TH12: "14"}, lossy_targets=(GEN_TH12,)),
+    SemanticValue("green_spirit", {GEN_TH13_PLUS: "21", GEN_TH12: "15"}, lossy_targets=(GEN_TH12,)),
+)
+DROP_TYPE_BY_GENERATION_VALUE: dict[tuple[str, str], SemanticValue] = {}
+for drop in DROP_TYPES:
+    for generation, value in drop.values.items():
+        DROP_TYPE_BY_GENERATION_VALUE.setdefault((generation, value), drop)
+DROP_TYPE_BY_SEMANTIC = {drop.semantic: drop for drop in DROP_TYPES}
+
 BULLET_TRANSFORM_MODES: tuple[SemanticValue, ...] = (
     SemanticValue("spawn_step", {GEN_TH13_PLUS: "1", GEN_TH12: "1"}),
     SemanticValue("set_mist", {GEN_TH13_PLUS: "2", GEN_TH12: "2"}),
@@ -360,6 +398,25 @@ def encode_bullet_shape(semantic: str, target: str, fallback: Any = None) -> str
     return plain(fallback, "0")
 
 
+def drop_type_semantic(game: str, value: Any) -> str:
+    raw = plain(value).strip()
+    semantic = DROP_TYPE_BY_GENERATION_VALUE.get((generation_for_game(game), raw))
+    if semantic:
+        return semantic.semantic
+    return f"raw:{raw}"
+
+
+def encode_drop_type(semantic: str, target: str, fallback: Any = None) -> str:
+    if semantic.startswith("raw:"):
+        return semantic[4:]
+    drop = DROP_TYPE_BY_SEMANTIC.get(semantic)
+    if drop:
+        encoded = drop.encode(generation_for_game(target))
+        if encoded is not None:
+            return encoded
+    return plain(fallback, "0")
+
+
 def bullet_transform_mode_semantic(game: str, mode: Any) -> str:
     raw = plain(mode).strip()
     semantic = BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE.get((generation_for_game(game), raw))
@@ -393,26 +450,6 @@ def remap_shape_change_arg(source_game: str, target: str, mode: Any, shape: Any)
     if bullet_transform_mode_semantic(source_game, mode) != "shape_change":
         return str(shape)
     return encode_bullet_shape(bullet_shape_semantic(source_game, shape), target, shape)
-
-
-def th13_append_transform_to_th12_509(args: list[object], index: int, source_game: str = "th15") -> list[str] | None:
-    if len(args) != 7:
-        return None
-    et_id, channel, mode, a, b, r, s = [str(arg) for arg in args]
-    mapped_mode = remap_bullet_transform_mode(source_game, "th12", mode)
-    a = remap_shape_change_arg(source_game, "th12", mode, a)
-    # TH13+ ins_611 appends a transform and omits the transform index.
-    # TH12 ins_509 needs that index explicitly: et, index, channel, mode, a, b, r, s.
-    return [et_id, str(index), channel, mapped_mode, a, b, r, s]
-
-
-def th13_transform_set_to_th12_509(args: list[object], source_game: str = "th15") -> list[str] | None:
-    if len(args) != 8:
-        return None
-    converted = [str(arg) for arg in args]
-    converted[3] = remap_bullet_transform_mode(source_game, "th12", converted[3])
-    converted[4] = remap_shape_change_arg(source_game, "th12", args[3], converted[4])
-    return converted
 
 
 def spread_semantic(game: str, style: Any) -> dict[str, Any]:
@@ -520,45 +557,7 @@ def remap_raw_arg_by_semantic(source_game: str, target: str, source_opcode: int,
 
 
 def remap_drop_type(source_game: str, target: str, value: str) -> str:
-    source_generation = generation_for_game(source_game)
-    target_generation = generation_for_game(target)
     text = str(value).strip()
-    if source_generation == target_generation:
+    if generation_for_game(source_game) == generation_for_game(target):
         return text
-    if source_generation == GEN_TH12 and target_generation == GEN_TH13_PLUS:
-        # TH12 UFO-specific item ids 10..18 do not represent the same runtime
-        # objects in TH13+.  Keep ordinary item ids stable and map obsolete UFO
-        # color/drop bundles to safe point-item equivalents.
-        table = {
-            "5": "6",   # bomb piece moved after life in TH13+
-            "6": "5",   # life moved before bomb piece in TH13+
-            "10": "1",  # fixed red -> point
-            "11": "2",  # fixed blue -> blue point
-            "12": "1",  # fixed green -> point
-            "13": "1",  # color-changing red -> point
-            "14": "2",  # color-changing blue -> blue point
-            "15": "1",  # color-changing green -> point
-            "16": "1",  # UFO red bundle -> point
-            "17": "2",  # UFO blue bundle -> blue point
-            "18": "1",  # UFO red/blue bundle -> point
-        }
-        return table.get(text, text)
-    if source_generation == GEN_TH13_PLUS and target_generation == GEN_TH12:
-        table = {
-            "5": "6",
-            "6": "5",
-            "10": "9",
-            "11": "9",
-            "12": "5",
-            "13": "9",
-            "14": "9",
-            "15": "5",
-            "16": "10",
-            "17": "11",
-            "18": "12",
-            "19": "13",
-            "20": "14",
-            "21": "15",
-        }
-        return table.get(text, text)
-    return text
+    return encode_drop_type(drop_type_semantic(source_game, text), target, text)
