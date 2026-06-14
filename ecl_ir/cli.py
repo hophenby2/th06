@@ -977,9 +977,10 @@ def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str
     if opcode == 525 and generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus" and len(args) >= 3:
         emitter_id = str(args[0])
         if bullet_state and emitter_id in bullet_state.curve_laser_emitters:
+            rendered_args = [str(arg) for arg in args]
             return [
-                f"    // dropped TH12 absolute curve-laser origin for TH13+ parity with native ins_711 origin",
-                f"    // original args: {', '.join(str(arg) for arg in args)}",
+                f"    // test TH12 absolute curve-laser origin lowering {source_game}->{target}: ins_525 -> ins_628",
+                f"    ins_628({', '.join(rendered_args)});",
             ]
         if bullet_state:
             bullet_state.observe_absolute_origin(emitter_id, args[1], args[2])

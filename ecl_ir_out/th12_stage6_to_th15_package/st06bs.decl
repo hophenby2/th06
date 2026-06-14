@@ -2776,8 +2776,8 @@ void BossCard3_at2()
     goto BossCard3_at2_1084 @ 0;
     BossCard3_at2_712:
     %C = ([-9999.0f] * %E) + %D;
-    // dropped TH12 absolute curve-laser origin for TH13+ parity with native ins_711 origin
-    // original args: 0, %B, %C
+    // test TH12 absolute curve-laser origin lowering th12->th15: ins_525 -> ins_628
+    ins_628(0, %B, %C);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // dynamic curve laser fire lowering th12->th15: ins_611 -> ins_711
@@ -2796,8 +2796,8 @@ void BossCard3_at2()
     goto BossCard3_at2_1720 @ 0;
     BossCard3_at2_1348:
     %C = ([-9999.0f] * %E) + %D;
-    // dropped TH12 absolute curve-laser origin for TH13+ parity with native ins_711 origin
-    // original args: 0, %B, %C
+    // test TH12 absolute curve-laser origin lowering th12->th15: ins_525 -> ins_628
+    ins_628(0, %B, %C);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // dynamic curve laser fire lowering th12->th15: ins_611 -> ins_711
@@ -2857,8 +2857,8 @@ void BossCard3_at2b()
     goto BossCard3_at2b_1064 @ 0;
     BossCard3_at2b_692:
     %C = ([-9999.0f] * %E) + %D;
-    // dropped TH12 absolute curve-laser origin for TH13+ parity with native ins_711 origin
-    // original args: 0, %B, %C
+    // test TH12 absolute curve-laser origin lowering th12->th15: ins_525 -> ins_628
+    ins_628(0, %B, %C);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // dynamic curve laser fire lowering th12->th15: ins_611 -> ins_711
@@ -2877,8 +2877,8 @@ void BossCard3_at2b()
     goto BossCard3_at2b_1700 @ 0;
     BossCard3_at2b_1328:
     %C = ([-9999.0f] * %E) + %D;
-    // dropped TH12 absolute curve-laser origin for TH13+ parity with native ins_711 origin
-    // original args: 0, %B, %C
+    // test TH12 absolute curve-laser origin lowering th12->th15: ins_525 -> ins_628
+    ins_628(0, %B, %C);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // dynamic curve laser fire lowering th12->th15: ins_611 -> ins_711
