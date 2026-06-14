@@ -293,7 +293,6 @@ BULLET_TRANSFORM_MODES: tuple[SemanticValue, ...] = (
     SemanticValue("sound", {GEN_TH13_PLUS: "2048", GEN_TH12: "16384"}),
     SemanticValue("wait_next", {GEN_TH13_PLUS: "-2147483648", GEN_TH12: "4096"}),
     SemanticValue("jump", {GEN_TH13_PLUS: "65536", GEN_TH12: "4194304"}),
-    SemanticValue("jump_legacy", {GEN_TH13_PLUS: "65536", GEN_TH12: "2097152"}),
     SemanticValue("independent_velocity", {GEN_TH13_PLUS: "524288", GEN_TH12: "134217728"}),
     SemanticValue("highlight", {GEN_TH13_PLUS: "1048576", GEN_TH12: "268435456"}),
     SemanticValue("velocity_over_time", {GEN_TH13_PLUS: "2097152", GEN_TH12: "536870912"}),
@@ -304,7 +303,13 @@ for mode in BULLET_TRANSFORM_MODES:
         BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE.setdefault((generation, value), mode)
 BULLET_TRANSFORM_MODE_BY_SEMANTIC = {mode.semantic: mode for mode in BULLET_TRANSFORM_MODES}
 
-UNSUPPORTED_BULLET_TRANSFORM_MODE_REASONS: dict[tuple[str, str, str], str] = {}
+UNSUPPORTED_BULLET_TRANSFORM_MODE_REASONS: dict[tuple[str, str, str], str] = {
+    (
+        GEN_TH12,
+        GEN_TH13_PLUS,
+        "2097152",
+    ): "TH12 etEx mode 2097152 is jump-related and is not TH13+ mode 2097152; direct mapping can jump into invalid TH13+ transform slots",
+}
 
 SPREAD_STYLES: tuple[SemanticValue, ...] = (
     SemanticValue("single_flower.right.aimed", {GEN_TH12: "2", GEN_TH10_TH11: "2"}),

@@ -1355,7 +1355,8 @@ def th12_509_to_th13plus_transform(args: list[str], target: str) -> tuple[int, l
     if converted[3] == "16":
         et_id, slot, channel, mode, a, b, r, s = converted
         subtype = th12_pause_then_velocity_subtype(args[3])
-        return 610, [et_id, slot, channel, mode, a, b, subtype, "0", r, s, "-999999.0f", "-999999.0f"]
+        mode_flags = "2" if str(args[3]) == "32" else "0"
+        return 610, [et_id, slot, channel, mode, a, b, subtype, mode_flags, r, s, "-999999.0f", "-999999.0f"]
     return 609, converted
 
 
