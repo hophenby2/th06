@@ -3035,7 +3035,7 @@ void BossCard4Laser()
     ins_302(3);
     // object Animation source_line=1781 family=th12
     // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(0, [-9982]);
+    ins_303(0, 6);
     // semantic op_key lowering th12->th15: anm.rotate
     ins_319(0, [-9981.0f]);
     %B = [-9981.0f];
@@ -3075,7 +3075,7 @@ void BossCard4Laser2()
     ins_302(3);
     // object Animation source_line=1804 family=th12
     // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(0, [-9982]);
+    ins_303(0, 6);
     // semantic op_key lowering th12->th15: anm.rotate
     ins_319(0, [-9981.0f]);
     %B = [-9981.0f];
@@ -3296,7 +3296,7 @@ void BossCard4_at2()
     goto BossCard4_at2_1160 @ 0;
     BossCard4_at2_628:
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_610
-    ins_610(0, 3, 0, 16, 1, 1, 2, 2, ([-9998.0f] / _f(16)) - 1.5707964f, [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
+    ins_610(0, 3, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
@@ -3327,7 +3327,7 @@ void BossCard4_at2()
     goto BossCard4_at2_1936 @ 0;
     BossCard4_at2_1404:
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_610
-    ins_610(0, 3, 0, 16, 1, 1, 2, 2, ([-9998.0f] / _f(16)) - 1.5707964f, [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
+    ins_610(0, 3, 0, 16, 1, 1, 6, 0, 3.1415927f / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
@@ -4251,7 +4251,7 @@ void BossCard6_atLine()
     ins_302(3);
     // object Animation source_line=2577 family=th12
     // Animation lowering th12 -> th15: anm.set_sprite -> ins_303
-    ins_303(0, 82);
+    ins_303(0, 6);
     // semantic op_key lowering th12->th15: unit.flag_set
     ins_502(271);
     // semantic op_key lowering th12->th15: flow.wait
@@ -4260,7 +4260,7 @@ void BossCard6_atLine()
     // movement lowering th12 -> th15: movement.velocity.set -> ins_404
     ins_404([-9981.0f], [-9980.0f]);
     // semantic op_key lowering th12->th15: unit.func_set
-    ins_632(6);
+    // dropped TH12 flying-bowl line helper effect for TH15: unit.func_set(6)
     goto BossCard6_atLine_208 @ 0;
     BossCard6_atLine_188:
     // semantic op_key lowering th12->th15: flow.wait

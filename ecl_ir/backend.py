@@ -359,6 +359,17 @@ def th12_stage6_to_th15_anm_args(event: dict[str, object], target: str, args: li
         # These TH12 stage6 boss scripts are Byakuren's flower/wing slots.
         # TH15 st06bs uses script 6 from bank 3 as a known-good extra boss slot.
         return [args[0], "6"]
+    if op_key == "anm.set_sprite" and function in {"BossCard4Laser", "BossCard4Laser2"} and len(args) == 2 and args[0] == "0" and args[1] == "[-9982]":
+        # TH12 stage06 uses boss-bank script 69 for the four wall laser
+        # familiars.  That script is not valid in TH15 st06bs bank 3; script 6
+        # is already used as the safe boss-side auxiliary script for this
+        # conversion.
+        return ["0", "6"]
+    if op_key == "anm.set_sprite" and function == "BossCard6_atLine" and len(args) == 2 and args == ["0", "82"]:
+        # TH12 script 82 is the flying-bowl line helper in Byakuren's last
+        # card.  It is not present in TH15 st06bs bank 3; use the same safe
+        # auxiliary boss script used for other imported boss-side helpers.
+        return ["0", "6"]
     if op_key in {"anm.play", "anm.play_abs"} and len(args) >= 2 and args[0] == "1":
         # anmPlay/anmPlayAbs carry their target ANM bank as an argument; remap it
         # alongside anmSelect or repeated stage enemy effects can play from
@@ -424,6 +435,14 @@ def compile_special_semantic_event(event: dict[str, object], target: str, contex
             f"ins_303({slot}, 6);",
             f"// TH12 butterfly switch argument preserved for audit: {switch}",
         ])
+    if (
+        op_key == "unit.func_set"
+        and target in {"th13", "th14", "th15", "th16", "th17", "th18"}
+        and is_th12_stage6_boss_like_context(event, target, context)
+        and str(context.get("function", "") if context else "") == "BossCard6_atLine"
+        and args == ["6"]
+    ):
+        return "// dropped TH12 flying-bowl line helper effect for TH15: unit.func_set(6)"
     return None
 
 
@@ -1383,11 +1402,25 @@ def th12_509_to_th13plus_transform(args: list[str], target: str) -> tuple[int, l
     if converted[3] == "16":
         et_id, slot, channel, mode, a, b, r, s = converted
         subtype = th12_pause_then_velocity_subtype(args[3])
-        mode_flags = "2" if str(args[3]) == "32" else "0"
-        if str(args[3]) == "32":
-            r = f"({r}) - 1.5707964f"
+        if args[3] == "32":
+            r = th12_random_angle_expression_bound(r)
+        mode_flags = "0"
         return 610, [et_id, slot, channel, mode, a, b, subtype, mode_flags, r, s, "-999999.0f", "-999999.0f"]
     return 609, converted
+
+
+def th12_random_angle_expression_bound(expr: str) -> str:
+    normalized = str(expr).strip()
+    match = re.fullmatch(r"\[-9998\.0f\]\s*/\s*_f\(([-+]?\d+(?:\.\d+)?)\)", normalized)
+    if match:
+        return f"3.1415927f / _f({match.group(1)})"
+    match = re.fullmatch(r"\[-9998\.0f\]\s*/\s*([-+]?\d+(?:\.\d+)?f?)", normalized)
+    if match:
+        denom = match.group(1)
+        return f"3.1415927f / {denom}"
+    if normalized == "[-9998.0f]":
+        return "3.1415927f"
+    return expr
 
 
 def th12_pause_then_velocity_subtype(mode: str) -> str:
@@ -1395,7 +1428,7 @@ def th12_pause_then_velocity_subtype(mode: str) -> str:
     # them into mode 16 and selects behavior with c.
     return {
         "16": "0",  # original direction + r, speed = s
-        "32": "2",  # aimed direction + r, speed = s
+        "32": "6",  # random aimed direction within +/-r, speed = s
         "64": "4",  # direction = r, speed = s
     }.get(str(mode), "0")
 
