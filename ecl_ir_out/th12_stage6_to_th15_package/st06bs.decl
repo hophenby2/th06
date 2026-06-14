@@ -155,13 +155,13 @@ void Boss1_at1()
     ins_605(3, 1.0f, 0.0f);
     ins_625(3, 6, 12, 14, 14, 1, 1, 1, 1);
     ins_624(3, 3.0f, 3.0f, 4.0f, 4.4f, 1.5f, 1.5f, 1.5f, 1.5f);
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(0, [-9997.0f], [-9996.0f] - _f(32));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(1, [-9997.0f], [-9996.0f] - _f(32));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(2, [-9997.0f], [-9996.0f] - _f(32));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(3, [-9997.0f], [-9996.0f] - _f(32));
     %C = [-9998.0f];
     $D = 3;
@@ -292,13 +292,13 @@ void Boss1_at1b()
     ins_605(3, 1.0f, 0.0f);
     ins_625(3, 6, 12, 14, 14, 1, 1, 1, 1);
     ins_624(3, 3.0f, 3.0f, 4.0f, 4.4f, 1.5f, 1.5f, 1.5f, 1.5f);
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(0, [-9997.0f], [-9996.0f] - _f(32));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(1, [-9997.0f], [-9996.0f] - _f(32));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(2, [-9997.0f], [-9996.0f] - _f(32));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(3, [-9997.0f], [-9996.0f] - _f(32));
     %C = [-9998.0f];
     $D = 3;
@@ -1121,7 +1121,7 @@ void Boss3_at1e1()
     ins_535($D, 30, 60, 60, 60);
     goto Boss3_at1e1_996 @ 0;
     Boss3_at1e1_508:
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(1, _f(-114) + [-9997.0f], _f(54) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
@@ -1164,7 +1164,7 @@ void Boss3_at1e2()
     ins_535($D, 30, 60, 60, 60);
     goto Boss3_at1e2_996 @ 0;
     Boss3_at1e2_508:
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(2, _f(114) + [-9997.0f], _f(54) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
@@ -1207,7 +1207,7 @@ void Boss3_at1e3()
     ins_535($D, 30, 60, 60, 60);
     goto Boss3_at1e3_1072 @ 0;
     Boss3_at1e3_508:
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(3, _f(-64) + [-9997.0f], _f(-80) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
@@ -1253,7 +1253,7 @@ void Boss3_at1e4()
     ins_535($D, 30, 60, 60, 60);
     goto Boss3_at1e4_1072 @ 0;
     Boss3_at1e4_508:
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(4, _f(64) + [-9997.0f], _f(-80) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
@@ -1655,7 +1655,7 @@ void Boss4_at1e1()
     $E = 32;
     goto Boss4_at1e1_1252 @ 0;
     Boss4_at1e1_588:
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(1, _f(-114) + [-9997.0f], _f(54) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
@@ -1712,7 +1712,7 @@ void Boss4_at1e2()
     $E = 32;
     goto Boss4_at1e2_1252 @ 0;
     Boss4_at1e2_588:
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(2, _f(114) + [-9997.0f], _f(54) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
@@ -1769,7 +1769,7 @@ void Boss4_at1e3()
     $E = 32;
     goto Boss4_at1e3_1252 @ 0;
     Boss4_at1e3_588:
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(3, _f(-64) + [-9997.0f], _f(-80) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
@@ -1826,7 +1826,7 @@ void Boss4_at1e4()
     $E = 32;
     goto Boss4_at1e4_1252 @ 0;
     Boss4_at1e4_588:
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(4, _f(64) + [-9997.0f], _f(-80) + [-9996.0f]);
     // semantic op_key lowering th12->th15: flow.circle_pos
     ins_81(%B, %C, %A + 1.5707964f, 16.0f);
@@ -2708,13 +2708,13 @@ void BossCard3_at()
     ins_614(4, 2);
     // semantic op_key lowering th12->th15: bullet.copy
     ins_614(5, 2);
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(2, [-9997.0f] + _f(-114), [-9996.0f] + _f(54));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(3, [-9997.0f] + _f(114), [-9996.0f] + _f(54));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(4, [-9997.0f] + _f(-64), [-9996.0f] + _f(-80));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(5, [-9997.0f] + _f(64), [-9996.0f] + _f(-80));
     // semantic op_key lowering th12->th15: unit.diff_i
     ins_535($A, 200, 200, 200, 100);
@@ -2747,22 +2747,22 @@ void BossCard3_at2()
     // object BulletEmitter source_line=1597 family=th12
     ins_600(0);
     ins_607(0, 1);
-    ins_602(0, 0, 13);
+    ins_602(0, 0, 2);
     ins_606(0, 1, 1);
     ins_604(0, -0.7853982f, -0.7853982f);
     ins_605(0, 4.0f, 4.0f);
     // semantic op_key lowering th12->th15: laser.new
     ins_700(0, -1.0f, -1.0f, -1.0f, 16.0f);
     // semantic op_key lowering th12->th15: laser.timing
-    ins_701(0, 32, -1, -1, -1, 0);
+    ins_701(0, 128, -1, -1, -1, 0);
     // semantic op_key lowering th12->th15: bullet.sound
     ins_608(0, 19, -1);
+    // dropped TH12 curve-laser uncancelable-time transform before TH15 lowering
+    // original args: 0, 0, 0, 512, 10, -999999, -999999.0f, -999999.0f
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609(0, 0, 0, 128, 10, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 0, 0, 256, 500, 0, -999999.0f, -999999.0f);
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609(0, 1, 0, 256, 120, 0, -999999.0f, -999999.0f);
-    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609(0, 2, 1, 8, 60000, -999999, 0.0f, 0.015707964f);
+    ins_609(0, 1, 1, 8, 60000, 0, 0.0f, 0.015707964f);
     %A = 2.356194f;
     // semantic op_key lowering th12->th15: unit.diff_f
     ins_536(%E, 128.0f, 64.0f, 64.0f, 64.0f);
@@ -2776,11 +2776,11 @@ void BossCard3_at2()
     goto BossCard3_at2_1084 @ 0;
     BossCard3_at2_712:
     %C = ([-9999.0f] * %E) + %D;
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
-    ins_628(0, %B, %C);
+    // dropped TH12 absolute curve-laser origin for TH13+ parity with native ins_711 origin
+    // original args: 0, %B, %C
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
-    // semantic op_key lowering th12->th15: laser.curve_on
+    // dynamic curve laser fire lowering th12->th15: ins_611 -> ins_711
     ins_711(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(14, 14, 12, 10);
@@ -2796,11 +2796,11 @@ void BossCard3_at2()
     goto BossCard3_at2_1720 @ 0;
     BossCard3_at2_1348:
     %C = ([-9999.0f] * %E) + %D;
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
-    ins_628(0, %B, %C);
+    // dropped TH12 absolute curve-laser origin for TH13+ parity with native ins_711 origin
+    // original args: 0, %B, %C
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
-    // semantic op_key lowering th12->th15: laser.curve_on
+    // dynamic curve laser fire lowering th12->th15: ins_611 -> ins_711
     ins_711(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(14, 14, 12, 10);
@@ -2827,22 +2827,22 @@ void BossCard3_at2b()
     // object BulletEmitter source_line=1653 family=th12
     ins_600(0);
     ins_607(0, 1);
-    ins_602(0, 0, 13);
+    ins_602(0, 0, 2);
     ins_606(0, 1, 1);
     ins_604(0, -0.7853982f, -0.7853982f);
     ins_605(0, 4.0f, 4.0f);
     // semantic op_key lowering th12->th15: laser.new
     ins_700(0, -1.0f, -1.0f, -1.0f, 16.0f);
     // semantic op_key lowering th12->th15: laser.timing
-    ins_701(0, 32, -1, -1, -1, 0);
+    ins_701(0, 128, -1, -1, -1, 0);
     // semantic op_key lowering th12->th15: bullet.sound
     ins_608(0, 19, -1);
+    // dropped TH12 curve-laser uncancelable-time transform before TH15 lowering
+    // original args: 0, 0, 0, 512, 10, -999999, -999999.0f, -999999.0f
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609(0, 0, 0, 128, 10, -999999, -999999.0f, -999999.0f);
+    ins_609(0, 0, 0, 256, 500, 0, -999999.0f, -999999.0f);
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609(0, 1, 0, 256, 120, 0, -999999.0f, -999999.0f);
-    // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
-    ins_609(0, 2, 1, 8, 60000, -999999, 0.0f, 0.015707964f);
+    ins_609(0, 1, 1, 8, 60000, 0, 0.0f, 0.015707964f);
     %A = -0.785398f;
     // semantic op_key lowering th12->th15: unit.diff_f
     ins_536(%E, 128.0f, 64.0f, 64.0f, 64.0f);
@@ -2857,11 +2857,11 @@ void BossCard3_at2b()
     goto BossCard3_at2b_1064 @ 0;
     BossCard3_at2b_692:
     %C = ([-9999.0f] * %E) + %D;
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
-    ins_628(0, %B, %C);
+    // dropped TH12 absolute curve-laser origin for TH13+ parity with native ins_711 origin
+    // original args: 0, %B, %C
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
-    // semantic op_key lowering th12->th15: laser.curve_on
+    // dynamic curve laser fire lowering th12->th15: ins_611 -> ins_711
     ins_711(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(14, 14, 12, 10);
@@ -2877,11 +2877,11 @@ void BossCard3_at2b()
     goto BossCard3_at2b_1700 @ 0;
     BossCard3_at2b_1328:
     %C = ([-9999.0f] * %E) + %D;
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
-    ins_628(0, %B, %C);
+    // dropped TH12 absolute curve-laser origin for TH13+ parity with native ins_711 origin
+    // original args: 0, %B, %C
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
-    // semantic op_key lowering th12->th15: laser.curve_on
+    // dynamic curve laser fire lowering th12->th15: ins_611 -> ins_711
     ins_711(0);
     // semantic op_key lowering th12->th15: unit.diff_wait
     ins_548(14, 14, 12, 10);
@@ -3176,13 +3176,13 @@ void BossCard4_at()
     $D = 50;
     goto BossCard4_at_1344 @ 0;
     BossCard4_at_496:
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(2, [-9997.0f] + _f(-114), [-9996.0f] + _f(54));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(3, [-9997.0f] + _f(114), [-9996.0f] + _f(54));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(4, [-9997.0f] + _f(-64), [-9996.0f] + _f(-80));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(5, [-9997.0f] + _f(64), [-9996.0f] + _f(-80));
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(2, %A, %C);
@@ -3217,13 +3217,13 @@ void BossCard4_at()
     %C = 0.010472f;
     goto BossCard4_at_3168 @ 0;
     BossCard4_at_1604:
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(2, [-9997.0f] + _f(-114), [-9996.0f] + _f(54));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(3, [-9997.0f] + _f(114), [-9996.0f] + _f(54));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(4, [-9997.0f] + _f(-64), [-9996.0f] + _f(-80));
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(5, [-9997.0f] + _f(64), [-9996.0f] + _f(-80));
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(2, %A, 1.0471976f);
@@ -3296,7 +3296,7 @@ void BossCard4_at2()
     goto BossCard4_at2_1160 @ 0;
     BossCard4_at2_628:
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_610
-    ins_610(0, 3, 0, 16, 1, 1, 2, 2, [-9998.0f] / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
+    ins_610(0, 3, 0, 16, 1, 1, 2, 2, ([-9998.0f] / _f(16)) - 1.5707964f, [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
@@ -3327,7 +3327,7 @@ void BossCard4_at2()
     goto BossCard4_at2_1936 @ 0;
     BossCard4_at2_1404:
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_610
-    ins_610(0, 3, 0, 16, 1, 1, 2, 2, [-9998.0f] / _f(16), [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
+    ins_610(0, 3, 0, 16, 1, 1, 2, 2, ([-9998.0f] / _f(16)) - 1.5707964f, [-9999.0f] * 1.0f, -999999.0f, -999999.0f);
     // semantic op_key lowering th12->th15: bullet.angle
     ins_604(0, %A, 0.0f);
     // semantic op_key lowering th12->th15: bullet.fire
@@ -3553,7 +3553,7 @@ void BossCard4_at7()
     %B = ([-9999.0f] * _f(128)) + _f(64);
     // semantic op_key lowering th12->th15: bullet.speed
     ins_605(7, (%B / 64.0f) + ([-9999.0f] * 0.5f), 0.0f);
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(7, %B, [-9999.0f] * _f(192));
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(7);
@@ -3572,7 +3572,7 @@ void BossCard4_at7()
     // semantic op_key lowering th12->th15: bullet.speed
     ins_605(7, (%B / 64.0f) + ([-9999.0f] * 0.5f), 0.0f);
     %B = %B * _f(-1);
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(7, %B, [-9999.0f] * _f(192));
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(7);
@@ -3900,7 +3900,7 @@ void BossCard5_at(var A, var B, var C, var D)
     ins_604(0, %K, 0.0f);
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
     ins_609(0, 3, 0, 4, 60, -999999, 0.023333333f, -999999.0f);
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628(0, %A, %B);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601(0);
@@ -4230,7 +4230,7 @@ void BossCard6_at(var A, var B, var C, var D, var E, var F, var G)
     ins_609($A, 6, 1, 524288, 60000, -999999, %H, %I);
     // dynamic bullet transform lowering th12->th15: ins_509 -> ins_609
     ins_609($A, 7, 1, 8, 60000, -999999, 0.0f, %D / 4.8f);
-    // semantic op_key lowering th12->th15: bullet.et_offset_abs
+    // dynamic absolute bullet origin lowering th12->th15: ins_525 -> ins_628
     ins_628($A, %B, %C);
     // semantic op_key lowering th12->th15: bullet.fire
     ins_601($A);

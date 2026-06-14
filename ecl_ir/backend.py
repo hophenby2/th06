@@ -1290,6 +1290,9 @@ def compile_th13plus(e: BulletEmitter) -> str:
         aim_raw_value = mode_raw(e.aim.get("mode"), default="1")
     style_value = remap_bullet_shape_for_target(e, target="th15")
     color_value = e.appearance.get("color")
+    if e.game == "th12" and (emitter_has_curve_laser(e) or e.semantics.get("curve_laser_fire")):
+        style_value = "0"
+        color_value = "2"
     ways_value = e.count.get("ways")
     layers_value = e.count.get("layers")
     angle_value = e.aim.get("base_angle")
@@ -1303,19 +1306,50 @@ def compile_th13plus(e: BulletEmitter) -> str:
     lines.extend(emit_instruction_with_ranked_args(604, [emitter_id, as_float_expr(angle_value if angle_value is not None else "0.0f"), as_float_expr(angle_step_value if angle_step_value is not None else "0.0f")], ["0", "0.0f", "0.0f"]))
     lines.extend(emit_instruction_with_ranked_args(605, [emitter_id, speed_value, speed_step_value if speed_step_value is not None else e.speed.get("last_or_step")], ["0", "1.0f", e.speed.get("last_or_step", "0.0f")]))
     lines.extend(th13plus_origin_lines(str(emitter_id), e.origin))
+    lines.extend(th13plus_laser_origin_lines(e, str(emitter_id)))
     if args := sound_args(e, emitter_id):
         lines.append(emit_checked_instruction("th15", 608, args))
     for field, value in (("speed.first", e.speed.get("first")), ("count.ways", e.count.get("ways"))):
         comment = difficulty_comment(field, value)
         if comment:
             lines.insert(0, comment)
-    for transform in e.transforms:
+    curve_laser = e.game == "th12" and (emitter_has_curve_laser(e) or e.semantics.get("curve_laser_fire"))
+    transforms = curve_laser_th13plus_transforms(e.transforms) if curve_laser else e.transforms
+    for transform in transforms:
         lowered = lower_transform_for_th13plus(transform, e.game, "th15", str(emitter_id))
         if lowered:
             lines.extend(lowered)
         else:
             lines.append(f"// unsupported transform from ins_{transform.raw_opcode}: {', '.join(transform.raw_args)}")
     return "\n".join(lines)
+
+
+def curve_laser_th13plus_transforms(transforms):
+    normalized = []
+    next_index = 0
+    for transform in transforms:
+        args = [str(arg) for arg in transform.raw_args]
+        if transform.raw_opcode == 509 and len(args) == 8:
+            mode = args[3]
+            if mode == "512":
+                continue
+            args = args[:]
+            args[1] = str(next_index)
+            if mode == "1024":
+                try:
+                    if int(args[4]) < 500:
+                        args[4] = "500"
+                except ValueError:
+                    pass
+            if mode == "8" and args[5] == "-999999":
+                args[5] = "0"
+            next_index += 1
+            cloned = deepcopy(transform)
+            cloned.raw_args = args
+            normalized.append(cloned)
+            continue
+        normalized.append(transform)
+    return normalized
 
 
 def lower_transform_for_th13plus(transform, source_game: str, target: str, emitter_id: str) -> list[str] | None:
@@ -1356,6 +1390,8 @@ def th12_509_to_th13plus_transform(args: list[str], target: str) -> tuple[int, l
         et_id, slot, channel, mode, a, b, r, s = converted
         subtype = th12_pause_then_velocity_subtype(args[3])
         mode_flags = "2" if str(args[3]) == "32" else "0"
+        if str(args[3]) == "32":
+            r = f"({r}) - 1.5707964f"
         return 610, [et_id, slot, channel, mode, a, b, subtype, mode_flags, r, s, "-999999.0f", "-999999.0f"]
     return 609, converted
 
@@ -1380,6 +1416,14 @@ def th13plus_origin_lines(emitter_id: str, origin: dict[str, object]) -> list[st
         return [emit_checked_instruction("th15", 627, [emitter_id, str(origin.get("distance", "0.0f"))])]
     if mode == "absolute":
         return [emit_checked_instruction("th15", 628, [emitter_id, str(origin.get("x", "0.0f")), str(origin.get("y", "0.0f"))])]
+    return []
+
+
+def emitter_has_curve_laser(e: BulletEmitter) -> bool:
+    return any(getattr(ins, "opcode", None) == 611 for ins in getattr(e, "raw", []))
+
+
+def th13plus_laser_origin_lines(e: BulletEmitter, emitter_id: str) -> list[str]:
     return []
 
 

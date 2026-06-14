@@ -356,6 +356,13 @@ def adapt_args_for_op_key(op_key: str, source_game: str, source_opcode: int, tar
         angle = fields.get("angle", target_defaults.get("angle", "0.0f"))
         fields["x_speed"] = f"({speed}) * cos({angle})"
         fields["y_speed"] = f"({speed}) * sin({angle})"
+    if op_key == "laser.timing" and source_gen == GEN_12 and target_gen == GEN_13:
+        if fields.get("duration") == "-1" and fields.get("stop") == "-1" and fields.get("graze_delay") == "-1":
+            try:
+                if int(str(fields.get("start", "0")).strip()) < 128:
+                    fields["start"] = "128"
+            except ValueError:
+                pass
     result = [adapt_field_value(field, fields.get(field, target_defaults.get(field, "")), source_gen, target_gen) for field in target_fields]
     return result
 

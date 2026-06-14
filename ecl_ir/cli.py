@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import math
 import re
@@ -549,6 +550,19 @@ def should_emit_semantic_object_in_timeline(obj, source_game: str, target: str) 
     return True
 
 
+def object_for_timeline_compile(obj, bullet_state: BulletLoweringState | None):
+    if (
+        bullet_state
+        and getattr(obj, "kind", None) == "BulletEmitter"
+        and str(getattr(obj, "id", "")) in bullet_state.curve_laser_emitters
+    ):
+        cloned = copy.copy(obj)
+        cloned.semantics = copy.deepcopy(getattr(obj, "semantics", {}))
+        cloned.semantics["curve_laser_fire"] = True
+        return cloned
+    return obj
+
+
 def emit_function_body(function_objects: list[object], target: str) -> list[str]:
     timelines = [obj for obj in function_objects if getattr(obj, "kind", None) == "Timeline"]
     helper = next((obj for obj in function_objects if getattr(obj, "kind", None) == "HelperRoutine" and helper_applies(obj, target)), None)
@@ -577,7 +591,10 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
     lines.append(f"    // Timeline lowering {timeline.family} -> {target}; interleaved structured draft")
     lines.append("    // control-flow, async scheduling, and expression semantics require target-game verification")
     skipped_debug_selector = False
-    bullet_state = make_bullet_lowering_state(function_objects, source_game, target)
+    if generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
+        bullet_state = make_bullet_lowering_state_from_events(timeline.fields.get("statements", []), source_game, target)
+    else:
+        bullet_state = make_bullet_lowering_state(function_objects, source_game, target)
     for event in timeline.fields.get("statements", []):
         stage_rewrite = find_rewrite(rewrites, "stage.skip_debug_spell_selector")
         if stage_rewrite and matches_condition_rewrite(event, stage_rewrite):
@@ -597,7 +614,8 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
                 if not should_emit_semantic_object_in_timeline(obj, source_game, target):
                     continue
                 lines.append(f"    // object {obj.kind} source_line={obj.source_line} family={obj.family}")
-                for line in compile_object(obj, target).splitlines():
+                compile_obj = object_for_timeline_compile(obj, bullet_state)
+                for line in compile_object(compile_obj, target).splitlines():
                     lines.append(f"    {line}")
         if line_no in covered_lines:
             continue
@@ -675,7 +693,12 @@ def emit_raw_timeline_body(timeline, target: str, rewrites: list[object] | None 
     lines.append("    // Boss ECL keeps source instruction order to avoid moving dynamic bullet parameters before initialization.")
     emitted_spelltest_skip = False
     source_game = getattr(timeline, "game", "unknown")
-    bullet_state = BulletLoweringState({}, {}, {}) if generation_for_game(source_game) == "th13_plus" and generation_for_game(target) == "th12" else None
+    if generation_for_game(source_game) == "th13_plus" and generation_for_game(target) == "th12":
+        bullet_state = BulletLoweringState({}, {}, {}, {}, set())
+    elif generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
+        bullet_state = make_bullet_lowering_state_from_events(timeline.fields.get("statements", []), source_game, target)
+    else:
+        bullet_state = None
     boss_rewrite = find_rewrite(rewrites, "boss.skip_debug_spell_selector")
     for event in timeline.fields.get("statements", []):
         if boss_rewrite and matches_condition_rewrite(event, boss_rewrite):
@@ -704,6 +727,8 @@ class BulletLoweringState:
     double_flower_aux: dict[str, str]
     transform_next_index: dict[str, int]
     double_flower_ways: dict[str, str]
+    pending_curve_laser_offsets: dict[str, tuple[str, str]]
+    curve_laser_emitters: set[str]
 
     def activate_double_flower(self, emitter_id: str) -> str | None:
         aux_id = th12_aux_emitter_id(emitter_id)
@@ -746,8 +771,16 @@ class BulletLoweringState:
     def ways_for(self, emitter_id: str) -> str | None:
         return self.double_flower_ways.get(emitter_id)
 
+    def observe_absolute_origin(self, emitter_id: str, x: object, y: object) -> None:
+        self.pending_curve_laser_offsets[emitter_id] = (str(x), str(y))
+
+    def pop_curve_laser_offset(self, emitter_id: str) -> tuple[str, str] | None:
+        return self.pending_curve_laser_offsets.pop(emitter_id, None)
+
 
 def make_bullet_lowering_state(function_objects: list[object], source_game: str, target: str) -> BulletLoweringState | None:
+    if generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
+        return BulletLoweringState({}, {}, {}, {}, set())
     if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
     aux: dict[str, str] = {}
@@ -760,10 +793,30 @@ def make_bullet_lowering_state(function_objects: list[object], source_game: str,
             aux_id = th12_aux_emitter_id(emitter_id)
             if aux_id:
                 aux[emitter_id] = aux_id
-    return BulletLoweringState(aux, {}, {})
+    return BulletLoweringState(aux, {}, {}, {}, set())
+
+
+def make_bullet_lowering_state_from_events(events: list[dict[str, object]], source_game: str, target: str) -> BulletLoweringState | None:
+    state = make_bullet_lowering_state([], source_game, target)
+    if not state:
+        return None
+    for event in events:
+        if event.get("kind") != "instruction" or int(event.get("opcode") or -1) != 611:
+            continue
+        args = event.get("args", [])
+        emitter_id = str(args[0]) if args else "0"
+        state.curve_laser_emitters.add(emitter_id)
+    return state
 
 
 def lower_bullet_fire_opcode(opcode: int, args: list[object], source_game: str, target: str, bullet_state: BulletLoweringState | None) -> list[str] | None:
+    if opcode == 611 and generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus":
+        emitter_id = str(args[0]) if args else "0"
+        if bullet_state:
+            bullet_state.pop_curve_laser_offset(emitter_id)
+        lines = [f"    // dynamic curve laser fire lowering {source_game}->{target}: ins_611 -> ins_711"]
+        lines.append(f"    ins_711({emitter_id});")
+        return lines
     if opcode != 601 or generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
     emitter_id = str(args[0]) if args else "0"
@@ -913,6 +966,28 @@ def lower_bullet_create_opcode(opcode: int, args: list[object], source_game: str
 
 
 def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str, target: str, difficulty_literals: object = None, bullet_state: BulletLoweringState | None = None) -> list[str] | None:
+    if opcode == 502 and generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus" and len(args) >= 3:
+        emitter_id = str(args[0])
+        if bullet_state and emitter_id in bullet_state.curve_laser_emitters:
+            rendered_args = [emitter_id, "0", "2"]
+            return [
+                f"    // curve laser material lowering {source_game}->{target}: TH13+ curve laser uses visible sprite/color",
+                f"    ins_602({', '.join(rendered_args)});",
+            ]
+    if opcode == 525 and generation_for_game(source_game) == "th12" and generation_for_game(target) == "th13_plus" and len(args) >= 3:
+        emitter_id = str(args[0])
+        if bullet_state and emitter_id in bullet_state.curve_laser_emitters:
+            return [
+                f"    // dropped TH12 absolute curve-laser origin for TH13+ parity with native ins_711 origin",
+                f"    // original args: {', '.join(str(arg) for arg in args)}",
+            ]
+        if bullet_state:
+            bullet_state.observe_absolute_origin(emitter_id, args[1], args[2])
+        rendered_args = [str(arg) for arg in args]
+        return [
+            f"    // dynamic absolute bullet origin lowering {source_game}->{target}: ins_525 -> ins_628",
+            f"    ins_628({', '.join(rendered_args)});",
+        ]
     if generation_for_game(source_game) != "th13_plus" or generation_for_game(target) != "th12":
         return None
     mapping = {
@@ -986,6 +1061,15 @@ def lower_bullet_transform_opcode(opcode: int, args: list[object], source_game: 
         if opcode != 509 or len(args) != 8:
             return None
         rendered = [str(arg) for arg in args]
+        curve_laser = bool(bullet_state and rendered[0] in bullet_state.curve_laser_emitters)
+        if curve_laser and rendered[3] == "512":
+            return [
+                "    // dropped TH12 curve-laser uncancelable-time transform before TH15 lowering",
+                f"    // original args: {', '.join(rendered)}",
+            ]
+        if curve_laser and bullet_state:
+            rendered = rendered[:]
+            rendered[1] = str(bullet_state.next_transform_index(rendered[0]))
         reason = unsupported_bullet_transform_mode_reason(source_game, target, rendered[3])
         if reason:
             return [
@@ -993,6 +1077,14 @@ def lower_bullet_transform_opcode(opcode: int, args: list[object], source_game: 
                 f"    // original args: {', '.join(rendered)}",
             ]
         target_opcode, converted = th12_509_to_th13plus_transform(rendered, target)
+        if rendered[3] == "1024" and converted[3] == "256":
+            try:
+                if int(str(converted[4]).strip()) < 500:
+                    converted[4] = "500"
+            except ValueError:
+                pass
+        if curve_laser and rendered[3] == "8" and len(converted) >= 6 and converted[5] == "-999999":
+            converted[5] = "0"
         return ranked_or_plain_lines(
             target_opcode,
             converted,
