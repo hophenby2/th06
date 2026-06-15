@@ -484,14 +484,9 @@ def align_stage_resources_to_target(resources: dict[str, list[str]], objects: li
     result = {key: list(value) for key, value in resources.items()}
     anim_entries = result.get("anim", [])
     result["anim"] = ["enemy.anm", f"st{stage}enm.anm"] if anim_entries else [f"st{stage}enm.anm"]
-    ecli_entries = result.get("ecli", [])
-    if ecli_entries:
-        target_stage = Path(f"E:/fork/th062/{target}/st{stage}.decl")
-        if target_stage.exists():
-            target_program = parse_decl(str(target_stage))
-            target_ecli = target_program.resources.get("ecli", [])
-            if target_ecli:
-                result["ecli"] = target_ecli
+    # ECLI references are script dependency boundaries, not visual resources.
+    # Keep the source list so converted stage scripts do not accidentally bind
+    # to target-side boss or midboss scripts such as st01bs.ecl.
     return result
 
 
@@ -589,6 +584,12 @@ def covered_lines_for_lifted_object(obj, source_game: str, target: str) -> set[i
         return set()
     if getattr(obj, "kind", None) in {"LaserEmitter", "Mode"}:
         return set()
+    if (
+        getattr(obj, "kind", None) == "BulletEmitter"
+        and generation_for_game(source_game) == "th10_th11"
+        and generation_for_game(target) == "th13_plus"
+    ):
+        return set()
     covered: set[int] = set()
     policy = lifted_raw_coverage_policy(getattr(obj, "kind", ""), source_game, target, getattr(obj, "family", ""))
     if policy == "contiguous_setup_prefix":
@@ -626,6 +627,12 @@ def timeline_object_sort_key(obj) -> tuple[int, str]:
 
 def should_emit_semantic_object_in_timeline(obj, source_game: str, target: str) -> bool:
     if getattr(obj, "kind", None) == "LaserEmitter":
+        return False
+    if (
+        getattr(obj, "kind", None) == "BulletEmitter"
+        and generation_for_game(source_game) == "th10_th11"
+        and generation_for_game(target) == "th13_plus"
+    ):
         return False
     if (
         getattr(obj, "kind", None) == "BulletEmitter"
@@ -1052,10 +1059,12 @@ def lower_bullet_config_opcode(opcode: int, args: list[object], source_game: str
         mapping = {
             400: 600,
             402: 602,
+            403: 603,
             404: 604,
             405: 605,
             406: 606,
             407: 607,
+            408: 608,
         }
         mapped = mapping.get(opcode)
         if mapped is None:

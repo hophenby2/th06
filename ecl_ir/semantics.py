@@ -81,7 +81,7 @@ def lifted_raw_coverage_policy(kind: str, source_game: str, target: str, family:
         return "default"
     if family == "th12" and source_generation == GEN_TH12 and target_generation == GEN_TH13_PLUS:
         return "contiguous_setup_prefix"
-    if family == "th10_slot" and source_generation == GEN_TH10_TH11 and target_generation in {GEN_TH12, GEN_TH13_PLUS}:
+    if family == "th10_slot" and source_generation == GEN_TH10_TH11 and target_generation == GEN_TH12:
         return "contiguous_setup_prefix"
     return "default"
 
@@ -306,7 +306,7 @@ add_reference_name_opcode_maps()
 BULLET_SHAPES: tuple[SemanticValue, ...] = (
     SemanticValue("point", {GEN_TH13_PLUS: "0", GEN_TH12: "0", GEN_TH10_TH11: "0", GEN_TH06_TH08: "0"}),
     SemanticValue("point_highlight", {GEN_TH13_PLUS: "1", GEN_TH12: "1", GEN_TH06_TH08: "0"}),
-    SemanticValue("grape", {GEN_TH13_PLUS: "2", GEN_TH12: "2"}),
+    SemanticValue("grape", {GEN_TH13_PLUS: "2", GEN_TH12: "2", GEN_TH10_TH11: "24"}),
     SemanticValue("orb_small", {GEN_TH13_PLUS: "4", GEN_TH12: "3", GEN_TH10_TH11: "1", GEN_TH06_TH08: "3"}),
     SemanticValue("orb_small_highlight", {GEN_TH13_PLUS: "5", GEN_TH12: "4", GEN_TH06_TH08: "3"}),
     SemanticValue("orb_ring", {GEN_TH13_PLUS: "6", GEN_TH12: "5", GEN_TH10_TH11: "2", GEN_TH06_TH08: "6"}),
@@ -324,17 +324,21 @@ BULLET_SHAPES: tuple[SemanticValue, ...] = (
     SemanticValue("orb_medium", {GEN_TH13_PLUS: "18", GEN_TH12: "17", GEN_TH10_TH11: "12", GEN_TH06_TH08: "8"}),
     SemanticValue("orb_medium_highlight", {GEN_TH13_PLUS: "19", GEN_TH12: "18", GEN_TH10_TH11: "19", GEN_TH06_TH08: "8"}),
     SemanticValue("ellipse", {GEN_TH13_PLUS: "20", GEN_TH12: "19", GEN_TH10_TH11: "13", GEN_TH06_TH08: "19"}),
+    SemanticValue("ellipse_highlight", {GEN_TH13_PLUS: "20", GEN_TH12: "19", GEN_TH10_TH11: "20"}, lossy_targets=(GEN_TH13_PLUS, GEN_TH12)),
     SemanticValue("knife", {GEN_TH13_PLUS: "21", GEN_TH12: "20", GEN_TH10_TH11: "14", GEN_TH06_TH08: "20"}),
+    SemanticValue("knife_highlight", {GEN_TH13_PLUS: "21", GEN_TH12: "20", GEN_TH10_TH11: "21"}, lossy_targets=(GEN_TH13_PLUS, GEN_TH12)),
     SemanticValue("butterfly", {GEN_TH13_PLUS: "22", GEN_TH12: "21", GEN_TH10_TH11: "15", GEN_TH06_TH08: "21"}),
+    SemanticValue("butterfly_highlight", {GEN_TH13_PLUS: "22", GEN_TH12: "21", GEN_TH10_TH11: "22"}, lossy_targets=(GEN_TH13_PLUS, GEN_TH12)),
     SemanticValue("big_star", {GEN_TH13_PLUS: "23", GEN_TH12: "22", GEN_TH10_TH11: "16", GEN_TH06_TH08: "8"}),
-    SemanticValue("big_star_reverse", {GEN_TH13_PLUS: "24", GEN_TH12: "22", GEN_TH10_TH11: "22", GEN_TH06_TH08: "8"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11, GEN_TH06_TH08)),
-    SemanticValue("light_orb", {GEN_TH13_PLUS: "33", GEN_TH12: "23"}),
-    SemanticValue("light_flame", {GEN_TH13_PLUS: "25", GEN_TH12: "24"}),
+    SemanticValue("big_star_reverse", {GEN_TH13_PLUS: "24", GEN_TH12: "22", GEN_TH06_TH08: "8"}, lossy_targets=(GEN_TH12, GEN_TH06_TH08)),
+    SemanticValue("light_orb", {GEN_TH13_PLUS: "33", GEN_TH12: "23", GEN_TH10_TH11: "18"}),
+    SemanticValue("light_flame", {GEN_TH13_PLUS: "25", GEN_TH12: "24", GEN_TH10_TH11: "25"}),
     SemanticValue("heart", {GEN_TH13_PLUS: "29", GEN_TH12: "25", GEN_TH10_TH11: "27", GEN_TH06_TH08: "25"}),
     SemanticValue("orb_large", {GEN_TH13_PLUS: "32", GEN_TH12: "26", GEN_TH10_TH11: "17"}),
     SemanticValue("rose", {GEN_TH13_PLUS: "34", GEN_TH12: "27"}, lossy_targets=(GEN_TH13_PLUS,)),
     SemanticValue("drop", {GEN_TH13_PLUS: "34", GEN_TH12: "28"}),
     SemanticValue("purple_flame", {GEN_TH13_PLUS: "26", GEN_TH12: "29"}),
+    SemanticValue("rice_spinning", {GEN_TH13_PLUS: "35", GEN_TH10_TH11: "26"}),
     SemanticValue("laser_segment", {GEN_TH13_PLUS: "38", GEN_TH12: "30"}),
 )
 BULLET_SHAPE_BY_GENERATION_VALUE: dict[tuple[str, str], SemanticValue] = {}
@@ -399,7 +403,7 @@ BULLET_TRANSFORM_MODES: tuple[SemanticValue, ...] = (
     SemanticValue("uncancelable_time", {GEN_TH13_PLUS: "128", GEN_TH12: "512", GEN_TH10_TH11: "4096"}),
     SemanticValue("offscreen_time", {GEN_TH13_PLUS: "256", GEN_TH12: "1024", GEN_TH10_TH11: "8192"}),
     SemanticValue("shape_change", {GEN_TH13_PLUS: "512", GEN_TH12: "2048", GEN_TH10_TH11: "16384"}),
-    SemanticValue("wait_next", {GEN_TH13_PLUS: "-2147483648", GEN_TH12: "4096", GEN_TH10_TH11: "32768"}),
+    SemanticValue("wait_next", {GEN_TH13_PLUS: "-2147483648", GEN_TH12: "4096", GEN_TH10_TH11: "32768"}, aliases=("-2147483648",)),
     SemanticValue("delete", {GEN_TH13_PLUS: "1024", GEN_TH12: "8192", GEN_TH10_TH11: "65536"}),
     SemanticValue("legacy_unknown_131072", {GEN_TH10_TH11: "131072"}),
     SemanticValue("legacy_unknown_262144", {GEN_TH10_TH11: "262144"}),
@@ -415,7 +419,6 @@ BULLET_TRANSFORM_MODES: tuple[SemanticValue, ...] = (
     SemanticValue("highlight", {GEN_TH13_PLUS: "1048576", GEN_TH12: "268435456", GEN_TH10_TH11: "268435456"}),
     SemanticValue("velocity_over_time", {GEN_TH13_PLUS: "2097152", GEN_TH12: "536870912", GEN_TH10_TH11: "536870912"}),
     SemanticValue("legacy_ds_unknown_1073741824", {GEN_TH10_TH11: "1073741824"}),
-    SemanticValue("legacy_reserved_sign_bit", {GEN_TH10_TH11: "-2147483648"}),
 )
 BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE: dict[tuple[str, str], SemanticValue] = {}
 for mode in BULLET_TRANSFORM_MODES:
@@ -432,12 +435,17 @@ UNSUPPORTED_BULLET_TRANSFORM_MODE_REASONS: dict[tuple[str, str, str], str] = {
 }
 
 SPREAD_STYLES: tuple[SemanticValue, ...] = (
-    SemanticValue("single_flower.right.aimed", {GEN_TH12: "2", GEN_TH10_TH11: "2"}),
-    SemanticValue("single_flower.right.fixed", {GEN_TH12: "3", GEN_TH10_TH11: "3"}),
-    SemanticValue("single_flower.left.aimed", {GEN_TH13_PLUS: "2", GEN_TH12: "4", GEN_TH10_TH11: "4"}),
-    SemanticValue("single_flower.left.fixed", {GEN_TH13_PLUS: "3", GEN_TH12: "5", GEN_TH10_TH11: "5"}),
-    SemanticValue("single_flower.offset_left.aimed", {GEN_TH13_PLUS: "4", GEN_TH12: "4", GEN_TH10_TH11: "4"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11)),
-    SemanticValue("single_flower.offset_left.fixed", {GEN_TH13_PLUS: "5", GEN_TH12: "5", GEN_TH10_TH11: "5"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11)),
+    SemanticValue("fan.aimed", {GEN_TH13_PLUS: "0", GEN_TH10_TH11: "0"}),
+    SemanticValue("fan.fixed", {GEN_TH13_PLUS: "1", GEN_TH10_TH11: "1"}),
+    SemanticValue("random_angle", {GEN_TH13_PLUS: "6", GEN_TH10_TH11: "6"}),
+    SemanticValue("random_speed", {GEN_TH13_PLUS: "7", GEN_TH10_TH11: "7"}),
+    SemanticValue("random_angle_speed", {GEN_TH13_PLUS: "8", GEN_TH10_TH11: "8"}),
+    SemanticValue("single_flower.left.aimed", {GEN_TH13_PLUS: "2", GEN_TH12: "4", GEN_TH10_TH11: "2"}),
+    SemanticValue("single_flower.left.fixed", {GEN_TH13_PLUS: "3", GEN_TH12: "5", GEN_TH10_TH11: "3"}),
+    SemanticValue("single_flower.offset_left.aimed", {GEN_TH13_PLUS: "4", GEN_TH10_TH11: "4"}),
+    SemanticValue("single_flower.offset_left.fixed", {GEN_TH13_PLUS: "5", GEN_TH10_TH11: "5"}),
+    SemanticValue("single_flower.right.aimed", {GEN_TH12: "2"}),
+    SemanticValue("single_flower.right.fixed", {GEN_TH12: "3"}),
     SemanticValue("double_flower.aimed", {GEN_TH13_PLUS: "9", GEN_TH12: "4", GEN_TH10_TH11: "4"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11)),
     SemanticValue("double_flower.fixed", {GEN_TH13_PLUS: "10", GEN_TH12: "5", GEN_TH10_TH11: "5"}, lossy_targets=(GEN_TH12, GEN_TH10_TH11)),
 )
@@ -499,6 +507,9 @@ def bullet_transform_mode_semantic(game: str, mode: Any) -> str:
     semantic = BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE.get((generation_for_game(game), raw))
     if semantic:
         return semantic.semantic
+    for candidate in BULLET_TRANSFORM_MODES:
+        if raw in candidate.aliases:
+            return candidate.semantic
     return f"raw:{raw}"
 
 
@@ -803,6 +814,12 @@ def spread_semantic(game: str, style: Any) -> dict[str, Any]:
                 "aimed": parts[2] == "aimed",
                 "source_raw": raw,
             }
+        return {
+            "semantic": style_semantic.semantic,
+            "spread_family": parts[0],
+            "source_raw": raw,
+            "aimed": parts[-1] == "aimed",
+        }
     return {"semantic": f"raw:{raw}", "spread_family": "raw", "raw": raw, "aimed": raw in {"0", "2", "4", "9"}}
 
 
