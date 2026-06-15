@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import base64
+import hashlib
 import json
-from dataclasses import fields
+import re
 from pathlib import Path
 from typing import Any
 
@@ -176,12 +178,172 @@ def object_from_dict(data: dict[str, Any]) -> object:
     return obj
 
 
+FUNC_HEADER_RE = re.compile(r"^\s*(?:void|sub)\s+(\w+)\s*\(([^)]*)\)\s*(\{)?\s*(?://.*)?$")
+RESOURCE_START_RE = re.compile(r"^\s*(anim|ecli|timeline)\s*\{")
+
+
+def detect_text_encoding(source_bytes: bytes) -> str:
+    for encoding in ("utf-8-sig", "utf-8", "cp932", "shift_jis"):
+        try:
+            source_bytes.decode(encoding)
+            return encoding
+        except UnicodeDecodeError:
+            continue
+    return "utf-8"
+
+
+def split_source_lines(source_bytes: bytes) -> list[str]:
+    encoding = detect_text_encoding(source_bytes)
+    return source_bytes.decode(encoding, errors="replace").splitlines(keepends=True)
+
+
+def line_ending(line: str) -> str:
+    if line.endswith("\r\n"):
+        return "\\r\\n"
+    if line.endswith("\n"):
+        return "\\n"
+    if line.endswith("\r"):
+        return "\\r"
+    return ""
+
+
+def line_without_ending(line: str) -> str:
+    return line[:-2] if line.endswith("\r\n") else line[:-1] if line.endswith(("\n", "\r")) else line
+
+
+def build_source_layout(source_bytes: bytes) -> dict[str, Any]:
+    lines = split_source_lines(source_bytes)
+    items: list[dict[str, Any]] = []
+    resource_stack: dict[str, Any] | None = None
+    current_function: dict[str, Any] | None = None
+    pending_function: dict[str, Any] | None = None
+    brace_depth = 0
+    for index, physical_line in enumerate(lines, 1):
+        body = line_without_ending(physical_line)
+        stripped = body.strip()
+        item: dict[str, Any] = {"line_no": index, "raw": body, "ending": line_ending(physical_line)}
+
+        if resource_stack is not None:
+            item["kind"] = "resource_line"
+            item["resource"] = resource_stack["name"]
+            if stripped == "}":
+                item["kind"] = "resource_end"
+                resource_stack = None
+            items.append(item)
+            continue
+
+        if current_function is not None:
+            item["function"] = current_function["name"]
+            if stripped == "{" and brace_depth == 0:
+                item["kind"] = "function_open"
+                brace_depth = 1
+                items.append(item)
+                continue
+            if stripped == "}" and brace_depth <= 1:
+                item["kind"] = "function_end"
+                current_function["end_line"] = index
+                current_function = None
+                brace_depth = 0
+                items.append(item)
+                continue
+            if "{" in stripped:
+                brace_depth += stripped.count("{")
+            if "}" in stripped:
+                brace_depth = max(1, brace_depth - stripped.count("}"))
+            item["kind"] = classify_layout_line(stripped)
+            items.append(item)
+            continue
+
+        match = FUNC_HEADER_RE.match(body)
+        if match:
+            item["kind"] = "function_header"
+            item["function"] = match.group(1)
+            item["params"] = match.group(2).strip()
+            item["header_has_open_brace"] = bool(match.group(3))
+            current_function = {"name": match.group(1), "start_line": index, "params": match.group(2).strip()}
+            brace_depth = 1 if match.group(3) else 0
+            pending_function = None if match.group(3) else current_function
+            items.append(item)
+            continue
+
+        if pending_function is not None and stripped == "{":
+            item["kind"] = "function_open"
+            item["function"] = pending_function["name"]
+            current_function = pending_function
+            pending_function = None
+            brace_depth = 1
+            items.append(item)
+            continue
+
+        resource_match = RESOURCE_START_RE.match(body)
+        if resource_match:
+            item["kind"] = "resource_inline" if "}" in stripped else "resource_start"
+            item["resource"] = resource_match.group(1)
+            if item["kind"] == "resource_start":
+                resource_stack = {"name": resource_match.group(1)}
+            items.append(item)
+            continue
+
+        item["kind"] = classify_layout_line(stripped)
+        items.append(item)
+    return {"encoding": detect_text_encoding(source_bytes), "line_count": len(lines), "items": items}
+
+
+def classify_layout_line(stripped: str) -> str:
+    if not stripped:
+        return "blank"
+    if stripped.startswith("//"):
+        return "comment"
+    if stripped.startswith("!"):
+        return "difficulty"
+    if stripped.startswith("+") and stripped.endswith(":"):
+        return "time_label"
+    if stripped.endswith(":"):
+        return "label"
+    if stripped.startswith("var "):
+        return "var"
+    if stripped.startswith("@"): 
+        return "call"
+    if stripped.startswith(("goto ", "if ", "unless ")):
+        return "branch"
+    if stripped.startswith("return"):
+        return "return"
+    if "ins_" in stripped:
+        return "instruction"
+    if "=" in stripped and stripped.endswith(";"):
+        return "assign"
+    return "raw"
+
+
+def emit_layout_source(data: dict[str, Any]) -> str | None:
+    layout = data.get("source_layout")
+    if not isinstance(layout, dict):
+        return None
+    items = layout.get("items")
+    if not isinstance(items, list):
+        return None
+    return "".join(str(item.get("raw", "")) + decode_line_ending(str(item.get("ending", ""))) for item in items)
+
+
+def decode_line_ending(value: str) -> str:
+    return {"\\r\\n": "\r\n", "\\n": "\n", "\\r": "\r"}.get(value, value)
+
+
 def build_eclir(path: str | Path) -> dict[str, Any]:
+    path = Path(path)
+    source_bytes = path.read_bytes()
+    source_encoding = detect_text_encoding(source_bytes)
+    source_text = source_bytes.decode(source_encoding, errors="replace")
     program = parse_decl(str(path))
     objects = lift_all_objects(program)
     return {
         "schema": "th062.eclir",
         "schema_version": SCHEMA_VERSION,
+        "source_bytes_base64": base64.b64encode(source_bytes).decode("ascii"),
+        "source_text": source_text,
+        "source_encoding": source_encoding,
+        "source_sha256": hashlib.sha256(source_bytes).hexdigest(),
+        "source_layout": build_source_layout(source_bytes),
         "program": program_to_dict(program),
         "summary": summarize_by_kind(objects),
         "objects": [object_to_dict(obj) for obj in objects],
@@ -205,7 +367,29 @@ def emit_eclir_json(path: str | Path) -> str:
     return json.dumps(build_eclir(path), ensure_ascii=False, indent=2)
 
 
-def emit_roundtrip_source(program: Program) -> str:
+def emit_layout_roundtrip_source(data: dict[str, Any]) -> str | None:
+    return emit_layout_source(data)
+
+
+def emit_layout_roundtrip_bytes(data: dict[str, Any]) -> bytes | None:
+    text = emit_layout_source(data)
+    if text is None:
+        return None
+    layout = data.get("source_layout") if isinstance(data.get("source_layout"), dict) else {}
+    encoding = str(layout.get("encoding") or data.get("source_encoding") or "utf-8")
+    return text.encode(encoding, errors="replace")
+
+
+def emit_roundtrip_bytes(program: Program, data: dict[str, Any] | None = None, canonical: bool = False) -> bytes:
+    if data and not canonical and isinstance(data.get("source_bytes_base64"), str):
+        return base64.b64decode(data["source_bytes_base64"])
+    return emit_roundtrip_source(program, data if canonical else None, canonical=True).encode()
+
+
+def emit_roundtrip_source(program: Program, data: dict[str, Any] | None = None, canonical: bool = False) -> str:
+    if data and not canonical and isinstance(data.get("source_text"), str):
+        text = data["source_text"]
+        return text if text.endswith("\n") else text + "\n"
     lines: list[str] = []
     for resource, entries in program.resources.items():
         quoted = "; ".join(f'"{entry}"' for entry in entries)
@@ -231,3 +415,84 @@ def emit_roundtrip_source(program: Program) -> str:
                 lines.append(raw if raw.startswith("!") else f"    {raw.strip()}")
         lines.append("}")
     return "\n".join(lines) + "\n"
+
+
+def validate_eclir_data(data: dict[str, Any]) -> dict[str, Any]:
+    program = program_from_dict(data.get("program", {}) or {})
+    source_text = data.get("source_text")
+    source_bytes_base64 = data.get("source_bytes_base64")
+    result: dict[str, Any] = {
+        "schema": data.get("schema"),
+        "schema_version": data.get("schema_version"),
+        "game": program.game,
+        "functions": len(program.functions),
+        "instructions": sum(len(func.body) for func in program.functions),
+        "resources": {key: len(value) for key, value in program.resources.items()},
+        "objects": len(data.get("objects", []) or []),
+        "ok": True,
+        "warnings": [],
+    }
+    reparsed: Program | None = None
+    if isinstance(source_bytes_base64, str):
+        source_bytes = base64.b64decode(source_bytes_base64)
+        digest = hashlib.sha256(source_bytes).hexdigest()
+        result["source_sha256_actual"] = digest
+        result["source_sha256_expected"] = data.get("source_sha256")
+        if data.get("source_sha256") and digest != data.get("source_sha256"):
+            result["ok"] = False
+            result["warnings"].append("source_bytes sha256 mismatch")
+        layout_bytes = emit_layout_roundtrip_bytes(data)
+        if layout_bytes is not None:
+            layout_digest = hashlib.sha256(layout_bytes).hexdigest()
+            result["source_layout_sha256_actual"] = layout_digest
+            if layout_digest != digest:
+                result["ok"] = False
+                result["warnings"].append("source_layout reconstruction differs from source bytes")
+        reparsed = parse_decl_bytes(source_bytes, str(data.get("program", {}).get("source", "<eclir>")))
+    elif isinstance(source_text, str):
+        digest = hashlib.sha256(source_text.encode()).hexdigest()
+        result["source_sha256_actual"] = digest
+        result["source_sha256_expected"] = data.get("source_sha256")
+        if data.get("source_sha256") and digest != data.get("source_sha256"):
+            result["ok"] = False
+            result["warnings"].append("source_text sha256 mismatch")
+        reparsed = parse_decl_text(source_text, str(data.get("program", {}).get("source", "<eclir>")))
+        result["warnings"].append("source_bytes_base64 missing; exact byte roundtrip is unavailable")
+    else:
+        result["warnings"].append("source_text/source_bytes missing; roundtrip will be canonical only")
+    if reparsed is not None:
+        if len(reparsed.functions) != len(program.functions):
+            result["ok"] = False
+            result["warnings"].append(f"function count mismatch source={len(reparsed.functions)} program={len(program.functions)}")
+        if sum(len(func.body) for func in reparsed.functions) != result["instructions"]:
+            result["ok"] = False
+            result["warnings"].append("instruction count mismatch between source and program")
+    return result
+
+
+def parse_decl_text(source_text: str, source_name: str) -> Program:
+    import tempfile
+
+    with tempfile.NamedTemporaryFile("w", suffix=".decl", delete=False) as handle:
+        handle.write(source_text)
+        temp_path = handle.name
+    try:
+        program = parse_decl(temp_path)
+        program.source = source_name
+        return program
+    finally:
+        Path(temp_path).unlink(missing_ok=True)
+
+
+def parse_decl_bytes(source_bytes: bytes, source_name: str) -> Program:
+    import tempfile
+
+    with tempfile.NamedTemporaryFile("wb", suffix=".decl", delete=False) as handle:
+        handle.write(source_bytes)
+        temp_path = handle.name
+    try:
+        program = parse_decl(temp_path)
+        program.source = source_name
+        return program
+    finally:
+        Path(temp_path).unlink(missing_ok=True)

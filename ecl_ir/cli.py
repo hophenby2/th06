@@ -4,6 +4,7 @@ import argparse
 import copy
 import json
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -18,7 +19,7 @@ from .transform_ir import BulletTransformIR, TransformTimelineState, build_th12_
 from .luastg_backend import emit_luastg_file
 from .luastg_lifter import emit_luastg_ir_json
 from .luastg_normalizer import emit_normalized_json, normalize_luastg_file
-from .ir_file import build_eclir, dump_eclir, emit_roundtrip_source, load_eclir
+from .ir_file import build_eclir, dump_eclir, emit_layout_roundtrip_bytes, emit_roundtrip_bytes, emit_roundtrip_source, load_eclir, validate_eclir_data
 
 
 def load_objects(path: str):
@@ -1695,13 +1696,39 @@ def cmd_emit_ir(args: argparse.Namespace) -> int:
 
 
 def cmd_roundtrip_ir(args: argparse.Namespace) -> int:
-    program, _objects, _data = load_eclir(args.input)
-    output = emit_roundtrip_source(program)
-    if args.output:
-        Path(args.output).write_text(output)
+    program, _objects, data = load_eclir(args.input)
+    if args.canonical:
+        output = emit_roundtrip_source(program, data, canonical=True)
+        if args.output:
+            Path(args.output).write_text(output)
+        else:
+            print(output, end="")
+    elif args.layout:
+        output_bytes = emit_layout_roundtrip_bytes(data)
+        if output_bytes is None:
+            raise SystemExit("IR has no source_layout; use exact or --canonical")
+        if args.output:
+            Path(args.output).write_bytes(output_bytes)
+        else:
+            sys.stdout.buffer.write(output_bytes)
     else:
-        print(output, end="")
+        output_bytes = emit_roundtrip_bytes(program, data)
+        if args.output:
+            Path(args.output).write_bytes(output_bytes)
+        else:
+            sys.stdout.buffer.write(output_bytes)
     return 0
+
+
+def cmd_validate_ir(args: argparse.Namespace) -> int:
+    _program, _objects, data = load_eclir(args.input)
+    result = validate_eclir_data(data)
+    text = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+    if args.output:
+        Path(args.output).write_text(text)
+    else:
+        print(text, end="")
+    return 0 if result.get("ok") else 1
 
 
 def cmd_compile_ir(args: argparse.Namespace) -> int:
@@ -1963,7 +1990,14 @@ def main(argv: list[str] | None = None) -> int:
     roundtrip_ir = sub.add_parser("roundtrip-ir", help="reconstruct source-like .decl from standalone .eclir.json")
     roundtrip_ir.add_argument("input")
     roundtrip_ir.add_argument("--output", "-o", help="write .decl to file instead of stdout")
+    roundtrip_ir.add_argument("--canonical", action="store_true", help="emit canonicalized source from Program IR instead of exact source_text")
+    roundtrip_ir.add_argument("--layout", action="store_true", help="emit source reconstructed from source_layout instead of source_bytes_base64")
     roundtrip_ir.set_defaults(func=cmd_roundtrip_ir)
+
+    validate_ir = sub.add_parser("validate-ir", help="validate standalone .eclir.json consistency")
+    validate_ir.add_argument("input")
+    validate_ir.add_argument("--output", "-o", help="write validation JSON to file instead of stdout")
+    validate_ir.set_defaults(func=cmd_validate_ir)
 
     compile_ir = sub.add_parser("compile-ir", help="compile standalone .eclir.json to target .decl")
     compile_ir.add_argument("input")
