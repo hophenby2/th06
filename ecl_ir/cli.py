@@ -18,6 +18,7 @@ from .transform_ir import BulletTransformIR, TransformTimelineState, build_th12_
 from .luastg_backend import emit_luastg_file
 from .luastg_lifter import emit_luastg_ir_json
 from .luastg_normalizer import emit_normalized_json, normalize_luastg_file
+from .ir_file import build_eclir, dump_eclir, emit_roundtrip_source, load_eclir
 
 
 def load_objects(path: str):
@@ -1683,6 +1684,36 @@ def emit_semantic_object_block(objects: list[object], target: str) -> list[str]:
     return lines
 
 
+def cmd_emit_ir(args: argparse.Namespace) -> int:
+    data = build_eclir(args.input)
+    text = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
+    if args.output:
+        Path(args.output).write_text(text)
+    else:
+        print(text, end="")
+    return 0
+
+
+def cmd_roundtrip_ir(args: argparse.Namespace) -> int:
+    program, _objects, _data = load_eclir(args.input)
+    output = emit_roundtrip_source(program)
+    if args.output:
+        Path(args.output).write_text(output)
+    else:
+        print(output, end="")
+    return 0
+
+
+def cmd_compile_ir(args: argparse.Namespace) -> int:
+    program, objects, _data = load_eclir(args.input)
+    output = emit_transpile(program, objects, args.target)
+    if args.output:
+        Path(args.output).write_text(output)
+    else:
+        print(output)
+    return 0
+
+
 def cmd_transpile(args: argparse.Namespace) -> int:
     program, objects = load_objects(args.input)
     output = emit_transpile(program, objects, args.target)
@@ -1922,6 +1953,23 @@ def main(argv: list[str] | None = None) -> int:
     compile_cmd.add_argument("--kind", default="BulletEmitter", choices=["BulletEmitter", "LaserEmitter", "Movement", "Animation", "Enemy", "BossPattern", "Timeline", "EffectEmitter", "FamiliarSpawner", "AutoBulletTimer", "BossTimer", "MotionModifier"])
     compile_cmd.add_argument("--index", type=int, default=0, help="0-based lifted object index within --kind")
     compile_cmd.set_defaults(func=cmd_compile)
+
+
+    emit_ir = sub.add_parser("emit-ir", help="emit standalone .eclir.json from .decl")
+    emit_ir.add_argument("input")
+    emit_ir.add_argument("--output", "-o", help="write .eclir.json to file instead of stdout")
+    emit_ir.set_defaults(func=cmd_emit_ir)
+
+    roundtrip_ir = sub.add_parser("roundtrip-ir", help="reconstruct source-like .decl from standalone .eclir.json")
+    roundtrip_ir.add_argument("input")
+    roundtrip_ir.add_argument("--output", "-o", help="write .decl to file instead of stdout")
+    roundtrip_ir.set_defaults(func=cmd_roundtrip_ir)
+
+    compile_ir = sub.add_parser("compile-ir", help="compile standalone .eclir.json to target .decl")
+    compile_ir.add_argument("input")
+    compile_ir.add_argument("--target", required=True, choices=["th06", "th07", "th08", "th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"])
+    compile_ir.add_argument("--output", "-o", help="write target .decl to file instead of stdout")
+    compile_ir.set_defaults(func=cmd_compile_ir)
 
 
     transpile = sub.add_parser("transpile", help="lower a whole .decl file as a structured draft")
