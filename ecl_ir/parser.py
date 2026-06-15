@@ -13,7 +13,7 @@ LABEL_RE = re.compile(r"^\s*([A-Za-z_]\w*)\s*:\s*(?://.*)?$")
 TIME_RE = re.compile(r"^\s*\+(\d+)\s*:\s*(?://(.*))?$")
 GOTO_RE = re.compile(r"^\s*goto\s+([A-Za-z_]\w*)\s*@\s*([^;]+)\s*;")
 COND_GOTO_RE = re.compile(r"^\s*(if|unless)\s*\((.*)\)\s*goto\s+([A-Za-z_]\w*)\s*@\s*([^;]+)\s*;")
-CALL_RE = re.compile(r"^\s*@([A-Za-z_]\w*)\s*\((.*)\)\s*(async)?\s*;")
+CALL_RE = re.compile(r"^\s*@([A-Za-z_]\w*)\s*\((.*)\)\s*(async(?:\s+[-+]?\d+)?)?\s*;")
 RETURN_RE = re.compile(r"^\s*return\s*;")
 VAR_RE = re.compile(r"^\s*var\s+(.+?)\s*;")
 ASSIGN_RE = re.compile(r"^\s*((?:[%$][A-Za-z0-9_]+)|(?:\[-?\d+(?:\.0f)?\]))\s*=\s*(.+?)\s*;")
@@ -82,7 +82,13 @@ def classify_statement(raw_line: str, line_no: int, difficulty: str | None = Non
     if m := GOTO_RE.match(raw_line):
         return Statement("goto", raw_line.rstrip(), line_no, text, difficulty, {"label": m.group(1), "time": m.group(2).strip()})
     if m := CALL_RE.match(raw_line):
-        return Statement("async_call" if m.group(3) else "call", raw_line.rstrip(), line_no, text, difficulty, {"function": m.group(1), "args": split_args(m.group(2))})
+        async_text = (m.group(3) or "").strip()
+        attrs = {"function": m.group(1), "args": split_args(m.group(2))}
+        if async_text:
+            parts = async_text.split()
+            if len(parts) > 1:
+                attrs["async_slot"] = parts[1]
+        return Statement("async_call" if async_text else "call", raw_line.rstrip(), line_no, text, difficulty, attrs)
     if RETURN_RE.match(raw_line):
         return Statement("return", raw_line.rstrip(), line_no, text, difficulty)
     if m := VAR_RE.match(raw_line):

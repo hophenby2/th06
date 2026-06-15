@@ -247,6 +247,9 @@ def annotate_definition_prefix(emitter: BulletEmitter, apply_instruction) -> Non
         previous_line = ins.line_no
         if ins.opcode in {401, 501, 601}:
             break
+    prefix_transforms = prefix.transforms
+    if emitter.game in TH12_GAMES:
+        prefix_transforms = annotate_th12_to_th13plus_transforms(prefix.transforms, emitter.game, "th15")
     emitter.semantics["definition_state"] = {
         "origin": deepcopy(prefix.origin),
         "appearance": deepcopy(prefix.appearance),
@@ -256,13 +259,9 @@ def annotate_definition_prefix(emitter: BulletEmitter, apply_instruction) -> Non
         "sound": deepcopy(prefix.sound),
         "flags": deepcopy(prefix.flags),
         "semantics": deepcopy(prefix.semantics),
-        "transforms": [deepcopy(transform.__dict__) for transform in prefix.transforms],
+        "transforms": [deepcopy(transform.__dict__) for transform in prefix_transforms],
         "raw_lines": [ins.line_no for ins in prefix.raw],
     }
-    emitter.semantics["definition_state"]["transforms"] = [
-        deepcopy(transform.__dict__)
-        for transform in annotate_th12_to_th13plus_transforms(prefix.transforms, emitter.game, "th15")
-    ]
 
 
 def aim_mode_name(raw: str) -> str:
@@ -421,6 +420,8 @@ def lift_th10_function(game: str, func: Function) -> list[BulletEmitter]:
             emitter.raw.append(ins)
             append_emitter_op(emitter, ins)
             apply_th10(emitter, ins)
+    for emitter in emitters:
+        annotate_definition_prefix(emitter, apply_th10)
     return emitters
 
 

@@ -71,7 +71,11 @@ def generation_for_game(game: str) -> str:
 def lifted_raw_coverage_policy(kind: str, source_game: str, target: str, family: str = "") -> str:
     source_generation = generation_for_game(source_game)
     target_generation = generation_for_game(target)
-    if kind == "BulletEmitter" and family == "th12" and source_generation == GEN_TH12 and target_generation == GEN_TH13_PLUS:
+    if kind != "BulletEmitter":
+        return "default"
+    if family == "th12" and source_generation == GEN_TH12 and target_generation == GEN_TH13_PLUS:
+        return "contiguous_setup_prefix"
+    if family == "th10_slot" and source_generation == GEN_TH10_TH11 and target_generation in {GEN_TH12, GEN_TH13_PLUS}:
         return "contiguous_setup_prefix"
     return "default"
 
@@ -621,5 +625,8 @@ def remap_create_item_policy(source_game: str, target: str, value: str) -> str:
     if generation_for_game(source_game) == generation_for_game(target):
         return text
     if generation_for_game(source_game) == GEN_TH10_TH11 and generation_for_game(target) == GEN_TH13_PLUS:
-        return "0" if text == "0" else "1"
+        # TH13+ stage enemy creates use policy 1 in native stage scripts; actual drop color/type
+        # is represented by explicit dropMain/dropExtra ops on the child.  Raw TH10 policy
+        # values 2/3 can select target-side presets that do not match TH15 stage enemies.
+        return "1"
     return encode_drop_type(drop_type_semantic(source_game, text), target, text)

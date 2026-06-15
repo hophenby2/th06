@@ -378,6 +378,44 @@ def compile_th08_anm_alias(event: dict[str, object], target: str) -> str | None:
     return None
 
 
+def compile_th10_stage_wrapper_anm(event: dict[str, object], target: str, context: dict[str, object] | None = None) -> str | None:
+    if str(event.get("source_game") or "") not in {"th10", "th11"}:
+        return None
+    if generation_for_game(target) != "th13_plus":
+        return None
+    if canonical_anm_op_key(str(event.get("op_key") or "")) != "anm.set_main":
+        return None
+    args = [str(arg) for arg in event.get("args", [])]
+    if len(args) != 2 or args[0].strip() == "0":
+        return None
+    role_hint = anm_role_hint(event, context)
+    if role_hint != "stage":
+        return None
+    script = parse_int_literal(args[1])
+    native_combo = {
+        45: ("0", None),
+        46: ("5", None),
+        47: ("35", "93"),
+        48: ("40", "93"),
+    }.get(script)
+    if native_combo is None:
+        return None
+    select_opcode = target_opcode_for_op_key("anm.select", target)
+    main_opcode = target_opcode_for_op_key("anm.set_main", target)
+    sprite_opcode = target_opcode_for_op_key("anm.set_sprite", target)
+    if not select_opcode or not main_opcode or not sprite_opcode:
+        return None
+    main_script, sprite_script = native_combo
+    lines = [
+        "// TH10/11 stage wrapper ANM lowered to TH15 native st01 enemy combo",
+        f"ins_{select_opcode}(2);",
+        f"ins_{main_opcode}(0, {main_script});",
+    ]
+    if sprite_script is not None:
+        lines.append(f"ins_{sprite_opcode}(1, {sprite_script});")
+    return "\n".join(lines)
+
+
 def parse_int_literal(value: str) -> int | None:
     if re.fullmatch(r"-?\d+", str(value).strip()):
         return int(str(value).strip())
@@ -566,6 +604,8 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
     if lowered := compile_th08_conditional_jump(event, target):
         return lowered
     if lowered := compile_th08_anm_alias(event, target):
+        return lowered
+    if lowered := compile_th10_stage_wrapper_anm(event, target, context):
         return lowered
     if lowered := compile_special_semantic_event(event, target, context):
         return lowered
@@ -948,7 +988,13 @@ def enemy_create_op_key_for_target(create: dict[str, object], target: str, fallb
     if generation_for_game(target) not in {"th10_th11", "th12", "th13_plus"}:
         return fallback
     suffix = "_func" if create.get("func") else ""
-    if create.get("mirror"):
+    absolute = create.get("position_mode") == "absolute"
+    mirror = bool(create.get("mirror"))
+    if absolute and mirror:
+        return f"enemy.create_abs_mirror{suffix}"
+    if absolute:
+        return f"enemy.create_abs{suffix}"
+    if mirror:
         return f"enemy.create_mirror{suffix}"
     return f"enemy.create{suffix}"
 

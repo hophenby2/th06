@@ -320,9 +320,6 @@ def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
             obj = make_obj(AnimationOp, program, func, ins, family)
             op_name = animation[ins.opcode]
             op_key = op_key_for_opcode(program.game, ins.opcode)
-            if op_name == "anmSetMain" and len(ins.args) >= 2 and str(ins.args[0]).strip() != "0":
-                op_name = "anmSetSprite"
-                op_key = "animation.set_sprite"
             obj.fields.update({"op": op_name, "op_key": op_key, "args": ins.args, "difficulty": ins.difficulty})
             if op_name in {"anmSetMain", "anmSetSprite"} and len(ins.args) >= 2:
                 obj.fields["display"] = {

@@ -1512,6 +1512,8 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
     if kind in {"goto", "conditional_goto", "call", "async_call", "return", "var", "assign"}:
         suffix = "" if text.endswith(";") else ";"
         statement_text = remap_call_statement_text(event, source_game, target, context) if kind in {"call", "async_call"} else f"{text}{suffix}"
+        if kind == "async_call" and event.get("async_slot") is not None and statement_text.endswith(" async;"):
+            statement_text = statement_text[:-1] + f" {event.get('async_slot')};"
         ranked = emit_ranked_text_from_literals(statement_text, event.get("difficulty_literals", []))
         if ranked:
             return ranked
@@ -1538,7 +1540,9 @@ def remap_call_statement_text(event: dict[str, object], source_game: str, target
         if is_stage_decl_path(source_path) and function_uses_stage_enemy_anm_args(function) and args:
             remapped = remap_th10_stage_enemy_call_anm_args(args, target)
             if remapped != args:
-                async_suffix = " async" if event.get("kind") == "async_call" else ""
+                async_suffix = ""
+                if event.get("kind") == "async_call":
+                    async_suffix = " async" + (f" {event.get('async_slot')}" if event.get("async_slot") is not None else "")
                 return f"@{function}({', '.join(remapped)}){async_suffix};"
     if source_game != target and source_game == "th12" and target == "th15":
         source_path = str(context.get("source_path", "") if context else "").replace("\\", "/")
@@ -1548,7 +1552,9 @@ def remap_call_statement_text(event: dict[str, object], source_game: str, target
             remapped = remap_th12_stage_enemy_main_arg_to_target(args[0], target)
             if remapped is not None:
                 args = [remapped, *args[1:]]
-                async_suffix = " async" if event.get("kind") == "async_call" else ""
+                async_suffix = ""
+                if event.get("kind") == "async_call":
+                    async_suffix = " async" + (f" {event.get('async_slot')}" if event.get("async_slot") is not None else "")
                 return f"@{function}({', '.join(args)}){async_suffix};"
     return f"{text}{suffix}"
 
