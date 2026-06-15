@@ -1598,10 +1598,23 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         raw_expr = text.strip()
         if raw_expr.endswith(";"):
             raw_expr = raw_expr[:-1].strip()
-        if re.fullmatch(r"[%$]?[A-Za-z_][A-Za-z0-9_]*|[-+]?\d+(?:\.\d+)?f?", raw_expr):
+        if is_stack_expression_statement(raw_expr):
             return wrap_event_rank([f"    {raw_expr};"], event, target)
         return [f"    // raw: {text}"]
     return []
+
+def is_stack_expression_statement(expr: str) -> bool:
+    text = str(expr).strip()
+    if not text:
+        return False
+    if any(token in text for token in (";", "{", "}", "@", "goto", "return", "var ")):
+        return False
+    if re.fullmatch(r"[%$]?[A-Za-z_][A-Za-z0-9_]*|[-+]?\d+(?:\.\d+)?f?", text):
+        return True
+    if re.fullmatch(r"\[-?\d+(?:\.0f)?\]", text):
+        return True
+    allowed = r"[A-Za-z0-9_\s%$\[\]\.\+\-\*/(),]+"
+    return re.fullmatch(allowed, text) is not None
 
 def remap_call_statement_text(event: dict[str, object], source_game: str, target: str, context: dict[str, object] | None = None) -> str:
     text = str(event.get("text") or "")

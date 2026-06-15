@@ -106,8 +106,8 @@ void Boss()
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
     ins_302(3);
     ins_306(0, 0);
-    // semantic op_key lowering th10->th15: unit.move_limit
-    // unsupported semantic op without IR lowering policy for th15: unit.move_limit(0.0f, 96.0f, 280.0f, 64.0f)
+    // semantic op_key lowering th10->th15: movement.move_limit
+    ins_504(0.0f, 96.0f, 280.0f, 64.0f);
     !E
     // semantic op_key lowering th10->th15: unit.stars
     ins_540(2);
@@ -355,8 +355,8 @@ void Boss2()
     ins_525();
     // semantic op_key lowering th10->th15: boss.spell_end
     ins_523();
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     // semantic op_key lowering th10->th15: unit.set_invuln
     ins_515(60);
     unless ([-9986] == 0) goto Boss2_608 @ 0;
@@ -585,8 +585,8 @@ void Boss3()
     ins_525();
     // semantic op_key lowering th10->th15: boss.spell_end
     ins_523();
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     // semantic op_key lowering th10->th15: unit.set_invuln
     ins_515(120);
     unless ([-9986] == 0) goto Boss3_648 @ 0;
@@ -744,8 +744,8 @@ void BossCard1()
     // semantic op_key lowering th10->th15: boss.spell3
     ins_539(44, 3600, 1000000, "岐符「サルタクロス」");
     !*
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     // object Mode source_line=455 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
     // object Movement source_line=455 family=th10
@@ -757,7 +757,7 @@ void BossCard1()
     ins_516(7);
     // object Enemy source_line=458 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
     // semantic op_key lowering th10->th15: enemy.enm_kill_all
     ins_525();
     // object Animation source_line=460 family=th10_th11
@@ -912,8 +912,8 @@ void BossCard2()
     // semantic op_key lowering th10->th15: boss.spell_ex
     // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(49, 3600, 1000000, "風神「二百十\日」")
     !*
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     // object Mode source_line=538 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
     // object Movement source_line=538 family=th10
@@ -925,7 +925,7 @@ void BossCard2()
     ins_516(7);
     // object Enemy source_line=541 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
     // semantic op_key lowering th10->th15: enemy.enm_kill_all
     ins_525();
     @BossCharge() async;
@@ -976,8 +976,8 @@ void BossCard2()
     ins_609(0, 2, 0, 256, 120, -999999, -999999.0f, -999999.0f);
     // object Mode source_line=559 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
-    // semantic op_key lowering th10->th15: raw.th10_th11.411
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.411(1, 0)
+    // semantic op_key lowering th10->th15: bullet.copy
+    ins_614(1, 0);
     // object Mode source_line=560 family=bullet_transform_mode
     // Mode IR metadata: bullet transform mode raw=32 semantic=tangent_accel target_th12=8 target_th15=8
     // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
@@ -1113,8 +1113,8 @@ void BossCard3()
     !*
     // semantic op_key lowering th10->th15: raw.th10_th11.362
     // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.362()
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     // object Mode source_line=636 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
     // object Movement source_line=636 family=th10
@@ -1126,7 +1126,7 @@ void BossCard3()
     ins_516(7);
     // object Enemy source_line=639 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
     // semantic op_key lowering th10->th15: enemy.enm_kill_all
     ins_525();
     // semantic op_key lowering th10->th15: movement.move_limit_reset
@@ -1338,13 +1338,13 @@ void BossCard3()
     // Mode IR metadata: movement tween mode raw=0.0f semantic=mode_0.0f target=0.0f
     // dynamic bullet config lowering th10->th15: ins_403 -> ins_603
     ins_603(0, 0.0f, 0.0f);
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     goto BossCard3_5188 @ 360;
     BossCard3_4496:
     // object Enemy source_line=719 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("BossCard3_at2", 0.0f, 0.0f, 0, 0, 1);
+    ins_300("BossCard3_at2", 0.0f, 0.0f, 0, 0, 0);
     // object Movement source_line=720 family=th10
     // movement lowering th10 -> th15: movement.position.set -> ins_400
     ins_400(-384.0f, 96.0f + ([-9987.0f] * 96.0f));
@@ -1356,7 +1356,7 @@ void BossCard3()
     ins_548(10, 10, 10, 5);
     // object Enemy source_line=724 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("BossCard3_at3", 0.0f, 0.0f, 0, 0, 1);
+    ins_300("BossCard3_at3", 0.0f, 0.0f, 0, 0, 0);
     // object Movement source_line=725 family=th10
     // movement lowering th10 -> th15: movement.position.set -> ins_400
     ins_400(384.0f, 96.0f + ([-9987.0f] * 96.0f));
@@ -1635,8 +1635,8 @@ void BossCard4()
     ins_511(2300);
     // semantic op_key lowering th10->th15: unit.life_marker
     ins_527(0, 2300.0f, -24448);
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     // semantic op_key lowering th10->th15: enemy.enm_kill_all
     ins_525();
     unless ([-9959] >= 1) goto BossCard4_392 @ 0;
@@ -1664,7 +1664,7 @@ void BossCard4()
     BossCard4_392:
     // object Enemy source_line=849 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
     // object Mode source_line=850 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
     // object Movement source_line=850 family=th10
@@ -2083,18 +2083,18 @@ void BossDead()
     unless ([-9986] == 0) goto BossDead_308 @ 0;
     // object Enemy source_line=1083 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak2", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak2", 0.0f, 0.0f, 9999, 0, 0);
     goto BossDead_364 @ 0;
     BossDead_308:
     // object Enemy source_line=1086 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak2_ni", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak2_ni", 0.0f, 0.0f, 9999, 0, 0);
     BossDead_364:
     // semantic op_key lowering th10->th15: enemy.enm_kill_all
     ins_525();
     +60:
-    // semantic op_key lowering th10->th15: raw.th10_th11.410
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.410()
+    // semantic op_key lowering th10->th15: bullet.clear_all
+    ins_613();
     // semantic op_key lowering th10->th15: boss.spell_end
     ins_523();
     // semantic op_key lowering th10->th15: unit.drop_main
@@ -3408,8 +3408,8 @@ void Girl03_at()
     ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
     // object Mode source_line=1751 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
-    // semantic op_key lowering th10->th15: raw.th10_th11.411
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.411(1, 0)
+    // semantic op_key lowering th10->th15: bullet.copy
+    ins_614(1, 0);
     // object Mode source_line=1752 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
     // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
@@ -3663,7 +3663,7 @@ void MBoss()
     [-9947] = 1;
     ins_514(1, 0, 1800, "MBossDead");
     // semantic op_key lowering th10->th15: boss.set_timeout
-    // unsupported semantic op without IR lowering policy for th15: boss.set_timeout(1, "MBossEscape")
+    ins_521(1, "MBossEscape");
     // semantic op_key lowering th10->th15: unit.set_invuln
     ins_515(200);
     // semantic op_key lowering th10->th15: boss.set_chapter
@@ -3674,8 +3674,8 @@ void MBoss()
     // movement lowering th10 -> th15: movement.position.tween -> ins_401
     ins_401(60, 4, 0.0f, 128.0f);
     +60:
-    // semantic op_key lowering th10->th15: unit.move_limit
-    // unsupported semantic op without IR lowering policy for th15: unit.move_limit(0.0f, 96.0f, 280.0f, 64.0f)
+    // semantic op_key lowering th10->th15: movement.move_limit
+    ins_504(0.0f, 96.0f, 280.0f, 64.0f);
     goto MBoss_684 @ 140;
     MBoss_460:
     [-9981.0f] = 2.019595f;
@@ -3706,8 +3706,8 @@ void MBoss()
     // object Movement source_line=1900 family=th10
     // movement lowering th10 -> th15: movement.position.tween -> ins_401
     ins_401(60, 4, 0.0f, -32.0f);
-    // semantic op_key lowering th10->th15: raw.th10_th11.410
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.410()
+    // semantic op_key lowering th10->th15: bullet.clear_all
+    ins_613();
     +60:
     // semantic op_key lowering th10->th15: boss.set_chapter
     ins_524(0);
@@ -3754,8 +3754,8 @@ void MBossAt()
     ins_609(0, 2, 0, 256, 100, -999999, -999999.0f, -999999.0f);
     // object Mode source_line=1921 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
-    // semantic op_key lowering th10->th15: raw.th10_th11.411
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.411(1, 0)
+    // semantic op_key lowering th10->th15: bullet.copy
+    ins_614(1, 0);
     // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
     ins_604(1, [-9981.0f], 0.31415927f);
     // semantic op_key lowering th10->th15: bullet.count_by_difficulty
@@ -3906,8 +3906,8 @@ void MBossEscape()
     // object Movement source_line=1998 family=th10
     // movement lowering th10 -> th15: movement.position.tween -> ins_401
     ins_401(60, 4, 0.0f, -32.0f);
-    // semantic op_key lowering th10->th15: raw.th10_th11.410
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.410()
+    // semantic op_key lowering th10->th15: bullet.clear_all
+    ins_613();
     +60:
     // semantic op_key lowering th10->th15: boss.set_chapter
     ins_524(0);
@@ -4654,103 +4654,103 @@ void MainSub6L()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Enemy source_line=2465 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2467 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2469 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2471 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2473 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2475 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2477 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2479 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2481 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2483 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2485 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2487 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2489 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2491 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2493 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2495 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2497 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2499 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2501 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2503 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2505 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2507 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2509 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2511 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2513 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     return;
 }
 
@@ -4760,103 +4760,103 @@ void MainSub6R()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Enemy source_line=2519 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2521 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2523 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2525 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2527 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2529 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2531 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2533 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2535 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2537 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2539 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2541 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2543 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2545 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2547 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2549 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2551 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2553 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2555 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2557 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2559 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2561 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2563 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2565 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +6:
     // object Enemy source_line=2567 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow00R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     return;
 }
 
@@ -4982,87 +4982,87 @@ void MainSub8L()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Enemy source_line=2669 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2671 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2673 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2675 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2677 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2679 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2681 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2683 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2685 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2687 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2689 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2691 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2693 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2695 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2697 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2699 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2701 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2703 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2705 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2707 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2709 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01L", 216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2711 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
@@ -5088,87 +5088,87 @@ void MainSub8R()
     // control-flow, async scheduling, and expression semantics require target-game verification
     // object Enemy source_line=2723 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2725 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2727 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2729 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2731 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2733 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2735 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2737 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2739 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2741 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2743 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2745 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2747 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2749 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2751 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2753 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2755 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2757 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2759 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2761 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2763 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 1);
+    ins_300("Crow01R", -216.0f, [-9999.0f] * _f(128), 20, 1000, 2);
     +12:
     // object Enemy source_line=2765 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300

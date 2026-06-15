@@ -63,6 +63,16 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_12: ArgLayout(("duration", "mode", "speed"), {}),
         GEN_13: ArgLayout(("duration", "mode", "speed"), {}),
     },
+    "movement.move_boss": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "movement.move_boss_rel": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
 
     "movement.ellipse.set": {
         GEN_10: ArgLayout(("theta", "angular_speed", "radius", "radius_delta", "ellipse_mode", "ellipse_angle", "ellipse_ratio"), {"ellipse_mode": "0"}),
@@ -156,6 +166,36 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_12: ArgLayout((), {}),
         GEN_13: ArgLayout((), {}),
     },
+    "flow.noti": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "flow.notf": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "flow.negi": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "flow.negf": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "flow.square_sum": {
+        GEN_10: ArgLayout(("var", "x", "y"), {}),
+        GEN_12: ArgLayout(("var", "x", "y"), {}),
+        GEN_13: ArgLayout(("var", "x", "y"), {}),
+    },
+    "flow.stack_sqrt": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
     "bullet.fire": {
         GEN_OLD: ArgLayout((), {"et_id": "0"}),
         GEN_10: ArgLayout(("et_id",), {"et_id": "0"}),
@@ -188,6 +228,16 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_12: ArgLayout(("et_id", "slot", "mode", "channel", "a", "b", "r", "s"), {"et_id": "0"}),
         # TH13+ opcode 609 has explicit slot; opcode 611 is append-style and has no slot.
         GEN_13: ArgLayout(("et_id", "slot", "channel", "mode", "a", "b", "r", "s"), {"et_id": "0", "slot": "0"}),
+    },
+    "bullet.clear_all": {
+        GEN_10: ArgLayout((), {}),
+        GEN_12: ArgLayout((), {}),
+        GEN_13: ArgLayout((), {}),
+    },
+    "bullet.copy": {
+        GEN_10: ArgLayout(("dest", "src"), {}),
+        GEN_12: ArgLayout(("dest", "src"), {}),
+        GEN_13: ArgLayout(("dest", "src"), {}),
     },
     "bullet.cancel_radius": {
         GEN_OLD: ArgLayout((), {"radius": "0.0f"}),
@@ -286,6 +336,11 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_13: ArgLayout((), {}),
     },
     "unit.move_limit": {
+        GEN_10: ArgLayout(("x", "y", "width", "height"), {}),
+        GEN_12: ArgLayout(("x", "y", "width", "height"), {}),
+        GEN_13: ArgLayout(("x", "y", "width", "height"), {}),
+    },
+    "movement.move_limit": {
         GEN_10: ArgLayout(("x", "y", "width", "height"), {}),
         GEN_12: ArgLayout(("x", "y", "width", "height"), {}),
         GEN_13: ArgLayout(("x", "y", "width", "height"), {}),
@@ -422,9 +477,9 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_13: ArgLayout(("phase", "life", "time", "sub"), {"phase": "0", "life": "0", "time": "0"}),
     },
     "boss.set_timeout": {
-        GEN_10: ArgLayout(("mode", "sub"), {"mode": "0"}),
-        GEN_12: ArgLayout(("mode", "sub"), {"mode": "0"}),
-        GEN_13: ArgLayout(("mode", "sub"), {"mode": "0"}),
+        GEN_10: ArgLayout(("time", "sub"), {"time": "0"}),
+        GEN_12: ArgLayout(("time", "sub"), {"time": "0"}),
+        GEN_13: ArgLayout(("time", "sub"), {"time": "0"}),
     },
     "boss.spell": {
         GEN_OLD: ArgLayout(("phase", "spell_id", "score", "name", "user", "desc1", "desc2"), {"timeout": "0"}),

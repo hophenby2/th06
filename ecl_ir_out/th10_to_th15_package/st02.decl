@@ -131,8 +131,8 @@ void Boss()
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
     ins_302(3);
     ins_306(0, 0);
-    // semantic op_key lowering th10->th15: unit.move_limit
-    // unsupported semantic op without IR lowering policy for th15: unit.move_limit(0.0f, 96.0f, 280.0f, 100.0f)
+    // semantic op_key lowering th10->th15: movement.move_limit
+    ins_504(0.0f, 96.0f, 280.0f, 100.0f);
     // object Animation source_line=73 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
     ins_302(3);
@@ -446,8 +446,8 @@ void Boss1CardAtEnemyAt()
     ins_609(0, 2, 0, -2147483648, 50, -999999, -999999.0f, -999999.0f);
     // object Mode source_line=231 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
-    // semantic op_key lowering th10->th15: raw.th10_th11.411
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.411(1, 0)
+    // semantic op_key lowering th10->th15: bullet.copy
+    ins_614(1, 0);
     $A = 30;
     %B = _f(0);
     goto Boss1CardAtEnemyAt_1472 @ 10;
@@ -530,8 +530,8 @@ void Boss2()
     ins_525();
     // semantic op_key lowering th10->th15: boss.spell_end
     ins_523();
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     // semantic op_key lowering th10->th15: unit.stars
     ins_540(0);
     unless ([-9986] == 0) goto Boss2_628 @ 0;
@@ -767,8 +767,8 @@ void Boss2CardAtEnemy()
     // movement lowering th10 -> th15: movement.circle_rel.set -> ins_410
     ins_410([-9981.0f], [-9980.0f], 0.0f, 1.0f);
     +60:
-    // semantic op_key lowering th10->th15: raw.th10_th11.346
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.346(32.0f)
+    // semantic op_key lowering th10->th15: unit.et_protect_range
+    ins_526(32.0f);
     +220:
     // semantic op_key lowering th10->th15: raw.th10_th11.1
     ins_1();
@@ -820,8 +820,8 @@ void Boss2CardAtEnemyAt(var A, var B)
     ins_609(0, 1, 0, -2147483648, 120, -999999, -999999.0f, -999999.0f);
     // object Mode source_line=433 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
-    // semantic op_key lowering th10->th15: raw.th10_th11.411
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.411(1, 0)
+    // semantic op_key lowering th10->th15: bullet.copy
+    ins_614(1, 0);
     goto Boss2CardAtEnemyAt_980 @ 8;
     Boss2CardAtEnemyAt_532:
     +8:
@@ -993,8 +993,8 @@ void BossAtEnemy2LAt()
     !*
     // object Mode source_line=524 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
-    // semantic op_key lowering th10->th15: raw.th10_th11.411
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.411(1, 0)
+    // semantic op_key lowering th10->th15: bullet.copy
+    ins_614(1, 0);
     !ENH
     $A = 60;
     !*
@@ -1293,8 +1293,8 @@ void BossAtEnemyAt()
     !*
     // object Mode source_line=672 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
-    // semantic op_key lowering th10->th15: raw.th10_th11.411
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.411(1, 0)
+    // semantic op_key lowering th10->th15: bullet.copy
+    ins_614(1, 0);
     !ENH
     $A = 60;
     !*
@@ -1344,8 +1344,8 @@ void BossCard1()
     // semantic op_key lowering th10->th15: boss.spell3
     ins_539(16, 2700, 1000000, "疵痕「壊されたお守り」");
     !*
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     // object Mode source_line=705 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
     // object Movement source_line=705 family=th10
@@ -1357,7 +1357,7 @@ void BossCard1()
     ins_516(7);
     // object Enemy source_line=708 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
     // semantic op_key lowering th10->th15: enemy.enm_kill_all
     ins_525();
     goto BossCard1_1148 @ 360;
@@ -1488,8 +1488,8 @@ void BossCard2()
     // semantic op_key lowering th10->th15: bullet.clear_radius
     ins_616(640.0f);
     BossCard2_364:
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     // object Mode source_line=786 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
     // object Movement source_line=786 family=th10
@@ -1658,8 +1658,8 @@ void BossCard3()
     // semantic op_key lowering th10->th15: boss.spell3
     ins_539(24, 2700, 1000000, "創符「流刑人形」");
     !*
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     // object Mode source_line=884 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
     // object Movement source_line=884 family=th10
@@ -1671,7 +1671,7 @@ void BossCard3()
     ins_516(7);
     // object Enemy source_line=887 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
     // semantic op_key lowering th10->th15: enemy.enm_kill_all
     ins_525();
     +60:
@@ -1783,18 +1783,18 @@ void BossDead()
     unless ([-9986] == 0) goto BossDead_308 @ 0;
     // object Enemy source_line=949 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak2", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak2", 0.0f, 0.0f, 9999, 0, 0);
     goto BossDead_364 @ 0;
     BossDead_308:
     // object Enemy source_line=952 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak2_ni", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak2_ni", 0.0f, 0.0f, 9999, 0, 0);
     BossDead_364:
     // semantic op_key lowering th10->th15: enemy.enm_kill_all
     ins_525();
     +60:
-    // semantic op_key lowering th10->th15: raw.th10_th11.410
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.410()
+    // semantic op_key lowering th10->th15: bullet.clear_all
+    ins_613();
     // semantic op_key lowering th10->th15: boss.spell_end
     ins_523();
     // semantic op_key lowering th10->th15: unit.drop_main
@@ -1844,7 +1844,7 @@ void BossTrace()
     BossTrace_60:
     +1:
     // semantic op_key lowering th10->th15: movement.move_boss
-    // unsupported semantic op without IR lowering policy for th15: movement.move_boss()
+    ins_414();
     BossTrace_76:
     if (1) goto BossTrace_60 @ 0;
     return;
@@ -2512,11 +2512,11 @@ void MBoss()
     [-9947] = 1;
     ins_514(0, 0, 2400, "MBossDead");
     // semantic op_key lowering th10->th15: boss.set_timeout
-    // unsupported semantic op without IR lowering policy for th15: boss.set_timeout(0, "MBossEscape")
+    ins_521(0, "MBossEscape");
     // semantic op_key lowering th10->th15: boss.set_chapter
     ins_524(6);
-    // semantic op_key lowering th10->th15: unit.move_limit
-    // unsupported semantic op without IR lowering policy for th15: unit.move_limit(0.0f, 96.0f, 280.0f, 100.0f)
+    // semantic op_key lowering th10->th15: movement.move_limit
+    ins_504(0.0f, 96.0f, 280.0f, 100.0f);
     @MBossCard1();
     // semantic op_key lowering th10->th15: raw.th10_th11.1
     ins_1();
@@ -2545,7 +2545,7 @@ void MBoss2()
     ins_515(60);
     // object Enemy source_line=1330 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
     // object Mode source_line=1331 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
     // object Movement source_line=1331 family=th10
@@ -2638,8 +2638,8 @@ void MBossAtEnemy()
     // movement lowering th10 -> th15: movement.velocity_rel.tween -> ins_407
     ins_407(60, 0, [-9989.0f] + (3.1415927f / _f(6)), 5.0f);
     +60:
-    // semantic op_key lowering th10->th15: raw.th10_th11.346
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.346(32.0f)
+    // semantic op_key lowering th10->th15: unit.et_protect_range
+    ins_526(32.0f);
     +60:
     // semantic op_key lowering th10->th15: raw.th10_th11.1
     ins_1();
@@ -2673,8 +2673,8 @@ void MBossAtEnemy2()
     // movement lowering th10 -> th15: movement.velocity_rel.tween -> ins_407
     ins_407(60, 0, [-9989.0f] - (3.1415927f / _f(6)), 5.0f);
     +60:
-    // semantic op_key lowering th10->th15: raw.th10_th11.346
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.346(32.0f)
+    // semantic op_key lowering th10->th15: unit.et_protect_range
+    ins_526(32.0f);
     +60:
     // semantic op_key lowering th10->th15: raw.th10_th11.1
     ins_1();
@@ -2722,8 +2722,8 @@ void MBossAtEnemyAt(var A, var B)
     !*
     // object Mode source_line=1421 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
-    // semantic op_key lowering th10->th15: raw.th10_th11.411
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.411(1, 0)
+    // semantic op_key lowering th10->th15: bullet.copy
+    ins_614(1, 0);
     goto MBossAtEnemyAt_1496 @ 5;
     MBossAtEnemyAt_504:
     +5:
@@ -2811,8 +2811,8 @@ void MBossCard1()
     var A;
     // semantic op_key lowering th10->th15: boss.set_chapter
     ins_524(15);
-    // semantic op_key lowering th10->th15: raw.th10_th11.21
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.21()
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
     // object Mode source_line=1466 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
     // object Movement source_line=1466 family=th10
@@ -2824,7 +2824,7 @@ void MBossCard1()
     ins_516(7);
     // object Enemy source_line=1469 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 1);
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
     !EN
     // semantic op_key lowering th10->th15: boss.spell
     ins_537(10, 2400, 1000000, "厄符「バッドフォーチュン」");
@@ -3077,11 +3077,11 @@ void MBossDummy()
     +46:
     // object Enemy source_line=1598 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("YSpCir01", 0.0f, 0.0f, 50, 1000, 1);
+    ins_300("YSpCir01", 0.0f, 0.0f, 50, 1000, 4);
     +46:
     // object Enemy source_line=1600 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
-    ins_300("YSpCir01", 0.0f, 0.0f, 50, 1000, 1);
+    ins_300("YSpCir01", 0.0f, 0.0f, 50, 1000, 4);
     // object Mode source_line=1601 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
     // object Movement source_line=1601 family=th10
@@ -4264,69 +4264,69 @@ void main()
     +100:
     // object Enemy source_line=2213 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
-    ins_309("Girl01", 224.0f, 32.0f, 400, 1000, 1);
+    ins_309("Girl01", 224.0f, 32.0f, 400, 1000, 2);
     +60:
     // object Enemy source_line=2215 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
-    ins_309("Girl01", 224.0f, 32.0f, 400, 1000, 1);
+    ins_309("Girl01", 224.0f, 32.0f, 400, 1000, 2);
     +60:
     // object Enemy source_line=2217 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
-    ins_309("Girl01", 224.0f, 32.0f, 400, 1000, 1);
+    ins_309("Girl01", 224.0f, 32.0f, 400, 1000, 2);
     +60:
     // object Enemy source_line=2219 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
-    ins_309("Girl01", 224.0f, 32.0f, 400, 1000, 1);
+    ins_309("Girl01", 224.0f, 32.0f, 400, 1000, 2);
     +60:
     // object Enemy source_line=2221 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
-    ins_311("Girl01", -224.0f, 32.0f, 400, 1000, 1);
+    ins_311("Girl01", -224.0f, 32.0f, 400, 1000, 2);
     +60:
     // object Enemy source_line=2223 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
-    ins_311("Girl01", -224.0f, 32.0f, 400, 1000, 1);
+    ins_311("Girl01", -224.0f, 32.0f, 400, 1000, 2);
     +60:
     // object Enemy source_line=2225 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
-    ins_311("Girl01", -224.0f, 32.0f, 400, 1000, 1);
+    ins_311("Girl01", -224.0f, 32.0f, 400, 1000, 2);
     +60:
     // object Enemy source_line=2227 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
-    ins_311("Girl01", -224.0f, 32.0f, 400, 1000, 1);
+    ins_311("Girl01", -224.0f, 32.0f, 400, 1000, 2);
     +120:
     // object Enemy source_line=2229 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
-    ins_309("Girl01", 224.0f, 64.0f, 300, 1000, 1);
+    ins_309("Girl01", 224.0f, 64.0f, 300, 1000, 2);
     +30:
     // object Enemy source_line=2231 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
-    ins_311("Girl01", -224.0f, 64.0f, 300, 1000, 1);
+    ins_311("Girl01", -224.0f, 64.0f, 300, 1000, 2);
     +30:
     // object Enemy source_line=2233 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
-    ins_309("Girl01", 224.0f, 64.0f, 300, 1000, 1);
+    ins_309("Girl01", 224.0f, 64.0f, 300, 1000, 2);
     +30:
     // object Enemy source_line=2235 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
-    ins_311("Girl01", -224.0f, 64.0f, 300, 1000, 1);
+    ins_311("Girl01", -224.0f, 64.0f, 300, 1000, 2);
     +30:
     // object Enemy source_line=2237 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
-    ins_309("Girl01", 224.0f, 64.0f, 300, 1000, 1);
+    ins_309("Girl01", 224.0f, 64.0f, 300, 1000, 2);
     +30:
     // object Enemy source_line=2239 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
-    ins_311("Girl01", -224.0f, 64.0f, 300, 1000, 1);
+    ins_311("Girl01", -224.0f, 64.0f, 300, 1000, 2);
     +160:
     // object Enemy source_line=2242 family=th10_th11
     !ENH
     // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
-    ins_309("Girl02", 0.0f, -32.0f, 3000, 1000, 1);
+    ins_309("Girl02", 0.0f, -32.0f, 3000, 1000, 2);
     !*
     // object Enemy source_line=2244 family=th10_th11
     !L
     // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
-    ins_309("Girl02", 0.0f, -32.0f, 4000, 1000, 1);
+    ins_309("Girl02", 0.0f, -32.0f, 4000, 1000, 2);
     !*
     !L
     +200:

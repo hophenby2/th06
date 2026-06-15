@@ -236,7 +236,30 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                     signature=th10_info.signature or th11_info.signature,
                     source=f"{th10_info.source}; name inherited from th11 same-generation table",
                 )
+        for game in ("th10", "th11"):
+            if game not in result:
+                continue
+            for opcode in (294, 295):
+                info = result[game].get(opcode)
+                if info and info.name in {"moveBoss", "moveBossRel"}:
+                    result[game][opcode] = OpcodeInfo(
+                        game=game,
+                        opcode=opcode,
+                        name=info.name,
+                        signature="",
+                        source=f"{info.source}; signature forced from no-arg movement boss-follow semantic",
+                    )
     if "th12" in result:
+        for opcode in (314, 315):
+            info = result["th12"].get(opcode)
+            if info and info.name in {"moveBoss", "moveBossRel"}:
+                result["th12"][opcode] = OpcodeInfo(
+                    game="th12",
+                    opcode=opcode,
+                    name=info.name,
+                    signature="",
+                    source=f"{info.source}; signature forced from no-arg movement boss-follow semantic",
+                )
         info = result["th12"].get(445)
         if info and info.name == "laserCancel":
             result["th12"][445] = OpcodeInfo(
@@ -337,6 +360,25 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                 signature="SSSm",
                 source=f"{info.source}; signature forced from setInterrupt semantic layout",
             )
+        for opcode in (414, 415):
+            info = result[game].get(opcode)
+            if info and info.name in {"moveBoss", "moveBossRel"}:
+                result[game][opcode] = OpcodeInfo(
+                    game=game,
+                    opcode=opcode,
+                    name=info.name,
+                    signature="",
+                    source=f"{info.source}; signature forced from no-arg movement boss-follow semantic",
+                )
+        info = result[game].get(521)
+        if info and info.name == "setTimeout":
+            result[game][521] = OpcodeInfo(
+                game=game,
+                opcode=521,
+                name=info.name,
+                signature="Sm",
+                source=f"{info.source}; signature forced from setTimeout semantic layout",
+            )
         for opcode in (537, 538, 539):
             info = result[game].get(opcode)
             if info and info.name in {"spell", "spell2", "spell3"}:
@@ -347,6 +389,15 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                     signature="SSSm",
                     source=f"{info.source}; signature forced from spell semantic layout",
                 )
+        info = result[game].get(613)
+        if info and info.name == "etClearAll":
+            result[game][613] = OpcodeInfo(
+                game=game,
+                opcode=613,
+                name=info.name,
+                signature="",
+                source=f"{info.source}; signature forced from no-arg etClearAll semantic",
+            )
     return result
 
 

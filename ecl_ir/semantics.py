@@ -90,7 +90,7 @@ def lifted_raw_coverage_policy(kind: str, source_game: str, target: str, family:
 SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("flow.nop", {GEN_TH13_PLUS: 0, GEN_TH12: 0, GEN_TH10_TH11: 0}),
     SemanticOpcode("flow.kill_async", {GEN_TH13_PLUS: 17, GEN_TH12: 17, GEN_TH10_TH11: 17}),
-    SemanticOpcode("flow.kill_all_async", {GEN_TH13_PLUS: 21, GEN_TH12: 21}),
+    SemanticOpcode("flow.kill_all_async", {GEN_TH13_PLUS: 21, GEN_TH12: 21, GEN_TH10_TH11: 21}),
     SemanticOpcode("flow.wait", {GEN_TH13_PLUS: 23, GEN_TH12: 83, GEN_TH10_TH11: 83}),
     # TH10/11 docs omit these stack VM opcodes, but original scripts use them
     # with the same ABI as TH12 and TH13+ for arithmetic, comparisons, and
@@ -119,11 +119,17 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("flow.greaterf", {GEN_TH13_PLUS: 68, GEN_TH12: 68, GEN_TH10_TH11: 68}),
     SemanticOpcode("flow.geqi", {GEN_TH13_PLUS: 69, GEN_TH12: 69, GEN_TH10_TH11: 69}),
     SemanticOpcode("flow.geqf", {GEN_TH13_PLUS: 70, GEN_TH12: 70, GEN_TH10_TH11: 70}),
+    SemanticOpcode("flow.noti", {GEN_TH13_PLUS: 71, GEN_TH12: 71, GEN_TH10_TH11: 71}),
+    SemanticOpcode("flow.notf", {GEN_TH13_PLUS: 72, GEN_TH12: 72, GEN_TH10_TH11: 72}),
     SemanticOpcode("flow.deci", {GEN_TH13_PLUS: 78, GEN_TH12: 78, GEN_TH10_TH11: 78}),
     SemanticOpcode("flow.stack_sin", {GEN_TH13_PLUS: 79, GEN_TH12: 79, GEN_TH10_TH11: 79}),
     SemanticOpcode("flow.stack_cos", {GEN_TH13_PLUS: 80, GEN_TH12: 80, GEN_TH10_TH11: 80}),
     SemanticOpcode("flow.circle_pos", {GEN_TH13_PLUS: 81, GEN_TH12: 81, GEN_TH10_TH11: 81}),
     SemanticOpcode("flow.valid_rad", {GEN_TH13_PLUS: 82, GEN_TH12: 82, GEN_TH10_TH11: 82}),
+    SemanticOpcode("flow.negi", {GEN_TH13_PLUS: 83, GEN_TH12: 84, GEN_TH10_TH11: 84}),
+    SemanticOpcode("flow.negf", {GEN_TH13_PLUS: 84, GEN_TH12: 85, GEN_TH10_TH11: 85}),
+    SemanticOpcode("flow.square_sum", {GEN_TH13_PLUS: 85, GEN_TH12: 86, GEN_TH10_TH11: 86}),
+    SemanticOpcode("flow.stack_sqrt", {GEN_TH13_PLUS: 88, GEN_TH12: 88, GEN_TH10_TH11: 88}),
     SemanticOpcode("flow.get_angle", {GEN_TH13_PLUS: 87, GEN_TH12: 87, GEN_TH10_TH11: 87}),
     SemanticOpcode("enemy.create", {GEN_TH13_PLUS: 300, GEN_TH12: 256}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
     SemanticOpcode("enemy.create_async", {GEN_TH13_PLUS: 301, GEN_TH12: 257}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
@@ -153,6 +159,8 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("movement.circle_rel.tween", {GEN_TH13_PLUS: 411, GEN_TH12: 311, GEN_TH10_TH11: 291}),
     SemanticOpcode("movement.move_rand", {GEN_TH13_PLUS: 412, GEN_TH12: 312, GEN_TH10_TH11: 292}),
     SemanticOpcode("movement.move_rand_rel", {GEN_TH13_PLUS: 413, GEN_TH12: 313, GEN_TH10_TH11: 293}),
+    SemanticOpcode("movement.move_boss", {GEN_TH13_PLUS: 414, GEN_TH12: 314, GEN_TH10_TH11: 294}),
+    SemanticOpcode("movement.move_boss_rel", {GEN_TH13_PLUS: 415, GEN_TH12: 315, GEN_TH10_TH11: 295}),
     SemanticOpcode("movement.ellipse.set", {GEN_TH13_PLUS: 420, GEN_TH12: 320, GEN_TH10_TH11: 300}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
     SemanticOpcode("movement.ellipse.tween", {GEN_TH13_PLUS: 421, GEN_TH12: 321, GEN_TH10_TH11: 301}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
     SemanticOpcode("movement.ellipse_rel.set", {GEN_TH13_PLUS: 422, GEN_TH12: 322, GEN_TH10_TH11: 302}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
@@ -165,7 +173,7 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("unit.set_hitbox", {GEN_TH13_PLUS: 501, GEN_TH12: 401, GEN_TH10_TH11: 321}),
     SemanticOpcode("unit.flag_set", {GEN_TH13_PLUS: 502, GEN_TH12: 402, GEN_TH10_TH11: 322}),
     SemanticOpcode("unit.flag_clear", {GEN_TH13_PLUS: 503, GEN_TH12: 403, GEN_TH10_TH11: 323}),
-    SemanticOpcode("unit.move_limit", {GEN_TH13_PLUS: 504, GEN_TH12: 404, GEN_TH10_TH11: 324}),
+    SemanticOpcode("movement.move_limit", {GEN_TH13_PLUS: 504, GEN_TH12: 404, GEN_TH10_TH11: 324}),
     SemanticOpcode("movement.move_limit_reset", {GEN_TH13_PLUS: 505, GEN_TH12: 405, GEN_TH10_TH11: 325}),
     SemanticOpcode("unit.drop_clear", {GEN_TH13_PLUS: 506, GEN_TH12: 406, GEN_TH10_TH11: 326}),
     SemanticOpcode("unit.drop_extra", {GEN_TH13_PLUS: 507, GEN_TH12: 407, GEN_TH10_TH11: 327}),
@@ -187,6 +195,7 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("boss.spell_end", {GEN_TH13_PLUS: 523, GEN_TH12: 423, GEN_TH10_TH11: 343}),
     SemanticOpcode("boss.set_chapter", {GEN_TH13_PLUS: 524, GEN_TH12: 424, GEN_TH10_TH11: 344}),
     SemanticOpcode("enemy.enm_kill_all", {GEN_TH13_PLUS: 525, GEN_TH12: 425, GEN_TH10_TH11: 345}),
+    SemanticOpcode("unit.et_protect_range", {GEN_TH13_PLUS: 526, GEN_TH12: 426, GEN_TH10_TH11: 346}),
     SemanticOpcode("unit.life_marker", {GEN_TH13_PLUS: 527, GEN_TH12: 427, GEN_TH10_TH11: 347}),
     SemanticOpcode("unit.property.28", {GEN_TH13_PLUS: 528, GEN_TH12: 428}),
     SemanticOpcode("unit.property.29", {GEN_TH13_PLUS: 529, GEN_TH12: 429}),
@@ -214,6 +223,8 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("unit.effect.55", {GEN_TH13_PLUS: 555, GEN_TH12: 455}),
     SemanticOpcode("unit.effect.56", {GEN_TH13_PLUS: 556, GEN_TH12: 456}),
     *tuple(SemanticOpcode(f"bullet.emitter.{op - 600:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100, GEN_TH10_TH11: op - 200}) for op in range(600, 610)),
+    SemanticOpcode("bullet.clear_all", {GEN_TH13_PLUS: 613, GEN_TH12: 510, GEN_TH10_TH11: 410}),
+    SemanticOpcode("bullet.copy", {GEN_TH13_PLUS: 614, GEN_TH12: 511, GEN_TH10_TH11: 411}),
 )
 
 UNSUPPORTED_SEMANTIC_OPCODES: dict[tuple[str, int, str], str] = {
@@ -915,9 +926,4 @@ def remap_create_item_policy(source_game: str, target: str, value: str) -> str:
     text = str(value).strip()
     if generation_for_game(source_game) == generation_for_game(target):
         return text
-    if generation_for_game(source_game) == GEN_TH10_TH11 and generation_for_game(target) == GEN_TH13_PLUS:
-        # TH13+ stage enemy creates use policy 1 in native stage scripts; actual drop color/type
-        # is represented by explicit dropMain/dropExtra ops on the child.  Raw TH10 policy
-        # values 2/3 can select target-side presets that do not match TH15 stage enemies.
-        return "1"
     return encode_drop_type(drop_type_semantic(source_game, text), target, text)
