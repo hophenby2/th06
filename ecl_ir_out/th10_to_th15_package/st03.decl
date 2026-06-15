@@ -90,11 +90,11 @@ void Boss()
     ins_512(0);
     // object Animation source_line=56 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=57 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
-    ins_302(3);
-    ins_303(0, 0);
+    ins_302(2);
+    ins_303(0, 53);
     // object UnitFlag source_line=58 family=unit_flag
     // UnitFlag lowering th10->th15: unit.flag_set(2) no_body_collision -> 2
     ins_502(2);
@@ -123,10 +123,10 @@ void Boss()
     ins_17(0);
     // object Animation source_line=68 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=69 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // semantic op_key lowering th10->th15: movement.move_limit
     ins_504(0.0f, 96.0f, 280.0f, 64.0f);
@@ -134,14 +134,14 @@ void Boss()
     ins_540(2);
     // object Animation source_line=72 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=73 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
-    ins_302(1);
-    ins_303(1, 107);
+    ins_302(2);
+    ins_303(1, 53);
     // object Animation source_line=74 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     @Boss1();
     // semantic op_key lowering th10->th15: raw.th10_th11.1
     ins_1();
@@ -168,7 +168,7 @@ void Boss1()
     +60:
     // object Animation source_line=90 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // semantic op_key lowering th10->th15: flow.kill_async
     ins_17(0);
@@ -404,7 +404,7 @@ void Boss2()
     +160:
     // object Animation source_line=209 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // semantic op_key lowering th10->th15: flow.kill_async
     ins_17(0);
@@ -428,7 +428,7 @@ void Boss2()
     +160:
     // object Animation source_line=222 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // semantic op_key lowering th10->th15: flow.kill_async
     ins_17(0);
@@ -893,7 +893,7 @@ void Boss3()
     +160:
     // object Animation source_line=470 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // semantic op_key lowering th10->th15: flow.kill_async
     ins_17(0);
@@ -925,7 +925,7 @@ void Boss3()
     +160:
     // object Animation source_line=489 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // semantic op_key lowering th10->th15: flow.kill_async
     ins_17(0);
@@ -974,7 +974,7 @@ void BossCard1()
     !*
     !L
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(33, 3600, 1000000, "漂溺「光り輝く水底のトラウマ」")
+    ins_522(33, 3600, 1000000, "漂溺「光り輝く水底のトラウマ」");
     !*
     // semantic op_key lowering th10->th15: flow.kill_all_async
     ins_21();
@@ -994,10 +994,10 @@ void BossCard1()
     ins_525();
     // object Animation source_line=524 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // object Animation source_line=525 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     [-9985] = 0;
     goto BossCard1_2700 @ 160;
@@ -1447,7 +1447,7 @@ void BossCard2()
     !*
     !L
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(37, 3600, 1000000, "水符「河童の幻想大瀑布」")
+    ins_522(37, 3600, 1000000, "水符「河童の幻想大瀑布」");
     !*
     // semantic op_key lowering th10->th15: flow.kill_all_async
     ins_21();
@@ -1467,7 +1467,7 @@ void BossCard2()
     ins_525();
     // object Animation source_line=759 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     +90:
     // semantic op_key lowering th10->th15: flow.nop
@@ -1573,16 +1573,16 @@ void BossCard3()
     ins_525();
     // object Animation source_line=816 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     +60:
     // object Animation source_line=818 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     +60:
     // object Animation source_line=820 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     [-9981.0f] = _f(0);
     [-9980.0f] = 0.02618f;
@@ -1641,7 +1641,7 @@ void BossCard3L()
     [-9947] = 1;
     ins_514(1, 0, 3600, "BossDead");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(41, 3600, 1000000, "河童「スピン・ザ・セファリックプレート」")
+    ins_522(41, 3600, 1000000, "河童「スピン・ザ・セファリックプレート」");
     // semantic op_key lowering th10->th15: flow.kill_all_async
     ins_21();
     // object Mode source_line=854 family=movement_tween_mode
@@ -1660,16 +1660,16 @@ void BossCard3L()
     ins_525();
     // object Animation source_line=859 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     +60:
     // object Animation source_line=861 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     +60:
     // object Animation source_line=863 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     [-9981.0f] = _f(0);
     [-9980.0f] = 0.02618f;
@@ -1969,12 +1969,12 @@ void BossDead()
     ins_502(132);
     // object Animation source_line=1023 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(18);
     // object Animation source_line=1025 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // object Movement source_line=1026 family=th10
     // movement lowering th10 -> th15: movement.velocity.set -> ins_404
     ins_404([-9998.0f], 0.4f);
@@ -2003,10 +2003,10 @@ void BossDead()
     // unsupported semantic op without IR lowering policy for th15: unit.set_screen_shake(30, 12, 0)
     // object Animation source_line=1040 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // object Animation source_line=1041 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(18);
     // semantic op_key lowering th10->th15: raw.th10_th11.1
@@ -2601,10 +2601,10 @@ void MBoss()
     ins_512(0);
     // object Animation source_line=1331 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=1332 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // object UnitFlag source_line=1333 family=unit_flag
     // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
@@ -2752,7 +2752,7 @@ void MBossCard1()
     +80:
     // object Animation source_line=1401 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     goto MBossCard1_600 @ 220;
     MBossCard1_448:
     !HL
@@ -2986,7 +2986,7 @@ void MBossDead()
     // unsupported semantic op without IR lowering policy for th15: unit.set_screen_shake(30, 12, 0)
     // object Animation source_line=1525 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(18);
     // object Mode source_line=1527 family=movement_tween_mode
@@ -3001,10 +3001,10 @@ void MBossDead()
     ins_511(10000);
     // object Animation source_line=1530 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=1531 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     @MBossDead_anim() async;
     // semantic op_key lowering th10->th15: movement.move_limit_reset
@@ -3047,10 +3047,10 @@ void MBossDead_anim()
     +60:
     // object Animation source_line=1553 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=1554 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     return;
 }
@@ -3064,17 +3064,17 @@ void MBossDummy()
     ins_512(0);
     // object Animation source_line=1562 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=1563 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
-    ins_302(1);
-    ins_303(1, 107);
+    ins_302(2);
+    ins_303(1, 53);
     // object Animation source_line=1564 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=1565 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // object UnitFlag source_line=1566 family=unit_flag
     // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank

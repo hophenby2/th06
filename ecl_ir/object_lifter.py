@@ -60,7 +60,7 @@ def source_stage_kind(program: Program) -> str:
 
 def anm_role_for_context(program: Program, func: Function) -> str:
     stage_kind = source_stage_kind(program)
-    if stage_kind == "boss" or func.name.lower().startswith(("boss", "mboss")):
+    if stage_kind == "boss":
         return "boss"
     return "stage"
 
@@ -709,9 +709,9 @@ def lift_boss_patterns(program: Program, func: Function) -> list[BossPattern]:
                     current.fields.setdefault("target_policy", {})["spell_ex_common_header"] = {
                         "strategy": "emit_target_op",
                         "target_generations": ["th13_plus"],
-                        "target_op_key": "boss.spell",
+                        "target_op_key": "boss.spell_ex",
                         "arg_policy": {"take_first": 4},
-                        "reason": "extended_spell_descriptor_uses_common_spell_header_on_th13plus",
+                        "reason": "extended spell descriptor is a shared boss phase header in TH10+",
                     }
             elif boss_ops[ins.opcode] == "setInterrupt":
                 current.fields["interrupt"] = {"args": ins.args}

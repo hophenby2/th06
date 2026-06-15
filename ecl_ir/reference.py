@@ -379,9 +379,9 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                 signature="Sm",
                 source=f"{info.source}; signature forced from setTimeout semantic layout",
             )
-        for opcode in (537, 538, 539):
+        for opcode in (522, 528, 537, 538, 539):
             info = result[game].get(opcode)
-            if info and info.name in {"spell", "spell2", "spell3"}:
+            if info and info.name in {"spellEx", "spellUnused", "spell", "spell2", "spell3"}:
                 result[game][opcode] = OpcodeInfo(
                     game=game,
                     opcode=opcode,
@@ -398,6 +398,16 @@ def opcode_reference() -> dict[str, dict[int, OpcodeInfo]]:
                 signature="",
                 source=f"{info.source}; signature forced from no-arg etClearAll semantic",
             )
+        for opcode, signature in ((624, "Sffffffff"), (625, "SSSSSSSSS")):
+            info = result[game].get(opcode)
+            if info and info.name in {"etSpeedD", "etCountD"}:
+                result[game][opcode] = OpcodeInfo(
+                    game=game,
+                    opcode=opcode,
+                    name=info.name,
+                    signature=signature,
+                    source=f"{info.source}; signature forced from difficulty bullet setup semantic",
+                )
     return result
 
 

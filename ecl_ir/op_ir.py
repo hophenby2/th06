@@ -38,6 +38,8 @@ OP_ALIASES = {
     "setinterrupt": "boss.set_interrupt",
     "settimeout": "boss.set_timeout",
     "spellend": "boss.spell_end",
+    "spell_ex": "boss.spell_ex",
+    "spell_unused": "boss.spell_unused",
     "setchapter": "boss.set_chapter",
     "anm_select": "anm.select",
     "anm_set_sprite": "anm.set_sprite",
@@ -346,9 +348,9 @@ def op_lowering_policy(key: str, args: list[str]) -> dict[str, object] | None:
     if key == "boss.spell_ex":
         return {
             "strategy": "emit_target_op",
-            "reason": "extended_spell_descriptor_uses_common_spell_header_on_th13plus",
+            "reason": "extended spell descriptor is a shared boss phase header in TH10+",
             "target_generations": ["th13_plus"],
-            "target_op_key": "boss.spell",
+            "target_op_key": "boss.spell_ex",
             "arg_policy": {"take_first": 4},
         }
     if key == "enemy.byakuren_butterfly":

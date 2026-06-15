@@ -101,10 +101,10 @@ void Boss()
     ins_512(0);
     // object Animation source_line=66 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=67 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // object UnitFlag source_line=68 family=unit_flag
     // UnitFlag lowering th10->th15: unit.flag_set(2) no_body_collision -> 2
@@ -134,10 +134,10 @@ void Boss()
     ins_17(0);
     // object Animation source_line=78 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=79 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // semantic op_key lowering th10->th15: movement.move_limit
     ins_504(0.0f, 96.0f, 280.0f, 64.0f);
@@ -145,14 +145,14 @@ void Boss()
     ins_540(10);
     // object Animation source_line=82 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=83 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
-    ins_302(1);
-    ins_303(1, 107);
+    ins_302(2);
+    ins_303(1, 53);
     // object Animation source_line=84 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     @Boss1();
     // semantic op_key lowering th10->th15: raw.th10_th11.1
     ins_1();
@@ -173,7 +173,7 @@ void Boss1()
     ins_524(24);
     // object Animation source_line=95 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // semantic op_key lowering th10->th15: unit.set_invuln
     ins_515(200);
     +20:
@@ -1271,7 +1271,7 @@ void BossCard1()
     [-9947] = 1;
     ins_514(0, 0, 6300, "Boss2");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(100, 6300, 900000, "開宴「二拝二拍一拝」")
+    ins_522(100, 6300, 900000, "開宴「二拝二拍一拝」");
     // semantic op_key lowering th10->th15: flow.kill_all_async
     ins_21();
     // object Mode source_line=669 family=movement_tween_mode
@@ -1293,15 +1293,15 @@ void BossCard1()
     ins_525();
     // object Animation source_line=675 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // object Animation source_line=676 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     +90:
     // object Animation source_line=678 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(2, 0);
     // semantic op_key lowering th10->th15: anm.selected_play
     ins_313(0);
@@ -1369,7 +1369,7 @@ void BossCard10()
     ins_524(52);
     // object Animation source_line=724 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // semantic op_key lowering th10->th15: boss.spell_end
     ins_523();
@@ -1414,7 +1414,7 @@ void BossCard10()
     [-9947] = 1;
     ins_514(0, 0, 9600, "BossDead");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(109, 9600, 900000, "祟符「ミシャグジさま」")
+    ins_522(109, 9600, 900000, "祟符「ミシャグジさま」");
     +20:
     // semantic op_key lowering th10->th15: flow.nop
     ins_0();
@@ -1629,7 +1629,7 @@ void BossCard1_at()
     ins_516(15);
     // object Animation source_line=875 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(2, 0);
     $D = 4;
     // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
@@ -1867,7 +1867,7 @@ void BossCard2()
     [-9947] = 1;
     ins_514(0, 0, 6300, "Boss3");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(101, 6300, 900000, "土着神「手長足長さま」")
+    ins_522(101, 6300, 900000, "土着神「手長足長さま」");
     // semantic op_key lowering th10->th15: flow.kill_all_async
     ins_21();
     // object Mode source_line=1012 family=movement_tween_mode
@@ -1889,15 +1889,15 @@ void BossCard2()
     ins_525();
     // object Animation source_line=1018 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // object Animation source_line=1019 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     +90:
     // object Animation source_line=1021 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(2, 0);
     // semantic op_key lowering th10->th15: anm.selected_play
     ins_313(0);
@@ -2113,7 +2113,7 @@ void BossCard3()
     [-9947] = 1;
     ins_514(0, 0, 6300, "Boss4");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(102, 6300, 900000, "神具「洩矢の鉄の輪」")
+    ins_522(102, 6300, 900000, "神具「洩矢の鉄の輪」");
     // semantic op_key lowering th10->th15: unit.bomb_shield
     // emitted by IR op lowering policy for th15: unit.bomb_shield -> unit.bomb_shield; reason=TH12 bomb shield movement-domain opcode maps to TH13+ unit bomb shield
     ins_546(1, 7);
@@ -2277,7 +2277,7 @@ void BossCard4()
     [-9947] = 1;
     ins_514(0, 0, 6300, "Boss5");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(103, 6300, 900000, "源符「厭い川の翡翠」")
+    ins_522(103, 6300, 900000, "源符「厭い川の翡翠」");
     // semantic op_key lowering th10->th15: unit.bomb_shield
     // emitted by IR op lowering policy for th15: unit.bomb_shield -> unit.bomb_shield; reason=TH12 bomb shield movement-domain opcode maps to TH13+ unit bomb shield
     ins_546(1, 7);
@@ -2304,7 +2304,7 @@ void BossCard4()
     ins_313(0);
     // object Animation source_line=1231 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(2, 0);
     goto BossCard4_1736 @ 980;
     BossCard4_416:
@@ -2331,7 +2331,7 @@ void BossCard4()
     ins_313(0);
     // object Animation source_line=1247 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(2, 0);
     [-9981.0f] = 0.0f;
     [-9980.0f] = 4.0f;
@@ -2356,7 +2356,7 @@ void BossCard4()
     ins_313(0);
     // object Animation source_line=1261 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(2, 0);
     [-9981.0f] = 0.0f;
     [-9980.0f] = 1.0f;
@@ -2381,7 +2381,7 @@ void BossCard4()
     ins_313(0);
     // object Animation source_line=1275 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(2, 0);
     BossCard4_1736:
     if (1) goto BossCard4_416 @ 80;
@@ -2544,7 +2544,7 @@ void BossCard5()
     [-9947] = 1;
     ins_514(0, 0, 6300, "Boss6");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(104, 6300, 900000, "蛙狩「蛙は口ゆえ蛇に呑まるる」")
+    ins_522(104, 6300, 900000, "蛙狩「蛙は口ゆえ蛇に呑まるる」");
     // semantic op_key lowering th10->th15: unit.bomb_shield
     // emitted by IR op lowering policy for th15: unit.bomb_shield -> unit.bomb_shield; reason=TH12 bomb shield movement-domain opcode maps to TH13+ unit bomb shield
     ins_546(1, 7);
@@ -2759,7 +2759,7 @@ void BossCard6()
     [-9947] = 1;
     ins_514(0, 0, 6300, "Boss7");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(105, 6300, 900000, "土着神「七つの石と七つの木」")
+    ins_522(105, 6300, 900000, "土着神「七つの石と七つの木」");
     // semantic op_key lowering th10->th15: unit.bomb_shield
     // emitted by IR op lowering policy for th15: unit.bomb_shield -> unit.bomb_shield; reason=TH12 bomb shield movement-domain opcode maps to TH13+ unit bomb shield
     ins_546(1, 7);
@@ -2855,7 +2855,7 @@ void BossCard6_at()
     ins_516(41);
     // object Animation source_line=1503 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: flow.wait
     ins_23(60);
     // semantic op_key lowering th10->th15: unit.play_sound
@@ -3001,7 +3001,7 @@ void BossCard7()
     [-9947] = 1;
     ins_514(0, 0, 6300, "Boss8");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(106, 6300, 900000, "土着神「ケロちゃん風雨に負けず」")
+    ins_522(106, 6300, 900000, "土着神「ケロちゃん風雨に負けず」");
     // semantic op_key lowering th10->th15: unit.bomb_shield
     // emitted by IR op lowering policy for th15: unit.bomb_shield -> unit.bomb_shield; reason=TH12 bomb shield movement-domain opcode maps to TH13+ unit bomb shield
     ins_546(1, 7);
@@ -3028,7 +3028,7 @@ void BossCard7()
     ins_313(0);
     // object Animation source_line=1601 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(2, 0);
     @BossCard7_at() async;
     goto BossCard7_552 @ 200;
@@ -3044,7 +3044,7 @@ void BossCard7()
     ins_313(0);
     // object Animation source_line=1610 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(2, 0);
     BossCard7_552:
     if (1) goto BossCard7_464 @ 80;
@@ -3158,7 +3158,7 @@ void BossCard8()
     [-9947] = 1;
     ins_514(0, 0, 2400, "BossCard9");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(107, 2400, 900000, "土着神「宝永四年の赤蛙」")
+    ins_522(107, 2400, 900000, "土着神「宝永四年の赤蛙」");
     // semantic op_key lowering th10->th15: raw.th10_th11.362
     // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.362()
     // semantic op_key lowering th10->th15: movement.move_limit_reset
@@ -3187,8 +3187,8 @@ void BossCard8()
     ins_502(3);
     // object Animation source_line=1679 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
-    ins_306(0, 7);
+    ins_302(2);
+    ins_306(0, 0);
     // semantic op_key lowering th10->th15: anm.selected_play
     ins_313(0);
     // object Enemy source_line=1681 family=th10_th11
@@ -3198,7 +3198,7 @@ void BossCard8()
     ins_23(1200);
     // object Animation source_line=1683 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: flow.wait
     ins_23(60);
     // object Enemy source_line=1685 family=th10_th11
@@ -3225,10 +3225,10 @@ void BossCard8_at()
     ins_502(263);
     // object Animation source_line=1698 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=1699 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
     ins_600(0);
@@ -3293,7 +3293,7 @@ void BossCard8_at()
     ins_0();
     // object Animation source_line=1720 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(15);
     // semantic op_key lowering th10->th15: anm.selected_play
@@ -3312,7 +3312,7 @@ void BossCard8_at()
     ins_0();
     // object Animation source_line=1728 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(15);
     // semantic op_key lowering th10->th15: anm.selected_play
@@ -3333,7 +3333,7 @@ void BossCard8_at()
     +60:
     // object Animation source_line=1738 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(15);
     // semantic op_key lowering th10->th15: anm.selected_play
@@ -3387,7 +3387,7 @@ void BossCard9()
     ins_524(51);
     // object Animation source_line=1769 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
+    ins_302(2);
     ins_306(0, 0);
     // semantic op_key lowering th10->th15: boss.spell_end
     ins_523();
@@ -3427,7 +3427,7 @@ void BossCard9()
     [-9947] = 1;
     ins_514(0, 0, 5040, "BossCard10");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(108, 5040, 900000, "「諏訪大戦　～ 土着神話 vs 中央神話」")
+    ins_522(108, 5040, 900000, "「諏訪大戦　～ 土着神話 vs 中央神話」");
     // semantic op_key lowering th10->th15: raw.th10_th11.362
     // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.362()
     +20:
@@ -3438,8 +3438,8 @@ void BossCard9()
     ins_502(3);
     // object Animation source_line=1792 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
-    ins_306(0, 7);
+    ins_302(2);
+    ins_306(0, 0);
     $C = 460;
     [-9985] = 0;
     [-9984] = 0;
@@ -3577,7 +3577,7 @@ void BossCard9_at()
     ins_502(292);
     // object Animation source_line=1882 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
     ins_600(0);
     // object Mode source_line=1884 family=movement_tween_mode
@@ -3612,7 +3612,7 @@ void BossCard9_at()
     ins_609(0, 5, 0, 1024, -999999, -999999, -999999.0f, -999999.0f);
     // object Animation source_line=1893 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(41);
     // semantic op_key lowering th10->th15: flow.wait
@@ -3662,10 +3662,10 @@ void BossCard9_at2()
     ins_502(292);
     // object Animation source_line=1921 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=1922 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(41);
     // semantic op_key lowering th10->th15: flow.wait
@@ -3788,12 +3788,12 @@ void BossDead()
     ins_502(132);
     // object Animation source_line=1982 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(18);
     // object Animation source_line=1984 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // object Movement source_line=1985 family=th10
     // movement lowering th10 -> th15: movement.velocity.set -> ins_404
     ins_404([-9998.0f], 0.4f);
@@ -3822,10 +3822,10 @@ void BossDead()
     // unsupported semantic op without IR lowering policy for th15: unit.set_screen_shake(30, 12, 0)
     // object Animation source_line=1999 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // object Animation source_line=2000 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(18);
     // semantic op_key lowering th10->th15: raw.th10_th11.1
@@ -5154,7 +5154,7 @@ void MBoss()
     ins_400(0.0f, 128.0f);
     // object Animation source_line=2651 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(14);
     // object Enemy source_line=2653 family=th10_th11
@@ -5173,11 +5173,11 @@ void MBoss()
     ins_503(2);
     // object Animation source_line=2659 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=2660 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
-    ins_302(3);
-    ins_303(0, 6);
+    ins_302(2);
+    ins_303(0, 53);
     +60:
     // semantic op_key lowering th10->th15: unit.dialog_wait
     ins_519();
@@ -5185,11 +5185,11 @@ void MBoss()
     ins_17(0);
     // object Animation source_line=2664 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=2665 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
-    ins_306(0, 0);
+    ins_302(2);
+    ins_306(0, 20);
     // semantic op_key lowering th10->th15: anm.selected_play
     ins_313(0);
     +1:
@@ -5201,21 +5201,21 @@ void MBoss()
     ins_540(2);
     // object Animation source_line=2671 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=2672 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
-    ins_302(1);
-    ins_303(1, 107);
+    ins_302(2);
+    ins_303(1, 53);
     // object Animation source_line=2673 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // object Animation source_line=2674 family=th10_th11
-    // IR boss_aux_sprite lowering through target ANM catalog: bank 3, script 6
-    ins_302(3);
-    ins_303(8, 6);
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(8, 53);
     // object Animation source_line=2675 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // semantic op_key lowering th10->th15: boss.set_chapter
     ins_524(6);
     @MBoss1();
@@ -5240,12 +5240,12 @@ void MBoss1()
     ins_516(14);
     // object Animation source_line=2688 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
-    ins_302(3);
+    ins_302(2);
     // semantic op_key lowering th10->th15: unit.set_invuln
     ins_515(60);
     // object Animation source_line=2690 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     +60:
     // semantic op_key lowering th10->th15: anm.selected_play
     ins_313(0);
@@ -5366,7 +5366,7 @@ void MBossCard1()
     [-9947] = 1;
     ins_514(0, 0, 4200, "MBossCard2");
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(97, 4200, 10000, "神符「水眼の如き美しき源泉」")
+    ins_522(97, 4200, 10000, "神符「水眼の如き美しき源泉」");
     // semantic op_key lowering th10->th15: flow.kill_all_async
     ins_21();
     // object Mode source_line=2758 family=movement_tween_mode
@@ -5385,11 +5385,11 @@ void MBossCard1()
     ins_525();
     // object Animation source_line=2763 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // object Animation source_line=2764 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
-    ins_306(0, 0);
+    ins_302(2);
+    ins_306(0, 20);
     +90:
     // semantic op_key lowering th10->th15: flow.nop
     ins_0();
@@ -5401,8 +5401,8 @@ void MBossCard1()
     +160:
     // object Animation source_line=2772 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
-    ins_302(3);
-    ins_303(0, 20);
+    ins_302(2);
+    ins_303(0, 53);
     // object Movement source_line=2773 family=th10
     // movement lowering th10 -> th15: movement.move_rand -> ins_412
     ins_412(60, 4, 1.0f);
@@ -5465,7 +5465,7 @@ void MBossCard2()
     // semantic op_key lowering th10->th15: boss.set_chapter
     ins_524(16);
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(98, 4200, 10000, "神符「杉で結ぶ古き縁」")
+    ins_522(98, 4200, 10000, "神符「杉で結ぶ古き縁」");
     // semantic op_key lowering th10->th15: unit.set_invuln
     ins_515(60);
     // semantic op_key lowering th10->th15: boss.set_interrupt
@@ -5484,11 +5484,11 @@ void MBossCard2()
     ins_516(7);
     // object Animation source_line=2815 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // object Animation source_line=2816 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
-    ins_306(0, 0);
+    ins_302(2);
+    ins_306(0, 20);
     // semantic op_key lowering th10->th15: anm.selected_play
     ins_313(0);
     +90:
@@ -5751,7 +5751,7 @@ void MBossCard3()
     // semantic op_key lowering th10->th15: boss.set_chapter
     ins_524(17);
     // semantic op_key lowering th10->th15: boss.spell_ex
-    // unsupported semantic op without IR lowering policy for th15: boss.spell_ex(99, 4200, 10000, "神符「神が歩かれた御神渡り」")
+    ins_522(99, 4200, 10000, "神符「神が歩かれた御神渡り」");
     // semantic op_key lowering th10->th15: unit.set_invuln
     ins_515(60);
     // semantic op_key lowering th10->th15: boss.set_interrupt
@@ -5768,11 +5768,11 @@ void MBossCard3()
     ins_516(7);
     // object Animation source_line=2957 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // object Animation source_line=2958 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
-    ins_302(3);
-    ins_306(0, 0);
+    ins_302(2);
+    ins_306(0, 20);
     // semantic op_key lowering th10->th15: anm.selected_play
     ins_313(0);
     +90:
@@ -6058,7 +6058,7 @@ void MBossDead()
     // unsupported semantic op without IR lowering policy for th15: unit.set_screen_shake(30, 12, 0)
     // object Animation source_line=3108 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
-    ins_307(0, 28);
+    ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(18);
     // semantic op_key lowering th10->th15: boss.set_chapter

@@ -442,10 +442,10 @@ def anm_role_hint(event: dict[str, object], context: dict[str, object] | None = 
     function = str(context.get("function", "") if context else "")
     if any(token in name for token in ("boss", "mbs", "bs")):
         return "boss"
-    if function.startswith(("Boss", "MBoss", "MainBoss", "MainMBoss")) or function in {"HPWait", "MBossCard1LaserHit"}:
-        return "boss"
     if source_game and name.startswith(("stage", "st")):
         return "stage"
+    if function.startswith(("Boss", "MBoss", "MainBoss", "MainMBoss")) or function in {"HPWait", "MBossCard1LaserHit"}:
+        return "boss"
     return None
 
 
@@ -973,7 +973,7 @@ def compile_target_policy(obj, target: str) -> str | None:
     if spell := policies.get("spell_ex_common_header"):
         if isinstance(spell, dict) and op_lowering_policy_applies(spell, target, getattr(obj, "game", "")):
             args = [str(arg) for arg in (fields.get("spell", {}) or {}).get("args", fields.get("args", []))]
-            lowered = emit_target_op(target, str(spell.get("target_op_key", "boss.spell")), policy_args(args, spell))
+            lowered = emit_target_op(target, str(spell.get("target_op_key", "boss.spell_ex")), policy_args(args, spell))
             if lowered:
                 return f"// IR spell_ex_common_header lowering {obj.game}->{target}: {spell.get('reason', '')}\n{lowered}"
     return None

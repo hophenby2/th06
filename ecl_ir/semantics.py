@@ -197,6 +197,7 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("enemy.enm_kill_all", {GEN_TH13_PLUS: 525, GEN_TH12: 425, GEN_TH10_TH11: 345}),
     SemanticOpcode("unit.et_protect_range", {GEN_TH13_PLUS: 526, GEN_TH12: 426, GEN_TH10_TH11: 346}),
     SemanticOpcode("unit.life_marker", {GEN_TH13_PLUS: 527, GEN_TH12: 427, GEN_TH10_TH11: 347}),
+    SemanticOpcode("boss.spell_unused", {GEN_TH13_PLUS: 528}),
     SemanticOpcode("unit.property.28", {GEN_TH13_PLUS: 528, GEN_TH12: 428}),
     SemanticOpcode("unit.property.29", {GEN_TH13_PLUS: 529, GEN_TH12: 429}),
     SemanticOpcode("unit.property.30", {GEN_TH13_PLUS: 530, GEN_TH12: 430}),
@@ -225,6 +226,8 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     *tuple(SemanticOpcode(f"bullet.emitter.{op - 600:02d}", {GEN_TH13_PLUS: op, GEN_TH12: op - 100, GEN_TH10_TH11: op - 200}) for op in range(600, 610)),
     SemanticOpcode("bullet.clear_all", {GEN_TH13_PLUS: 613, GEN_TH12: 510, GEN_TH10_TH11: 410}),
     SemanticOpcode("bullet.copy", {GEN_TH13_PLUS: 614, GEN_TH12: 511, GEN_TH10_TH11: 411}),
+    SemanticOpcode("bullet.speed_by_difficulty", {GEN_TH13_PLUS: 624, GEN_TH12: 521, GEN_TH10_TH11: 424}),
+    SemanticOpcode("bullet.count_by_difficulty", {GEN_TH13_PLUS: 625, GEN_TH12: 522, GEN_TH10_TH11: 425}),
 )
 
 UNSUPPORTED_SEMANTIC_OPCODES: dict[tuple[str, int, str], str] = {
