@@ -212,6 +212,12 @@ class TimelineRewrite(IRObject):
 
 
 @dataclass
+class FunctionRewrite(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "function_rewrite", family: str = "program"):
+        super().__init__("FunctionRewrite", game, function, source_line, id, family)
+
+
+@dataclass
 class EffectEmitter(IRObject):
     def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "effect"):
         super().__init__("EffectEmitter", game, function, source_line, id, family)

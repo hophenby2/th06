@@ -28,6 +28,7 @@ OVERRIDE_DOMAIN_BY_NAME = {
     "laserStRotation": "laser", "laserStEnd": "laser", "laserCuOn": "laser",
     "lifeSet": "boss", "setBoss": "boss", "timerReset": "boss", "setInterrupt": "boss", "setTimeout": "boss",
     "spellEnd": "boss", "setChapter": "boss", "spell": "boss", "spell2": "boss", "spell3": "boss",
+    "bombShield": "unit", "gameSpeed": "unit", "rankF2": "unit",
 }
 
 OP_ALIASES = {
@@ -140,6 +141,9 @@ OP_ALIASES = {
     "func_set": "unit.func_set",
     "call_std": "unit.call_std",
     "stage_logo": "unit.stage_logo",
+    "bomb_shield": "unit.bomb_shield",
+    "game_speed": "unit.game_speed",
+    "rank_f2": "unit.rank_f2",
     "z_index": "unit.z_index",
     "hit_sound": "unit.hit_sound",
     "fog": "unit.fog",
@@ -259,11 +263,92 @@ def target_opcode_for_op_key(op_key: str, target: str) -> int | None:
     return None
 
 
+SOURCE_SPECIFIC_DROP_OP_KEYS = {
+    "unit.unknown569", "raw.spec1", "raw.spec2", "laser.debug700", "movement.unknown444",
+    "enemy.create_legacy270", "enemy.create_maple", "anm.reset", "bullet.distance",
+    "raw.eff_create", "raw.eff_create_angle", "raw.card_eff", "raw.timer_threshold", "raw.ins_129",
+    "raw.et_on_auto_delay", "flow.familiar_create", "flow.familiar_create_f", "flow.familiar_create_a",
+    "flow.trail_familiar_set", "anm.play_attack", "movement.move_rand_time", "flow.ins_79",
+    "anm.set_ex", "anm.set_boss_ex", "movement.move_circle_change", "movement.move_accel", "movement.move_curve",
+    "raw.et_delay", "raw.et_on_auto", "raw.set_life_bar", "raw.ins_153", "raw.timer_set", "raw.set_lives",
+    "raw.life_threshold", "flow.float_time", "flow.math_circle_pos", "flow.inc", "raw.ins_173", "raw.ins_184",
+    "flow.math_angle", "flow.math_distance", "flow.et_protect_range", "raw.val_set", "raw.player_nullify", "anm.familiar",
+    "bullet.transform", "bullet.transform2",
+}
+
+OLD_TARGET_PRESENTATION_HELPERS = {
+    "anm.on_et", "anm.rotate", "unit.z_index", "unit.hit_sound", "unit.fog",
+    "unit.func_set", "movement.move_set_mirror", "unit.call_std", "unit.stage_logo",
+    "laser.timing", "laser.angle",
+}
+
+
+def op_lowering_policy(key: str, args: list[str]) -> dict[str, object] | None:
+    if key == "boss.spell_ex":
+        return {
+            "strategy": "emit_target_op",
+            "reason": "extended_spell_descriptor_uses_common_spell_header_on_th13plus",
+            "target_generations": ["th13_plus"],
+            "target_op_key": "boss.spell",
+            "arg_policy": {"take_first": 4},
+        }
+    if key == "enemy.byakuren_butterfly":
+        return {
+            "strategy": "catalog_sprite",
+            "reason": "boss_butterfly_visual_helper_maps_to_target_familiar_sprite",
+            "target_generations": ["th13_plus"],
+            "catalog_role": "boss",
+            "catalog_purpose": "familiar",
+            "catalog_kind": "sprite",
+            "slot_arg_index": 0,
+            "metadata_arg_names": {"1": "switch"},
+        }
+    if key in {"movement.bomb_shield", "unit.bomb_shield"}:
+        return {
+            "strategy": "emit_target_op",
+            "reason": "TH12 bomb shield movement-domain opcode maps to TH13+ unit bomb shield",
+            "target_generations": ["th13_plus"],
+            "target_op_key": "unit.bomb_shield",
+            "arg_policy": {"defaults": ["1", "0"], "int_indices": [1]},
+        }
+    if key in {"movement.game_speed", "unit.game_speed"}:
+        return {
+            "strategy": "emit_target_op",
+            "reason": "game speed is a unit/runtime property in TH13+",
+            "target_generations": ["th13_plus"],
+            "target_op_key": "unit.game_speed",
+        }
+    if key in {"unit.unknown531", "unit.property.31"}:
+        return {
+            "strategy": "approximate",
+            "reason": "TH12 special body-hitbox flag has no verified TH13+ equivalent",
+            "target_generations": ["th13_plus"],
+            "approximation": "metadata_only_no_runtime_effect",
+        }
+    if key == "flow.debug22":
+        return {"strategy": "drop", "reason": "debug_only"}
+    if key in SOURCE_SPECIFIC_DROP_OP_KEYS:
+        return {"strategy": "drop", "reason": "source_specific_runtime_helper"}
+    if key == "flow.fset_rand_sign":
+        return {"strategy": "approximate", "reason": "random_sign_unavailable", "approximation": "positive_magnitude"}
+    if key == "unit.death_wait":
+        return {"strategy": "approximate", "reason": "target_without_death_wait", "target_generations": ["th13_plus"], "approximation": "no_op"}
+    if key == "boss.set_interrupt" and args and str(args[0]) == "-1":
+        return {"strategy": "drop", "reason": "disabled_interrupt"}
+    if key == "flow.call_async" and args and str(args[-1]) == "-1":
+        return {"strategy": "drop", "reason": "disabled_async_call"}
+    if key in OLD_TARGET_PRESENTATION_HELPERS:
+        return {"strategy": "drop", "reason": "unsupported_presentation_helper", "target_generations": ["th10_th11"]}
+    if key == "laser.on_aimed":
+        return {"strategy": "approximate", "reason": "old_aimed_laser_macro", "target_generations": ["th12", "th13_plus"], "approximation": "no_op_setup"}
+    return None
+
+
 def op_event(game: str, opcode: int, args: list[str], line: int | None = None, difficulty: str | None = None) -> dict[str, object]:
     info = opcode_info(game, opcode)
     key = op_key_for_opcode(game, opcode)
     domain = "boss" if key == "boss.spell_ex" else domain_for(game, opcode, info.name if info else "")
-    return {
+    event = {
         "op_key": key,
         "domain": domain,
         "source_game": game,
@@ -274,3 +359,7 @@ def op_event(game: str, opcode: int, args: list[str], line: int | None = None, d
         "line": line,
         "difficulty": difficulty,
     }
+    policy = op_lowering_policy(key, list(args))
+    if policy:
+        event["lowering_policy"] = policy
+    return event

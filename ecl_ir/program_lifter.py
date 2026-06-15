@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 
-from .model import EntryAlias, HelperRoutine, Program, ResourcePlan, TimelineRewrite
+from .model import EntryAlias, FunctionRewrite, HelperRoutine, Program, ResourcePlan, TimelineRewrite
 from .semantics import generation_for_game
 
 STAGE_ENTRY_ALIASES: dict[str, str] = {
@@ -34,6 +35,7 @@ def lift_program_adapters(program: Program) -> list[object]:
     adapters.extend(lift_entry_aliases(program))
     adapters.extend(lift_helper_routines(program))
     adapters.extend(lift_timeline_rewrites(program))
+    adapters.extend(lift_function_rewrites(program))
     return adapters
 
 
@@ -111,6 +113,19 @@ def lift_helper_routines(program: Program) -> list[HelperRoutine]:
 
 def lift_timeline_rewrites(program: Program) -> list[TimelineRewrite]:
     rewrites: list[TimelineRewrite] = []
+    if program.game in {"th10", "th11"} and source_role(program) == "stage_timeline":
+        for func in program.functions:
+            if not re.fullmatch(r"(?:B|G|R|Y)Girl00[A-Z]*", func.name):
+                continue
+            obj = TimelineRewrite(program.game, func.name, 0, "stage_enemy_drop_after_anm", "program")
+            obj.fields = {
+                "semantic": "timeline.order.drop_after_visual_setup",
+                "when_target_generation": "th13_plus",
+                "move_op_key": "unit.drop_main",
+                "insert_before_call_regex": r"@Girl00[A-Z]*\(",
+                "reason": "TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body",
+            }
+            rewrites.append(obj)
     if generation_for_game(program.game) != "th13_plus":
         return rewrites
     role = source_role(program)
@@ -135,4 +150,19 @@ def lift_timeline_rewrites(program: Program) -> list[TimelineRewrite]:
                 "reason": "normal target boss flow should bypass source spell-test selector",
             }
             rewrites.append(obj)
+    return rewrites
+
+
+def lift_function_rewrites(program: Program) -> list[FunctionRewrite]:
+    rewrites: list[FunctionRewrite] = []
+    if program.game == "th10" and source_role(program) == "stage_timeline" and any(func.name == "MapleEnemy" for func in program.functions):
+        obj = FunctionRewrite(program.game, "MapleEnemy", 0, "omit_maple_enemy", "program")
+        obj.fields = {
+            "semantic": "visual_helper_function.omit",
+            "when_target_generation": "th13_plus",
+            "function": "MapleEnemy",
+            "call_names": ["MapleEnemy"],
+            "reason": "TH10 MapleEnemy is a visual helper; target runtime entity is unstable and nonessential",
+        }
+        rewrites.append(obj)
     return rewrites

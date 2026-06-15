@@ -6,6 +6,7 @@ from collections.abc import Iterable
 from .model import BulletEmitter, BulletTransform, Function, Instruction, Program
 from .op_ir import op_event
 from .semantics import bullet_shape_semantic, spread_semantic
+from .spread_ir import double_flower_lowering_for_th12
 from .transform_ir import annotate_th12_to_th13plus_transforms
 
 TH13PLUS_GAMES = {"th13", "th14", "th15", "th16", "th17", "th18"}
@@ -20,6 +21,46 @@ def arg(args: list[str], index: int, default: str = "") -> str:
 
 def append_emitter_op(emitter: BulletEmitter, ins: Instruction) -> None:
     emitter.semantics.setdefault("ir_ops", []).append(op_event(emitter.game, ins.opcode, ins.args, ins.line_no, ins.difficulty))
+
+
+def emitter_has_curve_laser_semantic(emitter: BulletEmitter) -> bool:
+    return any(transform.raw_opcode in {510, 511, 512} for transform in emitter.transforms)
+
+
+def annotate_bullet_lowering_plan(emitter: BulletEmitter) -> None:
+    plan = emitter.semantics.setdefault("lowering_plan", {})
+    spread = emitter.semantics.get("bullet", {}).get("spread", {})
+    double_flower = double_flower_lowering_for_th12(str(emitter.id), spread)
+    if double_flower:
+        plan["spread"] = {
+            "semantic": "double_flower",
+            "target": "th12",
+            "strategy": "split_to_two_single_side_emitters",
+            "primary_style": double_flower.primary_style,
+            "aux_style": double_flower.aux_style,
+            "aux_emitter_id": double_flower.aux_emitter_id,
+        }
+    if emitter.game == "th12" and emitter_has_curve_laser_semantic(emitter):
+        plan["curve_laser"] = {
+            "semantic": "curve_laser_as_bullet_transform",
+            "targets": ["th13", "th14", "th15", "th16", "th17", "th18"],
+            "appearance_override": {"style": "0", "color": "2"},
+            "drop_modes": ["512"],
+            "normalize_tangent_delay": True,
+            "renumber_transform_slots": True,
+        }
+    if emitter.family == "th08_macro":
+        plan["old_macro"] = {
+            "semantic": "old_macro_bullet",
+            "target_family": "th06_th08",
+            "opcode_by_mode": {
+                "aimed_fan": 96, "fan": 97, "aimed_ring": 98, "ring": 99,
+                "offset_aimed_ring": 100, "offset_ring": 101, "random_angle": 102,
+                "random_speed": 103, "random_angle_speed": 104,
+            },
+        }
+    if emitter.family == "th10_slot":
+        plan["slot_backend"] = {"semantic": "slot_bullet_emitter", "target_family": "th10_th11"}
 
 
 def difficulty_literal_group(value: str, literals: object) -> dict[str, str]:
@@ -311,6 +352,8 @@ def lift_th13plus_function(game: str, func: Function) -> list[BulletEmitter]:
             emitter.raw.append(ins)
             append_emitter_op(emitter, ins)
             apply_th13plus(emitter, ins)
+    for emitter in emitters:
+        annotate_bullet_lowering_plan(emitter)
     return emitters
 
 
@@ -336,6 +379,7 @@ def lift_th12_function(game: str, func: Function) -> list[BulletEmitter]:
     for emitter in emitters:
         annotate_definition_prefix(emitter, apply_th12)
         emitter.transforms = annotate_th12_to_th13plus_transforms(emitter.transforms, game, "th15")
+        annotate_bullet_lowering_plan(emitter)
     return emitters
 
 
@@ -358,6 +402,8 @@ def lift_th08_function(game: str, func: Function) -> list[BulletEmitter]:
             append_emitter_op(emitter, ins)
             emitters.append(emitter)
             pending_transforms = []
+    for emitter in emitters:
+        annotate_bullet_lowering_plan(emitter)
     return emitters
 
 
@@ -422,6 +468,7 @@ def lift_th10_function(game: str, func: Function) -> list[BulletEmitter]:
             apply_th10(emitter, ins)
     for emitter in emitters:
         annotate_definition_prefix(emitter, apply_th10)
+        annotate_bullet_lowering_plan(emitter)
     return emitters
 
 

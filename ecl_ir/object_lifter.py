@@ -47,6 +47,77 @@ def append_ir_op(obj: IRObject, game: str, ins: Instruction) -> None:
     obj.fields.setdefault("ir_ops", []).append(op_event(game, ins.opcode, ins.args, ins.line_no, ins.difficulty))
 
 
+def source_stage_kind(program: Program) -> str:
+    source = program.source.replace("\\", "/").lower()
+    name = source.rsplit("/", 1)[-1]
+    if any(token in name for token in ("boss", "mbs", "bs")):
+        return "boss"
+    if "stage06" in source and "/th12/" in source:
+        return "th12_stage06"
+    return "stage"
+
+
+def anm_role_for_context(program: Program, func: Function) -> str:
+    stage_kind = source_stage_kind(program)
+    if stage_kind == "boss" or func.name.lower().startswith(("boss", "mboss")):
+        return "boss"
+    return "stage"
+
+
+def annotate_animation_policy(obj: AnimationOp, program: Program, func: Function, op_name: str, ins: Instruction) -> None:
+    role = anm_role_for_context(program, func)
+    obj.fields.setdefault("role", role)
+    obj.fields.setdefault("target_policy", {})
+    if program.game in {"th10", "th11"} and role == "stage" and op_name == "anmSetMain" and len(ins.args) == 2:
+        script = a(ins, 1, "")
+        obj.fields["target_policy"]["stage_enemy_wrapper_anm"] = {
+            "semantic": "stage_enemy_wrapper_anm",
+            "targets": ["th13", "th14", "th15", "th16", "th17", "th18"],
+            "source_slot": a(ins, 0, "0"),
+            "source_script": script,
+            "native_combos": {
+                "45": {"bank": "2", "main_slot": "0", "main_script": "0", "sprite_slot": "1", "sprite_script": ""},
+                "46": {"bank": "2", "main_slot": "0", "main_script": "5", "sprite_slot": "1", "sprite_script": ""},
+                "47": {"bank": "2", "main_slot": "0", "main_script": "35", "sprite_slot": "1", "sprite_script": "93"},
+                "48": {"bank": "2", "main_slot": "0", "main_script": "40", "sprite_slot": "1", "sprite_script": "93"},
+            },
+        }
+    if role == "boss" and op_name == "anmSetSprite" and len(ins.args) == 2 and a(ins, 0, "") in {str(slot) for slot in range(3, 13)}:
+        obj.fields["target_policy"]["boss_aux_sprite"] = {
+            "semantic": "boss_aux_sprite",
+            "source_slot": a(ins, 0, "0"),
+            "source_script": a(ins, 1, "0"),
+            "catalog_role": "boss",
+            "catalog_purpose": "familiar",
+            "catalog_kind": "sprite",
+        }
+    if program.game == "th12" and source_stage_kind(program) == "th12_stage06" and func.name == "MBoss":
+        if op_name == "anmSelect" and ins.args == ["2"]:
+            obj.fields["target_policy"]["drop_for_target"] = {"targets": ["th15"], "reason": "th12_stage06_mboss_boss_bank_select"}
+        if op_name == "anmSetSprite" and len(ins.args) == 2 and ins.args[1] in {"46", "47"}:
+            obj.fields["target_policy"]["drop_for_target"] = {"targets": ["th15"], "reason": f"th12_stage06_mboss_boss_bank_sprite_{ins.args[1]}"}
+    if op_name == "anmPlayAttack":
+        obj.fields["target_policy"]["legacy_attack_animation"] = {"semantic": "legacy_attack_animation", "fallback_op_key": "anm.play", "args": ["0", "0"]}
+
+
+def annotate_enemy_policy(obj: EnemyOp, program: Program, func: Function, ins: Instruction) -> None:
+    sub = a(ins, 0, "").strip().strip('"')
+    obj.fields.setdefault("target_policy", {})
+    if program.game == "th10" and sub == "MapleEnemy":
+        obj.fields["semantic"] = "visual_helper_enemy"
+        obj.fields["target_policy"]["omit_runtime_entity"] = {
+            "targets": ["th13", "th14", "th15", "th16", "th17", "th18"],
+            "reason": "maple_enemy_visual_helper",
+        }
+    if program.game == "th12" and sub == "BossCard6_atLine":
+        obj.fields.update({
+            "semantic": "flying_bowl_line_visual",
+            "target_behavior": "omit_visual_helper",
+            "reason": "visual line helper; bullet motion is represented by transforms on the linked emitter",
+        })
+        obj.fields["target_policy"]["omit_runtime_entity"] = {"targets": ["th13", "th14", "th15", "th16", "th17", "th18"], "reason": "flying_bowl_line_visual"}
+
+
 def lift_all_objects(program: Program) -> list[object]:
     objects: list[object] = []
     objects.extend(lift_program_adapters(program))
@@ -196,8 +267,10 @@ def apply_legacy_effect(obj: EffectEmitter, ins: Instruction) -> None:
     fields.update({"semantic": effect_names.get(ins.opcode, f"effect_{ins.opcode}"), "op_key": op_key_for_opcode(obj.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
     if ins.opcode == 139:
         fields["effect"] = {"source": "etama.anm", "script_expr": f"({a(ins, 0, '0')} + 28)", "amount": a(ins, 1, "1"), "color": a(ins, 2, "0"), "angle": None}
+        fields["target_policy"] = {"visual_effect": {"strategy": "anm.play", "target_op_key": "anm.play", "args": ["0", fields["effect"]["script_expr"]]}}
     elif ins.opcode == 140:
         fields["effect"] = {"source": "etama.anm", "script_expr": f"({a(ins, 0, '0')} + 28)", "amount": a(ins, 1, "1"), "color": a(ins, 2, "0"), "angle": a(ins, 3, "0.0f"), "unknown": ins.args[4:]}
+        fields["target_policy"] = {"visual_effect": {"strategy": "anm.play_rotate", "target_op_key": "anm.play_rotate", "args": ["0", fields["effect"]["script_expr"], fields["effect"].get("angle", "0.0f")]}}
 
 
 def apply_legacy_familiar(obj: FamiliarSpawner, ins: Instruction) -> None:
@@ -223,10 +296,13 @@ def apply_legacy_familiar(obj: FamiliarSpawner, ins: Instruction) -> None:
             "focus_invulnerable": True,
             "clear_bullets_on_death": True,
         }
+        fields["target_policy"] = {"familiar_spawn": {"strategy": "enemy_child_approximation", "preserve_focus_invulnerability_as_metadata": True}}
     elif ins.opcode == 83:
         fields["trail"] = {"enabled": a(ins, 0, "0")}
+        fields["target_policy"] = {"trail_toggle": {"strategy": "metadata_only"}}
     elif ins.opcode == 174:
         fields["focus_animation"] = {"source": "etama.anm", "script_expr": f"({a(ins, 0, '0')} + 48)"}
+        fields["target_policy"] = {"focus_animation": {"strategy": "anm.play", "target_op_key": "anm.play", "args": ["0", fields["focus_animation"]["script_expr"]]}}
 
 
 def apply_legacy_auto_bullet(obj: AutoBulletTimer, ins: Instruction) -> None:
@@ -234,8 +310,10 @@ def apply_legacy_auto_bullet(obj: AutoBulletTimer, ins: Instruction) -> None:
     obj.fields.update({"semantic": semantics.get(ins.opcode, f"auto_bullet_{ins.opcode}"), "op_key": op_key_for_opcode(obj.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
     if ins.opcode in {105, 106}:
         obj.fields["timer"] = {"interval": a(ins, 0, "1"), "initial_delay": "random_0_interval" if ins.opcode == 106 else "none", "fire_mode": "current_bullet_attributes"}
+        obj.fields["lowering_plan"] = {"strategy": "emit_single_fire_tick", "target_op_key": "bullet.fire"}
     else:
         obj.fields["timer"] = {"defer_attribute_fire": True}
+        obj.fields["lowering_plan"] = {"strategy": "metadata_only", "reason": "target slot emitters are configured explicitly"}
 
 
 def apply_legacy_boss_timer(obj: BossTimer, ins: Instruction) -> None:
@@ -251,12 +329,16 @@ def apply_legacy_boss_timer(obj: BossTimer, ins: Instruction) -> None:
     obj.fields.update({"semantic": semantics.get(ins.opcode, f"boss_timer_{ins.opcode}"), "op_key": op_key_for_opcode(obj.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
     if ins.opcode == 132:
         obj.fields["timer"] = {"start": a(ins, 0, "0"), "direction": "up", "attack_timer_expr": "threshold - timer"}
+        obj.fields["lowering_plan"] = {"strategy": "boss.timer_reset_approximation"}
     elif ins.opcode == 133:
         obj.fields["interrupt"] = {"trigger": "life_leq", "unknown": a(ins, 0, "0"), "life": a(ins, 1, "0"), "sub": a(ins, 2, "-1")}
+        obj.fields["lowering_plan"] = {"strategy": "boss.interrupt", "target_op_key": "boss.set_interrupt"}
     elif ins.opcode == 134:
         obj.fields["interrupt"] = {"trigger": "timer_geq", "time": a(ins, 0, "0"), "sub": a(ins, 1, "-1")}
+        obj.fields["lowering_plan"] = {"strategy": "boss.interrupt", "target_op_key": "boss.set_interrupt"}
     elif ins.opcode == 158:
         obj.fields["life_bar"] = {"slot": a(ins, 0, "0"), "life_min": a(ins, 1, "0"), "life_max": a(ins, 2, "0"), "color": a(ins, 3, "0")}
+        obj.fields["lowering_plan"] = {"strategy": "unit.life_marker_approximation", "target_op_key": "unit.life_marker"}
 
 
 def apply_legacy_motion_modifier(obj: MotionModifier, ins: Instruction) -> None:
@@ -267,7 +349,17 @@ def apply_legacy_motion_modifier(obj: MotionModifier, ins: Instruction) -> None:
         74: "circle_speed_change",
         178: "random_direction_tween_variant",
     }
-    obj.fields.update({"semantic": semantics.get(ins.opcode, f"motion_modifier_{ins.opcode}"), "op_key": op_key_for_opcode(obj.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
+    semantic = semantics.get(ins.opcode, f"motion_modifier_{ins.opcode}")
+    obj.fields.update({"semantic": semantic, "op_key": op_key_for_opcode(obj.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
+    plans = {
+        "random_direction_tween": {"strategy": "velocity_tween_neutral_angle", "target_op_key": "movement.velocity.tween"},
+        "random_direction_tween_variant": {"strategy": "velocity_tween_neutral_angle", "target_op_key": "movement.velocity.tween"},
+        "circle_speed_change": {"strategy": "circle_tween_approximation", "target_op_key": "movement.circle.tween"},
+        "angular_velocity": {"strategy": "long_lived_circle_tween", "target_op_key": "movement.circle.tween"},
+        "linear_acceleration": {"strategy": "long_lived_velocity_tween", "target_op_key": "movement.velocity.tween"},
+    }
+    if semantic in plans:
+        obj.fields["lowering_plan"] = plans[semantic]
     if ins.opcode in {67, 178}:
         obj.fields["motion"] = {"time": a(ins, 0, "0"), "mode": a(ins, 1, "0"), "speed": a(ins, 2, "0.0f"), "direction": "random_player_bounded", "variant": ins.opcode == 178}
     elif ins.opcode == 70:
@@ -496,17 +588,13 @@ def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
                     "slot": ins.args[0],
                     "script": ins.args[1],
                 }
+            annotate_animation_policy(obj, program, func, op_name, ins)
             objects.append(obj)
         elif ins.opcode in enemy:
             obj = make_obj(EnemyOp, program, func, ins, family)
             obj.fields.update({"op": enemy[ins.opcode], "op_key": op_key_for_opcode(program.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
             obj.fields["create"] = enemy_create_semantics(program, func, ins, enemy[ins.opcode])
-            if program.game == "th12" and ins.args and ins.args[0].strip('"') == "BossCard6_atLine":
-                obj.fields.update({
-                    "semantic": "flying_bowl_line_visual",
-                    "target_behavior": "omit_visual_helper",
-                    "reason": "visual line helper; bullet motion is represented by transforms on the linked emitter",
-                })
+            annotate_enemy_policy(obj, program, func, ins)
             objects.append(obj)
     return objects
 
@@ -562,6 +650,14 @@ def lift_boss_patterns(program: Program, func: Function) -> list[BossPattern]:
             current.fields.setdefault("ops", []).append({"op": boss_ops[ins.opcode], "op_key": op_key_for_opcode(program.game, ins.opcode), "opcode": ins.opcode, "args": ins.args, "line": ins.line_no})
             if boss_ops[ins.opcode].startswith("spell"):
                 current.fields["spell"] = {"opcode": ins.opcode, "args": ins.args}
+                if op_key_for_opcode(program.game, ins.opcode) == "boss.spell_ex":
+                    current.fields.setdefault("target_policy", {})["spell_ex_common_header"] = {
+                        "strategy": "emit_target_op",
+                        "target_generations": ["th13_plus"],
+                        "target_op_key": "boss.spell",
+                        "arg_policy": {"take_first": 4},
+                        "reason": "extended_spell_descriptor_uses_common_spell_header_on_th13plus",
+                    }
             elif boss_ops[ins.opcode] == "setInterrupt":
                 current.fields["interrupt"] = {"args": ins.args}
     return objects

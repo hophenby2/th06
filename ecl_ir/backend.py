@@ -10,7 +10,7 @@ from .op_ir import target_opcode_for_op_key
 from .origin_ir import bullet_origin_instructions
 from .reference import is_opcode_supported, validate_opcode_args
 from .semantics import boss_phase_prefix_ops, bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_raw_arg_by_semantic, remap_unit_flag_mask, unsupported_bullet_transform_mode_reason
-from .spread_ir import double_flower_lowering_for_th12, th12_aux_emitter_id
+from .spread_ir import th12_aux_emitter_id
 from .transform_ir import bullet_transform_instructions, lower_transform_opcode_to_instruction, target_transform_args
 
 INT_SENTINEL = "-999999"
@@ -217,41 +217,101 @@ def target_opcode_is_safe(target: str, opcode: int) -> bool:
     return int(opcode) not in UNSAFE_TARGET_OPCODES.get(target, set())
 
 
+def op_lowering_policy_applies(policy: dict[str, object], target: str) -> bool:
+    target_generations = policy.get("target_generations")
+    return not isinstance(target_generations, list) or generation_for_game(target) in {str(item) for item in target_generations}
+
+
+def policy_args(args: list[str], policy: dict[str, object]) -> list[str]:
+    arg_policy = policy.get("arg_policy") if isinstance(policy.get("arg_policy"), dict) else {}
+    out = list(args)
+    take_first = arg_policy.get("take_first")
+    if isinstance(take_first, int):
+        out = out[:take_first]
+    defaults = arg_policy.get("defaults")
+    if isinstance(defaults, list):
+        while len(out) < len(defaults):
+            out.append(str(defaults[len(out)]))
+    int_indices = arg_policy.get("int_indices")
+    if isinstance(int_indices, list):
+        for raw_index in int_indices:
+            try:
+                index = int(raw_index)
+            except (TypeError, ValueError):
+                continue
+            if 0 <= index < len(out):
+                out[index] = as_int_expr(out[index])
+    return out
+
+
+def compile_op_lowering_policy(event: dict[str, object], target: str) -> str | None:
+    policy = event.get("lowering_policy") if isinstance(event.get("lowering_policy"), dict) else None
+    if not policy or not op_lowering_policy_applies(policy, target):
+        return None
+    op_key = str(event.get("op_key") or "")
+    args_list = [str(arg) for arg in event.get("args", [])]
+    args = ", ".join(args_list)
+    strategy = str(policy.get("strategy", ""))
+    reason = str(policy.get("reason", ""))
+    if strategy == "drop":
+        return f"// dropped by IR op lowering policy for {target}: {op_key}({args}); reason={reason}"
+    if strategy == "approximate":
+        approximation = str(policy.get("approximation", ""))
+        return f"// approximated by IR op lowering policy for {target}: {op_key}({args}); reason={reason}; approximation={approximation}"
+    if strategy == "emit_target_op":
+        target_op_key = str(policy.get("target_op_key") or op_key)
+        lowered_args = policy_args(args_list, policy)
+        lowered = emit_target_op(target, target_op_key, lowered_args)
+        if lowered:
+            return f"// emitted by IR op lowering policy for {target}: {op_key} -> {target_op_key}; reason={reason}\n{lowered}"
+        return None
+    if strategy == "catalog_sprite":
+        if not args_list:
+            return f"// unsupported catalog_sprite IR lowering for {target}: {op_key}({args}); reason=missing_slot_arg"
+        slot_index = int(policy.get("slot_arg_index", 0) or 0)
+        slot = args_list[slot_index] if slot_index < len(args_list) else "0"
+        chosen = choose_script(target, str(policy.get("catalog_role", "boss")), str(policy.get("catalog_purpose", "familiar")), kind=str(policy.get("catalog_kind", "sprite")))
+        if chosen is None:
+            return f"// unsupported catalog_sprite IR lowering for {target}: {op_key}({args}); reason=no_target_catalog_sprite"
+        metadata = []
+        metadata_names = policy.get("metadata_arg_names") if isinstance(policy.get("metadata_arg_names"), dict) else {}
+        for index_text, name in metadata_names.items():
+            try:
+                index = int(index_text)
+            except ValueError:
+                continue
+            if index < len(args_list):
+                metadata.append(f"{name}={args_list[index]}")
+        lines = [
+            f"// catalog_sprite IR lowering for {target}: {op_key}; bank {chosen.bank}, script {chosen.script}; reason={reason}",
+            f"ins_{target_opcode_for_op_key('anm.select', target)}({chosen.bank});",
+            f"ins_{target_opcode_for_op_key('anm.set_sprite', target)}({slot}, {chosen.script});",
+        ]
+        if metadata:
+            lines.append(f"// IR metadata preserved: {', '.join(metadata)}")
+        return "\n".join(lines)
+    return None
+
+
+
+def compile_preemptive_op_lowering_policy(event: dict[str, object], target: str) -> str | None:
+    policy = event.get("lowering_policy") if isinstance(event.get("lowering_policy"), dict) else None
+    if not policy or not op_lowering_policy_applies(policy, target):
+        return None
+    strategy = str(policy.get("strategy", ""))
+    reason = str(policy.get("reason", ""))
+    if strategy in {"emit_target_op", "catalog_sprite"}:
+        return compile_op_lowering_policy(event, target)
+    if strategy == "drop" and reason in {"disabled_async_call", "debug_only"}:
+        return compile_op_lowering_policy(event, target)
+    return None
+
 def compile_lossy_semantic_fallback(event: dict[str, object], target: str) -> str | None:
     op_key = str(event.get("op_key") or "")
     args = ", ".join(str(arg) for arg in event.get("args", []))
-    if op_key == "flow.debug22":
-        return f"// dropped debug-only semantic op for {target}: debug22({args})"
-    if op_key in {
-        "unit.unknown569", "raw.spec1", "raw.spec2", "laser.debug700", "movement.unknown444",
-        "enemy.create_legacy270", "enemy.create_maple", "anm.reset", "bullet.distance",
-        "raw.eff_create", "raw.eff_create_angle", "raw.card_eff", "raw.timer_threshold", "raw.ins_129",
-        "raw.et_on_auto_delay", "flow.familiar_create", "flow.familiar_create_f", "flow.familiar_create_a",
-        "flow.trail_familiar_set", "anm.play_attack", "movement.move_rand_time", "flow.ins_79",
-        "anm.set_ex", "anm.set_boss_ex", "movement.move_circle_change", "movement.move_accel", "movement.move_curve",
-        "raw.et_delay", "raw.et_on_auto", "raw.set_life_bar", "raw.ins_153", "raw.timer_set", "raw.set_lives",
-        "raw.life_threshold", "flow.float_time", "flow.math_circle_pos", "flow.inc", "raw.ins_173", "raw.ins_184",
-        "flow.math_angle", "flow.math_distance", "flow.et_protect_range", "raw.val_set", "raw.player_nullify", "anm.familiar",
-        "bullet.transform", "bullet.transform2",
-    }:
-        return f"// dropped source-specific semantic op for {target}: {op_key}({args})"
-    if target in STACK_VM_TARGETS and op_key == "flow.fset_rand_sign":
-        return f"// approximated random-sign float assignment unavailable in target stack VM: {op_key}({args})"
-    if target in {"th13", "th14", "th15", "th16", "th17", "th18"} and op_key == "unit.death_wait":
-        return "// approximated deathWait on target without deathWait opcode: no-op"
-    if op_key == "boss.set_interrupt" and str(event.get("args", [""])[0]) == "-1":
-        return f"// dropped disabled interrupt for {target}: setInterrupt(-1)"
-    if op_key == "flow.call_async" and str(event.get("args", ["", ""])[-1]) == "-1":
-        return f"// dropped disabled async call for {target}: callAsync(..., -1)"
-    if target in {"th10", "th11"} and op_key in {
-        "anm.on_et", "anm.rotate", "unit.z_index", "unit.hit_sound", "unit.fog",
-        "unit.func_set", "movement.move_set_mirror", "unit.call_std", "unit.stage_logo",
-        "laser.timing", "laser.angle",
-    }:
-        return f"// dropped unsupported presentation/runtime helper for {target}: {op_key}({args})"
-    if target in {"th12", "th13", "th14", "th15", "th16", "th17", "th18"} and op_key == "laser.on_aimed":
-        return "// approximated old aimed laser macro on target laser manager: no-op setup placeholder"
-    return None
+    if lowered := compile_op_lowering_policy(event, target):
+        return lowered
+    return f"// unsupported semantic op without IR lowering policy for {target}: {op_key}({args})"
 
 
 STACK_VM_TARGETS = {"th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"}
@@ -539,63 +599,22 @@ def drop_th12_stage6_stage_mboss_boss_anm(event: dict[str, object], target: str,
     return None
 
 
-def compile_special_semantic_event(event: dict[str, object], target: str, context: dict[str, object] | None = None) -> str | None:
-    op_key = str(event.get("op_key") or "")
-    args = [str(arg) for arg in event.get("args", [])]
-    if op_key == "boss.spell_ex" and target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
-        if len(args) > 4:
-            return f"ins_537({', '.join(args[:4])});"
-        return None
-    if (
-        op_key == "anm.set_sprite"
-        and anm_role_hint(event, context) == "boss"
-        and len(args) == 2
-        and args[0] in {str(slot) for slot in range(3, 13)}
-        and args[1] in {"48", "49", "50", "51", "52", "53", "54", "55", "56", "57"}
-    ):
-        chosen = choose_script(target, "boss", "familiar", kind="sprite")
-        if chosen is None:
-            return None
-        return "\n".join([
-            f"// boss auxiliary sprite lowered through target ANM catalog: bank {chosen.bank}, script {chosen.script}",
-            f"ins_{target_opcode_for_op_key('anm.select', target)}({chosen.bank});",
-            f"ins_{target_opcode_for_op_key('anm.set_sprite', target)}({args[0]}, {chosen.script});",
-        ])
-    if op_key == "enemy.byakuren_butterfly" and target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
-        if not args:
-            return f"// unsupported byakuren butterfly helper arity for {target}: {', '.join(args)}"
-        slot = args[0]
-        switch = args[1] if len(args) > 1 else "0"
-        chosen = choose_script(target, "boss", "familiar", kind="sprite")
-        if chosen is None:
-            return f"// unsupported byakuren butterfly helper for {target}: no boss familiar sprite in catalog"
-        return "\n".join([
-            f"// boss familiar sprite lowered through target ANM catalog: bank {chosen.bank}, script {chosen.script}",
-            f"ins_{target_opcode_for_op_key('anm.select', target)}({chosen.bank});",
-            f"ins_{target_opcode_for_op_key('anm.set_sprite', target)}({slot}, {chosen.script});",
-            f"// TH12 butterfly switch argument preserved for audit: {switch}",
-        ])
-    return None
-
-
 def compile_ir_op_event(event: dict[str, object], target: str, comment: str | None = None, context: dict[str, object] | None = None) -> str | None:
     op_key = str(event.get("op_key") or "")
     if not op_key:
         return None
     args = [str(arg) for arg in event.get("args", [])]
-    if target == "th15" and str(event.get("source_game") or "") == "th10" and op_key.startswith("enemy.create") and args and args[0].strip('"') == "MapleEnemy":
-        return "// omitted TH10 MapleEnemy visual helper create for TH15 stability"
     source_opcode = int(event.get("source_opcode") or -1)
     if op_key.startswith("raw.") and source_opcode == 1 and is_opcode_supported(target, 1):
         return "ins_1();"
-    if dropped := drop_th12_stage6_stage_mboss_boss_anm(event, target, context):
-        return dropped
     source_game = str(event.get("source_game") or "")
+    if lowered := compile_preemptive_op_lowering_policy(event, target):
+        return lowered
     if target == "th12" and source_game in {"th13", "th14", "th15", "th16", "th17", "th18"} and source_opcode in {611, 612}:
         return compile_lossy_semantic_fallback(event, target)
-    if op_key == "flow.call_async" and str(event.get("source_game") or "") in {"th06", "th07", "th08"} and str(event.get("args", ["", ""])[-1]) == "-1":
-        return f"// dropped disabled async call for {target}: callAsync(..., -1)"
-    if op_key == "flow.float_time" and target not in {"th13", "th14", "th15", "th16", "th17", "th18"}:
+    if op_key == "flow.call_async" and str(event.get("args", ["", ""])[-1]) == "-1":
+        return compile_lossy_semantic_fallback(event, target)
+    if op_key == "flow.float_time" and generation_for_game(target) != "th13_plus":
         return compile_lossy_semantic_fallback(event, target)
     if op_key == "flow.nop" and source_game in {"th10", "th11", "th12"} and generation_for_game(target) == "th13_plus":
         return "ins_0();"
@@ -607,10 +626,6 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
     if lowered := compile_th08_conditional_jump(event, target):
         return lowered
     if lowered := compile_th08_anm_alias(event, target):
-        return lowered
-    if lowered := compile_th10_stage_wrapper_anm(event, target, context):
-        return lowered
-    if lowered := compile_special_semantic_event(event, target, context):
         return lowered
     semantic_map = opcode_map_for(source_game, target, source_opcode) if source_game and source_opcode >= 0 else None
     semantic_op_key = (semantic_map.semantic if semantic_map is not None and semantic_map.semantic else op_key) if op_key.startswith("raw.") else canonical_anm_op_key(op_key)
@@ -809,8 +824,8 @@ def append_definition_fire(text: str, emitter: BulletEmitter, target: str) -> st
         return text
     lines.append(f"// LuaSTG direct bullet call lowered to target fire")
     lines.append(f"ins_{fire_opcode}({emitter_id});")
-    double_flower = double_flower_lowering_for_th12(str(emitter_id), spread_semantics(emitter)) if target == "th12" else None
-    aux_id = double_flower.aux_emitter_id if double_flower else None
+    spread_plan = (getattr(emitter, "semantics", {}).get("lowering_plan", {}) or {}).get("spread", {}) if target == "th12" else {}
+    aux_id = spread_plan.get("aux_emitter_id") if isinstance(spread_plan, dict) else None
     if aux_id:
         lines.append(f"ins_{fire_opcode}({aux_id});")
     return "\n".join(lines)
@@ -978,7 +993,64 @@ def target_family(target: str) -> str:
     return "th12"
 
 
+def target_policy_applies(policy: dict[str, object], target: str) -> bool:
+    targets = policy.get("targets")
+    return not isinstance(targets, list) or target in {str(item) for item in targets}
+
+
+def compile_target_policy(obj, target: str) -> str | None:
+    fields = getattr(obj, "fields", {}) or {}
+    policies = fields.get("target_policy", {}) or {}
+    if drop := policies.get("drop_for_target"):
+        if isinstance(drop, dict) and target_policy_applies(drop, target):
+            return f"// dropped by IR target policy: {drop.get('reason', 'drop_for_target')}"
+    if omit := policies.get("omit_runtime_entity"):
+        if isinstance(omit, dict) and target_policy_applies(omit, target):
+            return f"// omitted runtime entity by IR target policy: {omit.get('reason', 'omit_runtime_entity')}"
+    if legacy := policies.get("legacy_attack_animation"):
+        if isinstance(legacy, dict):
+            lowered = emit_target_op(target, str(legacy.get("fallback_op_key", "anm.play")), [str(arg) for arg in legacy.get("args", ["0", "0"])])
+            if lowered:
+                return f"// animation semantic lowering {obj.family} -> {target}: {legacy.get('semantic', 'legacy_attack_animation')}\n{lowered}"
+            return compile_structured_preserve(obj, target, "legacy boss attack animation has no verified target slot")
+    if wrapper := policies.get("stage_enemy_wrapper_anm"):
+        if isinstance(wrapper, dict) and target_policy_applies(wrapper, target):
+            combo = (wrapper.get("native_combos", {}) or {}).get(str(wrapper.get("source_script", "")))
+            if isinstance(combo, dict):
+                select_opcode = target_opcode_for_op_key("anm.select", target)
+                main_opcode = target_opcode_for_op_key("anm.set_main", target)
+                sprite_opcode = target_opcode_for_op_key("anm.set_sprite", target)
+                if select_opcode and main_opcode and sprite_opcode:
+                    lines = [
+                        f"// IR stage_enemy_wrapper_anm lowering {obj.game}->{target}: source_script={wrapper.get('source_script')}",
+                        f"ins_{select_opcode}({combo.get('bank', '2')});",
+                        f"ins_{main_opcode}({combo.get('main_slot', '0')}, {combo.get('main_script', '0')});",
+                    ]
+                    if combo.get("sprite_script") not in {None, ""}:
+                        lines.append(f"ins_{sprite_opcode}({combo.get('sprite_slot', '1')}, {combo.get('sprite_script')});")
+                    return "\n".join(lines)
+    if aux := policies.get("boss_aux_sprite"):
+        if isinstance(aux, dict):
+            chosen = choose_script(target, str(aux.get("catalog_role", "boss")), str(aux.get("catalog_purpose", "familiar")), kind=str(aux.get("catalog_kind", "sprite")))
+            if chosen is None:
+                return None
+            return "\n".join([
+                f"// IR boss_aux_sprite lowering through target ANM catalog: bank {chosen.bank}, script {chosen.script}",
+                f"ins_{target_opcode_for_op_key('anm.select', target)}({chosen.bank});",
+                f"ins_{target_opcode_for_op_key('anm.set_sprite', target)}({aux.get('source_slot', '0')}, {chosen.script});",
+            ])
+    if spell := policies.get("spell_ex_common_header"):
+        if isinstance(spell, dict) and op_lowering_policy_applies(spell, target):
+            args = [str(arg) for arg in (fields.get("spell", {}) or {}).get("args", fields.get("args", []))]
+            lowered = emit_target_op(target, str(spell.get("target_op_key", "boss.spell")), policy_args(args, spell))
+            if lowered:
+                return f"// IR spell_ex_common_header lowering {obj.game}->{target}: {spell.get('reason', '')}\n{lowered}"
+    return None
+
+
 def compile_named_op(obj, target: str, table_by_family: dict[str, dict[str, int]]) -> str:
+    if lowered_by_policy := compile_target_policy(obj, target):
+        return lowered_by_policy
     if getattr(obj, "kind", None) == "Enemy" and obj.fields.get("semantic") == "flying_bowl_line_visual" and obj.fields.get("target_behavior") == "omit_visual_helper":
         return "// omitted visual helper object: flying_bowl_line_visual; bullet motion is represented by emitter transforms"
     if getattr(obj, "kind", None) == "Animation" and obj.fields.get("op") == "anmPlayAttack":
@@ -986,7 +1058,9 @@ def compile_named_op(obj, target: str, table_by_family: dict[str, dict[str, int]
         if lowered:
             return f"// animation semantic lowering {obj.family} -> {target}: legacy boss attack animation approximated as ANM play\n{lowered}"
         return compile_structured_preserve(obj, target, "legacy boss attack animation has no verified target slot")
+    source_event = ((getattr(obj, "fields", {}) or {}).get("ir_ops") or [{}])[0]
     event = {
+        **source_event,
         "op_key": obj.fields.get("op_key"),
         "source_game": getattr(obj, "game", ""),
         "source_opcode": getattr(obj.raw[0], "opcode", -1) if getattr(obj, "raw", None) else -1,
@@ -1196,6 +1270,17 @@ def compile_effect_emitter(obj, target: str) -> str:
     fields = getattr(obj, "fields", {}) or {}
     semantic = str(fields.get("semantic", ""))
     lines = [f"// EffectEmitter lowering {obj.family} -> {target}: {semantic}"]
+    visual_policy = (fields.get("target_policy", {}) or {}).get("visual_effect", {})
+    if visual_policy:
+        effect = fields.get("effect", {}) or {}
+        amount = str(effect.get("amount", "1"))
+        op_key = str(visual_policy.get("target_op_key", "anm.play"))
+        args = [str(arg) for arg in visual_policy.get("args", [])]
+        lowered = emit_target_op(target, op_key, args)
+        if lowered:
+            lines.append(f"// IR visual effect policy count={amount}: {visual_policy.get('strategy', op_key)}")
+            lines.append(lowered)
+            return "\n".join(lines)
     if semantic in {"effect_burst", "effect_burst_angle"}:
         effect = fields.get("effect", {}) or {}
         script_expr = str(effect.get("script_expr", "0"))
@@ -1232,6 +1317,7 @@ def compile_familiar_spawner(obj, target: str) -> str:
     semantic = str(fields.get("semantic", ""))
     spawn = fields.get("spawn", {}) or {}
     lines = [f"// FamiliarSpawner lowering {obj.family} -> {target}: {semantic}"]
+    policies = fields.get("target_policy", {}) or {}
     if spawn:
         sub = target_sub_name(spawn.get("sub", ""))
         x = str(spawn.get("x", "0.0f"))
@@ -1247,18 +1333,21 @@ def compile_familiar_spawner(obj, target: str) -> str:
             fallback = [sub, x, y, life, item, score]
         lowered = emit_target_op(target, op_key, fallback)
         if lowered:
-            lines.append("// approximated TH08 familiar as target enemy/familiar-like child; focus invulnerability is preserved only as semantic metadata")
+            policy = (policies.get("familiar_spawn", {}) or {})
+            lines.append(f"// IR familiar spawn policy: {policy.get('strategy', 'enemy_child_approximation')}; focus invulnerability is metadata")
             lines.append(lowered)
             return "\n".join(lines)
     if semantic == "focus_animation":
+        focus_policy = (policies.get("focus_animation", {}) or {})
         focus = fields.get("focus_animation", {}) or {}
-        lowered = emit_target_op(target, "anm.play", ["0", str(focus.get("script_expr", "0"))])
+        lowered = emit_target_op(target, str(focus_policy.get("target_op_key", "anm.play")), [str(arg) for arg in focus_policy.get("args", ["0", str(focus.get("script_expr", "0"))])])
         if lowered:
             lines.append("// approximated familiar focus ANM as ordinary ANM play")
             lines.append(lowered)
             return "\n".join(lines)
     if semantic == "trail_toggle":
-        lines.append("// metadata-only familiar trail toggle; target games have no verified equivalent trail runtime")
+        trail_policy = (policies.get("trail_toggle", {}) or {})
+        lines.append(f"// IR familiar trail policy: {trail_policy.get('strategy', 'metadata_only')}; target games have no verified equivalent trail runtime")
         return "\n".join(lines)
     return "\n".join(lines + compile_structured_preserve(obj, target, "familiar runtime behavior is TH08-specific").splitlines())
 
@@ -1268,11 +1357,12 @@ def compile_auto_bullet_timer(obj, target: str) -> str:
     semantic = str(fields.get("semantic", ""))
     timer = fields.get("timer", {}) or {}
     lines = [f"// AutoBulletTimer lowering {obj.family} -> {target}: {semantic}"]
-    if semantic == "defer_attribute_fire":
-        lines.append("// target slot emitters are configured without implicit fire; no instruction needed")
+    plan = fields.get("lowering_plan", {}) or {}
+    if semantic == "defer_attribute_fire" or plan.get("strategy") == "metadata_only":
+        lines.append(f"// IR auto-fire policy: {plan.get('reason', 'target slot emitters are configured without implicit fire')}")
         return "\n".join(lines)
     interval = str(timer.get("interval", "1"))
-    fire = emit_target_op(target, "bullet.fire", ["0"])
+    fire = emit_target_op(target, str(plan.get("target_op_key", "bullet.fire")), ["0"])
     if fire:
         lines.append(f"// auto-fire interval={interval} preserved as high-level timer; emitted one fire tick at source position")
         lines.append(fire)
@@ -1389,7 +1479,8 @@ def compile_motion_modifier(obj, target: str) -> str:
     fields = getattr(obj, "fields", {}) or {}
     semantic = str(fields.get("semantic", ""))
     motion = fields.get("motion", {}) or {}
-    lines = [f"// MotionModifier lowering {obj.family} -> {target}: {semantic}"]
+    plan = fields.get("lowering_plan", {}) or {}
+    lines = [f"// MotionModifier lowering {obj.family} -> {target}: {semantic}; plan={plan.get('strategy', 'direct')}"]
     if semantic in {"random_direction_tween", "random_direction_tween_variant"}:
         lowered = emit_target_op(target, "movement.velocity.tween", [str(motion.get("time", "0")), str(motion.get("mode", "0")), "0.0f", str(motion.get("speed", "0.0f"))])
         if lowered:
@@ -1571,9 +1662,11 @@ def compile_th13plus(e: BulletEmitter) -> str:
         aim_raw_value = mode_raw(e.aim.get("mode"), default="1")
     style_value = remap_bullet_shape_for_target(e, target="th15")
     color_value = e.appearance.get("color")
-    if e.game == "th12" and (emitter_has_curve_laser(e) or e.semantics.get("curve_laser_fire")):
-        style_value = "0"
-        color_value = "2"
+    curve_plan = (e.semantics.get("lowering_plan", {}) or {}).get("curve_laser", {})
+    if curve_plan:
+        appearance_override = curve_plan.get("appearance_override", {}) or {}
+        style_value = appearance_override.get("style", "0")
+        color_value = appearance_override.get("color", "2")
     ways_value = e.count.get("ways")
     layers_value = e.count.get("layers")
     angle_value = e.aim.get("base_angle")
@@ -1594,8 +1687,8 @@ def compile_th13plus(e: BulletEmitter) -> str:
         comment = difficulty_comment(field, value)
         if comment:
             lines.insert(0, comment)
-    curve_laser = e.game == "th12" and (emitter_has_curve_laser(e) or e.semantics.get("curve_laser_fire"))
-    transforms = curve_laser_th13plus_transforms(e.transforms) if curve_laser else e.transforms
+    curve_plan = (e.semantics.get("lowering_plan", {}) or {}).get("curve_laser", {})
+    transforms = curve_laser_th13plus_transforms(e.transforms, curve_plan) if curve_plan else e.transforms
     for transform in transforms:
         lowered = lower_transform_for_th13plus(transform, e.game, "th15", str(emitter_id))
         if lowered:
@@ -1605,18 +1698,23 @@ def compile_th13plus(e: BulletEmitter) -> str:
     return "\n".join(lines)
 
 
-def curve_laser_th13plus_transforms(transforms):
+def curve_laser_th13plus_transforms(transforms, curve_plan: dict[str, object] | None = None):
+    plan = curve_plan or {}
+    drop_modes = {str(mode) for mode in plan.get("drop_modes", ["512"])}
+    renumber = bool(plan.get("renumber_transform_slots", True))
+    normalize_tangent_delay = bool(plan.get("normalize_tangent_delay", True))
     normalized = []
     next_index = 0
     for transform in transforms:
         args = [str(arg) for arg in transform.raw_args]
         if transform.raw_opcode == 509 and len(args) == 8:
             mode = args[3]
-            if mode == "512":
+            if mode in drop_modes:
                 continue
             args = args[:]
-            args[1] = str(next_index)
-            if mode == "8" and args[5] == "-999999":
+            if renumber:
+                args[1] = str(next_index)
+            if normalize_tangent_delay and mode == "8" and args[5] == "-999999":
                 args[5] = "0"
             next_index += 1
             cloned = deepcopy(transform)
@@ -1706,12 +1804,12 @@ def compile_th12(e: BulletEmitter) -> str:
         speed_step_value = e.speed.get("last_or_step")
     speed_step = v(speed_step_value, e.speed.get("last_or_step", "0.0f"))
 
-    double_flower = double_flower_lowering_for_th12(str(emitter_id), spread_semantics(e))
-    aux_emitter_id = double_flower.aux_emitter_id if double_flower else None
-    if double_flower and aux_emitter_id:
-        lines = [f"// TH15 double flower spread lowered to two TH12 single-side flower slots: {emitter_id}+{aux_emitter_id}"]
-        lines.extend(emit_th12_bullet_setup_lines(emitter_id, double_flower.primary_style, style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step))
-        lines.extend(emit_th12_bullet_setup_lines(aux_emitter_id, double_flower.aux_style, style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step))
+    spread_plan = (e.semantics.get("lowering_plan", {}) or {}).get("spread", {})
+    aux_emitter_id = str(spread_plan.get("aux_emitter_id")) if spread_plan else None
+    if spread_plan and aux_emitter_id:
+        lines = [f"// IR spread lowering: double_flower split to two TH12 single-side slots: {emitter_id}+{aux_emitter_id}"]
+        lines.extend(emit_th12_bullet_setup_lines(emitter_id, spread_plan.get("primary_style", aim_raw_value), style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step))
+        lines.extend(emit_th12_bullet_setup_lines(aux_emitter_id, spread_plan.get("aux_style", aim_raw_value), style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step))
     else:
         lines = emit_th12_bullet_setup_lines(emitter_id, aim_raw_value, style_value, color_value, ways_value, ways, layers_value, layers, angle_value, angle_step_value, speed_value, speed, speed_step_value, speed_step)
 
@@ -1809,17 +1907,9 @@ def clamp_old_shape(shape: object, target: str) -> str:
 
 def compile_th08_macro(e: BulletEmitter, target: str) -> str:
     mode = e.aim.get("mode") or aim_mode_name(str(v(e.aim.get("mode_raw"), "1")))
-    opcode = {
-        "aimed_fan": 96,
-        "fan": 97,
-        "aimed_ring": 98,
-        "ring": 99,
-        "offset_aimed_ring": 100,
-        "offset_ring": 101,
-        "random_angle": 102,
-        "random_speed": 103,
-        "random_angle_speed": 104,
-    }.get(mode, 97)
+    old_macro_plan = (e.semantics.get("lowering_plan", {}) or {}).get("old_macro", {})
+    opcode_by_mode = old_macro_plan.get("opcode_by_mode", {}) if isinstance(old_macro_plan, dict) else {}
+    opcode = int(opcode_by_mode.get(mode, 97))
     style = clamp_old_shape(old_macro_int(e.appearance.get("style"), "0"), target)
     color = old_macro_int(e.appearance.get("color"), "0")
     ways = old_macro_int(e.count.get("ways"), "1")

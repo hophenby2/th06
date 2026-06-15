@@ -14,6 +14,7 @@ void BGirl00()
     // semantic EnemyVisual stage_enemy_visual th10->th15: color=blue source_script=45
     ins_302(2);
     ins_306(0, 0);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(2);
     @Girl00(0);
     // semantic op_key lowering th10->th15: flow.delete
@@ -29,6 +30,7 @@ void BGirl00B()
     // semantic EnemyVisual stage_enemy_visual th10->th15: color=blue source_script=45
     ins_302(2);
     ins_306(0, 0);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(2);
     @Girl00B(0);
     // semantic op_key lowering th10->th15: flow.delete
@@ -44,6 +46,7 @@ void BGirl00C()
     // semantic EnemyVisual stage_enemy_visual th10->th15: color=blue source_script=45
     ins_302(2);
     ins_306(0, 0);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(2);
     @Girl00C(0);
     // semantic op_key lowering th10->th15: flow.delete
@@ -59,6 +62,7 @@ void BGirl00D()
     // semantic EnemyVisual stage_enemy_visual th10->th15: color=blue source_script=45
     ins_302(2);
     ins_306(0, 0);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(2);
     @Girl00D(0);
     // semantic op_key lowering th10->th15: flow.delete
@@ -74,6 +78,7 @@ void BGirl00E()
     // semantic EnemyVisual stage_enemy_visual th10->th15: color=blue source_script=45
     ins_302(2);
     ins_306(0, 0);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(2);
     @Girl00E(0);
     // semantic op_key lowering th10->th15: flow.delete
@@ -1525,7 +1530,7 @@ void BossCard2At1()
     // Mode IR metadata: movement tween mode raw=%C semantic=mode_%C target=%C
     !EN
     // semantic op_key lowering th10->th15: laser.on_aimed
-    // approximated old aimed laser macro on target laser manager: no-op setup placeholder
+    // approximated by IR op lowering policy for th15: laser.on_aimed(3, 13, %B, %F, 0.0f, 180.0f, 0, 14.0f); reason=old_aimed_laser_macro; approximation=no_op_setup
     !*
     !HL
     // semantic op_key lowering th10->th15: laser.straight_on
@@ -1567,7 +1572,7 @@ void BossCard2At1b()
     // object Mode source_line=718 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=0.0f semantic=mode_0.0f target=0.0f
     // semantic op_key lowering th10->th15: laser.on_aimed
-    // approximated old aimed laser macro on target laser manager: no-op setup placeholder
+    // approximated by IR op lowering policy for th15: laser.on_aimed(3, 2, %B, %F, 0.0f, 180.0f, 0, 14.0f); reason=old_aimed_laser_macro; approximation=no_op_setup
     %B = %B + %E;
     // semantic op_key lowering th10->th15: flow.valid_rad
     ins_82(%B);
@@ -1994,6 +1999,7 @@ void GGirl00()
     ins_302(2);
     ins_306(0, 35);
     ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(3);
     @Girl00(35);
     // semantic op_key lowering th10->th15: flow.delete
@@ -2010,6 +2016,7 @@ void GGirl00B()
     ins_302(2);
     ins_306(0, 35);
     ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(3);
     @Girl00B(35);
     // semantic op_key lowering th10->th15: flow.delete
@@ -2026,6 +2033,7 @@ void GGirl00C()
     ins_302(2);
     ins_306(0, 35);
     ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(3);
     @Girl00C(35);
     // semantic op_key lowering th10->th15: flow.delete
@@ -2042,6 +2050,7 @@ void GGirl00D()
     ins_302(2);
     ins_306(0, 35);
     ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(3);
     @Girl00D(35);
     // semantic op_key lowering th10->th15: flow.delete
@@ -2058,6 +2067,7 @@ void GGirl00E()
     ins_302(2);
     ins_306(0, 35);
     ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(3);
     @Girl00E(35);
     // semantic op_key lowering th10->th15: flow.delete
@@ -3378,7 +3388,7 @@ void MainSub()
 
 void MapleEnemy()
 {
-    // omitted TH10 MapleEnemy visual helper for TH15 stability
+    // omitted function by IR rewrite: TH10 MapleEnemy is a visual helper; target runtime entity is unstable and nonessential
     return;
 }
 
@@ -3391,6 +3401,7 @@ void RGirl00()
     // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
     ins_302(2);
     ins_306(0, 5);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(1);
     @Girl00(5);
     // semantic op_key lowering th10->th15: flow.delete
@@ -3406,6 +3417,7 @@ void RGirl00B()
     // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
     ins_302(2);
     ins_306(0, 5);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(1);
     @Girl00B(5);
     // semantic op_key lowering th10->th15: flow.delete
@@ -3421,6 +3433,7 @@ void RGirl00C()
     // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
     ins_302(2);
     ins_306(0, 5);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(1);
     @Girl00C(5);
     // semantic op_key lowering th10->th15: flow.delete
@@ -3436,6 +3449,7 @@ void RGirl00D()
     // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
     ins_302(2);
     ins_306(0, 5);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(1);
     @Girl00D(5);
     // semantic op_key lowering th10->th15: flow.delete
@@ -3486,6 +3500,7 @@ void RGirl00E()
     // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
     ins_302(2);
     ins_306(0, 5);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(1);
     @Girl00E(5);
     // semantic op_key lowering th10->th15: flow.delete
@@ -3580,7 +3595,7 @@ void YGirl00()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
     // object Animation source_line=1735 family=th10_th11
-    // TH10/11 stage wrapper ANM lowered to TH15 native st01 enemy combo
+    // IR stage_enemy_wrapper_anm lowering th10->th15: source_script=48
     ins_302(2);
     ins_306(0, 40);
     ins_303(1, 93);
@@ -3599,6 +3614,7 @@ void YGirl00B()
     ins_302(2);
     ins_306(0, 40);
     ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(4);
     @Girl00B(40);
     // semantic op_key lowering th10->th15: flow.delete
@@ -3615,6 +3631,7 @@ void YGirl00C()
     ins_302(2);
     ins_306(0, 40);
     ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(4);
     @Girl00C(40);
     // semantic op_key lowering th10->th15: flow.delete
@@ -3631,6 +3648,7 @@ void YGirl00D()
     ins_302(2);
     ins_306(0, 40);
     ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(4);
     @Girl00D(40);
     // semantic op_key lowering th10->th15: flow.delete
@@ -3647,6 +3665,7 @@ void YGirl00E()
     ins_302(2);
     ins_306(0, 40);
     ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(4);
     @Girl00E(40);
     // semantic op_key lowering th10->th15: flow.delete
@@ -3987,7 +4006,7 @@ void main()
     ins_300("BGirl00C", 168.0f, -16.0f, 30, 1000, 1);
     +160:
     // object Enemy source_line=1947 family=th10_th11
-    // omitted TH10 MapleEnemy visual helper create for TH15 stability
+    // omitted runtime entity by IR target policy: maple_enemy_visual_helper
     // object Enemy source_line=1948 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
     ins_301("MBoss", -64.0f, -16.0f, 6000, 10000, 1);
@@ -4033,7 +4052,7 @@ void main()
     ins_311("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
     !HL
     // semantic op_key lowering th10->th15: unit.death_wait
-    // approximated deathWait on target without deathWait opcode: no-op
+    // approximated by IR op lowering policy for th15: unit.death_wait(); reason=target_without_death_wait; approximation=no_op
     !*
     !HL
     +100:
@@ -4091,7 +4110,7 @@ void main()
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
     ins_304("BGirl00B", 84.0f, -64.0f, 20, 1000, 1);
     // semantic op_key lowering th10->th15: unit.death_wait
-    // approximated deathWait on target without deathWait opcode: no-op
+    // approximated by IR op lowering policy for th15: unit.death_wait(); reason=target_without_death_wait; approximation=no_op
     +100:
     // object Enemy source_line=2005 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
@@ -4178,7 +4197,7 @@ void main()
     // semantic op_key lowering th10->th15: unit.dialog_wait
     ins_519();
     // semantic op_key lowering th10->th15: unit.death_wait
-    // approximated deathWait on target without deathWait opcode: no-op
+    // approximated by IR op lowering policy for th15: unit.death_wait(); reason=target_without_death_wait; approximation=no_op
     // semantic op_key lowering th10->th15: unit.dialog_read
     ins_518(1);
     // semantic op_key lowering th10->th15: unit.dialog_wait

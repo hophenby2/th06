@@ -84,8 +84,9 @@ def emit_transpile(program, objects, target: str) -> str:
         lines.extend(alias_lines)
         if lines and lines[-1] != "":
             lines.append("")
+    global_function_rewrites = by_function.get("", [])
     for function in function_order:
-        function_objects = by_function.get(function, [])
+        function_objects = [*by_function.get(function, []), *global_function_rewrites]
         if not function_objects:
             continue
         params = function_params.get(function, "")
@@ -93,6 +94,7 @@ def emit_transpile(program, objects, target: str) -> str:
         lines.append(target_function_header(function, params, target))
         lines.append("{")
         body_lines = emit_function_body(function_objects, target)
+        body_lines = apply_timeline_order_rewrites(body_lines, function_objects, target)
         if generation_for_game(target) == "th06_th08" and params:
             body_lines = old_target_param_initializers(params) + body_lines
         if params:
@@ -101,40 +103,37 @@ def emit_transpile(program, objects, target: str) -> str:
         lines.append("}")
     if generation_for_game(target) == "th06_th08":
         lines = normalize_old_target_lines(lines)
-    return postprocess_transpile_output("\n".join(lines), program.game, target)
+    return "\n".join(lines)
 
 
-def postprocess_transpile_output(output: str, source_game: str, target: str) -> str:
-    if source_game not in {"th10", "th11"} or generation_for_game(target) != "th13_plus":
-        return output
 
-    def move_drop_after_anm(match: re.Match[str]) -> str:
-        head, body, tail = match.groups()
-        lines = body.splitlines()
-        drop_line = None
-        kept: list[str] = []
-        for line in lines:
-            if drop_line is None and "ins_510(" in line:
-                drop_line = line
-            else:
-                kept.append(line)
-        if drop_line is None:
-            return match.group(0)
-        out: list[str] = []
-        inserted = False
-        for line in kept:
-            if not inserted and re.search(r"@Girl00[A-Z]*\(", line):
-                out.append(drop_line)
-                inserted = True
-            out.append(line)
-        if not inserted:
-            out.append(drop_line)
-        return head + "\n".join(out) + tail
+def timeline_order_rewrite_applies(obj, target: str) -> bool:
+    fields = getattr(obj, "fields", {}) or {}
+    return (
+        getattr(obj, "kind", None) == "TimelineRewrite"
+        and fields.get("semantic") == "timeline.order.drop_after_visual_setup"
+        and fields.get("when_target_generation") == generation_for_game(target)
+    )
 
-    wrapper_re = re.compile(r"(void\s+(?:B|G|R|Y)Girl00[A-Z]*\(\)\s*\{)(.*?)(\n\})", re.S)
-    output = wrapper_re.sub(move_drop_after_anm, output)
-    return output
 
+def apply_timeline_order_rewrites(lines: list[str], function_objects: list[object], target: str) -> list[str]:
+    out = list(lines)
+    for obj in function_objects:
+        if not timeline_order_rewrite_applies(obj, target):
+            continue
+        fields = getattr(obj, "fields", {}) or {}
+        move_op_key = str(fields.get("move_op_key", ""))
+        if move_op_key != "unit.drop_main":
+            continue
+        moved_index = next((idx for idx, line in enumerate(out) if "ins_510(" in line), None)
+        if moved_index is None:
+            continue
+        moved_line = out.pop(moved_index)
+        insert_re = re.compile(str(fields.get("insert_before_call_regex") or r"@Girl00[A-Z]*\("))
+        insert_index = next((idx for idx, line in enumerate(out) if insert_re.search(line)), len(out))
+        out.insert(insert_index, f"    // timeline order rewrite: {fields.get('reason', '')}")
+        out.insert(insert_index + 1, moved_line)
+    return out
 
 def stage06_th12_to_th15_resources(kind: str) -> dict[str, list[str]]:
     if kind == "stage":
@@ -188,8 +187,9 @@ def emit_transpile_selected_functions(program, objects, target: str, selected_fu
             by_function.setdefault(function, []).append(obj)
 
     function_params = inferred_function_params(program)
+    global_function_rewrites = by_function.get("", [])
     for function in [func.name for func in program.functions if func.name in selected_functions]:
-        function_objects = by_function.get(function, [])
+        function_objects = [*by_function.get(function, []), *global_function_rewrites]
         if not function_objects:
             continue
         params = function_params.get(function, "")
@@ -197,6 +197,7 @@ def emit_transpile_selected_functions(program, objects, target: str, selected_fu
         lines.append(target_function_header(function, params, target))
         lines.append("{")
         body_lines = emit_function_body(function_objects, target)
+        body_lines = apply_timeline_order_rewrites(body_lines, function_objects, target)
         if params:
             body_lines = drop_redeclared_param_vars(body_lines, params)
         lines.extend(body_lines)
@@ -648,21 +649,16 @@ def object_for_timeline_compile(obj, bullet_state: BulletLoweringState | None):
 
 def emit_function_body(function_objects: list[object], target: str) -> list[str]:
     timelines = [obj for obj in function_objects if getattr(obj, "kind", None) == "Timeline"]
-    if (
-        target == "th15"
-        and timelines
-        and getattr(timelines[0], "game", "") == "th10"
-        and getattr(timelines[0], "function", "") == "MapleEnemy"
-    ):
+    if rewrite := omitted_function_rewrite(function_objects, target):
         return [
-            "    // omitted TH10 MapleEnemy visual helper for TH15 stability",
+            f"    // omitted function by IR rewrite: {rewrite.fields.get('reason', '')}",
             "    return;",
         ]
     helper = next((obj for obj in function_objects if getattr(obj, "kind", None) == "HelperRoutine" and helper_applies(obj, target)), None)
     if helper is not None:
         return emit_helper_routine_body(helper, target)
     rewrites = [obj for obj in function_objects if getattr(obj, "kind", None) == "TimelineRewrite" and rewrite_applies(obj, target)]
-    semantic_objects = [obj for obj in function_objects if getattr(obj, "kind", None) not in {"Timeline", "BossPattern", "HelperRoutine", "TimelineRewrite"}]
+    semantic_objects = [obj for obj in function_objects if getattr(obj, "kind", None) not in {"Timeline", "BossPattern", "HelperRoutine", "TimelineRewrite", "FunctionRewrite"}]
     if not timelines:
         return emit_semantic_object_block(semantic_objects, target)
 
@@ -714,7 +710,12 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
                     bullet_state.observe_th12_definition_transforms(compile_obj, source_game, target)
         if line_no in covered_lines:
             continue
-        context = {"function": getattr(timeline, "function", ""), "source_path": getattr(timeline, "source", "")}
+        omitted_calls = {
+            str(obj.fields.get("function")): str(obj.fields.get("reason", "visual helper omitted"))
+            for obj in function_objects
+            if getattr(obj, "kind", None) == "FunctionRewrite" and function_rewrite_applies(obj, target)
+        }
+        context = {"function": getattr(timeline, "function", ""), "source_path": getattr(timeline, "source", ""), "omitted_calls": omitted_calls}
         lines.extend(emit_timeline_event(event, getattr(timeline, "game", "unknown"), target, bullet_state, context))
     emitted_starts = set(object_starts)
     late_objects = [obj for obj in semantic_objects if getattr(obj, "source_line", 0) not in emitted_starts and not getattr(obj, "raw", [])]
@@ -736,6 +737,28 @@ def helper_applies(obj, target: str) -> bool:
 
 def rewrite_applies(obj, target: str) -> bool:
     return getattr(obj, "fields", {}).get("when_target_generation") == generation_for_game(target)
+
+
+def function_rewrite_applies(obj, target: str) -> bool:
+    return getattr(obj, "fields", {}).get("when_target_generation") == generation_for_game(target)
+
+
+def omitted_function_rewrite(function_objects: list[object], target: str):
+    for obj in function_objects:
+        if getattr(obj, "kind", None) == "FunctionRewrite" and function_rewrite_applies(obj, target):
+            if getattr(obj, "fields", {}).get("semantic") == "visual_helper_function.omit":
+                return obj
+    return None
+
+
+def omitted_call_reason(function_objects: list[object], target: str, function_name: str) -> str | None:
+    for obj in function_objects:
+        if getattr(obj, "kind", None) != "FunctionRewrite" or not function_rewrite_applies(obj, target):
+            continue
+        fields = getattr(obj, "fields", {}) or {}
+        if fields.get("semantic") == "visual_helper_function.omit" and function_name in set(fields.get("call_names", [])):
+            return str(fields.get("reason", "visual helper omitted"))
+    return None
 
 
 def emit_helper_routine_body(helper, target: str) -> list[str]:
@@ -1545,13 +1568,9 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         and str(event.get("function", "")).startswith("EffChargePoint")
     ):
         return wrap_event_rank([f"    // dropped TH13+ charge-point effect call for TH12 stability: {text}"], event, target)
-    if (
-        target == "th15"
-        and source_game == "th10"
-        and kind in {"call", "async_call"}
-        and str(event.get("function", "")) == "MapleEnemy"
-    ):
-        return wrap_event_rank(["    // omitted TH10 MapleEnemy visual helper create for TH15 stability"], event, target)
+    omitted_calls = (context or {}).get("omitted_calls", {}) if context else {}
+    if kind in {"call", "async_call"} and str(event.get("function", "")) in omitted_calls:
+        return wrap_event_rank([f"    // omitted call by IR rewrite: {omitted_calls[str(event.get('function', ''))]}"], event, target)
     if kind in {"goto", "conditional_goto", "call", "async_call", "return", "var", "assign"}:
         suffix = "" if text.endswith(";") else ";"
         statement_text = remap_call_statement_text(event, source_game, target, context) if kind in {"call", "async_call"} else f"{text}{suffix}"
