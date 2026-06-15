@@ -9,7 +9,7 @@ from .model import BulletEmitter, BulletTransform
 from .op_ir import target_opcode_for_op_key
 from .origin_ir import bullet_origin_instructions
 from .reference import is_opcode_supported, validate_opcode_args
-from .semantics import boss_phase_prefix_ops, bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_raw_arg_by_semantic, unsupported_bullet_transform_mode_reason
+from .semantics import boss_phase_prefix_ops, bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_raw_arg_by_semantic, remap_unit_flag_mask, unsupported_bullet_transform_mode_reason
 from .spread_ir import double_flower_lowering_for_th12, th12_aux_emitter_id
 from .transform_ir import bullet_transform_instructions, lower_transform_opcode_to_instruction, target_transform_args
 
@@ -1355,19 +1355,19 @@ def compile_unit_flag(obj, target: str) -> str:
     op_key = str(fields.get("op_key") or flag.get("op_key") or "")
     raw = str(flag.get("raw_flag", "0"))
     source_game = getattr(obj, "game", "")
-    if op_key == "unit.flag_set" and source_game in {"th10", "th11"} and generation_for_game(target) == "th13_plus":
-        if raw == "16":
-            return "// UnitFlag lowering th10/th11->th13+: hidden/controller flag 16 -> target controller/intangible flag 32\nins_502(32);"
-        if raw == "32":
-            return "// UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox"
-    target_value = flag.get("target_th13plus") if generation_for_game(target) == "th13_plus" else raw
+    mapping = (fields.get("targets", {}) or {}).get(target) or remap_unit_flag_mask(source_game, target, raw)
+    target_value = mapping.get("target_flag", "drop")
+    names = "+".join(str(name) for name in flag.get("names", [])) or raw
+    dropped = mapping.get("dropped", []) or []
+    suffix = ""
+    if dropped:
+        suffix = "; dropped=" + "+".join(str(item.get("semantic", "")) for item in dropped)
     if target_value in {None, "", "drop"}:
-        return f"// UnitFlag lowering: dropped {source_game} {op_key}({raw}) for {target}; semantic={flag.get('name', '')}"
+        return f"// UnitFlag lowering {source_game}->{target}: dropped {op_key}({raw}); semantic={names}{suffix}"
     lowered = emit_target_op(target, op_key, [str(target_value)])
     if lowered:
-        return f"// UnitFlag lowering {source_game}->{target}: {flag.get('name', raw)}\n{lowered}"
+        return f"// UnitFlag lowering {source_game}->{target}: {op_key}({raw}) {names} -> {target_value}{suffix}\n{lowered}"
     return compile_lossy_semantic_fallback({"op_key": op_key, "source_game": source_game, "source_opcode": getattr(obj.raw[0], "opcode", -1) if getattr(obj, "raw", None) else -1, "args": [raw]}, target)
-
 
 def compile_mode(obj, target: str) -> str:
     fields = getattr(obj, "fields", {}) or {}

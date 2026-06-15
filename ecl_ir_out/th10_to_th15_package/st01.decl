@@ -95,7 +95,7 @@ void Boss()
     ins_302(3);
     ins_306(0, 0);
     // object UnitFlag source_line=59 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(48.0f, 48.0f);
     // object Mode source_line=61 family=movement_tween_mode
@@ -1677,8 +1677,8 @@ void BossDead()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
     // object UnitFlag source_line=774 family=unit_flag
-    // UnitFlag lowering th10->th15: flag_68
-    ins_502(68);
+    // UnitFlag lowering th10->th15: unit.flag_set(68) persist_lr_offscreen+no_global_clear -> 132
+    ins_502(132);
     // object Animation source_line=775 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
     ins_307(0, 28);
@@ -1768,7 +1768,7 @@ void Ecl_Girl00(var A)
     ins_302(2);
     ins_306(0, $A);
     // object UnitFlag source_line=820 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // object Mode source_line=822 family=movement_tween_mode
@@ -1882,7 +1882,7 @@ void Ecl_GirlInit()
     ins_302(2);
     ins_303(0, $A);
     // object UnitFlag source_line=876 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // object Mode source_line=878 family=movement_tween_mode
@@ -1923,7 +1923,7 @@ void Ecl_RGirl01()
     ins_302(2);
     ins_306(0, 5);
     // object UnitFlag source_line=898 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // object Mode source_line=900 family=movement_tween_mode
@@ -2076,7 +2076,7 @@ void Girl00(var A)
     ins_302(2);
     ins_306(0, $A);
     // object UnitFlag source_line=982 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // object Mode source_line=984 family=movement_tween_mode
@@ -2111,7 +2111,7 @@ void Girl00B(var A)
     ins_302(2);
     ins_306(0, $A);
     // object UnitFlag source_line=998 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // object Mode source_line=1000 family=movement_tween_mode
@@ -2196,7 +2196,7 @@ void Girl00C(var A)
     ins_302(2);
     ins_306(0, $A);
     // object UnitFlag source_line=1043 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // object Mode source_line=1045 family=movement_tween_mode
@@ -2315,7 +2315,7 @@ void Girl00D(var A)
     ins_302(2);
     ins_306(0, $A);
     // object UnitFlag source_line=1091 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // object Mode source_line=1093 family=movement_tween_mode
@@ -2353,7 +2353,7 @@ void Girl00E(var A)
     ins_302(2);
     ins_306(0, $A);
     // object UnitFlag source_line=1108 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // object Mode source_line=1110 family=movement_tween_mode
@@ -2391,7 +2391,7 @@ void Girl01()
     ins_302(2);
     ins_306(0, 40);
     // object UnitFlag source_line=1127 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(40.0f, 40.0f);
     // object Mode source_line=1129 family=movement_tween_mode
@@ -2502,7 +2502,7 @@ void Girl02()
     ins_302(2);
     ins_306(0, 40);
     // object UnitFlag source_line=1185 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(40.0f, 40.0f);
     // object Mode source_line=1187 family=movement_tween_mode
@@ -2601,7 +2601,7 @@ void MBoss()
     ins_302(3);
     ins_306(0, 0);
     // object UnitFlag source_line=1238 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(48.0f, 48.0f);
     // object Mode source_line=1240 family=movement_tween_mode
@@ -2982,7 +2982,7 @@ void MBossDead()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
     // object UnitFlag source_line=1429 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: hidden/controller flag 16 -> target controller/intangible flag 32
+    // UnitFlag lowering th10->th15: unit.flag_set(16) hidden_or_noninteractive -> 32
     ins_502(32);
     // semantic op_key lowering th10->th15: boss.spell_end
     ins_523();
@@ -3063,8 +3063,8 @@ void MBossEscape()
     // semantic op_key lowering th10->th15: boss.set_boss
     ins_512(-1);
     // object UnitFlag source_line=1476 family=unit_flag
-    // UnitFlag lowering th10->th15: flag_8
-    ins_502(8);
+    // UnitFlag lowering th10->th15: unit.flag_set(8) invincible_hide_boss_bar -> 16
+    ins_502(16);
     // object Mode source_line=1477 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
     // object Movement source_line=1477 family=th10
@@ -3659,7 +3659,7 @@ void main()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C;
     // object UnitFlag source_line=1779 family=unit_flag
-    // UnitFlag lowering th10/th11->th13+: hidden/controller flag 16 -> target controller/intangible flag 32
+    // UnitFlag lowering th10->th15: unit.flag_set(16) hidden_or_noninteractive -> 32
     ins_502(32);
     +160:
     // semantic op_key lowering th10->th15: flow.nop

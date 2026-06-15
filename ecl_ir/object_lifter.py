@@ -25,7 +25,7 @@ from .model import (
 )
 from .op_ir import op_event, op_key_for_opcode
 from .program_lifter import lift_program_adapters
-from .semantics import bullet_transform_mode_semantic, remap_bullet_transform_mode
+from .semantics import bullet_transform_mode_semantic, remap_bullet_transform_mode, remap_unit_flag_mask, unit_flag_semantics
 from .timeline_lifter import lift_timelines
 
 TH13PLUS = {"th13", "th14", "th15", "th16", "th17", "th18"}
@@ -63,25 +63,6 @@ def lift_all_objects(program: Program) -> list[object]:
     return sorted(objects, key=lambda obj: (getattr(obj, "function", ""), getattr(obj, "source_line", 0), getattr(obj, "kind", "")))
 
 
-def unit_flag_semantics(game: str, op_key: str, raw_flag: str, function: str) -> dict[str, object]:
-    generation = "th13_plus" if game in TH13PLUS else "th10_th11" if game in {"th10", "th11"} else game
-    meanings = {
-        "th10_th11": {
-            "16": {"name": "hidden_or_controller", "target_th13plus": "32", "stage_enemy_target": "drop"},
-            "32": {"name": "unknown_or_hidden_variant", "target_th13plus": "drop", "stage_enemy_target": "drop"},
-        },
-        "th12": {
-            "32": {"name": "intangible", "target_th13plus": "32"},
-        },
-        "th13_plus": {
-            "16": {"name": "invincible_hide_boss_bar", "target_th13plus": "16"},
-            "32": {"name": "intangible_no_hurtbox_hitbox", "target_th13plus": "32"},
-        },
-    }
-    semantic = dict(meanings.get(generation, {}).get(raw_flag, {"name": f"flag_{raw_flag}", "target_th13plus": raw_flag}))
-    semantic.update({"op_key": op_key, "raw_flag": raw_flag, "generation": generation, "function": function})
-    return semantic
-
 
 def lift_unit_flags(program: Program, func: Function) -> list[UnitFlagOp]:
     opcodes = {
@@ -102,11 +83,13 @@ def lift_unit_flags(program: Program, func: Function) -> list[UnitFlagOp]:
         op_key = opcodes[ins.opcode]
         raw_flag = a(ins, 0, "0")
         obj = make_obj(UnitFlagOp, program, func, ins, "unit_flag", raw_flag)
+        targets = {target: remap_unit_flag_mask(program.game, target, raw_flag) for target in ("th10", "th11", "th12", "th13", "th15")}
         obj.fields.update({
             "semantic": "unit_flag",
             "op_key": op_key,
             "operation": "set" if op_key.endswith("flag_set") else "clear",
             "flag": unit_flag_semantics(program.game, op_key, raw_flag, func.name),
+            "targets": targets,
             "args": ins.args,
             "difficulty": ins.difficulty,
         })

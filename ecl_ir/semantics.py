@@ -529,6 +529,258 @@ def remap_shape_change_arg(source_game: str, target: str, mode: Any, shape: Any)
     return encode_bullet_shape(bullet_shape_semantic(source_game, shape), target, shape)
 
 
+def flag_profile_for_game(game: str) -> str:
+    if game == "th10":
+        return "th10"
+    if game == "th11":
+        return "th11"
+    if game == "th12":
+        return "th12"
+    if game == "th13":
+        return "th13"
+    if game in TH13PLUS_GAMES:
+        return "th14_plus"
+    return "unknown"
+
+
+UNIT_FLAG_SEMANTICS_BY_PROFILE: dict[str, dict[int, str]] = {
+    "th10": {
+        0x00000001: "no_hurtbox",
+        0x00000002: "no_body_collision",
+        0x00000004: "persist_lr_offscreen",
+        0x00000008: "invincible_hide_boss_bar",
+        0x00000010: "hidden_or_noninteractive",
+        0x00000020: "legacy_th10_blank",
+        0x00000040: "no_global_clear",
+        0x00000080: "force_global_clear",
+        0x00000100: "entered_screen_internal",
+        0x00000200: "move_bounds_internal",
+        0x00000400: "tested_internal",
+        0x00000800: "movement_mirror_internal",
+        0x00001000: "horizontal_anim_internal",
+        0x00002000: "nonboss_hidden_strip_internal",
+        0x00004000: "special_unit_no_force_clear",
+        0x00008000: "boss_mode_internal",
+        0x00010000: "no_miss_marker",
+        0x00020000: "delete_pending_internal",
+        0x00040000: "movement_unknown_internal",
+        0x00080000: "legacy_364_unknown",
+        0x00100000: "bomb_immune",
+        0x00200000: "bomb_immune_cleanup_internal",
+    },
+    "th11": {
+        0x00000001: "no_hurtbox",
+        0x00000002: "no_body_collision",
+        0x00000004: "persist_lr_offscreen",
+        0x00000008: "persist_tb_offscreen",
+        0x00000010: "invincible_hide_boss_bar",
+        0x00000020: "hidden_or_noninteractive",
+        0x00000040: "boss_initial_unknown",
+        0x00000080: "no_global_clear",
+        0x00000100: "force_global_clear",
+        0x00000200: "graze_like_laser",
+        0x00000400: "no_clear_dialog_death",
+        0x00000800: "clear_effect_vulnerable",
+        0x00001000: "entered_screen_internal",
+        0x00002000: "move_bounds_internal",
+        0x00004000: "tested_internal",
+        0x00008000: "movement_mirror_internal",
+        0x00010000: "horizontal_anim_internal",
+        0x00020000: "nonboss_hidden_strip_internal",
+        0x00040000: "special_unit_no_force_clear",
+        0x00080000: "boss_mode_internal",
+        0x00100000: "no_miss_marker",
+        0x00200000: "delete_pending_internal",
+        0x00400000: "movement_unknown_internal",
+        0x00800000: "legacy_364_unknown",
+        0x01000000: "bomb_immune",
+        0x02000000: "bomb_immune_cleanup_internal",
+        0x08000000: "legacy_369_unknown",
+    },
+    "th12": {
+        0x00000001: "no_hurtbox",
+        0x00000002: "no_body_collision",
+        0x00000004: "persist_lr_offscreen",
+        0x00000008: "persist_tb_offscreen",
+        0x00000010: "invincible_hide_boss_bar",
+        0x00000020: "hidden_or_noninteractive",
+        0x00000040: "boss_initial_unknown",
+        0x00000080: "no_global_clear",
+        0x00000100: "force_global_clear",
+        0x00000200: "graze_like_laser",
+        0x00000400: "no_clear_dialog_death",
+        0x00000800: "clear_effect_vulnerable",
+        0x00008000: "entered_screen_internal",
+        0x00010000: "move_bounds_internal",
+        0x00020000: "tested_internal",
+        0x00040000: "movement_mirror_internal",
+        0x00080000: "horizontal_anim_internal",
+        0x00100000: "nonboss_hidden_strip_internal",
+        0x00200000: "special_unit_no_force_clear",
+        0x00400000: "boss_mode_internal",
+        0x00800000: "no_miss_marker",
+        0x01000000: "delete_pending_internal",
+        0x02000000: "movement_unknown_internal",
+        0x04000000: "legacy_444_unknown",
+        0x08000000: "bomb_immune",
+        0x10000000: "bomb_immune_cleanup_internal",
+        0x20000000: "engine_internal",
+        0x40000000: "legacy_449_unknown",
+    },
+    "th13": {
+        0x00000001: "no_hurtbox",
+        0x00000002: "no_body_collision",
+        0x00000004: "persist_lr_offscreen",
+        0x00000008: "persist_tb_offscreen",
+        0x00000010: "invincible_hide_boss_bar",
+        0x00000020: "hidden_or_noninteractive",
+        0x00000040: "boss_initial_unknown",
+        0x00000080: "no_global_clear",
+        0x00000100: "force_global_clear",
+        0x00000200: "graze_like_laser",
+        0x00000400: "no_clear_dialog_death",
+        0x00000800: "clear_effect_vulnerable",
+        0x00040000: "move_bounds_internal",
+        0x00080000: "tested_internal",
+        0x00100000: "movement_mirror_internal",
+        0x00200000: "horizontal_anim_internal",
+        0x00400000: "nonboss_hidden_strip_internal",
+        0x00800000: "special_unit_no_force_clear",
+        0x01000000: "boss_mode_internal",
+        0x02000000: "no_miss_marker",
+        0x04000000: "delete_pending_internal",
+        0x08000000: "movement_unknown_internal",
+        0x10000000: "legacy_544_unknown",
+        0x20000000: "bomb_immune",
+        0x40000000: "legacy_546_clear_unknown",
+        0x80000000: "engine_internal",
+    },
+    "th14_plus": {
+        0x00000001: "no_hurtbox",
+        0x00000002: "no_body_collision",
+        0x00000004: "persist_lr_offscreen",
+        0x00000008: "persist_tb_offscreen",
+        0x00000010: "invincible_hide_boss_bar",
+        0x00000020: "hidden_or_noninteractive",
+        0x00000040: "boss_initial_unknown",
+        0x00000080: "no_global_clear",
+        0x00000100: "force_global_clear",
+        0x00000200: "graze_like_laser",
+        0x00000400: "no_clear_dialog_death",
+        0x00000800: "clear_effect_vulnerable",
+        0x00001000: "rect_collision_gzz",
+        0x00020000: "move_bounds_internal",
+        0x00040000: "tested_internal",
+        0x00080000: "movement_mirror_internal",
+        0x00100000: "horizontal_anim_internal",
+        0x00200000: "nonboss_hidden_strip_internal",
+        0x00400000: "special_unit_no_force_clear",
+        0x00800000: "boss_mode_internal",
+        0x01000000: "no_miss_marker",
+        0x02000000: "delete_pending_internal",
+        0x04000000: "movement_unknown_internal",
+        0x08000000: "familiar_ignore_reimu_homing",
+        0x10000000: "bomb_immune",
+        0x20000000: "legacy_546_clear_unknown",
+        0x40000000: "engine_internal",
+        0x80000000: "familiar_hit_flash_purple",
+    },
+}
+
+UNIT_FLAG_VALUE_BY_PROFILE_SEMANTIC: dict[tuple[str, str], int] = {}
+for profile, flags in UNIT_FLAG_SEMANTICS_BY_PROFILE.items():
+    for value, semantic in flags.items():
+        UNIT_FLAG_VALUE_BY_PROFILE_SEMANTIC.setdefault((profile, semantic), value)
+
+LOSSY_UNIT_FLAG_TARGETS: dict[str, str | None] = {
+    "legacy_th10_blank": None,
+}
+
+
+def parse_int_mask(value: Any) -> int | None:
+    raw = plain(value).strip()
+    if not raw:
+        return None
+    try:
+        return int(raw, 0)
+    except ValueError:
+        return None
+
+
+def unit_flag_components(game: str, raw_flag: Any) -> list[dict[str, Any]]:
+    profile = flag_profile_for_game(game)
+    mask = parse_int_mask(raw_flag)
+    if mask is None:
+        return [{"source_value": plain(raw_flag), "semantic": f"expr:{plain(raw_flag)}", "profile": profile}]
+    table = UNIT_FLAG_SEMANTICS_BY_PROFILE.get(profile, {})
+    components: list[dict[str, Any]] = []
+    remaining = mask
+    bit = 1
+    while remaining:
+        if remaining & bit:
+            semantic = table.get(bit, f"raw_bit:{bit}")
+            components.append({"source_value": bit, "semantic": semantic, "profile": profile})
+            remaining &= ~bit
+        bit <<= 1
+    if not components:
+        components.append({"source_value": 0, "semantic": "none", "profile": profile})
+    return components
+
+
+def encode_unit_flag_semantic(semantic: str, target: str) -> int | None:
+    if semantic in LOSSY_UNIT_FLAG_TARGETS:
+        return LOSSY_UNIT_FLAG_TARGETS[semantic]
+    profile = flag_profile_for_game(target)
+    encoded = UNIT_FLAG_VALUE_BY_PROFILE_SEMANTIC.get((profile, semantic))
+    if encoded is not None:
+        return encoded
+    if semantic.startswith("raw_bit:"):
+        try:
+            return int(semantic.split(":", 1)[1], 0)
+        except ValueError:
+            return None
+    return None
+
+
+def unit_flag_semantics(game: str, op_key: str, raw_flag: Any, function: str) -> dict[str, Any]:
+    components = unit_flag_components(game, raw_flag)
+    return {
+        "op_key": op_key,
+        "raw_flag": plain(raw_flag),
+        "profile": flag_profile_for_game(game),
+        "function": function,
+        "components": components,
+        "names": [component["semantic"] for component in components],
+    }
+
+
+def remap_unit_flag_mask(source_game: str, target: str, raw_flag: Any) -> dict[str, Any]:
+    components = unit_flag_components(source_game, raw_flag)
+    target_mask = 0
+    emitted: list[dict[str, Any]] = []
+    dropped: list[dict[str, Any]] = []
+    for component in components:
+        semantic = str(component.get("semantic", ""))
+        encoded = encode_unit_flag_semantic(semantic, target)
+        mapped = dict(component)
+        mapped["target_value"] = encoded
+        if encoded is None or encoded == 0:
+            dropped.append(mapped)
+        else:
+            target_mask |= encoded
+            emitted.append(mapped)
+    return {
+        "source": plain(raw_flag),
+        "source_profile": flag_profile_for_game(source_game),
+        "target_profile": flag_profile_for_game(target),
+        "target_mask": target_mask,
+        "target_flag": str(target_mask) if target_mask else "drop",
+        "components": components,
+        "emitted": emitted,
+        "dropped": dropped,
+    }
+
+
 def spread_semantic(game: str, style: Any) -> dict[str, Any]:
     raw = plain(style).strip()
     generation = generation_for_game(game)
