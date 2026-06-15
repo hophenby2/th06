@@ -146,7 +146,10 @@ def bullet_transform_from_dict(data: dict[str, Any]) -> BulletTransform:
 
 
 def object_to_dict(obj: object) -> dict[str, Any]:
-    return obj.to_dict() if hasattr(obj, "to_dict") else dict(getattr(obj, "__dict__", {}))
+    data = obj.to_dict() if hasattr(obj, "to_dict") else dict(getattr(obj, "__dict__", {}))
+    if hasattr(obj, "source"):
+        data["source"] = str(getattr(obj, "source"))
+    return data
 
 
 def object_from_dict(data: dict[str, Any]) -> object:
@@ -165,6 +168,8 @@ def object_from_dict(data: dict[str, Any]) -> object:
         emitter.fire_lines = [int(item) for item in data.get("fire_lines", [])]
         emitter.raw = [instruction_from_dict(item) for item in data.get("raw", [])]
         emitter.unsupported = [str(item) for item in data.get("unsupported", [])]
+        if "source" in data:
+            emitter.source = str(data.get("source", ""))
         return emitter
 
     cls = IR_CLASS_BY_KIND.get(kind, IRObject)
@@ -175,6 +180,8 @@ def object_from_dict(data: dict[str, Any]) -> object:
     obj.fields = dict(data.get("fields", {}) or {})
     obj.raw = [instruction_from_dict(item) for item in data.get("raw", [])]
     obj.unsupported = [str(item) for item in data.get("unsupported", [])]
+    if "source" in data:
+        obj.source = str(data.get("source", ""))
     return obj
 
 

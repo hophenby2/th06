@@ -73,3 +73,19 @@ Validated on `th062/th10/stage01.decl`:
 - `compile-ir --target th15` produced `/tmp/th10_stage01_layout_to_th15.decl`.
 - `wine thtkGUI-th20tr/thtk/thtk12/thecl.exe -c 10 /tmp/th10_stage01_layout_roundtrip.decl /tmp/th10_stage01_layout_roundtrip.ecl` succeeded.
 - `wine thtkGUI-th20tr/thtk/thtk12/thecl.exe -c 15 /tmp/th10_stage01_layout_to_th15.decl /tmp/th10_stage01_layout_to_th15.ecl` succeeded.
+
+## Direct vs IR Target Lowering
+
+`transpile source.decl --target X` and `emit-ir source.decl` followed by `compile-ir source.eclir.json --target X` now use the same `emit_transpile(program, objects, target)` backend and have byte-identical target `.decl` output for validated samples.
+
+Important serialized fields for parity:
+
+- Raw instruction/statement text keeps original leading whitespace instead of stripping it.
+- Semantic objects preserve dynamic `source` path attributes, so path-dependent stage policies behave the same after IR deserialization.
+
+Validated parity samples:
+
+- `th062/th10/stage01.decl -> th15`: direct output equals IR output.
+- `th062/th08/ecldata1.decl -> th15`: direct output equals IR output.
+- `th062/th12/stage01.decl -> th15`: direct output equals IR output.
+- `th062/th15/st01.decl -> th12`: direct output equals IR output.

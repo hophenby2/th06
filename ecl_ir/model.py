@@ -17,7 +17,7 @@ class Instruction:
         return {
             "opcode": self.opcode,
             "args": self.args,
-            "raw": self.raw.strip(),
+            "raw": self.raw,
             "line_no": self.line_no,
             "difficulty": self.difficulty,
             "difficulty_literals": self.difficulty_literals,
@@ -36,7 +36,7 @@ class Statement:
     def to_dict(self) -> dict[str, Any]:
         return {
             "kind": self.kind,
-            "raw": self.raw.strip(),
+            "raw": self.raw,
             "line_no": self.line_no,
             "text": self.text,
             "difficulty": self.difficulty,
