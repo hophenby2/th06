@@ -164,6 +164,12 @@ class AnimationOp(IRObject):
 
 
 @dataclass
+class EnemyVisualOp(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "unknown"):
+        super().__init__("EnemyVisual", game, function, source_line, id, family)
+
+
+@dataclass
 class EnemyOp(IRObject):
     def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "unknown"):
         super().__init__("Enemy", game, function, source_line, id, family)

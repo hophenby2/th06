@@ -101,7 +101,39 @@ def emit_transpile(program, objects, target: str) -> str:
         lines.append("}")
     if generation_for_game(target) == "th06_th08":
         lines = normalize_old_target_lines(lines)
-    return "\n".join(lines)
+    return postprocess_transpile_output("\n".join(lines), program.game, target)
+
+
+def postprocess_transpile_output(output: str, source_game: str, target: str) -> str:
+    if source_game not in {"th10", "th11"} or generation_for_game(target) != "th13_plus":
+        return output
+
+    def move_drop_after_anm(match: re.Match[str]) -> str:
+        head, body, tail = match.groups()
+        lines = body.splitlines()
+        drop_line = None
+        kept: list[str] = []
+        for line in lines:
+            if drop_line is None and "ins_510(" in line:
+                drop_line = line
+            else:
+                kept.append(line)
+        if drop_line is None:
+            return match.group(0)
+        out: list[str] = []
+        inserted = False
+        for line in kept:
+            if not inserted and re.search(r"@Girl00[A-Z]*\(", line):
+                out.append(drop_line)
+                inserted = True
+            out.append(line)
+        if not inserted:
+            out.append(drop_line)
+        return head + "\n".join(out) + tail
+
+    wrapper_re = re.compile(r"(void\s+(?:B|G|R|Y)Girl00[A-Z]*\(\)\s*\{)(.*?)(\n\})", re.S)
+    output = wrapper_re.sub(move_drop_after_anm, output)
+    return output
 
 
 def stage06_th12_to_th15_resources(kind: str) -> dict[str, list[str]]:
@@ -576,6 +608,19 @@ def covered_lines_for_lifted_object(obj, source_game: str, target: str) -> set[i
     return covered
 
 
+
+
+def timeline_object_sort_key(obj) -> tuple[int, str]:
+    kind = getattr(obj, "kind", "")
+    fields = getattr(obj, "fields", {}) or {}
+    if kind == "EnemyVisual":
+        return (0, kind)
+    if kind == "Animation":
+        return (1, kind)
+    if str(fields.get("op_key") or "") == "unit.drop_main":
+        return (2, kind)
+    return (3, kind)
+
 def should_emit_semantic_object_in_timeline(obj, source_game: str, target: str) -> bool:
     if getattr(obj, "kind", None) == "LaserEmitter":
         return False
@@ -658,7 +703,7 @@ def emit_function_body(function_objects: list[object], target: str) -> list[str]
             continue
         line_no = int(event.get("line", 0) or 0)
         if line_no in object_starts:
-            for obj in sorted(object_starts[line_no], key=lambda item: getattr(item, "kind", "")):
+            for obj in sorted(object_starts[line_no], key=timeline_object_sort_key):
                 if not should_emit_semantic_object_in_timeline(obj, source_game, target):
                     continue
                 lines.append(f"    // object {obj.kind} source_line={obj.source_line} family={obj.family}")
@@ -1486,8 +1531,6 @@ def emit_timeline_event(event: dict[str, object], source_game: str = "unknown", 
         return wrap_event_rank([f"    // unlifted instruction: {text}"], event, target)
     if kind == "time":
         wait = str(event.get("time") or "").strip()
-        if generation_for_game(source_game) in {"th10_th11", "th12"} and generation_for_game(target) == "th13_plus" and wait:
-            return wrap_event_rank([f"    ins_23({literal_time_value(wait)});"], event, target)
         return wrap_event_rank([f"    {text}"], event, target)
     if kind == "label":
         return [f"    {text}"]

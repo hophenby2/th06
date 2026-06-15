@@ -71,6 +71,8 @@ def generation_for_game(game: str) -> str:
 def lifted_raw_coverage_policy(kind: str, source_game: str, target: str, family: str = "") -> str:
     source_generation = generation_for_game(source_game)
     target_generation = generation_for_game(target)
+    if kind == "EnemyVisual":
+        return "all"
     if kind != "BulletEmitter":
         return "default"
     if family == "th12" and source_generation == GEN_TH12 and target_generation == GEN_TH13_PLUS:

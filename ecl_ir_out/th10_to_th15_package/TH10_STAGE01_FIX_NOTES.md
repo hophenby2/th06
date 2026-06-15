@@ -114,3 +114,25 @@ After lowering to TH15 the visible/runtime-relevant differences were:
 - DropMain differs by color: red `510(1)`, blue `510(2)`, green `510(3)`. This is preserved because it is explicit drop behavior, not create policy.
 
 The regenerated file now has the five creates all ending in `..., 1);`, so #4/#5 no longer use target-side create presets `2/3`.
+
+## 2026-06-15 corrected counting from enemy #11
+
+Counting from the first enemy after the initial 10 visible enemies, the sequence in the regenerated TH15 file is:
+
+- #1-#3: `RGirl00` (`ins_305(..., 1)`) at source lines 1823/1825/1827.
+- #4: `BGirl00` (`ins_305(..., 1)`) at source line 1829.
+- #5: `GGirl00` (`ins_305(..., 1)`) at source line 1831.
+- #6: `RGirl00` (`ins_301(..., 1)`) at source line 1833.
+
+Differences found after this recount:
+
+- #1-#3 use red wrapper `RGirl00`; #4/#5 use blue/green wrappers `BGirl00/GGirl00`.
+- Create final policy is now normalized to `1` for all of them, matching native TH15 stage enemy creates.
+- `BGirl00/GGirl00` still differed in wrapper ordering: inherited TH10 order emitted `ins_510(2/3)` before ANM setup, while native TH15 wrappers set ANM first and then drop. A postprocess pass now moves `ins_510` in `BGirl00/GGirl00` wrapper families after the native TH15 ANM combo and before `@Girl00...`.
+
+Current wrapper starts:
+
+- `BGirl00`: `ins_302(2); ins_306(0, 0); ins_510(2); @Girl00(0);`
+- `GGirl00`: `ins_302(2); ins_306(0, 35); ins_303(1, 93); ins_510(3); @Girl00(35);`
+
+Recompiled successfully after regeneration.

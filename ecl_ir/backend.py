@@ -597,6 +597,8 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
         return f"// dropped disabled async call for {target}: callAsync(..., -1)"
     if op_key == "flow.float_time" and target not in {"th13", "th14", "th15", "th16", "th17", "th18"}:
         return compile_lossy_semantic_fallback(event, target)
+    if op_key == "flow.nop" and source_game in {"th10", "th11", "th12"} and generation_for_game(target) == "th13_plus":
+        return "ins_0();"
     if lowered := compile_th08_vm_arithmetic(event, target):
         return lowered
     if lowered := compile_th08_movement_alias(event, target):
@@ -866,6 +868,8 @@ def compile_object(obj, target: str) -> str:
         compiled = compile_movement(obj, target)
     elif kind == "Animation":
         compiled = compile_named_op(obj, target, ANIMATION_OPS)
+    elif kind == "EnemyVisual":
+        compiled = compile_enemy_visual(obj, target)
     elif kind == "Enemy":
         compiled = compile_named_op(obj, target, ENEMY_OPS)
     elif kind == "BossPattern":
@@ -899,6 +903,35 @@ def strip_line_comments(text: str) -> str:
         lines.append(line)
     return "\n".join(lines)
 
+
+
+def compile_enemy_visual(obj, target: str) -> str:
+    fields = getattr(obj, "fields", {}) or {}
+    source_game = getattr(obj, "game", "")
+    if fields.get("semantic") != "stage_enemy_visual":
+        return compile_raw_comment(obj, target)
+    select_opcode = target_opcode_for_op_key("anm.select", target)
+    main_opcode = target_opcode_for_op_key("anm.set_main", target)
+    sprite_opcode = target_opcode_for_op_key("anm.set_sprite", target)
+    drop_opcode = target_opcode_for_op_key("unit.drop_main", target)
+    if not select_opcode or not main_opcode:
+        return compile_structured_preserve(obj, target, "stage enemy visual has no verified ANM target ops")
+    if not is_opcode_supported(target, select_opcode) or not is_opcode_supported(target, main_opcode):
+        return compile_structured_preserve(obj, target, "stage enemy visual target ANM ops unsupported")
+    main_script = str(fields.get("main_script", "0"))
+    overlay_script = str(fields.get("overlay_script", ""))
+    overlay_slot = str(fields.get("overlay_slot", "1"))
+    drop_style = str(fields.get("drop_style", ""))
+    lines = [
+        f"// semantic EnemyVisual stage_enemy_visual {source_game}->{target}: color={fields.get('color', 'unknown')} source_script={fields.get('source_script', '')}",
+        f"ins_{select_opcode}(2);",
+        f"ins_{main_opcode}(0, {main_script});",
+    ]
+    if overlay_script and sprite_opcode and is_opcode_supported(target, sprite_opcode):
+        lines.append(f"ins_{sprite_opcode}({overlay_slot}, {overlay_script});")
+    if drop_style and drop_opcode and is_opcode_supported(target, drop_opcode):
+        lines.append(f"ins_{drop_opcode}({drop_style});")
+    return "\n".join(lines)
 
 def object_difficulty(obj) -> str | None:
     if getattr(obj, "kind", None) == "BulletEmitter":
@@ -991,6 +1024,8 @@ def enemy_create_op_key_for_target(create: dict[str, object], target: str, fallb
     absolute = create.get("position_mode") == "absolute"
     mirror = bool(create.get("mirror"))
     if absolute and mirror:
+        if generation_for_game(target) == "th13_plus" and str(create.get("role") or "") == "stage_enemy":
+            return f"enemy.create_mirror{suffix}"
         return f"enemy.create_abs_mirror{suffix}"
     if absolute:
         return f"enemy.create_abs{suffix}"
@@ -1809,5 +1844,4 @@ def mode_raw(mode: str | None, default: str = "1") -> str:
         "random_speed": "7",
         "random_angle_speed": "8",
     }.get(mode or "", default)
-
 

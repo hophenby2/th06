@@ -7,6 +7,7 @@ from .lifter import lift_program as lift_bullets
 from .model import (
     AnimationOp,
     AutoBulletTimer,
+    EnemyVisualOp,
     BossPattern,
     BossTimer,
     EffectEmitter,
@@ -295,8 +296,75 @@ def lift_movements(program: Program, func: Function) -> list[MovementOp]:
     return objects
 
 
+
+def stage_enemy_visual_from_script(script: int) -> dict[str, str] | None:
+    mapping = {
+        45: {"main_script": "0", "overlay_script": "", "drop_style": "2", "color": "blue"},
+        46: {"main_script": "5", "overlay_script": "", "drop_style": "1", "color": "red"},
+        47: {"main_script": "35", "overlay_script": "93", "drop_style": "3", "color": "green"},
+        48: {"main_script": "40", "overlay_script": "93", "drop_style": "4", "color": "yellow"},
+    }
+    return mapping.get(script)
+
+
+def lift_enemy_visuals(program: Program, func: Function) -> list[IRObject]:
+    if program.game not in {"th10", "th11"}:
+        return []
+    objects: list[IRObject] = []
+    body = func.body
+    for index, ins in enumerate(body):
+        if ins.opcode not in {259, 262} or len(ins.args) < 2:
+            continue
+        try:
+            script = int(str(ins.args[1]).strip())
+        except ValueError:
+            continue
+        semantic = stage_enemy_visual_from_script(script)
+        if semantic is None:
+            continue
+        previous_select = next((body[pos] for pos in range(index - 1, -1, -1) if body[pos].opcode == 258), None)
+        previous_drop = next((body[pos] for pos in range(index - 1, max(-1, index - 4), -1) if body[pos].opcode == 330), None)
+        next_drop = next((body[pos] for pos in range(index + 1, min(len(body), index + 4)) if body[pos].opcode == 330), None)
+        drop = next_drop or previous_drop
+        if previous_select is None and drop is None:
+            continue
+        selected_bank = previous_select.args[0] if previous_select is not None and previous_select.args else "1"
+        if str(selected_bank).strip() != "1":
+            continue
+        obj = make_obj(EnemyVisualOp, program, func, ins, "stage_enemy_visual", str(script))
+        obj.raw = []
+        if previous_select is not None and previous_select.line_no in {ins.line_no - 1, ins.line_no - 2}:
+            obj.raw.append(previous_select)
+            append_ir_op(obj, program.game, previous_select)
+        if previous_drop is not None and previous_drop.line_no in {ins.line_no - 1, ins.line_no - 2}:
+            obj.raw.append(previous_drop)
+            append_ir_op(obj, program.game, previous_drop)
+        obj.raw.append(ins)
+        if obj.fields.get("ir_ops"):
+            obj.fields["ir_ops"] = obj.fields["ir_ops"][-1:]
+        append_ir_op(obj, program.game, ins)
+        if next_drop is not None:
+            obj.raw.append(next_drop)
+            append_ir_op(obj, program.game, next_drop)
+        obj.fields.update({
+            "semantic": "stage_enemy_visual",
+            "source_bank": selected_bank,
+            "source_script": str(script),
+            "source_set_op": "anm.set_sprite" if ins.opcode == 259 else "anm.set_main",
+            "main_slot": "0",
+            "main_script": semantic["main_script"],
+            "overlay_slot": "1",
+            "overlay_script": semantic["overlay_script"],
+            "drop_style": str(drop.args[0]) if drop is not None and drop.args else semantic["drop_style"],
+            "color": semantic["color"],
+        })
+        objects.append(obj)
+    return objects
+
 def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
     objects: list[IRObject] = []
+    objects.extend(lift_enemy_visuals(program, func))
+    visual_covered_lines = {raw.line_no for obj in objects if getattr(obj, "kind", None) == "EnemyVisual" for raw in getattr(obj, "raw", [])}
     if program.game in TH13PLUS:
         animation = {302: "anmSelect", 303: "anmSetSprite", 306: "anmSetMain", 307: "anmPlay", 308: "anmPlayAbs", 317: "anmSwitch", 318: "anmReset"}
         enemy = {300: "enmCreate", 301: "enmCreateA", 304: "enmCreateM", 305: "enmCreateAM", 309: "enmCreateF", 310: "enmCreateAF", 311: "enmCreateMF", 312: "enmCreateAMF"}
@@ -316,6 +384,8 @@ def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
     else:
         return objects
     for ins in func.body:
+        if ins.line_no in visual_covered_lines:
+            continue
         if ins.opcode in animation:
             obj = make_obj(AnimationOp, program, func, ins, family)
             op_name = animation[ins.opcode]
