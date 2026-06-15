@@ -95,7 +95,7 @@ void Boss()
     ins_302(3);
     ins_306(0, 0);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(48.0f, 48.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -1421,7 +1421,7 @@ void Ecl_Girl00(var A)
     ins_302(2);
     ins_306(0, $A);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -1517,7 +1517,7 @@ void Ecl_GirlInit()
     ins_302(2);
     ins_303(0, $A);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -1556,7 +1556,7 @@ void Ecl_RGirl01()
     ins_302(2);
     ins_306(0, 5);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -1703,7 +1703,7 @@ void Girl00(var A)
     ins_302(2);
     ins_306(0, $A);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -1734,7 +1734,7 @@ void Girl00B(var A)
     ins_302(2);
     ins_306(0, $A);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -1807,7 +1807,7 @@ void Girl00C(var A)
     ins_302(2);
     ins_306(0, $A);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -1898,7 +1898,7 @@ void Girl00D(var A)
     ins_302(2);
     ins_306(0, $A);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -1932,7 +1932,7 @@ void Girl00E(var A)
     ins_302(2);
     ins_306(0, $A);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(24.0f, 24.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -1966,7 +1966,7 @@ void Girl01()
     ins_302(2);
     ins_306(0, 40);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(40.0f, 40.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -2063,7 +2063,7 @@ void Girl02()
     ins_302(2);
     ins_306(0, 40);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(40.0f, 40.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -2148,7 +2148,7 @@ void MBoss()
     ins_302(3);
     ins_306(0, 0);
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(32);
+    // dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox
     // semantic op_key lowering th10->th15: unit.set_hurtbox
     ins_500(48.0f, 48.0f);
     // semantic op_key lowering th10->th15: unit.set_hitbox
@@ -2473,7 +2473,8 @@ void MBossDead()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A;
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(16);
+    // remapped TH10/11 hidden/controller flag 16 to TH13+ intangible/controller flag 32
+    ins_502(32);
     // semantic op_key lowering th10->th15: boss.spell_end
     ins_523();
     unless ([-9959] <= 1) goto MBossDead_388 @ 0;
@@ -2754,64 +2755,64 @@ void MainSub()
     // control-flow, async scheduling, and expression semantics require target-game verification
     +20:
     // object Enemy source_line=1571 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("GGirl00B", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GGirl00B", -144.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1573 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("GGirl00B", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GGirl00B", -144.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1575 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00B", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -144.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1577 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00B", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -144.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1579 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00B", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -144.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1581 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -84.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -84.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1583 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -84.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -84.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1585 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -84.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -84.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1587 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -84.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -84.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1589 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -84.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -84.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1591 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00B", -24.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -24.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1593 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00B", -24.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -24.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1595 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00B", -24.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -24.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1597 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00B", -24.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -24.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1599 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00B", -24.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -24.0f, -64.0f, 20, 1000, 1);
     return;
 }
 
@@ -3074,7 +3075,8 @@ void main()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C;
     // semantic op_key lowering th10->th15: unit.flag_set
-    ins_502(16);
+    // remapped TH10/11 hidden/controller flag 16 to TH13+ intangible/controller flag 32
+    ins_502(32);
     +160:
     // semantic op_key lowering th10->th15: flow.nop
     ins_0();
@@ -3084,13 +3086,13 @@ void main()
     main_176:
     unless (($C % 2) == 0) goto main_368 @ 160;
     // object Enemy source_line=1787 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("Ecl_BGirl00", %B, -16.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_BGirl00", %B, -16.0f, 20, 1000, 1);
     goto main_420 @ 160;
     main_368:
     // object Enemy source_line=1790 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("Ecl_RGirl00", %B, -16.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_RGirl00", %B, -16.0f, 20, 1000, 1);
     main_420:
     %B;
     +20:
@@ -3103,26 +3105,26 @@ void main()
     main_572:
     if ($C < 9) goto main_176 @ 160;
     // object Enemy source_line=1800 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("Ecl_GGirl00", %B, -16.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_GGirl00", %B, -16.0f, 20, 1000, 1);
     +300:
     // semantic op_key lowering th10->th15: flow.nop
     ins_0();
     // object Enemy source_line=1803 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1805 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1807 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +20:
     // object Enemy source_line=1809 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +80:
     // object Enemy source_line=1811 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
@@ -3145,8 +3147,8 @@ void main()
     ins_304("GGirl00", 144.0f, -64.0f, 20, 1000, 1);
     +60:
     // object Enemy source_line=1821 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("Girl01", 64.0f, -16.0f, 300, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Girl01", 64.0f, -16.0f, 300, 1000, 1);
     +100:
     // object Enemy source_line=1823 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
@@ -3169,24 +3171,24 @@ void main()
     ins_304("GGirl00", 144.0f, -64.0f, 20, 1000, 1);
     +60:
     // object Enemy source_line=1833 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1835 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1837 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1839 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1841 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("GGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +60:
     // object Enemy source_line=1843 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
@@ -3198,13 +3200,13 @@ void main()
     main_1832:
     unless (($C % 2) == 0) goto main_2024 @ 1180;
     // object Enemy source_line=1850 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("Ecl_BGirl00", %B, -16.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_BGirl00", %B, -16.0f, 20, 1000, 1);
     goto main_2076 @ 1180;
     main_2024:
     // object Enemy source_line=1853 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("Ecl_RGirl00", %B, -16.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_RGirl00", %B, -16.0f, 20, 1000, 1);
     main_2076:
     %B;
     +20:
@@ -3217,8 +3219,8 @@ void main()
     main_2228:
     if ($C < 9) goto main_1832 @ 1180;
     // object Enemy source_line=1863 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("Ecl_GGirl00", %B, -16.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_GGirl00", %B, -16.0f, 20, 1000, 1);
     +80:
     // object Enemy source_line=1865 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
@@ -3282,123 +3284,123 @@ void main()
     ins_304("BGirl00", 24.0f, -64.0f, 20, 1000, 1);
     +200:
     // object Enemy source_line=1896 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("Girl01", 64.0f, -16.0f, 300, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Girl01", 64.0f, -16.0f, 300, 1000, 1);
     +10:
     // object Enemy source_line=1898 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1900 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1902 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1904 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1906 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("GGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GGirl00", -144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1908 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1910 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", 144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1912 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1914 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", 144.0f, -64.0f, 20, 1000, 1);
     +10:
     // object Enemy source_line=1916 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("GGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GGirl00", 144.0f, -64.0f, 20, 1000, 1);
     +80:
     // object Enemy source_line=1918 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", -48.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -48.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1919 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", 0.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 0.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1920 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", 48.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 48.0f, -16.0f, 30, 1000, 1);
     +20:
     // object Enemy source_line=1922 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", -72.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -72.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1923 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", -24.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -24.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1924 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", 24.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 24.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1925 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", 72.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 72.0f, -16.0f, 30, 1000, 1);
     +20:
     // object Enemy source_line=1927 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", -96.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -96.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1928 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", -48.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -48.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1929 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", 48.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 48.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1930 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", 96.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 96.0f, -16.0f, 30, 1000, 1);
     +20:
     // object Enemy source_line=1932 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -120.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -120.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1933 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -72.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -72.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1934 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 72.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 72.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1935 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 120.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 120.0f, -16.0f, 30, 1000, 1);
     +20:
     // object Enemy source_line=1937 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -144.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -144.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1938 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -96.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -96.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1939 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 96.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 96.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1940 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 144.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 144.0f, -16.0f, 30, 1000, 1);
     +20:
     // object Enemy source_line=1942 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -168.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -168.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1943 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -120.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -120.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1944 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 120.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 120.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=1945 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 168.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 168.0f, -16.0f, 30, 1000, 1);
     +160:
     // object Enemy source_line=1947 family=th10_th11
     // omitted TH10 MapleEnemy visual helper create for TH15 stability
@@ -3407,40 +3409,40 @@ void main()
     ins_301("MBoss", -64.0f, -16.0f, 6000, 10000, 1);
     +400:
     // object Enemy source_line=1950 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs_func -> ins_310
-    ins_310("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
+    ins_309("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
     +80:
     // object Enemy source_line=1952 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
     ins_311("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
     +80:
     // object Enemy source_line=1954 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs_func -> ins_310
-    ins_310("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
+    ins_309("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
     +80:
     // object Enemy source_line=1956 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
     ins_311("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
     +80:
     // object Enemy source_line=1958 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs_func -> ins_310
-    ins_310("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
+    ins_309("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
     +80:
     // object Enemy source_line=1960 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
     ins_311("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
     +80:
     // object Enemy source_line=1962 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs_func -> ins_310
-    ins_310("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
+    ins_309("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
     +80:
     // object Enemy source_line=1964 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
     ins_311("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
     +80:
     // object Enemy source_line=1966 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs_func -> ins_310
-    ins_310("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
+    ins_309("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
     +80:
     // object Enemy source_line=1968 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
@@ -3453,8 +3455,8 @@ void main()
     +100:
     !*
     // object Enemy source_line=1973 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("Girl01", 64.0f, -16.0f, 300, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Girl01", 64.0f, -16.0f, 300, 1000, 1);
     // object Enemy source_line=1974 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
     ins_304("Girl01", -64.0f, -16.0f, 300, 1000, 1);
@@ -3465,13 +3467,13 @@ void main()
     %B = [-9987.0f] * _f(128);
     unless (($C % 2) == 0) goto main_5916 @ 3580;
     // object Enemy source_line=1981 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00E", %B, -16.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00E", %B, -16.0f, 20, 1000, 1);
     goto main_5968 @ 3580;
     main_5916:
     // object Enemy source_line=1984 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00E", %B, -16.0f, 20, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00E", %B, -16.0f, 20, 1000, 1);
     main_5968:
     +10:
     $C = $C + 1;
@@ -3479,8 +3481,8 @@ void main()
     if ($C < 20) goto main_5648 @ 3580;
     +60:
     // object Enemy source_line=1991 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("Girl01", 128.0f, -16.0f, 300, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Girl01", 128.0f, -16.0f, 300, 1000, 1);
     // object Enemy source_line=1992 family=th10_th11
     // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
     ins_304("Girl01", -128.0f, -16.0f, 300, 1000, 1);
@@ -3508,79 +3510,79 @@ void main()
     // approximated deathWait on target without deathWait opcode: no-op
     +100:
     // object Enemy source_line=2005 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", -48.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -48.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2006 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", 0.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 0.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2007 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", 48.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 48.0f, -16.0f, 30, 1000, 1);
     +20:
     // object Enemy source_line=2009 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("RGirl00C", -72.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -72.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2010 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -24.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -24.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2011 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 24.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 24.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2012 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 72.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 72.0f, -16.0f, 30, 1000, 1);
     +20:
     // object Enemy source_line=2014 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -96.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -96.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2015 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -48.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -48.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2016 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 48.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 48.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2017 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 96.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 96.0f, -16.0f, 30, 1000, 1);
     +20:
     // object Enemy source_line=2019 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -120.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -120.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2020 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -72.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -72.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2021 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 72.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 72.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2022 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 120.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 120.0f, -16.0f, 30, 1000, 1);
     +20:
     // object Enemy source_line=2024 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -144.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -144.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2025 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -96.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -96.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2026 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 96.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 96.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2027 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 144.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 144.0f, -16.0f, 30, 1000, 1);
     +20:
     // object Enemy source_line=2029 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -168.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -168.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2030 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", -120.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -120.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2031 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 120.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 120.0f, -16.0f, 30, 1000, 1);
     // object Enemy source_line=2032 family=th10_th11
-    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
-    ins_301("BGirl00C", 168.0f, -16.0f, 30, 1000, 1);
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 168.0f, -16.0f, 30, 1000, 1);
     +400:
     // semantic op_key lowering th10->th15: unit.dialog_read
     ins_518(0);

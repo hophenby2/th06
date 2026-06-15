@@ -599,6 +599,11 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
         return compile_lossy_semantic_fallback(event, target)
     if op_key == "flow.nop" and source_game in {"th10", "th11", "th12"} and generation_for_game(target) == "th13_plus":
         return "ins_0();"
+    semantic_op_key = canonical_anm_op_key(op_key)
+    if semantic_op_key == "unit.flag_set" and source_game in {"th10", "th11"} and generation_for_game(target) == "th13_plus" and args == ["16"]:
+        return "// remapped TH10/11 hidden/controller flag 16 to TH13+ intangible/controller flag 32\nins_502(32);"
+    if semantic_op_key == "unit.flag_set" and source_game in {"th10", "th11"} and generation_for_game(target) == "th13_plus" and args == ["32"]:
+        return "// dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox"
     if lowered := compile_th08_vm_arithmetic(event, target):
         return lowered
     if lowered := compile_th08_movement_alias(event, target):
@@ -1028,6 +1033,8 @@ def enemy_create_op_key_for_target(create: dict[str, object], target: str, fallb
             return f"enemy.create_mirror{suffix}"
         return f"enemy.create_abs_mirror{suffix}"
     if absolute:
+        if generation_for_game(target) == "th13_plus" and str(create.get("role") or "") == "stage_enemy":
+            return f"enemy.create{suffix}"
         return f"enemy.create_abs{suffix}"
     if mirror:
         return f"enemy.create_mirror{suffix}"
@@ -1844,4 +1851,3 @@ def mode_raw(mode: str | None, default: str = "1") -> str:
         "random_speed": "7",
         "random_angle_speed": "8",
     }.get(mode or "", default)
-
