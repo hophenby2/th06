@@ -73,6 +73,10 @@ def lifted_raw_coverage_policy(kind: str, source_game: str, target: str, family:
     target_generation = generation_for_game(target)
     if kind == "EnemyVisual":
         return "all"
+    if kind == "UnitFlag":
+        return "all"
+    if kind == "Mode":
+        return "metadata"
     if kind != "BulletEmitter":
         return "default"
     if family == "th12" and source_generation == GEN_TH12 and target_generation == GEN_TH13_PLUS:
@@ -378,24 +382,40 @@ for drop in DROP_TYPES:
 DROP_TYPE_BY_SEMANTIC = {drop.semantic: drop for drop in DROP_TYPES}
 
 BULLET_TRANSFORM_MODES: tuple[SemanticValue, ...] = (
-    SemanticValue("spawn_step", {GEN_TH13_PLUS: "1", GEN_TH12: "1"}),
+    SemanticValue("spawn_step", {GEN_TH13_PLUS: "1", GEN_TH12: "1", GEN_TH10_TH11: "1"}),
     SemanticValue("set_mist", {GEN_TH13_PLUS: "2", GEN_TH12: "2"}),
-    SemanticValue("accel", {GEN_TH13_PLUS: "4", GEN_TH12: "4"}),
-    SemanticValue("tangent_accel", {GEN_TH13_PLUS: "8", GEN_TH12: "8"}),
-    SemanticValue("pause_then_velocity", {GEN_TH13_PLUS: "16", GEN_TH12: "64"}),
-    SemanticValue("pause_then_relative_velocity", {GEN_TH13_PLUS: "16", GEN_TH12: "16"}),
-    SemanticValue("pause_then_aimed_velocity", {GEN_TH13_PLUS: "16", GEN_TH12: "32"}),
+    SemanticValue("legacy_unknown_2", {GEN_TH10_TH11: "2"}),
+    SemanticValue("accel", {GEN_TH13_PLUS: "4", GEN_TH12: "4", GEN_TH10_TH11: "16"}),
+    SemanticValue("legacy_unknown_4", {GEN_TH10_TH11: "4"}),
+    SemanticValue("legacy_unknown_8", {GEN_TH10_TH11: "8"}),
+    SemanticValue("tangent_accel", {GEN_TH13_PLUS: "8", GEN_TH12: "8", GEN_TH10_TH11: "32"}),
+    SemanticValue("pause_then_relative_velocity", {GEN_TH13_PLUS: "16", GEN_TH12: "16", GEN_TH10_TH11: "64"}),
+    SemanticValue("pause_then_aimed_velocity", {GEN_TH13_PLUS: "16", GEN_TH12: "32", GEN_TH10_TH11: "128"}),
+    SemanticValue("pause_then_velocity", {GEN_TH13_PLUS: "16", GEN_TH12: "64", GEN_TH10_TH11: "256"}),
+    SemanticValue("sound", {GEN_TH13_PLUS: "2048", GEN_TH12: "16384", GEN_TH10_TH11: "512"}),
+    SemanticValue("bounce_all", {GEN_TH10_TH11: "1024"}),
+    SemanticValue("bounce_no_bottom", {GEN_TH10_TH11: "2048"}),
     SemanticValue("bounce", {GEN_TH13_PLUS: "64", GEN_TH12: "256"}),
-    SemanticValue("uncancelable_time", {GEN_TH13_PLUS: "128", GEN_TH12: "512"}),
-    SemanticValue("offscreen_time", {GEN_TH13_PLUS: "256", GEN_TH12: "1024"}),
-    SemanticValue("shape_change", {GEN_TH13_PLUS: "512", GEN_TH12: "2048"}),
-    SemanticValue("delete", {GEN_TH13_PLUS: "1024", GEN_TH12: "8192"}),
-    SemanticValue("sound", {GEN_TH13_PLUS: "2048", GEN_TH12: "16384"}),
-    SemanticValue("wait_next", {GEN_TH13_PLUS: "-2147483648", GEN_TH12: "4096"}),
-    SemanticValue("jump", {GEN_TH13_PLUS: "65536", GEN_TH12: "4194304"}),
-    SemanticValue("independent_velocity", {GEN_TH13_PLUS: "524288", GEN_TH12: "134217728"}),
-    SemanticValue("highlight", {GEN_TH13_PLUS: "1048576", GEN_TH12: "268435456"}),
-    SemanticValue("velocity_over_time", {GEN_TH13_PLUS: "2097152", GEN_TH12: "536870912"}),
+    SemanticValue("uncancelable_time", {GEN_TH13_PLUS: "128", GEN_TH12: "512", GEN_TH10_TH11: "4096"}),
+    SemanticValue("offscreen_time", {GEN_TH13_PLUS: "256", GEN_TH12: "1024", GEN_TH10_TH11: "8192"}),
+    SemanticValue("shape_change", {GEN_TH13_PLUS: "512", GEN_TH12: "2048", GEN_TH10_TH11: "16384"}),
+    SemanticValue("wait_next", {GEN_TH13_PLUS: "-2147483648", GEN_TH12: "4096", GEN_TH10_TH11: "32768"}),
+    SemanticValue("delete", {GEN_TH13_PLUS: "1024", GEN_TH12: "8192", GEN_TH10_TH11: "65536"}),
+    SemanticValue("legacy_unknown_131072", {GEN_TH10_TH11: "131072"}),
+    SemanticValue("legacy_unknown_262144", {GEN_TH10_TH11: "262144"}),
+    SemanticValue("spawn_bullet_legacy", {GEN_TH10_TH11: "524288"}),
+    SemanticValue("wall_pass_horizontal", {GEN_TH10_TH11: "1048576"}),
+    SemanticValue("bounce_bottom", {GEN_TH10_TH11: "2097152"}),
+    SemanticValue("jump", {GEN_TH13_PLUS: "65536", GEN_TH12: "4194304", GEN_TH10_TH11: "4194304"}),
+    SemanticValue("legacy_ds_unknown_8388608", {GEN_TH10_TH11: "8388608"}),
+    SemanticValue("shape_change_no_mist", {GEN_TH10_TH11: "16777216"}),
+    SemanticValue("legacy_turn_unknown", {GEN_TH10_TH11: "33554432"}),
+    SemanticValue("legacy_unknown_67108864", {GEN_TH10_TH11: "67108864"}),
+    SemanticValue("independent_velocity", {GEN_TH13_PLUS: "524288", GEN_TH12: "134217728", GEN_TH10_TH11: "134217728"}),
+    SemanticValue("highlight", {GEN_TH13_PLUS: "1048576", GEN_TH12: "268435456", GEN_TH10_TH11: "268435456"}),
+    SemanticValue("velocity_over_time", {GEN_TH13_PLUS: "2097152", GEN_TH12: "536870912", GEN_TH10_TH11: "536870912"}),
+    SemanticValue("legacy_ds_unknown_1073741824", {GEN_TH10_TH11: "1073741824"}),
+    SemanticValue("legacy_reserved_sign_bit", {GEN_TH10_TH11: "-2147483648"}),
 )
 BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE: dict[tuple[str, str], SemanticValue] = {}
 for mode in BULLET_TRANSFORM_MODES:

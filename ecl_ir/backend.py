@@ -600,10 +600,6 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
     if op_key == "flow.nop" and source_game in {"th10", "th11", "th12"} and generation_for_game(target) == "th13_plus":
         return "ins_0();"
     semantic_op_key = canonical_anm_op_key(op_key)
-    if semantic_op_key == "unit.flag_set" and source_game in {"th10", "th11"} and generation_for_game(target) == "th13_plus" and args == ["16"]:
-        return "// remapped TH10/11 hidden/controller flag 16 to TH13+ intangible/controller flag 32\nins_502(32);"
-    if semantic_op_key == "unit.flag_set" and source_game in {"th10", "th11"} and generation_for_game(target) == "th13_plus" and args == ["32"]:
-        return "// dropped TH10/11 unit flag 32 for TH13+ stage enemy compatibility; TH13+ flag 32 is intangible/no-hurtbox"
     if lowered := compile_th08_vm_arithmetic(event, target):
         return lowered
     if lowered := compile_th08_movement_alias(event, target):
@@ -889,6 +885,10 @@ def compile_object(obj, target: str) -> str:
         compiled = compile_boss_timer(obj, target)
     elif kind == "MotionModifier":
         compiled = compile_motion_modifier(obj, target)
+    elif kind == "UnitFlag":
+        compiled = compile_unit_flag(obj, target)
+    elif kind == "Mode":
+        compiled = compile_mode(obj, target)
     elif kind == "Timeline":
         compiled = compile_timeline(obj, target)
     else:
@@ -1346,6 +1346,44 @@ def compile_boss_timer(obj, target: str) -> str:
             return "\n".join(lines)
     return "\n".join(lines + compile_structured_preserve(obj, target, "boss HUD/timer semantics differ across generations").splitlines())
 
+
+
+
+def compile_unit_flag(obj, target: str) -> str:
+    fields = getattr(obj, "fields", {}) or {}
+    flag = fields.get("flag", {}) or {}
+    op_key = str(fields.get("op_key") or flag.get("op_key") or "")
+    raw = str(flag.get("raw_flag", "0"))
+    source_game = getattr(obj, "game", "")
+    if op_key == "unit.flag_set" and source_game in {"th10", "th11"} and generation_for_game(target) == "th13_plus":
+        if raw == "16":
+            return "// UnitFlag lowering th10/th11->th13+: hidden/controller flag 16 -> target controller/intangible flag 32\nins_502(32);"
+        if raw == "32":
+            return "// UnitFlag lowering th10/th11->th13+: dropped source flag 32; target flag 32 disables hurtbox/hitbox"
+    target_value = flag.get("target_th13plus") if generation_for_game(target) == "th13_plus" else raw
+    if target_value in {None, "", "drop"}:
+        return f"// UnitFlag lowering: dropped {source_game} {op_key}({raw}) for {target}; semantic={flag.get('name', '')}"
+    lowered = emit_target_op(target, op_key, [str(target_value)])
+    if lowered:
+        return f"// UnitFlag lowering {source_game}->{target}: {flag.get('name', raw)}\n{lowered}"
+    return compile_lossy_semantic_fallback({"op_key": op_key, "source_game": source_game, "source_opcode": getattr(obj.raw[0], "opcode", -1) if getattr(obj, "raw", None) else -1, "args": [raw]}, target)
+
+
+def compile_mode(obj, target: str) -> str:
+    fields = getattr(obj, "fields", {}) or {}
+    mode = fields.get("mode", {}) or {}
+    semantic = fields.get("semantic", "mode")
+    if semantic == "bullet_transform_mode":
+        return "// Mode IR metadata: bullet transform mode raw={raw} semantic={name} target_th12={th12} target_th15={th15}".format(
+            raw=mode.get("raw", ""), name=mode.get("name", ""), th12=mode.get("target_th12", ""), th15=mode.get("target_th15", "")
+        )
+    if semantic == "movement_tween_mode":
+        return "// Mode IR metadata: movement tween mode raw={raw} semantic={name} target={target}".format(raw=mode.get("raw", ""), name=mode.get("name", ""), target=mode.get("target", ""))
+    if semantic == "mirror_mode":
+        lowered = emit_target_op(target, "movement.mirror_mode", [str(mode.get("raw", "0"))])
+        if lowered:
+            return f"// Mode lowering mirror mode -> {target}\n{lowered}"
+    return f"// Mode IR metadata: {semantic} {mode}"
 
 def compile_motion_modifier(obj, target: str) -> str:
     fields = getattr(obj, "fields", {}) or {}

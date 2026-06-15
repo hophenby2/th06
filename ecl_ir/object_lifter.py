@@ -19,10 +19,13 @@ from .model import (
     LaserEmitter,
     MotionModifier,
     MovementOp,
+    ModeOp,
     Program,
+    UnitFlagOp,
 )
 from .op_ir import op_event, op_key_for_opcode
 from .program_lifter import lift_program_adapters
+from .semantics import bullet_transform_mode_semantic, remap_bullet_transform_mode
 from .timeline_lifter import lift_timelines
 
 TH13PLUS = {"th13", "th14", "th15", "th16", "th17", "th18"}
@@ -52,10 +55,121 @@ def lift_all_objects(program: Program) -> list[object]:
     for func in program.functions:
         objects.extend(lift_lasers(program, func))
         objects.extend(lift_movements(program, func))
+        objects.extend(lift_unit_flags(program, func))
+        objects.extend(lift_modes(program, func))
         objects.extend(lift_animation_enemy(program, func))
         objects.extend(lift_boss_patterns(program, func))
         objects.extend(lift_high_level_legacy_objects(program, func))
     return sorted(objects, key=lambda obj: (getattr(obj, "function", ""), getattr(obj, "source_line", 0), getattr(obj, "kind", "")))
+
+
+def unit_flag_semantics(game: str, op_key: str, raw_flag: str, function: str) -> dict[str, object]:
+    generation = "th13_plus" if game in TH13PLUS else "th10_th11" if game in {"th10", "th11"} else game
+    meanings = {
+        "th10_th11": {
+            "16": {"name": "hidden_or_controller", "target_th13plus": "32", "stage_enemy_target": "drop"},
+            "32": {"name": "unknown_or_hidden_variant", "target_th13plus": "drop", "stage_enemy_target": "drop"},
+        },
+        "th12": {
+            "32": {"name": "intangible", "target_th13plus": "32"},
+        },
+        "th13_plus": {
+            "16": {"name": "invincible_hide_boss_bar", "target_th13plus": "16"},
+            "32": {"name": "intangible_no_hurtbox_hitbox", "target_th13plus": "32"},
+        },
+    }
+    semantic = dict(meanings.get(generation, {}).get(raw_flag, {"name": f"flag_{raw_flag}", "target_th13plus": raw_flag}))
+    semantic.update({"op_key": op_key, "raw_flag": raw_flag, "generation": generation, "function": function})
+    return semantic
+
+
+def lift_unit_flags(program: Program, func: Function) -> list[UnitFlagOp]:
+    opcodes = {
+        "th10": {322: "unit.flag_set", 323: "unit.flag_clear"},
+        "th11": {322: "unit.flag_set", 323: "unit.flag_clear"},
+        "th12": {402: "unit.flag_set", 403: "unit.flag_clear"},
+        "th13": {502: "unit.flag_set", 503: "unit.flag_clear"},
+        "th14": {502: "unit.flag_set", 503: "unit.flag_clear"},
+        "th15": {502: "unit.flag_set", 503: "unit.flag_clear"},
+        "th16": {502: "unit.flag_set", 503: "unit.flag_clear"},
+        "th17": {502: "unit.flag_set", 503: "unit.flag_clear"},
+        "th18": {502: "unit.flag_set", 503: "unit.flag_clear"},
+    }.get(program.game, {})
+    objects: list[UnitFlagOp] = []
+    for ins in func.body:
+        if ins.opcode not in opcodes or not ins.args:
+            continue
+        op_key = opcodes[ins.opcode]
+        raw_flag = a(ins, 0, "0")
+        obj = make_obj(UnitFlagOp, program, func, ins, "unit_flag", raw_flag)
+        obj.fields.update({
+            "semantic": "unit_flag",
+            "op_key": op_key,
+            "operation": "set" if op_key.endswith("flag_set") else "clear",
+            "flag": unit_flag_semantics(program.game, op_key, raw_flag, func.name),
+            "args": ins.args,
+            "difficulty": ins.difficulty,
+        })
+        objects.append(obj)
+    return objects
+
+
+def movement_mode_semantic(raw_mode: str) -> dict[str, str]:
+    return {
+        "0": {"name": "linear_or_default", "target": "0"},
+        "1": {"name": "ease_or_smooth", "target": "1"},
+        "4": {"name": "decelerate_or_curve", "target": "4"},
+        "7": {"name": "legacy_exit_accel", "target": "0"},
+        "9": {"name": "special_curve", "target": "9"},
+    }.get(str(raw_mode), {"name": f"mode_{raw_mode}", "target": str(raw_mode)})
+
+
+def lift_modes(program: Program, func: Function) -> list[ModeOp]:
+    mode_arg_by_opcode = {
+        **{op: 1 for op in (281, 283, 285, 287, 289, 291, 301, 303, 305, 306)},
+        **{op: 1 for op in (301, 303, 305, 307, 309, 311, 321, 323, 325, 326)},
+        **{op: 1 for op in (401, 403, 405, 407, 409, 411, 421, 423, 425, 426, 441, 443, 445, 447)},
+    }
+    bullet_transform_mode_arg_by_opcode = {409: 3, 509: 3, 609: 3}
+    mirror_opcode = {"th12": 324, "th13": 424, "th14": 424, "th15": 424, "th16": 424, "th17": 424, "th18": 424}.get(program.game)
+    objects: list[ModeOp] = []
+    for ins in func.body:
+        if ins.opcode == mirror_opcode and ins.args:
+            obj = make_obj(ModeOp, program, func, ins, "mirror_mode", a(ins, 0, "0"))
+            obj.fields.update({"semantic": "mirror_mode", "op_key": "movement.mirror_mode", "mode": {"raw": a(ins, 0, "0"), "name": "mirror_on" if a(ins, 0, "0") != "0" else "mirror_off"}, "args": ins.args, "difficulty": ins.difficulty})
+            objects.append(obj)
+            continue
+        transform_index = bullet_transform_mode_arg_by_opcode.get(ins.opcode)
+        if transform_index is not None and len(ins.args) > transform_index:
+            raw_mode = a(ins, transform_index, "0")
+            semantic = bullet_transform_mode_semantic(program.game, raw_mode)
+            obj = make_obj(ModeOp, program, func, ins, "bullet_transform_mode", raw_mode)
+            obj.fields.update({
+                "semantic": "bullet_transform_mode",
+                "op_key": op_key_for_opcode(program.game, ins.opcode),
+                "mode": {
+                    "raw": raw_mode,
+                    "name": semantic,
+                    "target_th12": remap_bullet_transform_mode(program.game, "th12", raw_mode),
+                    "target_th15": remap_bullet_transform_mode(program.game, "th15", raw_mode),
+                },
+                "mode_arg_index": transform_index,
+                "emitter_id": a(ins, 0, "0"),
+                "transform_slot": a(ins, 1, "0"),
+                "channel": a(ins, 2, "0"),
+                "args": ins.args,
+                "difficulty": ins.difficulty,
+            })
+            objects.append(obj)
+            continue
+        index = mode_arg_by_opcode.get(ins.opcode)
+        if index is None or len(ins.args) <= index:
+            continue
+        raw_mode = a(ins, index, "0")
+        obj = make_obj(ModeOp, program, func, ins, "movement_tween_mode", raw_mode)
+        obj.fields.update({"semantic": "movement_tween_mode", "op_key": op_key_for_opcode(program.game, ins.opcode), "mode": {"raw": raw_mode, **movement_mode_semantic(raw_mode)}, "mode_arg_index": index, "args": ins.args, "difficulty": ins.difficulty})
+        objects.append(obj)
+    return objects
 
 
 def lift_high_level_legacy_objects(program: Program, func: Function) -> list[IRObject]:
@@ -272,6 +386,8 @@ def lift_movements(program: Program, func: Function) -> list[MovementOp]:
         obj.fields["args"] = ins.args
         obj.fields["difficulty"] = ins.difficulty
         obj.fields.setdefault("semantics", {})["motion"] = {"op": op_name}
+        if len(ins.args) > 1 and op_name.endswith("Time"):
+            obj.fields.setdefault("semantics", {})["mode"] = {"raw": ins.args[1], **movement_mode_semantic(ins.args[1])}
         if program.game in TH13PLUS:
             if ins.opcode in {404, 406} and len(ins.args) >= 2:
                 current_direction, current_speed = ins.args[0], ins.args[1]

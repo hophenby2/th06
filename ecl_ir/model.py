@@ -239,3 +239,15 @@ class BossTimer(IRObject):
 class MotionModifier(IRObject):
     def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "motion_modifier"):
         super().__init__("MotionModifier", game, function, source_line, id, family)
+
+
+@dataclass
+class UnitFlagOp(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "unit_flag"):
+        super().__init__("UnitFlag", game, function, source_line, id, family)
+
+
+@dataclass
+class ModeOp(IRObject):
+    def __init__(self, game: str, function: str, source_line: int, id: str = "0", family: str = "mode"):
+        super().__init__("Mode", game, function, source_line, id, family)

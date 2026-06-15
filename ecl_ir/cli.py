@@ -584,7 +584,7 @@ def covered_lines_for_lifted_object(obj, source_game: str, target: str) -> set[i
     raw = getattr(obj, "raw", [])
     if not raw:
         return set()
-    if getattr(obj, "kind", None) == "LaserEmitter":
+    if getattr(obj, "kind", None) in {"LaserEmitter", "Mode"}:
         return set()
     covered: set[int] = set()
     policy = lifted_raw_coverage_policy(getattr(obj, "kind", ""), source_game, target, getattr(obj, "family", ""))
