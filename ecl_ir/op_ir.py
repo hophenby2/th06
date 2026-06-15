@@ -283,7 +283,66 @@ OLD_TARGET_PRESENTATION_HELPERS = {
 }
 
 
+def legacy_stack_vm_policy(key: str) -> dict[str, object] | None:
+    binary_ops = {
+        "flow.iadd": (50, 43), "flow.isub": (52, 43), "flow.imul": (54, 43), "flow.idiv": (56, 43), "flow.imod": (58, 43),
+        "flow.fadd": (51, 45), "flow.fsub": (53, 45), "flow.fmul": (55, 45), "flow.fdiv": (57, 45), "flow.fmod": (58, 45),
+    }
+    set_binary_ops = {
+        "flow.iset_add": (50, 43), "flow.iset_sub": (52, 43), "flow.iset_mul": (54, 43), "flow.iset_div": (56, 43), "flow.iset_mod": (58, 43),
+        "flow.fset_add": (51, 45), "flow.fset_sub": (53, 45), "flow.fset_mul": (55, 45), "flow.fset_div": (57, 45), "flow.fset_mod": (58, 45),
+    }
+    if key == "flow.iset":
+        return {"strategy": "stack_vm_sequence", "source_generations": ["th06_th08"], "target_generations": ["th10_th11", "th12", "th13_plus"], "sequence": [{"push_arg": 1}, {"ins": 43, "args": ["$0"]}], "reason": "legacy integer set lowered through target stack VM"}
+    if key == "flow.fset":
+        return {"strategy": "stack_vm_sequence", "source_generations": ["th06_th08"], "target_generations": ["th10_th11", "th12", "th13_plus"], "sequence": [{"push_arg": 1}, {"ins": 45, "args": ["$0"]}], "reason": "legacy float set lowered through target stack VM"}
+    if key in binary_ops:
+        op, setter = binary_ops[key]
+        return {"strategy": "stack_vm_sequence", "source_generations": ["th06_th08"], "target_generations": ["th10_th11", "th12", "th13_plus"], "sequence": [{"push_arg": 0}, {"push_arg": 1}, {"ins": op, "args": []}, {"ins": setter, "args": ["$0"]}], "reason": "legacy binary expression lowered through target stack VM"}
+    if key in set_binary_ops:
+        op, setter = set_binary_ops[key]
+        return {"strategy": "stack_vm_sequence", "source_generations": ["th06_th08"], "target_generations": ["th10_th11", "th12", "th13_plus"], "sequence": [{"push_arg": 1}, {"push_arg": 2}, {"ins": op, "args": []}, {"ins": setter, "args": ["$0"]}], "reason": "legacy set-binary expression lowered through target stack VM"}
+    unary_float_ops = {"flow.fset_sin": 79, "flow.fset_cos": 80}
+    if key in unary_float_ops:
+        return {"strategy": "stack_vm_sequence", "source_generations": ["th06_th08"], "target_generations": ["th10_th11", "th12", "th13_plus"], "sequence": [{"push_arg": 1}, {"ins": unary_float_ops[key], "args": []}, {"ins": 45, "args": ["$0"]}], "reason": "legacy unary float expression lowered through target stack VM"}
+    if key == "flow.inc":
+        return {"strategy": "stack_vm_sequence", "source_generations": ["th06_th08"], "target_generations": ["th10_th11", "th12", "th13_plus"], "sequence": [{"push_arg": 0}, {"push": "1"}, {"ins": 50, "args": []}, {"ins": 43, "args": ["$0"]}], "reason": "legacy integer increment lowered through target stack VM"}
+    if key == "flow.dec":
+        return {"strategy": "emit_raw_ins", "source_generations": ["th06_th08"], "target_generations": ["th10_th11", "th12", "th13_plus"], "opcode": 78, "args": ["$0"], "reason": "legacy decrement maps to target deci"}
+    if key == "flow.norm_rad":
+        return {"strategy": "emit_raw_ins", "source_generations": ["th06_th08"], "target_generations": ["th10_th11", "th12", "th13_plus"], "opcode": 82, "args": ["$0"], "reason": "legacy normalize-radian maps to target validRad"}
+    compare_ops = {
+        "flow.jmp_equ": 59, "flow.jmp_equ_f": 60,
+        "flow.jmp_neq": 61, "flow.jmp_neq_f": 62,
+        "flow.jmp_lss": 63, "flow.jmp_lss_f": 64,
+        "flow.jmp_leq": 65, "flow.jmp_leq_f": 66,
+        "flow.jmp_gre": 67, "flow.jmp_gre_f": 68,
+        "flow.jmp_geq": 69, "flow.jmp_geq_f": 70,
+    }
+    if key in compare_ops:
+        return {
+            "strategy": "legacy_conditional_jump",
+            "source_generations": ["th06_th08"],
+            "target_generations": ["th10_th11", "th12", "th13_plus"],
+            "compare_opcode": compare_ops[key],
+            "target_op_key": "flow.jmp_neq",
+            "reason": "legacy conditional jump embeds comparison; target uses compare stack then conditional jump",
+        }
+    if key == "flow.loop":
+        return {
+            "strategy": "legacy_loop_jump",
+            "source_generations": ["th06_th08"],
+            "target_generations": ["th10_th11", "th12", "th13_plus"],
+            "decrement_opcode": 78,
+            "target_op_key": "flow.jmp_neq",
+            "reason": "legacy loop embeds decrement and conditional branch",
+        }
+    return None
+
+
 def op_lowering_policy(key: str, args: list[str]) -> dict[str, object] | None:
+    if legacy_policy := legacy_stack_vm_policy(key):
+        return legacy_policy
     if key == "boss.spell_ex":
         return {
             "strategy": "emit_target_op",
@@ -317,6 +376,49 @@ def op_lowering_policy(key: str, args: list[str]) -> dict[str, object] | None:
             "reason": "game speed is a unit/runtime property in TH13+",
             "target_generations": ["th13_plus"],
             "target_op_key": "unit.game_speed",
+        }
+    if key == "movement.move_dir":
+        return {
+            "strategy": "emit_target_op",
+            "reason": "TH06-08 directional movement aliases target velocity.set",
+            "source_generations": ["th06_th08"],
+            "target_generations": ["th10_th11", "th12", "th13_plus"],
+            "target_op_key": "movement.velocity.set",
+        }
+    if key == "movement.move_dir_time":
+        return {
+            "strategy": "emit_target_op",
+            "reason": "TH06-08 timed directional movement aliases target velocity.tween",
+            "source_generations": ["th06_th08"],
+            "target_generations": ["th10_th11", "th12", "th13_plus"],
+            "target_op_key": "movement.velocity.tween",
+        }
+    if key == "anm.set":
+        return {
+            "strategy": "emit_target_op_sequence",
+            "reason": "TH06-08 combined ANM set aliases target select+set_main",
+            "source_generations": ["th06_th08"],
+            "target_generations": ["th10_th11", "th12", "th13_plus"],
+            "sequence": [
+                {"target_op_key": "anm.select", "args": ["0"]},
+                {"target_op_key": "anm.set_main", "args": ["0", "$0"]},
+            ],
+        }
+    if key == "anm.set_sprite":
+        return {
+            "strategy": "emit_target_op",
+            "reason": "TH06-08 sprite ANM set aliases target anm.set_sprite",
+            "source_generations": ["th06_th08"],
+            "target_generations": ["th10_th11", "th12", "th13_plus"],
+            "target_op_key": "anm.set_sprite",
+        }
+    if key in {"anm.set_slot", "anm.set_boss_slot"}:
+        return {
+            "strategy": "emit_target_op",
+            "reason": "TH06-08 slotted ANM set aliases target anm.set_sprite",
+            "source_generations": ["th06_th08"],
+            "target_generations": ["th10_th11", "th12", "th13_plus"],
+            "target_op_key": "anm.set_sprite",
         }
     if key in {"unit.unknown531", "unit.property.31"}:
         return {

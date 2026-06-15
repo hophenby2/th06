@@ -217,9 +217,14 @@ def target_opcode_is_safe(target: str, opcode: int) -> bool:
     return int(opcode) not in UNSAFE_TARGET_OPCODES.get(target, set())
 
 
-def op_lowering_policy_applies(policy: dict[str, object], target: str) -> bool:
+def op_lowering_policy_applies(policy: dict[str, object], target: str, source_game: str = "") -> bool:
     target_generations = policy.get("target_generations")
-    return not isinstance(target_generations, list) or generation_for_game(target) in {str(item) for item in target_generations}
+    if isinstance(target_generations, list) and generation_for_game(target) not in {str(item) for item in target_generations}:
+        return False
+    source_generations = policy.get("source_generations")
+    if source_game and isinstance(source_generations, list) and generation_for_game(source_game) not in {str(item) for item in source_generations}:
+        return False
+    return True
 
 
 def policy_args(args: list[str], policy: dict[str, object]) -> list[str]:
@@ -246,7 +251,7 @@ def policy_args(args: list[str], policy: dict[str, object]) -> list[str]:
 
 def compile_op_lowering_policy(event: dict[str, object], target: str) -> str | None:
     policy = event.get("lowering_policy") if isinstance(event.get("lowering_policy"), dict) else None
-    if not policy or not op_lowering_policy_applies(policy, target):
+    if not policy or not op_lowering_policy_applies(policy, target, str(event.get("source_game") or "")):
         return None
     op_key = str(event.get("op_key") or "")
     args_list = [str(arg) for arg in event.get("args", [])]
@@ -258,12 +263,59 @@ def compile_op_lowering_policy(event: dict[str, object], target: str) -> str | N
     if strategy == "approximate":
         approximation = str(policy.get("approximation", ""))
         return f"// approximated by IR op lowering policy for {target}: {op_key}({args}); reason={reason}; approximation={approximation}"
+    if strategy == "stack_vm_sequence":
+        return compile_stack_vm_sequence_policy(event, target, policy)
+    if strategy == "emit_raw_ins":
+        rendered_args = [policy_template_arg(arg, args_list) for arg in policy.get("args", [])]
+        opcode = int(policy.get("opcode", 0))
+        line = f"ins_{opcode}({', '.join(rendered_args)});" if rendered_args else f"ins_{opcode}();"
+        return f"// emitted raw instruction by IR op lowering policy for {target}: {op_key}; reason={reason}\n{line}"
+    if strategy == "legacy_conditional_jump":
+        legacy_args = adapt_values_for_generation(args_list, generation_for_game(str(event.get("source_game") or "")), generation_for_game(target))
+        if len(legacy_args) != 4:
+            return None
+        jump_opcode = target_opcode_for_op_key(str(policy.get("target_op_key", "flow.jmp_neq")), target)
+        if jump_opcode is None or not is_opcode_supported(target, jump_opcode):
+            return None
+        compare_opcode = int(policy.get("compare_opcode", 0))
+        return "\n".join([
+            f"// legacy conditional jump by IR op lowering policy for {target}: {op_key}; reason={reason}",
+            stack_push(legacy_args[0]),
+            stack_push(legacy_args[1]),
+            f"ins_{compare_opcode}();",
+            f"ins_{jump_opcode}({legacy_args[3]}, {legacy_args[2]});",
+        ])
+    if strategy == "legacy_loop_jump":
+        legacy_args = adapt_values_for_generation(args_list, generation_for_game(str(event.get("source_game") or "")), generation_for_game(target))
+        if len(legacy_args) != 3:
+            return None
+        jump_opcode = target_opcode_for_op_key(str(policy.get("target_op_key", "flow.jmp_neq")), target)
+        if jump_opcode is None or not is_opcode_supported(target, jump_opcode):
+            return None
+        decrement_opcode = int(policy.get("decrement_opcode", 78))
+        return "\n".join([
+            f"// legacy loop jump by IR op lowering policy for {target}: {op_key}; reason={reason}",
+            f"ins_{decrement_opcode}({legacy_args[2]});",
+            f"ins_{jump_opcode}({legacy_args[1]}, {legacy_args[0]});",
+        ])
     if strategy == "emit_target_op":
         target_op_key = str(policy.get("target_op_key") or op_key)
         lowered_args = policy_args(args_list, policy)
         lowered = emit_target_op(target, target_op_key, lowered_args)
         if lowered:
             return f"// emitted by IR op lowering policy for {target}: {op_key} -> {target_op_key}; reason={reason}\n{lowered}"
+        return None
+    if strategy == "emit_target_op_sequence":
+        lines = []
+        for item in policy.get("sequence", []) if isinstance(policy.get("sequence"), list) else []:
+            if not isinstance(item, dict):
+                continue
+            item_args = [str(arg).replace("$0", args_list[0] if args_list else "0").replace("$1", args_list[1] if len(args_list) > 1 else "0") for arg in item.get("args", [])]
+            lowered = emit_target_op(target, str(item.get("target_op_key", "")), item_args)
+            if lowered:
+                lines.append(lowered)
+        if lines:
+            return f"// emitted sequence by IR op lowering policy for {target}: {op_key}; reason={reason}\n" + "\n".join(lines)
         return None
     if strategy == "catalog_sprite":
         if not args_list:
@@ -296,11 +348,11 @@ def compile_op_lowering_policy(event: dict[str, object], target: str) -> str | N
 
 def compile_preemptive_op_lowering_policy(event: dict[str, object], target: str) -> str | None:
     policy = event.get("lowering_policy") if isinstance(event.get("lowering_policy"), dict) else None
-    if not policy or not op_lowering_policy_applies(policy, target):
+    if not policy or not op_lowering_policy_applies(policy, target, str(event.get("source_game") or "")):
         return None
     strategy = str(policy.get("strategy", ""))
     reason = str(policy.get("reason", ""))
-    if strategy in {"emit_target_op", "catalog_sprite"}:
+    if strategy in {"emit_target_op", "emit_target_op_sequence", "stack_vm_sequence", "emit_raw_ins", "legacy_conditional_jump", "legacy_loop_jump", "catalog_sprite"}:
         return compile_op_lowering_policy(event, target)
     if strategy == "drop" and reason in {"disabled_async_call", "debug_only"}:
         return compile_op_lowering_policy(event, target)
@@ -321,38 +373,45 @@ def stack_push(value: str) -> str:
     return f"{value};"
 
 
+def policy_template_arg(value: object, args_list: list[str]) -> str:
+    text = str(value)
+    for index, arg in enumerate(args_list):
+        text = text.replace(f"${index}", arg)
+    return text
+
+
+def compile_stack_vm_sequence_policy(event: dict[str, object], target: str, policy: dict[str, object]) -> str | None:
+    args_list = adapt_values_for_generation([str(arg) for arg in event.get("args", [])], generation_for_game(str(event.get("source_game") or "")), generation_for_game(target))
+    lines: list[str] = []
+    for item in policy.get("sequence", []) if isinstance(policy.get("sequence"), list) else []:
+        if not isinstance(item, dict):
+            continue
+        if "push_arg" in item:
+            index = int(item.get("push_arg", 0))
+            if index < len(args_list):
+                lines.append(stack_push(args_list[index]))
+            continue
+        if "push" in item:
+            lines.append(stack_push(policy_template_arg(item.get("push", "0"), args_list)))
+            continue
+        if "ins" in item:
+            opcode = int(item.get("ins", 0))
+            item_args = [policy_template_arg(arg, args_list) for arg in item.get("args", [])]
+            lines.append(f"ins_{opcode}({', '.join(item_args)});" if item_args else f"ins_{opcode}();")
+    if not lines:
+        return None
+    return f"// stack VM sequence by IR op lowering policy for {target}: {event.get('op_key')}; reason={policy.get('reason', '')}\n" + "\n".join(lines)
+
+
 def compile_th08_vm_arithmetic(event: dict[str, object], target: str) -> str | None:
     if target not in STACK_VM_TARGETS or str(event.get("source_game") or "") not in {"th06", "th07", "th08"}:
         return None
     op_key = str(event.get("op_key") or "")
     args = [str(arg) for arg in event.get("args", [])]
     args = adapt_values_for_generation(args, generation_for_game(str(event.get("source_game") or "")), generation_for_game(target))
-    binary_ops = {
-        "flow.iadd": (50, 43), "flow.isub": (52, 43), "flow.imul": (54, 43), "flow.idiv": (56, 43), "flow.imod": (58, 43),
-        "flow.fadd": (51, 45), "flow.fsub": (53, 45), "flow.fmul": (55, 45), "flow.fdiv": (57, 45), "flow.fmod": (58, 45),
-    }
-    set_binary_ops = {
-        "flow.iset_add": (50, 43), "flow.iset_sub": (52, 43), "flow.iset_mul": (54, 43), "flow.iset_div": (56, 43), "flow.iset_mod": (58, 43),
-        "flow.fset_add": (51, 45), "flow.fset_sub": (53, 45), "flow.fset_mul": (55, 45), "flow.fset_div": (57, 45), "flow.fset_mod": (58, 45),
-    }
-    unary_float_ops = {"flow.fset_sin": 79, "flow.fset_cos": 80}
-    if op_key == "flow.iset" and len(args) == 2:
-        return "\n".join([stack_push(args[1]), f"ins_43({args[0]});"])
-    if op_key == "flow.fset" and len(args) == 2:
-        return "\n".join([stack_push(args[1]), f"ins_45({args[0]});"])
-    if op_key in binary_ops and len(args) == 2:
-        op, setter = binary_ops[op_key]
-        return "\n".join([stack_push(args[0]), stack_push(args[1]), f"ins_{op}();", f"ins_{setter}({args[0]});"])
-    if op_key in set_binary_ops and len(args) == 3:
-        op, setter = set_binary_ops[op_key]
-        return "\n".join([stack_push(args[1]), stack_push(args[2]), f"ins_{op}();", f"ins_{setter}({args[0]});"])
-    if op_key in unary_float_ops and len(args) == 2:
-        return "\n".join([stack_push(args[1]), f"ins_{unary_float_ops[op_key]}();", f"ins_45({args[0]});"])
-    if op_key == "flow.fset_rand_sign" and len(args) == 2:
-        return "\n".join([f"// random sign approximated using positive magnitude", stack_push(args[1]), f"ins_45({args[0]});"])
     if op_key == "flow.math_circle_pos" and len(args) == 4:
         return "\n".join([
-            f"// TH08 circlePos lowered through stack VM",
+            f"// TH08 circlePos lowered through stack VM; TODO move geometry sequence to IR",
             stack_push(args[2]), f"ins_80();", stack_push(args[3]), f"ins_55();", f"ins_45({args[0]});",
             stack_push(args[2]), f"ins_79();", stack_push(args[3]), f"ins_55();", f"ins_45({args[1]});",
         ])
@@ -361,119 +420,13 @@ def compile_th08_vm_arithmetic(event: dict[str, object], target: str) -> str | N
     if op_key == "flow.math_distance" and len(args) == 5:
         if target not in {"th13", "th14", "th15", "th16", "th17", "th18"}:
             return None
-        # TH13+ squareSumRoot(dst, x_delta, y_delta) maps distance between two points.
         return "\n".join([
+            f"// TH08 distance lowered through stack VM; TODO move geometry sequence to IR",
             stack_push(args[3]), stack_push(args[1]), "ins_53();", "ins_45([-9931.0f]);",
             stack_push(args[4]), stack_push(args[2]), "ins_53();", "ins_45([-9930.0f]);",
             f"ins_86({args[0]}, [-9931.0f], [-9930.0f]);",
         ])
-    if op_key == "flow.dec" and len(args) == 1:
-        return f"ins_78({args[0]});"
-    if op_key == "flow.inc" and len(args) == 1:
-        return "\n".join([stack_push(args[0]), "1;", "ins_50();", f"ins_43({args[0]});"])
-    if op_key == "flow.norm_rad" and len(args) == 1:
-        return f"ins_82({args[0]});"
     return None
-
-
-def compile_th08_movement_alias(event: dict[str, object], target: str) -> str | None:
-    if target not in STACK_VM_TARGETS or str(event.get("source_game") or "") not in {"th06", "th07", "th08"}:
-        return None
-    op_key = str(event.get("op_key") or "")
-    args = adapt_values_for_generation([str(arg) for arg in event.get("args", [])], generation_for_game(str(event.get("source_game") or "")), generation_for_game(target))
-    if op_key == "movement.move_dir" and len(args) == 2:
-        opcode = target_opcode_for_op_key("movement.velocity.set", target)
-        if opcode is not None and is_opcode_supported(target, opcode):
-            return f"ins_{opcode}({args[0]}, {args[1]});"
-    if op_key == "movement.move_dir_time" and len(args) == 4:
-        opcode = target_opcode_for_op_key("movement.velocity.tween", target)
-        if opcode is not None and is_opcode_supported(target, opcode):
-            return f"ins_{opcode}({args[0]}, {args[1]}, {args[2]}, {args[3]});"
-    return None
-
-
-def compile_th08_conditional_jump(event: dict[str, object], target: str) -> str | None:
-    if target not in STACK_VM_TARGETS or str(event.get("source_game") or "") not in {"th06", "th07", "th08"}:
-        return None
-    op_key = str(event.get("op_key") or "")
-    args = adapt_values_for_generation([str(arg) for arg in event.get("args", [])], generation_for_game(str(event.get("source_game") or "")), generation_for_game(target))
-    compare_ops = {
-        "flow.jmp_equ": 59, "flow.jmp_equ_f": 60,
-        "flow.jmp_neq": 61, "flow.jmp_neq_f": 62,
-        "flow.jmp_lss": 63, "flow.jmp_lss_f": 64,
-        "flow.jmp_leq": 65, "flow.jmp_leq_f": 66,
-        "flow.jmp_gre": 67, "flow.jmp_gre_f": 68,
-        "flow.jmp_geq": 69, "flow.jmp_geq_f": 70,
-    }
-    if op_key in compare_ops and len(args) == 4:
-        jump_opcode = target_opcode_for_op_key("flow.jmp_neq", target)
-        if jump_opcode is None or not is_opcode_supported(target, jump_opcode):
-            return None
-        return "\n".join([stack_push(args[0]), stack_push(args[1]), f"ins_{compare_ops[op_key]}();", f"ins_{jump_opcode}({args[3]}, {args[2]});"])
-    if op_key == "flow.loop" and len(args) == 3:
-        jump_opcode = target_opcode_for_op_key("flow.jmp_neq", target)
-        if jump_opcode is None or not is_opcode_supported(target, jump_opcode):
-            return None
-        return "\n".join([f"ins_78({args[2]});", f"ins_{jump_opcode}({args[1]}, {args[0]});"])
-    return None
-
-
-def compile_th08_anm_alias(event: dict[str, object], target: str) -> str | None:
-    if target not in STACK_VM_TARGETS or str(event.get("source_game") or "") not in {"th06", "th07", "th08"}:
-        return None
-    op_key = str(event.get("op_key") or "")
-    args = [str(arg) for arg in event.get("args", [])]
-    select_opcode = target_opcode_for_op_key("anm.select", target)
-    main_opcode = target_opcode_for_op_key("anm.set_main", target)
-    sprite_opcode = target_opcode_for_op_key("anm.set_sprite", target)
-    if op_key == "anm.set" and len(args) == 1 and select_opcode and main_opcode and is_opcode_supported(target, select_opcode) and is_opcode_supported(target, main_opcode):
-        return "\n".join([f"ins_{select_opcode}(0);", f"ins_{main_opcode}(0, {args[0]});"])
-    if op_key in {"anm.set_ex", "anm.set_boss_ex"} and len(args) == 1 and select_opcode and main_opcode and is_opcode_supported(target, select_opcode) and is_opcode_supported(target, main_opcode):
-        base = args[0]
-        if re.fullmatch(r"-?\d+", base):
-            values = [str(int(base) + i) for i in range(6)]
-            return "\n".join([f"ins_{select_opcode}(0);", *[f"ins_{main_opcode}({slot}, {script});" for slot, script in enumerate(values)]])
-    if op_key == "anm.set_slot" and len(args) == 2 and sprite_opcode and is_opcode_supported(target, sprite_opcode):
-        return f"ins_{sprite_opcode}({args[0]}, {args[1]});"
-    return None
-
-
-def compile_th10_stage_wrapper_anm(event: dict[str, object], target: str, context: dict[str, object] | None = None) -> str | None:
-    if str(event.get("source_game") or "") not in {"th10", "th11"}:
-        return None
-    if generation_for_game(target) != "th13_plus":
-        return None
-    if canonical_anm_op_key(str(event.get("op_key") or "")) != "anm.set_main":
-        return None
-    args = [str(arg) for arg in event.get("args", [])]
-    if len(args) != 2 or args[0].strip() == "0":
-        return None
-    role_hint = anm_role_hint(event, context)
-    if role_hint != "stage":
-        return None
-    script = parse_int_literal(args[1])
-    native_combo = {
-        45: ("0", None),
-        46: ("5", None),
-        47: ("35", "93"),
-        48: ("40", "93"),
-    }.get(script)
-    if native_combo is None:
-        return None
-    select_opcode = target_opcode_for_op_key("anm.select", target)
-    main_opcode = target_opcode_for_op_key("anm.set_main", target)
-    sprite_opcode = target_opcode_for_op_key("anm.set_sprite", target)
-    if not select_opcode or not main_opcode or not sprite_opcode:
-        return None
-    main_script, sprite_script = native_combo
-    lines = [
-        "// TH10/11 stage wrapper ANM lowered to TH15 native st01 enemy combo",
-        f"ins_{select_opcode}(2);",
-        f"ins_{main_opcode}(0, {main_script});",
-    ]
-    if sprite_script is not None:
-        lines.append(f"ins_{sprite_opcode}(1, {sprite_script});")
-    return "\n".join(lines)
 
 
 def parse_int_literal(value: str) -> int | None:
@@ -583,22 +536,6 @@ def anm_set_purpose(event: dict[str, object], role_hint: str | None, set_kind: s
     return "main"
 
 
-def drop_th12_stage6_stage_mboss_boss_anm(event: dict[str, object], target: str, context: dict[str, object] | None = None) -> str | None:
-    if target != "th15" or str(event.get("source_game") or "") != "th12":
-        return None
-    if not str(context.get("source_path", "") if context else "").replace("\\", "/").endswith("/th12/stage06.decl"):
-        return None
-    if str(context.get("function", "") if context else "") != "MBoss":
-        return None
-    op_key = str(event.get("op_key") or "")
-    args = [str(arg) for arg in event.get("args", [])]
-    if op_key == "anm.select" and args == ["2"]:
-        return "// dropped TH12 MBoss boss-bank ANM select in TH15 stage-side script"
-    if op_key == "anm.set_sprite" and len(args) == 2 and args[1] in {"46", "47"}:
-        return f"// dropped TH12 MBoss boss-bank sprite script {args[1]} in TH15 stage-side script"
-    return None
-
-
 def compile_ir_op_event(event: dict[str, object], target: str, comment: str | None = None, context: dict[str, object] | None = None) -> str | None:
     op_key = str(event.get("op_key") or "")
     if not op_key:
@@ -620,12 +557,6 @@ def compile_ir_op_event(event: dict[str, object], target: str, comment: str | No
         return "ins_0();"
     semantic_op_key = canonical_anm_op_key(op_key)
     if lowered := compile_th08_vm_arithmetic(event, target):
-        return lowered
-    if lowered := compile_th08_movement_alias(event, target):
-        return lowered
-    if lowered := compile_th08_conditional_jump(event, target):
-        return lowered
-    if lowered := compile_th08_anm_alias(event, target):
         return lowered
     semantic_map = opcode_map_for(source_game, target, source_opcode) if source_game and source_opcode >= 0 else None
     semantic_op_key = (semantic_map.semantic if semantic_map is not None and semantic_map.semantic else op_key) if op_key.startswith("raw.") else canonical_anm_op_key(op_key)
@@ -1040,7 +971,7 @@ def compile_target_policy(obj, target: str) -> str | None:
                 f"ins_{target_opcode_for_op_key('anm.set_sprite', target)}({aux.get('source_slot', '0')}, {chosen.script});",
             ])
     if spell := policies.get("spell_ex_common_header"):
-        if isinstance(spell, dict) and op_lowering_policy_applies(spell, target):
+        if isinstance(spell, dict) and op_lowering_policy_applies(spell, target, getattr(obj, "game", "")):
             args = [str(arg) for arg in (fields.get("spell", {}) or {}).get("args", fields.get("args", []))]
             lowered = emit_target_op(target, str(spell.get("target_op_key", "boss.spell")), policy_args(args, spell))
             if lowered:
@@ -1088,31 +1019,11 @@ def semantic_enemy_create_event(obj, target: str, event: dict[str, object]) -> d
     create = fields.get("create")
     if not isinstance(create, dict):
         return event
-    op_key = enemy_create_op_key_for_target(create, target, str(event.get("op_key") or ""))
+    target_forms = create.get("target_forms") if isinstance(create.get("target_forms"), dict) else {}
+    op_key = str(target_forms.get(generation_for_game(target)) or event.get("op_key") or "")
     if not op_key:
         return event
     return {**event, "op_key": op_key, "create": create}
-
-
-def enemy_create_op_key_for_target(create: dict[str, object], target: str, fallback: str) -> str:
-    if str(create.get("role") or "") != "stage_enemy":
-        return fallback
-    if generation_for_game(target) not in {"th10_th11", "th12", "th13_plus"}:
-        return fallback
-    suffix = "_func" if create.get("func") else ""
-    absolute = create.get("position_mode") == "absolute"
-    mirror = bool(create.get("mirror"))
-    if absolute and mirror:
-        if generation_for_game(target) == "th13_plus" and str(create.get("role") or "") == "stage_enemy":
-            return f"enemy.create_mirror{suffix}"
-        return f"enemy.create_abs_mirror{suffix}"
-    if absolute:
-        if generation_for_game(target) == "th13_plus" and str(create.get("role") or "") == "stage_enemy":
-            return f"enemy.create{suffix}"
-        return f"enemy.create_abs{suffix}"
-    if mirror:
-        return f"enemy.create_mirror{suffix}"
-    return f"enemy.create{suffix}"
 
 
 def semantic_object_args(obj, target: str) -> list[str]:
@@ -1370,72 +1281,49 @@ def compile_auto_bullet_timer(obj, target: str) -> str:
     return "\n".join(lines + compile_structured_preserve(obj, target, "target has no verified auto-fire timer primitive").splitlines())
 
 
+def emit_plan_instruction(target: str, plan: dict[str, object]) -> list[str]:
+    if not isinstance(plan, dict):
+        return []
+    if sequence := plan.get("sequence"):
+        lines: list[str] = []
+        if isinstance(sequence, list):
+            for item in sequence:
+                if not isinstance(item, dict):
+                    continue
+                lowered = emit_target_op(target, str(item.get("target_op_key", "")), [str(arg) for arg in item.get("args", [])])
+                if lowered:
+                    lines.append(lowered)
+        return lines
+    target_op_key = str(plan.get("target_op_key", ""))
+    if not target_op_key:
+        return []
+    lowered = emit_target_op(target, target_op_key, [str(arg) for arg in plan.get("args", [])])
+    return [lowered] if lowered else []
+
+
+def plan_for_target_generation(plan: dict[str, object], target: str) -> dict[str, object]:
+    if str(plan.get("strategy", "")) != "target_by_generation":
+        return plan
+    plans = plan.get("plans") if isinstance(plan.get("plans"), dict) else {}
+    selected = plans.get(generation_for_game(target)) or plans.get(target)
+    if isinstance(selected, dict):
+        return selected
+    return {}
+
+
 def compile_boss_timer(obj, target: str) -> str:
     fields = getattr(obj, "fields", {}) or {}
     semantic = str(fields.get("semantic", ""))
-    lines = [f"// BossTimer lowering {obj.family} -> {target}: {semantic}"]
-    interrupt = fields.get("interrupt", {}) or {}
-    if interrupt:
-        if interrupt.get("trigger") == "life_leq":
-            args = ["0", str(interrupt.get("life", "0")), "0", target_sub_name(interrupt.get("sub", "-1"))]
-        else:
-            args = ["0", "0", str(interrupt.get("time", "0")), target_sub_name(interrupt.get("sub", "-1"))]
-        lowered = emit_target_op(target, "boss.set_interrupt", args)
-        if lowered:
-            lines.append("// lowered threshold interrupt through target boss interrupt object")
-            lines.append(lowered)
-            return "\n".join(lines)
-    if semantic == "timer_set":
-        lowered = emit_target_op(target, "boss.timer_reset", [])
-        if lowered:
-            lines.append("// target timer reset approximates legacy upward timer set")
-            lines.append(lowered)
-            return "\n".join(lines)
-    if semantic == "life_bar_segment":
-        bar = fields.get("life_bar", {}) or {}
-        marker_hp = float_literal(bar.get("life_min", "0"))
-        lowered = emit_target_op(target, "unit.life_marker", [str(bar.get("slot", "0")), marker_hp, str(bar.get("color", "0"))])
-        if lowered:
-            lines.append("// lowered lifebar color segment to target life marker approximation")
-            lines.append(lowered)
-            return "\n".join(lines)
-    if semantic == "visible_life_count":
-        if target == "th12":
-            lowered = emit_target_op(target, "unit.life_hide", [])
-        elif target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
-            lowered = emit_target_op(target, "bullet.life_hide", ["0"])
-        else:
-            lowered = None
-        if lowered:
-            lines.append("// visible life-count HUD state approximated by keeping target lifebar visible")
-            lines.append(lowered)
-            return "\n".join(lines)
-    if semantic == "bomb_immunity_state":
-        enabled = str((fields.get("args") or ["1"])[0]) != "0"
-        if target in {"th13", "th14", "th15", "th16", "th17", "th18"}:
-            lowered = emit_target_op(target, "unit.bomb_shield", ["1" if enabled else "0", "0"])
-            invuln = emit_target_op(target, "unit.bomb_invuln", ["0.0f" if enabled else "1.0f"])
-            if lowered or invuln:
-                lines.append("// lowered legacy bomb-immunity state to target bomb shield/invulnerability controls")
-                if lowered:
-                    lines.append(lowered)
-                if invuln:
-                    lines.append(invuln)
-                return "\n".join(lines)
-        elif target == "th12":
-            lowered = emit_target_op(target, "movement.bomb_shield", ["1" if enabled else "0", "0.0f"])
-            if lowered:
-                lines.append("// lowered legacy bomb-immunity state to TH12 bombShield approximation")
-                lines.append(lowered)
-                return "\n".join(lines)
-    if semantic == "boss_runtime_state":
-        lowered = emit_target_op(target, "unit.set_invuln", ["0"])
-        if lowered:
-            lines.append("// preserved unknown boss runtime state as explicit no-duration invulnerability state boundary")
-            lines.append(lowered)
-            return "\n".join(lines)
+    plan = fields.get("lowering_plan", {}) if isinstance(fields.get("lowering_plan"), dict) else {}
+    selected_plan = plan_for_target_generation(plan, target)
+    lines = [f"// BossTimer lowering {obj.family} -> {target}: {semantic}; plan={plan.get('strategy', 'direct')}"]
+    lowered_lines = emit_plan_instruction(target, selected_plan)
+    if lowered_lines:
+        reason = selected_plan.get("reason") or plan.get("reason") or selected_plan.get("strategy") or plan.get("strategy")
+        lines.append(f"// IR boss timer plan: {reason}")
+        lines.extend(lowered_lines)
+        return "\n".join(lines)
     return "\n".join(lines + compile_structured_preserve(obj, target, "boss HUD/timer semantics differ across generations").splitlines())
-
 
 
 
@@ -1478,33 +1366,13 @@ def compile_mode(obj, target: str) -> str:
 def compile_motion_modifier(obj, target: str) -> str:
     fields = getattr(obj, "fields", {}) or {}
     semantic = str(fields.get("semantic", ""))
-    motion = fields.get("motion", {}) or {}
-    plan = fields.get("lowering_plan", {}) or {}
+    plan = fields.get("lowering_plan", {}) if isinstance(fields.get("lowering_plan"), dict) else {}
     lines = [f"// MotionModifier lowering {obj.family} -> {target}: {semantic}; plan={plan.get('strategy', 'direct')}"]
-    if semantic in {"random_direction_tween", "random_direction_tween_variant"}:
-        lowered = emit_target_op(target, "movement.velocity.tween", [str(motion.get("time", "0")), str(motion.get("mode", "0")), "0.0f", str(motion.get("speed", "0.0f"))])
-        if lowered:
-            lines.append("// approximated bounded random direction as target velocity tween with neutral angle; semantic direction retained in object metadata")
-            lines.append(lowered)
-            return "\n".join(lines)
-    if semantic == "circle_speed_change":
-        lowered = emit_target_op(target, "movement.circle.tween", [str(motion.get("time", "0")), "0", str(motion.get("angular_velocity", "0.0f")), "0.0f", str(motion.get("radius_velocity", "0.0f"))])
-        if lowered:
-            lines.append("// approximated legacy circle speed change through target circle tween")
-            lines.append(lowered)
-            return "\n".join(lines)
-    if semantic == "angular_velocity":
-        lowered = emit_target_op(target, "movement.circle.tween", ["999999", "0", str(motion.get("angular_velocity", "0.0f")), "0.0f", "0.0f"])
-        if lowered:
-            lines.append("// approximated legacy per-frame angular velocity as long-lived target circle tween")
-            lines.append(lowered)
-            return "\n".join(lines)
-    if semantic == "linear_acceleration":
-        lowered = emit_target_op(target, "movement.velocity.tween", ["999999", "0", "0.0f", str(motion.get("acceleration", "0.0f"))])
-        if lowered:
-            lines.append("// approximated legacy per-frame acceleration as long-lived target velocity tween")
-            lines.append(lowered)
-            return "\n".join(lines)
+    lowered_lines = emit_plan_instruction(target, plan_for_target_generation(plan, target))
+    if lowered_lines:
+        lines.append(f"// IR motion modifier plan: {plan.get('reason', plan.get('strategy', 'direct'))}")
+        lines.extend(lowered_lines)
+        return "\n".join(lines)
     return "\n".join(lines + compile_structured_preserve(obj, target, "motion modifier needs runtime state unavailable in target opcode").splitlines())
 
 

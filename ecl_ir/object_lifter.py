@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+import re
 from typing import Iterable
 
 from .lifter import lift_program as lift_bullets
@@ -316,6 +317,26 @@ def apply_legacy_auto_bullet(obj: AutoBulletTimer, ins: Instruction) -> None:
         obj.fields["lowering_plan"] = {"strategy": "metadata_only", "reason": "target slot emitters are configured explicitly"}
 
 
+
+def target_sub_name(value: object) -> str:
+    text = str(value).strip()
+    if text == "-1":
+        return '""'
+    if re.fullmatch(r"\d+", text):
+        return f'"Sub{text}"'
+    return text
+
+
+def float_literal(value: object) -> str:
+    text = str(value).strip()
+    if text.endswith("f"):
+        return text
+    if re.fullmatch(r"[-+]?\d+", text):
+        return f"{text}.0f"
+    if re.fullmatch(r"[-+]?\d+\.\d+", text):
+        return f"{text}f"
+    return text
+
 def apply_legacy_boss_timer(obj: BossTimer, ins: Instruction) -> None:
     semantics = {
         132: "timer_set",
@@ -329,16 +350,23 @@ def apply_legacy_boss_timer(obj: BossTimer, ins: Instruction) -> None:
     obj.fields.update({"semantic": semantics.get(ins.opcode, f"boss_timer_{ins.opcode}"), "op_key": op_key_for_opcode(obj.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
     if ins.opcode == 132:
         obj.fields["timer"] = {"start": a(ins, 0, "0"), "direction": "up", "attack_timer_expr": "threshold - timer"}
-        obj.fields["lowering_plan"] = {"strategy": "boss.timer_reset_approximation"}
+        obj.fields["lowering_plan"] = {"strategy": "emit_target_op", "target_op_key": "boss.timer_reset", "args": [], "reason": "target timer reset approximates legacy upward timer set"}
     elif ins.opcode == 133:
         obj.fields["interrupt"] = {"trigger": "life_leq", "unknown": a(ins, 0, "0"), "life": a(ins, 1, "0"), "sub": a(ins, 2, "-1")}
-        obj.fields["lowering_plan"] = {"strategy": "boss.interrupt", "target_op_key": "boss.set_interrupt"}
+        obj.fields["lowering_plan"] = {"strategy": "emit_target_op", "target_op_key": "boss.set_interrupt", "args": ["0", a(ins, 1, "0"), "0", target_sub_name(a(ins, 2, "-1"))], "reason": "legacy life threshold interrupt"}
     elif ins.opcode == 134:
         obj.fields["interrupt"] = {"trigger": "timer_geq", "time": a(ins, 0, "0"), "sub": a(ins, 1, "-1")}
-        obj.fields["lowering_plan"] = {"strategy": "boss.interrupt", "target_op_key": "boss.set_interrupt"}
+        obj.fields["lowering_plan"] = {"strategy": "emit_target_op", "target_op_key": "boss.set_interrupt", "args": ["0", "0", a(ins, 0, "0"), target_sub_name(a(ins, 1, "-1"))], "reason": "legacy timer threshold interrupt"}
+    elif ins.opcode == 148:
+        obj.fields["lowering_plan"] = {"strategy": "target_by_generation", "plans": {"th12": {"target_op_key": "unit.life_hide", "args": []}, "th13_plus": {"target_op_key": "bullet.life_hide", "args": ["0"]}}, "reason": "visible life count approximated by target lifebar visibility controls"}
     elif ins.opcode == 158:
         obj.fields["life_bar"] = {"slot": a(ins, 0, "0"), "life_min": a(ins, 1, "0"), "life_max": a(ins, 2, "0"), "color": a(ins, 3, "0")}
-        obj.fields["lowering_plan"] = {"strategy": "unit.life_marker_approximation", "target_op_key": "unit.life_marker"}
+        obj.fields["lowering_plan"] = {"strategy": "emit_target_op", "target_op_key": "unit.life_marker", "args": [a(ins, 0, "0"), float_literal(a(ins, 1, "0")), a(ins, 3, "0")], "reason": "legacy lifebar color segment approximated as target life marker"}
+    elif ins.opcode == 173:
+        enabled = "1" if a(ins, 0, "1") != "0" else "0"
+        obj.fields["lowering_plan"] = {"strategy": "target_by_generation", "plans": {"th12": {"target_op_key": "movement.bomb_shield", "args": [enabled, "0.0f"]}, "th13_plus": {"sequence": [{"target_op_key": "unit.bomb_shield", "args": [enabled, "0"]}, {"target_op_key": "unit.bomb_invuln", "args": ["0.0f" if enabled == "1" else "1.0f"]}]}}, "reason": "legacy bomb immunity state"}
+    elif ins.opcode == 184:
+        obj.fields["lowering_plan"] = {"strategy": "emit_target_op", "target_op_key": "unit.set_invuln", "args": ["0"], "reason": "unknown boss runtime state preserved as invulnerability boundary"}
 
 
 def apply_legacy_motion_modifier(obj: MotionModifier, ins: Instruction) -> None:
@@ -358,16 +386,20 @@ def apply_legacy_motion_modifier(obj: MotionModifier, ins: Instruction) -> None:
         "angular_velocity": {"strategy": "long_lived_circle_tween", "target_op_key": "movement.circle.tween"},
         "linear_acceleration": {"strategy": "long_lived_velocity_tween", "target_op_key": "movement.velocity.tween"},
     }
-    if semantic in plans:
-        obj.fields["lowering_plan"] = plans[semantic]
     if ins.opcode in {67, 178}:
         obj.fields["motion"] = {"time": a(ins, 0, "0"), "mode": a(ins, 1, "0"), "speed": a(ins, 2, "0.0f"), "direction": "random_player_bounded", "variant": ins.opcode == 178}
+        obj.fields["lowering_plan"] = {"strategy": "emit_target_op", "target_op_key": "movement.velocity.tween", "args": [a(ins, 0, "0"), a(ins, 1, "0"), "0.0f", a(ins, 2, "0.0f")], "reason": "bounded random direction approximated as neutral-angle velocity tween"}
     elif ins.opcode == 70:
         obj.fields["motion"] = {"angular_velocity": a(ins, 0, "0.0f")}
+        obj.fields["lowering_plan"] = {"strategy": "emit_target_op", "target_op_key": "movement.circle.tween", "args": ["999999", "0", a(ins, 0, "0.0f"), "0.0f", "0.0f"], "reason": "legacy per-frame angular velocity approximated as long-lived circle tween"}
     elif ins.opcode == 71:
         obj.fields["motion"] = {"acceleration": a(ins, 0, "0.0f")}
+        obj.fields["lowering_plan"] = {"strategy": "emit_target_op", "target_op_key": "movement.velocity.tween", "args": ["999999", "0", "0.0f", a(ins, 0, "0.0f")], "reason": "legacy per-frame acceleration approximated as long-lived velocity tween"}
     elif ins.opcode == 74:
         obj.fields["motion"] = {"time": a(ins, 0, "0"), "angular_velocity": a(ins, 1, "0.0f"), "radius_velocity": a(ins, 2, "0.0f"), "requires_circle_motion": True}
+        obj.fields["lowering_plan"] = {"strategy": "emit_target_op", "target_op_key": "movement.circle.tween", "args": [a(ins, 0, "0"), "0", a(ins, 1, "0.0f"), "0.0f", a(ins, 2, "0.0f")], "reason": "legacy circle speed change approximated through target circle tween"}
+    elif semantic in plans:
+        obj.fields["lowering_plan"] = plans[semantic]
 
 
 def lift_lasers(program: Program, func: Function) -> list[LaserEmitter]:
@@ -603,7 +635,7 @@ def enemy_create_semantics(program: Program, func: Function, ins: Instruction, o
     sub = a(ins, 0, "")
     sub_name = sub.strip().strip('"')
     role = "boss" if enemy_create_is_boss(sub_name, func.name, program.source) else "stage_enemy"
-    return {
+    create = {
         "sub": sub,
         "x": a(ins, 1, "0.0f"),
         "y": a(ins, 2, "0.0f"),
@@ -615,6 +647,29 @@ def enemy_create_semantics(program: Program, func: Function, ins: Instruction, o
         "mirror": "M" in op_name,
         "func": op_name.endswith("F"),
     }
+    create["target_forms"] = enemy_create_target_forms(create)
+    return create
+
+
+def enemy_create_target_forms(create: dict[str, object]) -> dict[str, str]:
+    if str(create.get("role") or "") != "stage_enemy":
+        return {}
+    suffix = "_func" if create.get("func") else ""
+    absolute = create.get("position_mode") == "absolute"
+    mirror = bool(create.get("mirror"))
+    if absolute and mirror:
+        old_form = f"enemy.create_abs_mirror{suffix}"
+        th13_form = f"enemy.create_mirror{suffix}"
+    elif absolute:
+        old_form = f"enemy.create_abs{suffix}"
+        th13_form = f"enemy.create{suffix}"
+    elif mirror:
+        old_form = f"enemy.create_mirror{suffix}"
+        th13_form = old_form
+    else:
+        old_form = f"enemy.create{suffix}"
+        th13_form = old_form
+    return {"th10_th11": old_form, "th12": old_form, "th13_plus": th13_form}
 
 
 def enemy_create_is_boss(sub_name: str, function: str, source: str) -> bool:
