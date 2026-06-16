@@ -68,6 +68,12 @@ def generation_for_game(game: str) -> str:
     return GEN_UNKNOWN
 
 
+def bullet_transform_generation_for_game(game: str) -> str:
+    if game == "th11":
+        return GEN_TH12
+    return generation_for_game(game)
+
+
 def lifted_raw_coverage_policy(kind: str, source_game: str, target: str, family: str = "") -> str:
     source_generation = generation_for_game(source_game)
     target_generation = generation_for_game(target)
@@ -546,7 +552,7 @@ def encode_drop_type(semantic: str, target: str, fallback: Any = None) -> str:
 
 def bullet_transform_mode_semantic(game: str, mode: Any) -> str:
     raw = plain(mode).strip()
-    semantic = BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE.get((generation_for_game(game), raw))
+    semantic = BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE.get((bullet_transform_generation_for_game(game), raw))
     if semantic:
         return semantic.semantic
     for candidate in BULLET_TRANSFORM_MODES:
@@ -558,12 +564,13 @@ def bullet_transform_mode_semantic(game: str, mode: Any) -> str:
 def encode_bullet_transform_mode(semantic: str, target: str, fallback: Any = None) -> str:
     if semantic.startswith("raw:"):
         return semantic[4:]
-    special = SPECIAL_BULLET_TRANSFORM_MODE_ENCODINGS.get((semantic, generation_for_game(target)))
+    target_generation = bullet_transform_generation_for_game(target)
+    special = SPECIAL_BULLET_TRANSFORM_MODE_ENCODINGS.get((semantic, target_generation))
     if special is not None:
         return special
     mode = BULLET_TRANSFORM_MODE_BY_SEMANTIC.get(semantic)
     if mode:
-        encoded = mode.encode(generation_for_game(target))
+        encoded = mode.encode(target_generation)
         if encoded is not None:
             return encoded
     return plain(fallback, "0")
@@ -572,7 +579,7 @@ def encode_bullet_transform_mode(semantic: str, target: str, fallback: Any = Non
 def bullet_transform_mode_can_encode(semantic: str, target: str) -> bool:
     if semantic.startswith("raw:"):
         return False
-    target_generation = generation_for_game(target)
+    target_generation = bullet_transform_generation_for_game(target)
     if (semantic, target_generation) in SPECIAL_BULLET_TRANSFORM_MODE_ENCODINGS:
         return True
     mode = BULLET_TRANSFORM_MODE_BY_SEMANTIC.get(semantic)
@@ -585,7 +592,7 @@ def remap_bullet_transform_mode(source_game: str, target: str, mode: Any) -> str
 
 def unsupported_bullet_transform_mode_reason(source_game: str, target: str, mode: Any) -> str | None:
     return UNSUPPORTED_BULLET_TRANSFORM_MODE_REASONS.get(
-        (generation_for_game(source_game), generation_for_game(target), plain(mode).strip())
+        (bullet_transform_generation_for_game(source_game), generation_for_game(target), plain(mode).strip())
     )
 
 

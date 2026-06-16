@@ -9,6 +9,7 @@ from .model import BulletTransform
 from .origin_ir import LoweredInstruction
 from .semantics import (
     bullet_shape_semantic,
+    bullet_transform_generation_for_game,
     bullet_transform_mode_can_encode,
     bullet_transform_mode_semantic,
     encode_bullet_shape,
@@ -218,7 +219,7 @@ class BulletTransformIR:
 
     def encoded_b(self, target: str) -> str:
         value = self.values.get("b", "-999999")
-        if generation_for_game(target) in {"th12", "th13_plus"}:
+        if bullet_transform_generation_for_game(target) in {"th12", "th13_plus"}:
             return {
                 "bounce_all": "15",
                 "bounce_no_bottom": "13",
@@ -230,7 +231,7 @@ class BulletTransformIR:
 
     def encoded_r(self, target: str) -> str:
         value = self.values.get("r", "-999999.0f")
-        if generation_for_game(target) in {"th12", "th13_plus"} and self.mode_semantic in {"bounce_bottom", "bounce_horizontal", "wall_pass_horizontal"}:
+        if bullet_transform_generation_for_game(target) in {"th12", "th13_plus"} and self.mode_semantic in {"bounce_bottom", "bounce_horizontal", "wall_pass_horizontal"}:
             return "-999999.0f"
         return normalize_target_float_sentinel(value, target)
 
@@ -292,7 +293,9 @@ class BulletTransformIR:
         if self.unsupported_reason(target):
             return None
         target_generation = generation_for_game(target)
-        if target_generation == "th10_th11":
+        target_transform_generation = bullet_transform_generation_for_game(target)
+        source_transform_generation = bullet_transform_generation_for_game(self.source_game)
+        if target_generation == "th10_th11" and target_transform_generation == "th10_th11":
             parametric = self.lower_parametric_to_legacy()
             if parametric is not None:
                 return parametric
@@ -300,7 +303,7 @@ class BulletTransformIR:
             return None
         if target_generation == "th13_plus":
             fields = self.base_fields_for(target)
-            if fields[3] == "16":
+            if fields[3] == "16" and source_transform_generation != "th13_plus":
                 emitter_id, slot, channel, mode, a, b, r, s = fields
                 if self.mode_semantic == "pause_then_aimed_velocity":
                     r = th12_random_angle_expression_bound(r)
