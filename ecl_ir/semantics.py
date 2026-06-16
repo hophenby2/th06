@@ -419,21 +419,36 @@ BULLET_TRANSFORM_MODES: tuple[SemanticValue, ...] = (
     SemanticValue("shape_change", {GEN_TH13_PLUS: "512", GEN_TH12: "2048", GEN_TH10_TH11: "16384"}),
     SemanticValue("wait_next", {GEN_TH13_PLUS: "-2147483648", GEN_TH12: "4096", GEN_TH10_TH11: "32768"}, aliases=("-2147483648",)),
     SemanticValue("delete", {GEN_TH13_PLUS: "1024", GEN_TH12: "8192", GEN_TH10_TH11: "65536"}),
-    SemanticValue("legacy_unknown_131072", {GEN_TH10_TH11: "131072"}),
-    SemanticValue("legacy_unknown_262144", {GEN_TH10_TH11: "262144"}),
-    SemanticValue("spawn_bullet_legacy", {GEN_TH10_TH11: "524288"}),
+    SemanticValue("legacy_unknown_131072", {GEN_TH12: "131072", GEN_TH10_TH11: "131072"}),
+    SemanticValue("legacy_unknown_262144", {GEN_TH12: "262144", GEN_TH10_TH11: "262144"}),
+    SemanticValue("spawn_bullet_legacy", {GEN_TH12: "524288", GEN_TH10_TH11: "524288"}),
+    SemanticValue("spawn_bullet_layers_legacy", {GEN_TH12: "1048576"}),
+    SemanticValue("th12_jump_related", {GEN_TH12: "2097152"}),
     SemanticValue("wall_pass_horizontal", {GEN_TH10_TH11: "1048576"}),
     SemanticValue("bounce_bottom", {GEN_TH10_TH11: "2097152"}),
     SemanticValue("jump", {GEN_TH13_PLUS: "65536", GEN_TH12: "4194304", GEN_TH10_TH11: "4194304"}),
-    SemanticValue("legacy_ds_unknown_8388608", {GEN_TH10_TH11: "8388608"}),
-    SemanticValue("shape_change_no_mist", {GEN_TH10_TH11: "16777216"}),
-    SemanticValue("legacy_turn_unknown", {GEN_TH10_TH11: "33554432"}),
-    SemanticValue("legacy_unknown_67108864", {GEN_TH10_TH11: "67108864"}),
+    SemanticValue("legacy_ds_unknown_8388608", {GEN_TH12: "8388608", GEN_TH10_TH11: "8388608"}),
+    SemanticValue("shape_change_no_mist", {GEN_TH12: "16777216", GEN_TH10_TH11: "16777216"}),
+    SemanticValue("legacy_turn_unknown", {GEN_TH12: "33554432", GEN_TH10_TH11: "33554432"}),
+    SemanticValue("legacy_unknown_67108864", {GEN_TH12: "67108864", GEN_TH10_TH11: "67108864"}),
     SemanticValue("bounce_horizontal", {GEN_TH10_TH11: "134217728"}),
     SemanticValue("independent_velocity", {GEN_TH13_PLUS: "524288", GEN_TH12: "134217728"}),
     SemanticValue("highlight", {GEN_TH13_PLUS: "1048576", GEN_TH12: "268435456", GEN_TH10_TH11: "268435456"}),
     SemanticValue("velocity_over_time", {GEN_TH13_PLUS: "2097152", GEN_TH12: "536870912", GEN_TH10_TH11: "536870912"}),
     SemanticValue("legacy_ds_unknown_1073741824", {GEN_TH10_TH11: "1073741824"}),
+    SemanticValue("spawn_bullet_advanced", {GEN_TH13_PLUS: "8192"}),
+    SemanticValue("spawn_laser_attributes", {GEN_TH13_PLUS: "16384"}),
+    SemanticValue("move_to_restore_speed", {GEN_TH13_PLUS: "131072"}),
+    SemanticValue("set_velocity_immediate", {GEN_TH13_PLUS: "262144"}),
+    SemanticValue("scale", {GEN_TH13_PLUS: "4194304"}),
+    SemanticValue("mark_direction", {GEN_TH13_PLUS: "8388608"}),
+    SemanticValue("spawn_familiar", {GEN_TH13_PLUS: "16777216"}),
+    SemanticValue("layer", {GEN_TH13_PLUS: "33554432"}),
+    SemanticValue("spawn_delay", {GEN_TH13_PLUS: "67108864"}),
+    SemanticValue("spawn_laser", {GEN_TH13_PLUS: "134217728"}),
+    SemanticValue("hitbox_radius", {GEN_TH13_PLUS: "536870912"}),
+    SemanticValue("homing_velocity_blend", {GEN_TH13_PLUS: "1073741824"}),
+    SemanticValue("wall_pass", {GEN_TH13_PLUS: "4096"}),
 )
 BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE: dict[tuple[str, str], SemanticValue] = {}
 for mode in BULLET_TRANSFORM_MODES:
@@ -442,6 +457,10 @@ for mode in BULLET_TRANSFORM_MODES:
 BULLET_TRANSFORM_MODE_BY_SEMANTIC = {mode.semantic: mode for mode in BULLET_TRANSFORM_MODES}
 
 SPECIAL_BULLET_TRANSFORM_MODE_ENCODINGS: dict[tuple[str, str], str] = {
+    ("bounce_all", GEN_TH12): "256",
+    ("bounce_no_bottom", GEN_TH12): "256",
+    ("bounce_bottom", GEN_TH12): "256",
+    ("bounce_horizontal", GEN_TH12): "256",
     ("bounce_all", GEN_TH13_PLUS): "64",
     ("bounce_no_bottom", GEN_TH13_PLUS): "64",
     ("bounce_bottom", GEN_TH13_PLUS): "64",
@@ -548,6 +567,16 @@ def encode_bullet_transform_mode(semantic: str, target: str, fallback: Any = Non
         if encoded is not None:
             return encoded
     return plain(fallback, "0")
+
+
+def bullet_transform_mode_can_encode(semantic: str, target: str) -> bool:
+    if semantic.startswith("raw:"):
+        return False
+    target_generation = generation_for_game(target)
+    if (semantic, target_generation) in SPECIAL_BULLET_TRANSFORM_MODE_ENCODINGS:
+        return True
+    mode = BULLET_TRANSFORM_MODE_BY_SEMANTIC.get(semantic)
+    return bool(mode and mode.encode(target_generation) is not None)
 
 
 def remap_bullet_transform_mode(source_game: str, target: str, mode: Any) -> str:

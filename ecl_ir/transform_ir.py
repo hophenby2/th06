@@ -9,6 +9,7 @@ from .model import BulletTransform
 from .origin_ir import LoweredInstruction
 from .semantics import (
     bullet_shape_semantic,
+    bullet_transform_mode_can_encode,
     bullet_transform_mode_semantic,
     encode_bullet_shape,
     encode_bullet_transform_mode,
@@ -138,6 +139,19 @@ def normalize_target_float_sentinel(value: str, target: str) -> str:
     return value
 
 
+def normalized_int(value: object) -> str:
+    return str(value).strip()
+
+
+def legacy_bounce_mode_for_mask(mask: object) -> str | None:
+    return {
+        "15": "1024",
+        "13": "2048",
+        "2": "2097152",
+        "12": "134217728",
+    }.get(normalized_int(mask))
+
+
 @dataclass(frozen=True)
 class BulletTransformIR:
     source_game: str
@@ -204,7 +218,7 @@ class BulletTransformIR:
 
     def encoded_b(self, target: str) -> str:
         value = self.values.get("b", "-999999")
-        if generation_for_game(target) == "th13_plus":
+        if generation_for_game(target) in {"th12", "th13_plus"}:
             return {
                 "bounce_all": "15",
                 "bounce_no_bottom": "13",
@@ -216,9 +230,44 @@ class BulletTransformIR:
 
     def encoded_r(self, target: str) -> str:
         value = self.values.get("r", "-999999.0f")
-        if generation_for_game(target) == "th13_plus" and self.mode_semantic == "wall_pass_horizontal":
+        if generation_for_game(target) in {"th12", "th13_plus"} and self.mode_semantic in {"bounce_bottom", "bounce_horizontal", "wall_pass_horizontal"}:
             return "-999999.0f"
         return normalize_target_float_sentinel(value, target)
+
+    def lower_parametric_to_legacy(self) -> LoweredInstruction | None:
+        if self.mode_semantic == "bounce":
+            mode = legacy_bounce_mode_for_mask(self.values.get("b", "-999999"))
+            if mode is None:
+                return None
+            r = self.values.get("r", "-999999.0f") if mode in {"1024", "2048"} else "-999999.0f"
+            return LoweredInstruction(
+                409,
+                [
+                    self.values.get("emitter_id", "0"),
+                    self.values.get("slot", "0"),
+                    self.values.get("channel", "0"),
+                    mode,
+                    self.values.get("a", "-999999"),
+                    "-999999",
+                    r,
+                    "-999999.0f",
+                ],
+            )
+        if self.mode_semantic == "wall_pass" and normalized_int(self.values.get("b", "-999999")) == "12":
+            return LoweredInstruction(
+                409,
+                [
+                    self.values.get("emitter_id", "0"),
+                    self.values.get("slot", "0"),
+                    self.values.get("channel", "0"),
+                    "1048576",
+                    self.values.get("a", "-999999"),
+                    "-999999",
+                    "-999999.0f",
+                    "-999999.0f",
+                ],
+            )
+        return None
 
     def base_fields_for(self, target: str) -> list[str]:
         return [
@@ -243,6 +292,12 @@ class BulletTransformIR:
         if self.unsupported_reason(target):
             return None
         target_generation = generation_for_game(target)
+        if target_generation == "th10_th11":
+            parametric = self.lower_parametric_to_legacy()
+            if parametric is not None:
+                return parametric
+        if not bullet_transform_mode_can_encode(self.mode_semantic, target):
+            return None
         if target_generation == "th13_plus":
             fields = self.base_fields_for(target)
             if fields[3] == "16":
