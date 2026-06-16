@@ -288,7 +288,7 @@ def apply_legacy_familiar(obj: FamiliarSpawner, ins: Instruction) -> None:
         fields["spawn"] = {
             "sub": a(ins, 0, ""),
             "x": a(ins, 1, "0.0f"),
-            "y": a(ins, 2, "0.0f"),
+            "y": remap_legacy270_y_final(a(ins, 2, "0.0f")) if ins.opcode == 270 else a(ins, 2, "0.0f"),
             "life": a(ins, 3, "0"),
             "item": a(ins, 4, "0"),
             "score": a(ins, 5, "0"),
@@ -336,6 +336,51 @@ def float_literal(value: object) -> str:
     if re.fullmatch(r"[-+]?\d+\.\d+", text):
         return f"{text}f"
     return text
+
+def remap_legacy270_y(value: object) -> str:
+    text = str(value).strip()
+    match = re.fullmatch(r"([-+]?(?:\d+(?:\.\d*)?|\.\d+))(f?)", text)
+    if not match:
+        return text
+    number = float(match.group(1))
+    if number >= 0:
+        return text
+    mapped = -number - 448.0
+    if mapped.is_integer():
+        return f"{int(mapped)}.0f"
+    return f"{mapped:.6f}".rstrip("0").rstrip(".") + "f"
+
+def remap_legacy270_y_final(value: object) -> str:
+    first = remap_legacy270_y(value)
+    match = re.fullmatch(r"([-+]?(?:\d+(?:\.\d*)?|\.\d+))(f?)", first.strip())
+    if not match:
+        return f"448.0f - ({first})"
+    mapped = 448.0 - float(match.group(1))
+    if mapped.is_integer():
+        return f"{int(mapped)}.0f"
+    return f"{mapped:.6f}".rstrip("0").rstrip(".") + "f"
+
+
+def negated_numeric_expr(value: object) -> str:
+    text = str(value).strip()
+    match = re.fullmatch(r"([-+]?(?:\d+(?:\.\d*)?|\.\d+))(f?)", text)
+    if match:
+        number = -float(match.group(1))
+        if number.is_integer():
+            return f"{int(number)}.0f" if match.group(2) or "." in match.group(1) else str(int(number))
+        return f"{number:.6f}".rstrip("0").rstrip(".") + "f"
+    if text.startswith("-"):
+        return text[1:]
+    return f"-({text})"
+
+
+def legacy270_created_subs(program: Program) -> set[str]:
+    subs: set[str] = set()
+    for func in program.functions:
+        for ins in func.body:
+            if ins.opcode == 270 and ins.args:
+                subs.add(str(ins.args[0]).strip().strip('"'))
+    return subs
 
 def apply_legacy_boss_timer(obj: BossTimer, ins: Instruction) -> None:
     semantics = {
@@ -493,6 +538,7 @@ def lift_movements(program: Program, func: Function) -> list[MovementOp]:
         return objects
     current_direction: str | None = None
     current_speed: str | None = None
+    reverse_legacy270_velocity = program.game in {"th10", "th11", "th12"} and func.name in legacy270_created_subs(program)
     for ins in func.body:
         if ins.opcode not in movement_names:
             continue
@@ -500,7 +546,13 @@ def lift_movements(program: Program, func: Function) -> list[MovementOp]:
         op_name = movement_names[ins.opcode]
         obj.fields["op"] = op_name
         obj.fields["op_key"] = op_key_for_opcode(program.game, ins.opcode)
-        obj.fields["args"] = ins.args
+        args = ins.args[:]
+        if reverse_legacy270_velocity and ins.opcode == 284 and len(args) >= 2:
+            args[1] = negated_numeric_expr(args[1])
+        elif reverse_legacy270_velocity and ins.opcode == 285 and len(args) >= 4:
+            args[3] = negated_numeric_expr(args[3])
+        obj.fields["args"] = args
+        obj.fields["source_args"] = ins.args
         obj.fields["difficulty"] = ins.difficulty
         obj.fields.setdefault("semantics", {})["motion"] = {"op": op_name}
         if len(ins.args) > 1 and op_name.endswith("Time"):
@@ -604,11 +656,11 @@ def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
         family = "th13plus"
     elif program.game == "th12":
         animation = {258: "anmSelect", 259: "anmSetSprite", 262: "anmSetMain", 263: "anmPlay", 264: "anmPlayAbs"}
-        enemy = {256: "enmCreate", 257: "enmCreateA", 260: "enmCreateM", 261: "enmCreateAM", 265: "enmCreateF", 266: "enmCreateAF", 267: "enmCreateMF", 268: "enmCreateAMF"}
+        enemy = {256: "enmCreate", 257: "enmCreateA", 260: "enmCreateM", 261: "enmCreateAM", 265: "enmCreateF", 266: "enmCreateAF", 267: "enmCreateMF", 268: "enmCreateAMF", 270: "enmCreate", 271: "enmCreateF"}
         family = "th12"
     elif program.game in {"th10", "th11"}:
         animation = {258: "anmSelect", 259: "anmSetSprite", 262: "anmSetMain", 263: "anmPlay", 264: "anmPlayAbs"}
-        enemy = {256: "enmCreate", 257: "enmCreateA", 260: "enmCreateM", 261: "enmCreateAM", 265: "enmCreateF", 266: "enmCreateAF", 267: "enmCreateMF", 268: "enmCreateAMF"}
+        enemy = {256: "enmCreate", 257: "enmCreateA", 260: "enmCreateM", 261: "enmCreateAM", 265: "enmCreateF", 266: "enmCreateAF", 267: "enmCreateMF", 268: "enmCreateAMF", 270: "enmCreate", 271: "enmCreateF"}
         family = "th10_th11"
     elif program.game in {"th06", "th07", "th08"}:
         animation = {62: "anmPlayAttack"}
@@ -634,7 +686,11 @@ def lift_animation_enemy(program: Program, func: Function) -> list[IRObject]:
             objects.append(obj)
         elif ins.opcode in enemy:
             obj = make_obj(EnemyOp, program, func, ins, family)
-            obj.fields.update({"op": enemy[ins.opcode], "op_key": op_key_for_opcode(program.game, ins.opcode), "args": ins.args, "difficulty": ins.difficulty})
+            args = ins.args[:]
+            if ins.opcode in {270, 271} and len(args) >= 7:
+                y_arg = remap_legacy270_y_final(args[2]) if ins.opcode == 270 else args[2]
+                args = [args[0], args[1], y_arg, args[4], args[5], args[6]]
+            obj.fields.update({"op": enemy[ins.opcode], "op_key": op_key_for_opcode(program.game, ins.opcode), "args": args, "source_args": ins.args, "difficulty": ins.difficulty})
             obj.fields["create"] = enemy_create_semantics(program, func, ins, enemy[ins.opcode])
             annotate_enemy_policy(obj, program, func, ins)
             objects.append(obj)
@@ -648,10 +704,10 @@ def enemy_create_semantics(program: Program, func: Function, ins: Instruction, o
     create = {
         "sub": sub,
         "x": a(ins, 1, "0.0f"),
-        "y": a(ins, 2, "0.0f"),
-        "life": a(ins, 3, "0"),
-        "score": a(ins, 4, "0"),
-        "item": a(ins, 5, "0"),
+        "y": remap_legacy270_y_final(a(ins, 2, "0.0f")) if ins.opcode == 270 else a(ins, 2, "0.0f"),
+        "life": a(ins, 4, "0") if ins.opcode in {270, 271} else a(ins, 3, "0"),
+        "score": a(ins, 5, "0") if ins.opcode in {270, 271} else a(ins, 4, "0"),
+        "item": a(ins, 6, "0") if ins.opcode in {270, 271} else a(ins, 5, "0"),
         "role": role,
         "position_mode": "absolute" if "A" in op_name else "relative",
         "mirror": "M" in op_name,

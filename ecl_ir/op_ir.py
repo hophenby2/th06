@@ -57,7 +57,8 @@ OP_ALIASES = {
     "enm_create_af": "enemy.create_abs_func",
     "enm_create_mf": "enemy.create_mirror_func",
     "enm_create_amf": "enemy.create_abs_mirror_func",
-    "enm_create270": "enemy.create_legacy270",
+    "enm_create270": "enemy.create",
+    "enm_create271": "enemy.create_func",
     "enm_maple_enemy": "enemy.create_maple",
     "move_pos": "movement.position.set",
     "move_pos_time": "movement.position.tween",
@@ -220,6 +221,10 @@ def op_key_for_name(game: str, opcode: int, name: str) -> str:
 
 
 def op_key_for_opcode(game: str, opcode: int) -> str:
+    if game.lower() in {"th10", "th11", "th12"} and opcode == 270:
+        return "enemy.create"
+    if game.lower() in {"th10", "th11", "th12"} and opcode == 271:
+        return "enemy.create_func"
     if game.lower() == "th12" and opcode == 422:
         return "boss.spell_ex"
     info = opcode_info(game, opcode)
@@ -275,7 +280,7 @@ SOURCE_SPECIFIC_DROP_OP_KEYS = {
     "raw.et_delay", "raw.et_on_auto", "raw.set_life_bar", "raw.ins_153", "raw.timer_set", "raw.set_lives",
     "raw.life_threshold", "flow.float_time", "flow.math_circle_pos", "flow.inc", "raw.ins_173", "raw.ins_184",
     "flow.math_angle", "flow.math_distance", "flow.et_protect_range", "raw.val_set", "raw.player_nullify", "anm.familiar",
-    "bullet.transform", "bullet.transform2",
+    "bullet.transform", "bullet.transform2", "anm.play_high",
 }
 
 OLD_TARGET_PRESENTATION_HELPERS = {
@@ -443,15 +448,6 @@ def op_lowering_policy(key: str, args: list[str]) -> dict[str, object] | None:
         return {"strategy": "drop", "reason": "disabled_async_call"}
     if key in OLD_TARGET_PRESENTATION_HELPERS:
         return {"strategy": "drop", "reason": "unsupported_presentation_helper", "target_generations": ["th10_th11"]}
-    if key == "enemy.create_legacy270":
-        return {
-            "strategy": "emit_target_op",
-            "target_op_key": "enemy.create_func",
-            "reason": "TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create",
-            "source_generations": ["th10_th11"],
-            "target_generations": ["th12", "th13_plus"],
-            "arg_policy": {"indices": [0, 1, 2, 4, 5, 6]},
-        }
     if key == "laser.on_aimed":
         return {
             "strategy": "legacy_laser_on_aimed",

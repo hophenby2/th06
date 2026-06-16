@@ -131,19 +131,19 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("flow.square_sum", {GEN_TH13_PLUS: 85, GEN_TH12: 86, GEN_TH10_TH11: 86}),
     SemanticOpcode("flow.stack_sqrt", {GEN_TH13_PLUS: 88, GEN_TH12: 88, GEN_TH10_TH11: 88}),
     SemanticOpcode("flow.get_angle", {GEN_TH13_PLUS: 87, GEN_TH12: 87, GEN_TH10_TH11: 87}),
-    SemanticOpcode("enemy.create", {GEN_TH13_PLUS: 300, GEN_TH12: 256}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
-    SemanticOpcode("enemy.create_async", {GEN_TH13_PLUS: 301, GEN_TH12: 257}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
+    SemanticOpcode("enemy.create", {GEN_TH13_PLUS: 300, GEN_TH12: 256, GEN_TH10_TH11: 256}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
+    SemanticOpcode("enemy.create_abs", {GEN_TH13_PLUS: 301, GEN_TH12: 257, GEN_TH10_TH11: 257}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
     SemanticOpcode("animation.select", {GEN_TH13_PLUS: 302, GEN_TH12: 258}, {(GEN_TH13_PLUS, GEN_TH12): (0,)}),
     SemanticOpcode("animation.set_sprite", {GEN_TH13_PLUS: 303, GEN_TH12: 259}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
-    SemanticOpcode("enemy.create_main", {GEN_TH13_PLUS: 304, GEN_TH12: 260}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
-    SemanticOpcode("enemy.create_async_main", {GEN_TH13_PLUS: 305, GEN_TH12: 261}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
+    SemanticOpcode("enemy.create_mirror", {GEN_TH13_PLUS: 304, GEN_TH12: 260, GEN_TH10_TH11: 260}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
+    SemanticOpcode("enemy.create_abs_mirror", {GEN_TH13_PLUS: 305, GEN_TH12: 261, GEN_TH10_TH11: 261}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
     SemanticOpcode("animation.set_main", {GEN_TH13_PLUS: 306, GEN_TH12: 262}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
     SemanticOpcode("animation.play", {GEN_TH13_PLUS: 307, GEN_TH12: 263}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
     SemanticOpcode("animation.play_abs", {GEN_TH13_PLUS: 308, GEN_TH12: 264}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
-    SemanticOpcode("enemy.create_func", {GEN_TH13_PLUS: 309, GEN_TH12: 265}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
-    SemanticOpcode("enemy.create_async_func", {GEN_TH13_PLUS: 310, GEN_TH12: 266}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
-    SemanticOpcode("enemy.create_main_func", {GEN_TH13_PLUS: 311, GEN_TH12: 267}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
-    SemanticOpcode("enemy.create_async_main_func", {GEN_TH13_PLUS: 312, GEN_TH12: 268}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
+    SemanticOpcode("enemy.create_func", {GEN_TH13_PLUS: 309, GEN_TH12: 265, GEN_TH10_TH11: 265}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
+    SemanticOpcode("enemy.create_abs_func", {GEN_TH13_PLUS: 310, GEN_TH12: 266, GEN_TH10_TH11: 266}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
+    SemanticOpcode("enemy.create_mirror_func", {GEN_TH13_PLUS: 311, GEN_TH12: 267, GEN_TH10_TH11: 267}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
+    SemanticOpcode("enemy.create_abs_mirror_func", {GEN_TH13_PLUS: 312, GEN_TH12: 268, GEN_TH10_TH11: 268}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5)}),
     SemanticOpcode("enemy.byakuren_butterfly", {GEN_TH12: 281}),
     SemanticOpcode("movement.position.set", {GEN_TH13_PLUS: 400, GEN_TH12: 300, GEN_TH10_TH11: 280}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1)}),
     SemanticOpcode("movement.position.tween", {GEN_TH13_PLUS: 401, GEN_TH12: 301, GEN_TH10_TH11: 281}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3)}),
@@ -897,7 +897,7 @@ def remap_raw_arg_by_semantic(source_game: str, target: str, source_opcode: int,
             mapped[0] = "1"
         elif mapped[0] == "3":
             mapped[0] = "2"
-    elif source_opcode in {256, 257, 260, 261, 265, 266, 267, 268, 300, 301, 304, 305, 309, 310, 311, 312} and source_opcode != target_opcode and len(mapped) >= 6:
+    elif source_opcode in {256, 257, 260, 261, 265, 266, 267, 268, 270, 271, 300, 301, 304, 305, 309, 310, 311, 312} and source_opcode != target_opcode and len(mapped) >= 6:
         mapped[5] = remap_create_item_policy(source_game, target, mapped[5])
     elif semantic_key == "bullet.emitter.02" and source_opcode != target_opcode and len(mapped) >= 3:
         mapped[1] = encode_bullet_shape(bullet_shape_semantic(source_game, mapped[1]), target, mapped[1])

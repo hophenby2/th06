@@ -227,6 +227,19 @@ def op_lowering_policy_applies(policy: dict[str, object], target: str, source_ga
     return True
 
 
+def negated_expr(value: object) -> str:
+    text = str(value).strip()
+    if re.fullmatch(r"[-+]?\d+(?:\.\d+)?f?", text):
+        if text.startswith("-"):
+            return text[1:]
+        if text.startswith("+"):
+            return f"-{text[1:]}"
+        return f"-{text}"
+    if text.startswith("(") and text.endswith(")"):
+        return f"-{text}"
+    return f"-({text})"
+
+
 def policy_args(args: list[str], policy: dict[str, object]) -> list[str]:
     arg_policy = policy.get("arg_policy") if isinstance(policy.get("arg_policy"), dict) else {}
     out = list(args)
@@ -248,6 +261,15 @@ def policy_args(args: list[str], policy: dict[str, object]) -> list[str]:
             if 0 <= index < len(out):
                 selected.append(out[index])
         out = selected
+    negate_indices = arg_policy.get("negate_indices")
+    if isinstance(negate_indices, list):
+        for raw_index in negate_indices:
+            try:
+                index = int(raw_index)
+            except (TypeError, ValueError):
+                continue
+            if 0 <= index < len(out):
+                out[index] = negated_expr(out[index])
     int_indices = arg_policy.get("int_indices")
     if isinstance(int_indices, list):
         for raw_index in int_indices:
@@ -396,7 +418,7 @@ def compile_preemptive_op_lowering_policy(event: dict[str, object], target: str)
     reason = str(policy.get("reason", ""))
     if strategy in {"emit_target_op", "emit_target_op_sequence", "stack_vm_sequence", "emit_raw_ins", "legacy_laser_on_aimed", "legacy_conditional_jump", "legacy_loop_jump", "catalog_sprite"}:
         return compile_op_lowering_policy(event, target)
-    if strategy == "drop" and reason in {"disabled_async_call", "debug_only"}:
+    if strategy == "drop":
         return compile_op_lowering_policy(event, target)
     return None
 
