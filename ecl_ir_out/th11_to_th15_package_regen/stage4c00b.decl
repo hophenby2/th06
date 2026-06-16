@@ -1,0 +1,939 @@
+// source: th062/th11/stage4c00b.decl
+// source game: th11
+// target: th15
+// whole-file lowering is a structured draft; verify target-game scheduling and resources
+// top-level declarations
+void BossCardItem();
+
+void BossCard2_00B()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    // semantic op_key lowering th11->th15: boss.life_set
+    ins_511(5700);
+    // semantic op_key lowering th11->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 4000, 3000, "BossCard3_00B");
+    // semantic op_key lowering th11->th15: unit.life_marker
+    ins_527(0, 5700.0f, -8355585);
+    // semantic op_key lowering th11->th15: unit.life_marker
+    ins_527(1, 4000.0f, -12566273);
+    // semantic op_key lowering th11->th15: unit.life_marker
+    ins_527(2, 1500.0f, -16777024);
+    // semantic op_key lowering th11->th15: boss.spell
+    ins_537(58, 3000, 500000, "�z�N�u�ˉB�R�����v");
+    // object Mode source_line=13 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // object Movement source_line=13 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 0, 0.0f, 128.0f);
+    [-9947] = 1;
+    +60:
+    // semantic op_key lowering th11->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th11->th15: movement.move_limit
+    ins_504(0.0f, 128.0f, 280.0f, 64.0f);
+    // semantic op_key lowering th11->th15: unit.diff_i
+    ins_535($B, 70, 70, 70, 20);
+    goto BossCard2_00B_868 @ 60;
+    BossCard2_00B_420:
+    @BossCard2_00Bat() async;
+    @BossCard2_00Bat2() async;
+    @BossCard2_00Bat3() async;
+    // semantic op_key lowering th11->th15: unit.diff_wait
+    ins_548(100, 100, 50, 50);
+    // object Animation source_line=25 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    // semantic op_key lowering th11->th15: unit.play_sound
+    ins_516(41);
+    // semantic op_key lowering th11->th15: unit.diff_wait
+    ins_548(60, 60, 50, 50);
+    // semantic op_key lowering th11->th15: unit.play_sound
+    ins_516(15);
+    // object Movement source_line=29 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412($B, 0, 2.0f);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23($B);
+    unless ($B > 20) goto BossCard2_00B_868 @ 60;
+    $B = $B - 5;
+    BossCard2_00B_868:
+    if (1) goto BossCard2_00B_420 @ 60;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard2_00B_420 lines 20..34 condition=1
+}
+
+void BossCard2_00Bat()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D;
+    // object Animation source_line=41 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    // dynamic bullet config lowering th11->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=43 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th11->th15: ins_407 -> ins_607
+    ins_607(0, 3);
+    // dynamic bullet config lowering th11->th15: ins_402 -> ins_602
+    ins_602(0, 4, 8);
+    // dynamic bullet config lowering th11->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.0f);
+    // object Mode source_line=47 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1.6f semantic=mode_1.6f target=1.6f
+    // dynamic bullet config lowering th11->th15: ins_405 -> ins_605
+    ins_605(0, 1.6f, 1.0f);
+    // object Mode source_line=48 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=2 semantic=set_mist target_th12=2 target_th15=2
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(0, 0, 1, 2, 2, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=49 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1024 semantic=offscreen_time target_th12=1024 target_th15=256
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(0, 1, 0, 256, 120, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=50 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=67108864 semantic=legacy_unknown_67108864 target_th12=67108864 target_th15=67108864
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 3, 0, 67108864, -999999, -999999, 0.0f, 0.0f); reason=source_specific_runtime_helper
+    // semantic op_key lowering th11->th15: unit.diff_i
+    ins_535($A, 40, 80, 40, 40);
+    // semantic op_key lowering th11->th15: unit.diff_i
+    ins_535($B, 90, 90, 50, 50);
+    goto BossCard2_00Bat_1840 @ 0;
+    BossCard2_00Bat_456:
+    // semantic op_key lowering th11->th15: flow.circle_pos
+    ins_81(%C, %D, [-9998.0f], [-9999.0f] * _f(32));
+    %C = %C + [-9997.0f];
+    %D = %D + ([-9996.0f] - 0.0f);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_abs
+    // original: ins_439(0, %C, %D);
+    unless ([-9959] <= 1) goto BossCard2_00Bat_912 @ 0;
+    // object Mode source_line=60 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=33554432 semantic=legacy_turn_unknown target_th12=33554432 target_th15=33554432
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 2, 0, 33554432, 60, 4, %C, %D); reason=source_specific_runtime_helper
+    goto BossCard2_00Bat_960 @ 0;
+    BossCard2_00Bat_912:
+    // object Mode source_line=63 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=33554432 semantic=legacy_turn_unknown target_th12=33554432 target_th15=33554432
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 2, 0, 33554432, 40, 4, %C, %D); reason=source_specific_runtime_helper
+    BossCard2_00Bat_960:
+    // object Mode source_line=65 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4096 semantic=wait_next target_th12=4096 target_th15=-2147483648
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(0, 4, 0, -2147483648, $B, -999999, -999999.0f, -999999.0f);
+    unless ([-9959] == 0) goto BossCard2_00Bat_1344 @ 0;
+    // object Mode source_line=67 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=67108864 semantic=legacy_unknown_67108864 target_th12=67108864 target_th15=67108864
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 5, 0, 67108864, -999999, -999999, _f(999) + ([-9998.0f] / _f(112)), 4.0f + ([-9987.0f] * 1.5f)); reason=source_specific_runtime_helper
+    goto BossCard2_00Bat_1576 @ 0;
+    BossCard2_00Bat_1344:
+    // object Mode source_line=70 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=67108864 semantic=legacy_unknown_67108864 target_th12=67108864 target_th15=67108864
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 5, 0, 67108864, -999999, -999999, _f(999) + ([-9998.0f] / _f(24)), 4.0f + ([-9987.0f] * 3.5f)); reason=source_specific_runtime_helper
+    BossCard2_00Bat_1576:
+    // semantic op_key lowering th11->th15: bullet.distance
+    // dropped by IR op lowering policy for th15: bullet.distance(0, 192.0f); reason=source_specific_runtime_helper
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(0, [-9998.0f], 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(1);
+    !E
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(1);
+    !*
+    $B = $B - 1;
+    !E
+    $B = $B - 1;
+    !*
+    BossCard2_00Bat_1840:
+    if ($A--) goto BossCard2_00Bat_456 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2_00Bat_456 lines 54..84 condition=$A--
+}
+
+void BossCard2_00Bat2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    // object Animation source_line=91 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    // dynamic bullet config lowering th11->th15: ins_400 -> ins_600
+    ins_600(1);
+    // object Mode source_line=93 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th11->th15: ins_407 -> ins_607
+    ins_607(1, 3);
+    // dynamic bullet config lowering th11->th15: ins_402 -> ins_602
+    ins_602(1, 32, 1);
+    // dynamic bullet config lowering th11->th15: ins_406 -> ins_606
+    ins_606(1, 1, 1);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(1, 0.0f, 0.0f);
+    // object Mode source_line=97 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1.6f semantic=mode_1.6f target=1.6f
+    // dynamic bullet config lowering th11->th15: ins_405 -> ins_605
+    ins_605(1, 1.6f, 1.0f);
+    // object Mode source_line=98 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=2 semantic=set_mist target_th12=2 target_th15=2
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(1, 0, 1, 2, 2, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=99 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1024 semantic=offscreen_time target_th12=1024 target_th15=256
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(1, 1, 0, 256, 120, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=100 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=67108864 semantic=legacy_unknown_67108864 target_th12=67108864 target_th15=67108864
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(1, 3, 0, 67108864, -999999, -999999, 0.0f, 0.0f); reason=source_specific_runtime_helper
+    // semantic op_key lowering th11->th15: unit.diff_i
+    ins_535($A, 10, 20, 20, 20);
+    // semantic op_key lowering th11->th15: unit.diff_i
+    ins_535($B, 90, 90, 50, 50);
+    %E = [-9998.0f];
+    goto BossCard2_00Bat2_1992 @ 0;
+    BossCard2_00Bat2_496:
+    // semantic op_key lowering th11->th15: flow.circle_pos
+    ins_81(%C, %D, [-9998.0f], [-9999.0f] * _f(32));
+    %C = %C + [-9997.0f];
+    %D = %D + ([-9996.0f] - 0.0f);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_abs
+    // original: ins_439(1, %C, %D);
+    unless ([-9959] <= 1) goto BossCard2_00Bat2_952 @ 0;
+    // object Mode source_line=111 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=33554432 semantic=legacy_turn_unknown target_th12=33554432 target_th15=33554432
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(1, 2, 0, 33554432, 60, 4, %C, %D); reason=source_specific_runtime_helper
+    goto BossCard2_00Bat2_1000 @ 0;
+    BossCard2_00Bat2_952:
+    // object Mode source_line=114 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=33554432 semantic=legacy_turn_unknown target_th12=33554432 target_th15=33554432
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(1, 2, 0, 33554432, 40, 4, %C, %D); reason=source_specific_runtime_helper
+    BossCard2_00Bat2_1000:
+    // object Mode source_line=116 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4096 semantic=wait_next target_th12=4096 target_th15=-2147483648
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(1, 4, 0, -2147483648, $B, -999999, -999999.0f, -999999.0f);
+    unless ([-9959] == 0) goto BossCard2_00Bat2_1292 @ 0;
+    // object Mode source_line=118 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=67108864 semantic=legacy_unknown_67108864 target_th12=67108864 target_th15=67108864
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(1, 5, 0, 67108864, -999999, -999999, %E, 1.0f + ([-9999.0f] * 1.0f)); reason=source_specific_runtime_helper
+    goto BossCard2_00Bat2_1432 @ 0;
+    BossCard2_00Bat2_1292:
+    // object Mode source_line=121 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=67108864 semantic=legacy_unknown_67108864 target_th12=67108864 target_th15=67108864
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(1, 5, 0, 67108864, -999999, -999999, %E, 1.0f + ([-9999.0f] * 3.0f)); reason=source_specific_runtime_helper
+    BossCard2_00Bat2_1432:
+    %E = %E + 0.314159f;
+    !E
+    %E = %E + 0.07854f;
+    !*
+    // semantic op_key lowering th11->th15: bullet.distance
+    // dropped by IR op lowering policy for th15: bullet.distance(1, 160.0f); reason=source_specific_runtime_helper
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(1, [-9998.0f], 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(1);
+    // semantic op_key lowering th11->th15: unit.diff_wait
+    ins_548(4, 4, 2, 2);
+    !E
+    $B = $B - 8;
+    !*
+    !N
+    $B = $B - 4;
+    !*
+    !H
+    $B = $B - 2;
+    !*
+    !L
+    $B = $B - 2;
+    !*
+    BossCard2_00Bat2_1992:
+    if ($A--) goto BossCard2_00Bat2_496 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2_00Bat2_496 lines 105..141 condition=$A--
+}
+
+void BossCard2_00Bat3()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    // object Animation source_line=148 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    // dynamic bullet config lowering th11->th15: ins_400 -> ins_600
+    ins_600(2);
+    // object Mode source_line=150 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th11->th15: ins_407 -> ins_607
+    ins_607(2, 3);
+    // dynamic bullet config lowering th11->th15: ins_402 -> ins_602
+    ins_602(2, 18, 4);
+    // dynamic bullet config lowering th11->th15: ins_406 -> ins_606
+    ins_606(2, 1, 1);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(2, 0.0f, 0.0f);
+    // object Mode source_line=154 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1.6f semantic=mode_1.6f target=1.6f
+    // dynamic bullet config lowering th11->th15: ins_405 -> ins_605
+    ins_605(2, 1.6f, 1.0f);
+    // object Mode source_line=155 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=2 semantic=set_mist target_th12=2 target_th15=2
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(2, 0, 1, 2, 2, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=156 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1024 semantic=offscreen_time target_th12=1024 target_th15=256
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(2, 1, 0, 256, 120, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=157 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=67108864 semantic=legacy_unknown_67108864 target_th12=67108864 target_th15=67108864
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(2, 3, 0, 67108864, -999999, -999999, 0.0f, 0.0f); reason=source_specific_runtime_helper
+    // semantic op_key lowering th11->th15: unit.diff_i
+    ins_535($A, 40, 80, 80, 80);
+    // semantic op_key lowering th11->th15: unit.diff_i
+    ins_535($B, 90, 90, 50, 50);
+    %E = [-9998.0f];
+    goto BossCard2_00Bat3_1848 @ 0;
+    BossCard2_00Bat3_496:
+    // semantic op_key lowering th11->th15: flow.circle_pos
+    ins_81(%C, %D, [-9998.0f], [-9999.0f] * _f(32));
+    %C = %C + [-9997.0f];
+    %D = %D + ([-9996.0f] - 0.0f);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_abs
+    // original: ins_439(2, %C, %D);
+    unless ([-9959] <= 1) goto BossCard2_00Bat3_952 @ 0;
+    // object Mode source_line=168 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=33554432 semantic=legacy_turn_unknown target_th12=33554432 target_th15=33554432
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(2, 2, 0, 33554432, 60, 4, %C, %D); reason=source_specific_runtime_helper
+    goto BossCard2_00Bat3_1000 @ 0;
+    BossCard2_00Bat3_952:
+    // object Mode source_line=171 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=33554432 semantic=legacy_turn_unknown target_th12=33554432 target_th15=33554432
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(2, 2, 0, 33554432, 40, 4, %C, %D); reason=source_specific_runtime_helper
+    BossCard2_00Bat3_1000:
+    // object Mode source_line=173 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4096 semantic=wait_next target_th12=4096 target_th15=-2147483648
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(2, 4, 0, -2147483648, $B, -999999, -999999.0f, -999999.0f);
+    unless ([-9959] == 0) goto BossCard2_00Bat3_1292 @ 0;
+    // object Mode source_line=175 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=67108864 semantic=legacy_unknown_67108864 target_th12=67108864 target_th15=67108864
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(2, 5, 0, 67108864, -999999, -999999, %E, 1.0f + ([-9999.0f] * 1.0f)); reason=source_specific_runtime_helper
+    goto BossCard2_00Bat3_1432 @ 0;
+    BossCard2_00Bat3_1292:
+    // object Mode source_line=178 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=67108864 semantic=legacy_unknown_67108864 target_th12=67108864 target_th15=67108864
+    // semantic op_key lowering th11->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(2, 5, 0, 67108864, -999999, -999999, %E, 1.0f + ([-9999.0f] * 3.0f)); reason=source_specific_runtime_helper
+    BossCard2_00Bat3_1432:
+    %E = %E + 0.07854f;
+    !E
+    %E = %E + 0.07854f;
+    !*
+    // semantic op_key lowering th11->th15: bullet.distance
+    // dropped by IR op lowering policy for th15: bullet.distance(2, 160.0f); reason=source_specific_runtime_helper
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(2, [-9998.0f], 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(2);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(1);
+    !E
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(1);
+    !*
+    $B = $B - 1;
+    !E
+    $B = $B - 1;
+    !*
+    BossCard2_00Bat3_1848:
+    if ($A--) goto BossCard2_00Bat3_496 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2_00Bat3_496 lines 162..196 condition=$A--
+}
+
+void BossCard3_00B()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    // semantic op_key lowering th11->th15: unit.set_invuln
+    ins_515(100);
+    // semantic op_key lowering th11->th15: enemy.enm_kill_all
+    ins_525();
+    unless ([-9986] == 0) goto BossCard3_00B_196 @ 0;
+    // semantic op_key lowering th11->th15: bullet.cancel_radius
+    ins_615(640.0f);
+    goto BossCard3_00B_216 @ 0;
+    BossCard3_00B_196:
+    // semantic op_key lowering th11->th15: bullet.clear_radius
+    ins_616(640.0f);
+    BossCard3_00B_216:
+    // semantic op_key lowering th11->th15: boss.spell_end
+    ins_523();
+    // semantic op_key lowering th11->th15: flow.kill_all_async
+    ins_21();
+    // semantic op_key lowering th11->th15: unit.func_set
+    ins_632(0);
+    // semantic op_key lowering th11->th15: unit.laser_cancel
+    ins_545();
+    // semantic op_key lowering th11->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 1500, 3000, "BossCard4_00B");
+    // semantic op_key lowering th11->th15: boss.set_chapter
+    ins_524(45);
+    unless ([-9986] == 0) goto BossCard3_00B_624 @ 0;
+    // semantic op_key lowering th11->th15: unit.drop_clear
+    ins_506();
+    unless ([-9947] == 1) goto BossCard3_00B_548 @ 0;
+    // semantic op_key lowering th11->th15: unit.drop_main
+    ins_510(5);
+    BossCard3_00B_548:
+    @BossCardItem();
+    // semantic op_key lowering th11->th15: unit.drop_area
+    ins_508(48.0f, 48.0f);
+    // semantic op_key lowering th11->th15: unit.drop_items
+    ins_509();
+    BossCard3_00B_624:
+    [-9947] = 1;
+    // semantic op_key lowering th11->th15: unit.play_sound
+    ins_516(15);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(90);
+    // semantic op_key lowering th11->th15: boss.spell
+    ins_537(62, 3000, 500000, "�z�N�u�S���S��s�v");
+    +60:
+    // semantic op_key lowering th11->th15: flow.nop
+    ins_0();
+    @BossCard3_00Bat() async;
+    @BossCard3_00Bat2() async;
+    @BossCard3_00Bat3() async;
+    @BossCard3_00Bat4() async;
+    !HL
+    @BossCard3_00Bat5() async;
+    !*
+    !L
+    @BossCard3_00Bat6() async;
+    !*
+    goto BossCard3_00B_1060 @ 160;
+    BossCard3_00B_1032:
+    +100:
+    // object Movement source_line=244 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(30, 0, 1.0f);
+    BossCard3_00B_1060:
+    if (1) goto BossCard3_00B_1032 @ 60;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard3_00B_1032 lines 242..246 condition=1
+}
+
+void BossCard3_00Bat()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    %A = [-9998.0f];
+    // dynamic bullet config lowering th11->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=255 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th11->th15: ins_407 -> ins_607
+    ins_607(0, 3);
+    // dynamic bullet config lowering th11->th15: ins_402 -> ins_602
+    ins_602(0, 19, 3);
+    // dynamic bullet config lowering th11->th15: ins_406 -> ins_606
+    ins_606(0, 3, 1);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.0f);
+    // object Mode source_line=259 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1.0f semantic=mode_1.0f target=1.0f
+    // dynamic bullet config lowering th11->th15: ins_405 -> ins_605
+    ins_605(0, 1.0f, 1.0f);
+    // object Mode source_line=260 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=2 semantic=set_mist target_th12=2 target_th15=2
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
+    goto BossCard3_00Bat_1212 @ 0;
+    BossCard3_00Bat_304:
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(0, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(0);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(0, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(0);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(0, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(0);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(0, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(0);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(0, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(0);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(0, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(0);
+    %A = %A + 0.314159f;
+    // semantic op_key lowering th11->th15: flow.valid_rad
+    ins_82(%A);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(24);
+    BossCard3_00Bat_1212:
+    if (1) goto BossCard3_00Bat_304 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard3_00Bat_304 lines 262..285 condition=1
+}
+
+void BossCard3_00Bat2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +90:
+    [-9981.0f] = [-9998.0f];
+    // dynamic bullet config lowering th11->th15: ins_400 -> ins_600
+    ins_600(1);
+    // object Mode source_line=294 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2 semantic=mode_2 target=2
+    // dynamic bullet config lowering th11->th15: ins_407 -> ins_607
+    ins_607(1, 2);
+    // dynamic bullet config lowering th11->th15: ins_402 -> ins_602
+    ins_602(1, 18, 3);
+    // semantic op_key lowering th11->th15: bullet.count_by_difficulty
+    ins_625(1, 16, 32, 32, 32, 1, 1, 1, 1);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(1, 0.0f, 0.0f);
+    // object Mode source_line=298 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1.0f semantic=mode_1.0f target=1.0f
+    // dynamic bullet config lowering th11->th15: ins_405 -> ins_605
+    ins_605(1, 1.0f, 1.0f);
+    // object Mode source_line=299 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=2 semantic=set_mist target_th12=2 target_th15=2
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(1, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th11->th15: bullet.distance
+    // dropped by IR op lowering policy for th15: bullet.distance(1, 32.0f); reason=source_specific_runtime_helper
+    goto BossCard3_00Bat2_392 @ 90;
+    BossCard3_00Bat2_352:
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(1);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(60);
+    BossCard3_00Bat2_392:
+    if (1) goto BossCard3_00Bat2_352 @ 90;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard3_00Bat2_352 lines 302..306 condition=1
+}
+
+void BossCard3_00Bat3()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    [-9981.0f] = [-9998.0f];
+    // dynamic bullet config lowering th11->th15: ins_400 -> ins_600
+    ins_600(2);
+    // object Mode source_line=314 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=5 semantic=mode_5 target=5
+    // dynamic bullet config lowering th11->th15: ins_407 -> ins_607
+    ins_607(2, 5);
+    // dynamic bullet config lowering th11->th15: ins_402 -> ins_602
+    ins_602(2, 8, 6);
+    // semantic op_key lowering th11->th15: bullet.count_by_difficulty
+    ins_625(2, 8, 32, 32, 32, 1, 1, 1, 1);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(2, 0.0f, 0.0f);
+    // object Mode source_line=318 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th11->th15: ins_405 -> ins_605
+    ins_605(2, 2.0f, 1.0f);
+    // object Mode source_line=319 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=2 semantic=set_mist target_th12=2 target_th15=2
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(2, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
+    goto BossCard3_00Bat3_368 @ 0;
+    BossCard3_00Bat3_328:
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(2);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(30);
+    BossCard3_00Bat3_368:
+    if (1) goto BossCard3_00Bat3_328 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard3_00Bat3_328 lines 321..325 condition=1
+}
+
+void BossCard3_00Bat4()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    %A = [-9998.0f];
+    // dynamic bullet config lowering th11->th15: ins_400 -> ins_600
+    ins_600(3);
+    // object Mode source_line=334 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th11->th15: ins_407 -> ins_607
+    ins_607(3, 3);
+    // dynamic bullet config lowering th11->th15: ins_402 -> ins_602
+    ins_602(3, 19, 1);
+    // dynamic bullet config lowering th11->th15: ins_406 -> ins_606
+    ins_606(3, 3, 1);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(3, 0.0f, 0.0f);
+    // object Mode source_line=338 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th11->th15: ins_405 -> ins_605
+    ins_605(3, 2.0f, 1.0f);
+    // object Mode source_line=339 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=2 semantic=set_mist target_th12=2 target_th15=2
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(3, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
+    goto BossCard3_00Bat4_1212 @ 0;
+    BossCard3_00Bat4_304:
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(3, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(3, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(3);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(3, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(3, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(3);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(3, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(3, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(3);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(3, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(3, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(3);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(3, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(3, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(3);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(3, [-9998.0f], [-9999.0f] * 16.0f);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(3, %A, 0.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(3);
+    %A = %A + 0.314159f;
+    // semantic op_key lowering th11->th15: flow.valid_rad
+    ins_82(%A);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(24);
+    BossCard3_00Bat4_1212:
+    if (1) goto BossCard3_00Bat4_304 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard3_00Bat4_304 lines 341..364 condition=1
+}
+
+void BossCard3_00Bat5()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +10:
+    [-9981.0f] = [-9998.0f];
+    // dynamic bullet config lowering th11->th15: ins_400 -> ins_600
+    ins_600(4);
+    // object Mode source_line=373 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=5 semantic=mode_5 target=5
+    // dynamic bullet config lowering th11->th15: ins_407 -> ins_607
+    ins_607(4, 5);
+    // dynamic bullet config lowering th11->th15: ins_402 -> ins_602
+    ins_602(4, 4, 2);
+    // dynamic bullet config lowering th11->th15: ins_406 -> ins_606
+    ins_606(4, 32, 1);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(4, 0.0f, 0.0f);
+    // object Mode source_line=377 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th11->th15: ins_405 -> ins_605
+    ins_605(4, 2.0f, 1.0f);
+    // object Mode source_line=378 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=2 semantic=set_mist target_th12=2 target_th15=2
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(4, 0, 1, 2, 0, -999999, -999999.0f, -999999.0f);
+    goto BossCard3_00Bat5_344 @ 10;
+    BossCard3_00Bat5_304:
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(4);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(20);
+    BossCard3_00Bat5_344:
+    if (1) goto BossCard3_00Bat5_304 @ 10;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard3_00Bat5_304 lines 380..384 condition=1
+}
+
+void BossCard3_00Bat6()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +120:
+    [-9981.0f] = [-9998.0f];
+    // dynamic bullet config lowering th11->th15: ins_400 -> ins_600
+    ins_600(5);
+    // object Mode source_line=393 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2 semantic=mode_2 target=2
+    // dynamic bullet config lowering th11->th15: ins_407 -> ins_607
+    ins_607(5, 2);
+    // dynamic bullet config lowering th11->th15: ins_402 -> ins_602
+    ins_602(5, 18, 1);
+    // dynamic bullet config lowering th11->th15: ins_406 -> ins_606
+    ins_606(5, 32, 1);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(5, 0.0f, 0.0f);
+    // object Mode source_line=397 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th11->th15: ins_405 -> ins_605
+    ins_605(5, 2.0f, 1.0f);
+    // object Mode source_line=398 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=2 semantic=set_mist target_th12=2 target_th15=2
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(5, 0, 1, 2, 0, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=399 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=268435456 semantic=highlight target_th12=268435456 target_th15=1048576
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(5, 1, 0, 1048576, 1, -999999, -999999.0f, -999999.0f);
+    goto BossCard3_00Bat6_392 @ 120;
+    BossCard3_00Bat6_352:
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(5);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(60);
+    BossCard3_00Bat6_392:
+    if (1) goto BossCard3_00Bat6_352 @ 120;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard3_00Bat6_352 lines 401..405 condition=1
+}
+
+void BossCard4_00B()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D;
+    // semantic op_key lowering th11->th15: unit.set_invuln
+    ins_515(100);
+    // semantic op_key lowering th11->th15: enemy.enm_kill_all
+    ins_525();
+    unless ([-9986] == 0) goto BossCard4_00B_196 @ 0;
+    // semantic op_key lowering th11->th15: bullet.cancel_radius
+    ins_615(640.0f);
+    goto BossCard4_00B_216 @ 0;
+    BossCard4_00B_196:
+    // semantic op_key lowering th11->th15: bullet.clear_radius
+    ins_616(640.0f);
+    BossCard4_00B_216:
+    // semantic op_key lowering th11->th15: boss.spell_end
+    ins_523();
+    // semantic op_key lowering th11->th15: flow.kill_all_async
+    ins_21();
+    // semantic op_key lowering th11->th15: unit.func_set
+    ins_632(0);
+    // semantic op_key lowering th11->th15: unit.laser_cancel
+    ins_545();
+    // semantic op_key lowering th11->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 4200, "BossDead");
+    // semantic op_key lowering th11->th15: boss.set_chapter
+    ins_524(46);
+    unless ([-9986] == 0) goto BossCard4_00B_620 @ 0;
+    // semantic op_key lowering th11->th15: unit.drop_clear
+    ins_506();
+    unless ([-9947] == 1) goto BossCard4_00B_544 @ 0;
+    // semantic op_key lowering th11->th15: unit.drop_main
+    ins_510(5);
+    BossCard4_00B_544:
+    @BossCardItem();
+    // semantic op_key lowering th11->th15: unit.drop_area
+    ins_508(48.0f, 48.0f);
+    // semantic op_key lowering th11->th15: unit.drop_items
+    ins_509();
+    BossCard4_00B_620:
+    // semantic op_key lowering th11->th15: unit.play_sound
+    ins_516(15);
+    [-9947] = 1;
+    // object Mode source_line=437 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=437 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(90, 4, 0.0f, 128.0f);
+    // semantic op_key lowering th11->th15: movement.move_limit_reset
+    ins_505();
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(90);
+    // semantic op_key lowering th11->th15: boss.spell
+    ins_537(66, 4200, 500000, "�z�N�u�a�X�����v");
+    // object UnitFlag source_line=441 family=unit_flag
+    // UnitFlag lowering th11->th15: unit.flag_set(12) persist_lr_offscreen+persist_tb_offscreen -> 12
+    ins_502(12);
+    // semantic op_key lowering th11->th15: unit.play_sound
+    ins_516(41);
+    // object Animation source_line=443 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    +60:
+    // semantic op_key lowering th11->th15: flow.nop
+    ins_0();
+    // object Animation source_line=446 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // semantic op_key lowering th11->th15: anm.reset
+    // dropped by IR op lowering policy for th15: anm.reset(); reason=source_specific_runtime_helper
+    // object Animation source_line=448 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(0, 53);
+    // object Animation source_line=449 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(2, 53);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(60);
+    @BossCard4_00Bat() async;
+    // semantic op_key lowering th11->th15: unit.diff_f
+    ins_536(%B, 2.0f, 2.0f, 3.0f, 3.6f);
+    goto BossCard4_00B_1340 @ 60;
+    BossCard4_00B_1080:
+    // object Mode source_line=455 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // object Movement source_line=455 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(40, 3, [-9989.0f], %B);
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(40);
+    // object Mode source_line=457 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // object Movement source_line=457 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(40, 3, [-9989.0f], 1.0f);
+    unless (%B < 3.6f) goto BossCard4_00B_1320 @ 60;
+    %B = %B + 0.2f;
+    BossCard4_00B_1320:
+    // semantic op_key lowering th11->th15: flow.wait
+    ins_23(40);
+    BossCard4_00B_1340:
+    if (1) goto BossCard4_00B_1080 @ 60;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard4_00B_1080 lines 454..463 condition=1
+}
+
+void BossCard4_00Bat()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // dynamic bullet config lowering th11->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=471 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=5 semantic=mode_5 target=5
+    // dynamic bullet config lowering th11->th15: ins_407 -> ins_607
+    ins_607(0, 5);
+    // dynamic bullet config lowering th11->th15: ins_402 -> ins_602
+    ins_602(0, 8, 6);
+    // dynamic bullet config lowering th11->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(0, [-9998.0f], 0.09817477f);
+    // object Mode source_line=475 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0.05f semantic=mode_0.05f target=0.05f
+    // dynamic bullet config lowering th11->th15: ins_405 -> ins_605
+    ins_605(0, 0.05f, 2.0f);
+    // object Mode source_line=476 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=2 semantic=set_mist target_th12=2 target_th15=2
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(0, 0, 1, 2, 1, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th11->th15: unit.diff_i
+    ins_535($A, 300, 800, 800, 1300);
+    // object Mode source_line=478 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4096 semantic=wait_next target_th12=4096 target_th15=-2147483648
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(0, 1, 0, -2147483648, $A, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=479 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=8192 semantic=delete target_th12=8192 target_th15=1024
+    // dynamic bullet transform lowering th11->th15: ins_409 -> ins_609
+    ins_609(0, 2, 0, 1024, -999999, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=481 family=movement_tween_mode
+    !HL
+    // Mode IR metadata: movement tween mode raw=0.2f semantic=mode_0.2f target=0.2f
+    !*
+    !HL
+    // dynamic bullet config lowering th11->th15: ins_405 -> ins_605
+    ins_605(0, 0.2f, 0.0f);
+    !*
+    goto BossCard4_00Bat_588 @ 0;
+    BossCard4_00Bat_424:
+    // dynamic bullet config lowering th11->th15: ins_404 -> ins_604
+    ins_604(0, [-9998.0f], 0.0f);
+    // unsupported semantic op_key for th11->th15: bullet.et_offset_rad
+    // original: ins_437(0, [-9998.0f], [-9987.0f] * 64.0f);
+    // dynamic bullet fire lowering th11->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th11->th15: unit.diff_wait
+    ins_548(3, 3, 3, 3);
+    BossCard4_00Bat_588:
+    if (1) goto BossCard4_00Bat_424 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard4_00Bat_424 lines 484..490 condition=1
+}

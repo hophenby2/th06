@@ -1,0 +1,4236 @@
+// source: th062/th10/stage01.decl
+// source game: th10
+// target: th15
+// whole-file lowering is a structured draft; verify target-game scheduling and resources
+anim { "enemy.anm"; "st01enm.anm"; }
+ecli { "default.ecl"; }
+
+void BGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=8 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=blue source_script=45
+    ins_302(2);
+    ins_306(0, 0);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(2);
+    @Girl00(0);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void BGirl00B()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=17 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=blue source_script=45
+    ins_302(2);
+    ins_306(0, 0);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(2);
+    @Girl00B(0);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void BGirl00C()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=28 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=blue source_script=45
+    ins_302(2);
+    ins_306(0, 0);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(2);
+    @Girl00C(0);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void BGirl00D()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=38 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=blue source_script=45
+    ins_302(2);
+    ins_306(0, 0);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(2);
+    @Girl00D(0);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void BGirl00E()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=48 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=blue source_script=45
+    ins_302(2);
+    ins_306(0, 0);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(2);
+    @Girl00E(0);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void Boss()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: boss.set_boss
+    ins_512(0);
+    // object Animation source_line=57 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=58 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, 5);
+    // object UnitFlag source_line=59 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(48.0f, 48.0f);
+    // object Mode source_line=61 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=32.0f semantic=mode_32.0f target=32.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(32.0f, 32.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // semantic op_key lowering th10->th15: boss.life_set
+    ins_511(8200);
+    // object Mode source_line=64 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=64 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 112.0f);
+    +60:
+    // semantic op_key lowering th10->th15: unit.dialog_wait
+    ins_519();
+    // semantic op_key lowering th10->th15: movement.move_limit
+    ins_504(0.0f, 96.0f, 280.0f, 100.0f);
+    // object Animation source_line=68 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=69 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(1, 53);
+    // object Animation source_line=70 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    @Boss1();
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void Boss1()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($A, 90, 90, 40, 40);
+    // semantic op_key lowering th10->th15: boss.timer_reset
+    ins_513();
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 2200, 2700, "BossCard1");
+    // semantic op_key lowering th10->th15: unit.life_marker
+    ins_527(0, 2200.0f, -24448);
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(24);
+    // semantic op_key lowering th10->th15: unit.stars
+    ins_540(1);
+    goto Boss1_428 @ 200;
+    Boss1_224:
+    // object Movement source_line=86 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(40, 4, 6.0f);
+    +40:
+    @Boss1At1() async;
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23($A);
+    // object Movement source_line=90 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(40, 4, 6.0f);
+    +40:
+    @Boss1At2() async;
+    +40:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    +40:
+    @Boss1At3() async;
+    +40:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Boss1_428:
+    if (1) goto Boss1_224 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop Boss1_224 lines 85..100 condition=1
+}
+
+void Boss1At1()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %D = 1.0f;
+    $A = 60;
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=111 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 0);
+    !ENH
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.31415927f);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.31415927f);
+    !*
+    !EN
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    !*
+    !H
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 3, 1);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 5, 1);
+    !*
+    // object Mode source_line=123 family=movement_tween_mode
+    !E
+    // Mode IR metadata: movement tween mode raw=1.1f semantic=mode_1.1f target=1.1f
+    !*
+    !E
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 1.1f, 1.0f);
+    !*
+    // object Mode source_line=125 family=movement_tween_mode
+    !N
+    // Mode IR metadata: movement tween mode raw=1.8f semantic=mode_1.8f target=1.8f
+    !*
+    !N
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 1.8f, 1.0f);
+    !*
+    // object Mode source_line=127 family=movement_tween_mode
+    !HL
+    // Mode IR metadata: movement tween mode raw=2.5f semantic=mode_2.5f target=2.5f
+    !*
+    !HL
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.5f, 1.0f);
+    !*
+    // object Mode source_line=129 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=130 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=131 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=8192 semantic=offscreen_time target_th12=1024 target_th15=256
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 2, 0, 256, 100, -999999, -999999.0f, -999999.0f);
+    %E = [-9998.0f];
+    goto Boss1At1_1152 @ 1;
+    Boss1At1_612:
+    %D = %D + 1.5f;
+    %E = %E + 0.15708f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%E);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 2);
+    // semantic op_key lowering th10->th15: flow.circle_pos
+    ins_81(%B, %C, %E, %D);
+    // object Mode source_line=140 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=%B semantic=mode_%B target=%B
+    // dynamic bullet config lowering th10->th15: ins_403 -> ins_603
+    ins_603(0, %B, %C);
+    +1:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 1);
+    %D = -1.0f * %D;
+    // semantic op_key lowering th10->th15: flow.circle_pos
+    ins_81(%B, %C, %E, %D);
+    %D = -1.0f * %D;
+    // object Mode source_line=147 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=%B semantic=mode_%B target=%B
+    // dynamic bullet config lowering th10->th15: ins_403 -> ins_603
+    ins_603(0, %B, %C);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    Boss1At1_1152:
+    if ($A--) goto Boss1At1_612 @ 0;
+    return;
+    return;
+    // detected loops:
+    // - counter_loop Boss1At1_612 lines 134..150 condition=$A--
+}
+
+void Boss1At2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %D = 1.0f;
+    $A = 60;
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=162 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2 semantic=mode_2 target=2
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 2);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.09817477f);
+    !E
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 16, 1);
+    !*
+    !N
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 1);
+    !*
+    !H
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 2);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 5);
+    !*
+    // object Mode source_line=173 family=movement_tween_mode
+    !ENH
+    // Mode IR metadata: movement tween mode raw=1.8f semantic=mode_1.8f target=1.8f
+    !*
+    !ENH
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 1.8f, 1.0f);
+    !*
+    // object Mode source_line=175 family=movement_tween_mode
+    !L
+    // Mode IR metadata: movement tween mode raw=2.8f semantic=mode_2.8f target=2.8f
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.8f, 1.0f);
+    !*
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 6, 6);
+    // object Mode source_line=178 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=179 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=180 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=32 semantic=tangent_accel target_th12=8 target_th15=8
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 2, 0, 8, 40, -999999, 0.0f, 0.03926991f);
+    // object Mode source_line=181 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    return;
+}
+
+void Boss1At3()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %D = 1.0f;
+    $A = 60;
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=193 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2 semantic=mode_2 target=2
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 2);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.09817477f);
+    !E
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 16, 1);
+    !*
+    !N
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 1);
+    !*
+    !H
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 2);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 5);
+    !*
+    // object Mode source_line=204 family=movement_tween_mode
+    !ENH
+    // Mode IR metadata: movement tween mode raw=1.8f semantic=mode_1.8f target=1.8f
+    !*
+    !ENH
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 1.8f, 1.0f);
+    !*
+    // object Mode source_line=206 family=movement_tween_mode
+    !L
+    // Mode IR metadata: movement tween mode raw=2.8f semantic=mode_2.8f target=2.8f
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.8f, 1.0f);
+    !*
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 6, 6);
+    // object Mode source_line=209 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=210 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=211 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=32 semantic=tangent_accel target_th12=8 target_th15=8
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 2, 0, 8, 40, -999999, 0.0f, -0.03926991f);
+    // object Mode source_line=212 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    return;
+}
+
+void Boss2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // semantic op_key lowering th10->th15: boss.life_set
+    ins_511(8200);
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 2200, 2700, "BossCard2");
+    // semantic op_key lowering th10->th15: unit.life_marker
+    ins_527(0, 2200.0f, -24448);
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(25);
+    // semantic op_key lowering th10->th15: unit.stars
+    ins_540(0);
+    unless ([-9986] == 0) goto Boss2_292 @ 0;
+    // semantic op_key lowering th10->th15: bullet.cancel_radius
+    ins_615(640.0f);
+    goto Boss2_312 @ 0;
+    Boss2_292:
+    // semantic op_key lowering th10->th15: bullet.clear_radius
+    ins_616(640.0f);
+    Boss2_312:
+    // semantic op_key lowering th10->th15: boss.spell_end
+    ins_523();
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
+    unless ([-9986] == 0) goto Boss2_548 @ 0;
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(1, 5);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(2, 5);
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(48.0f, 48.0f);
+    // semantic op_key lowering th10->th15: unit.drop_items
+    ins_509();
+    Boss2_548:
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(15);
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    goto Boss2_808 @ 350;
+    Boss2_608:
+    +40:
+    @Boss2At2() async;
+    +40:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    +40:
+    @Boss2At3() async;
+    +40:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=253 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(40, 4, 6.0f);
+    +40:
+    @Boss2At1() async;
+    +90:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Movement source_line=258 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(40, 4, 6.0f);
+    Boss2_808:
+    if (1) goto Boss2_608 @ 60;
+    return;
+    // detected loops:
+    // - backedge_loop Boss2_608 lines 244..260 condition=1
+}
+
+void Boss2At1()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    %D = 1.0f;
+    $A = 110;
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=271 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2 semantic=mode_2 target=2
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 2);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 1.0471976f);
+    !ENH
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 3, 1);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 6, 1);
+    !*
+    // object Mode source_line=278 family=movement_tween_mode
+    !ENH
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    !*
+    !ENH
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.0f, 1.0f);
+    !*
+    // object Mode source_line=280 family=movement_tween_mode
+    !L
+    // Mode IR metadata: movement tween mode raw=4.0f semantic=mode_4.0f target=4.0f
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 4.0f, 1.0f);
+    !*
+    // object Mode source_line=282 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=283 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=284 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=8192 semantic=offscreen_time target_th12=1024 target_th15=256
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 2, 0, 256, 100, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 2);
+    // object Mode source_line=286 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // semantic op_key lowering th10->th15: bullet.copy
+    ins_614(1, 0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(1, 8, 1);
+    // object Mode source_line=288 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(1, 4);
+    %E = [-9998.0f];
+    %F = %E;
+    goto Boss2At1_1100 @ 1;
+    Boss2At1_672:
+    %D = %D + 1.0f;
+    %E = %E - 0.15708f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%E);
+    // semantic op_key lowering th10->th15: flow.circle_pos
+    ins_81(%B, %C, %E, %D);
+    // object Mode source_line=297 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=%B semantic=mode_%B target=%B
+    // dynamic bullet config lowering th10->th15: ins_403 -> ins_603
+    ins_603(0, %B, %C);
+    +1:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    %F = %F + 0.15708f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%E);
+    // semantic op_key lowering th10->th15: flow.circle_pos
+    ins_81(%B, %C, %F, %D);
+    // object Mode source_line=303 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=%B semantic=mode_%B target=%B
+    // dynamic bullet config lowering th10->th15: ins_403 -> ins_603
+    ins_603(1, %B, %C);
+    !NHL
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    !*
+    Boss2At1_1100:
+    if ($A--) goto Boss2At1_672 @ 0;
+    return;
+    return;
+    // detected loops:
+    // - counter_loop Boss2At1_672 lines 292..308 condition=$A--
+}
+
+void Boss2At2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %D = 1.0f;
+    $A = 60;
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=320 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2 semantic=mode_2 target=2
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 2);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.19634955f);
+    !E
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 16, 1);
+    !*
+    !N
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 1);
+    !*
+    !H
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 4);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 9);
+    !*
+    // object Mode source_line=331 family=movement_tween_mode
+    !EN
+    // Mode IR metadata: movement tween mode raw=1.8f semantic=mode_1.8f target=1.8f
+    !*
+    !EN
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 1.8f, 1.0f);
+    !*
+    // object Mode source_line=333 family=movement_tween_mode
+    !H
+    // Mode IR metadata: movement tween mode raw=2.6f semantic=mode_2.6f target=2.6f
+    !*
+    !H
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.6f, 1.0f);
+    !*
+    // object Mode source_line=335 family=movement_tween_mode
+    !L
+    // Mode IR metadata: movement tween mode raw=3.2f semantic=mode_3.2f target=3.2f
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 3.2f, 1.0f);
+    !*
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 6, 6);
+    // object Mode source_line=338 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=339 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=340 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=8192 semantic=offscreen_time target_th12=1024 target_th15=256
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 2, 0, 256, 200, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=341 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=32 semantic=tangent_accel target_th12=8 target_th15=8
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 3, 0, 8, 50, -999999, 0.0f, -0.05235988f);
+    // object Mode source_line=342 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    return;
+}
+
+void Boss2At3()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E;
+    %D = 1.0f;
+    $A = 60;
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=354 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2 semantic=mode_2 target=2
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 2);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.19634955f);
+    !E
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 16, 1);
+    !*
+    !N
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 1);
+    !*
+    !H
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 4);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 32, 5);
+    !*
+    // object Mode source_line=365 family=movement_tween_mode
+    !EN
+    // Mode IR metadata: movement tween mode raw=1.8f semantic=mode_1.8f target=1.8f
+    !*
+    !EN
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 1.8f, 1.0f);
+    !*
+    // object Mode source_line=367 family=movement_tween_mode
+    !H
+    // Mode IR metadata: movement tween mode raw=2.6f semantic=mode_2.6f target=2.6f
+    !*
+    !H
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.6f, 1.0f);
+    !*
+    // object Mode source_line=369 family=movement_tween_mode
+    !L
+    // Mode IR metadata: movement tween mode raw=3.2f semantic=mode_3.2f target=3.2f
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 3.2f, 1.0f);
+    !*
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 6, 6);
+    // object Mode source_line=372 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=373 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=374 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=8192 semantic=offscreen_time target_th12=1024 target_th15=256
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 2, 0, 256, 200, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=375 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=32 semantic=tangent_accel target_th12=8 target_th15=8
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 3, 0, 8, 50, -999999, 0.0f, 0.05235988f);
+    // object Mode source_line=376 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    return;
+}
+
+void BossCard1()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F, G;
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 2700, "Boss2");
+    !EN
+    // semantic op_key lowering th10->th15: boss.spell
+    ins_537(2, 2700, 500000, "�H���u�I�[�^���X�J�C�v");
+    !*
+    !HL
+    // semantic op_key lowering th10->th15: boss.spell3
+    ins_539(4, 2700, 500000, "�H���u�H�̋�Ɖ����̐S�v");
+    !*
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(43);
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
+    // object Mode source_line=392 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=392 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 128.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(7);
+    // object Enemy source_line=395 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    +60:
+    // object Animation source_line=397 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    +60:
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    +30:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    %A = [-9998.0f];
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($G, 28, 38, 38, 38);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=405 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 3);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 6);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, $G, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // object Mode source_line=409 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.0f, 2.0f);
+    // object Mode source_line=410 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=411 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(0, 1, 0, 16, 60, 1, 0, 0, 1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=412 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 2, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // object Mode source_line=413 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(0, 3, 0, 16, 60, 1, 0, 0, -1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=414 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 4, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    // object Mode source_line=415 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(0, 5, 0, 16, 60, 1, 0, 0, 1.5707964f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=416 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 6, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(1);
+    // object Mode source_line=418 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(1, 3);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(1, 8, 6);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(1, $G, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(1, %A, 0.0f);
+    // object Mode source_line=422 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(1, 2.0f, 2.0f);
+    // object Mode source_line=423 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(1, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=424 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(1, 1, 0, 16, 60, 1, 0, 0, -1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=425 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(1, 2, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    // object Mode source_line=426 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(1, 3, 0, 16, 60, 1, 0, 0, 1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=427 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(1, 4, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // object Mode source_line=428 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(1, 5, 0, 16, 60, 1, 0, 0, -1.0471976f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=429 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(1, 6, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(2);
+    // object Mode source_line=431 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(2, 3);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(2, 8, 6);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(2, $G, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(2, %A, 0.0f);
+    // object Mode source_line=435 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(2, 2.0f, 2.0f);
+    // object Mode source_line=436 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(2, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=437 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(2, 1, 0, 16, 60, 1, 0, 0, 1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=438 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(2, 2, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // object Mode source_line=439 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(2, 3, 0, 16, 60, 1, 0, 0, -1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=440 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(2, 4, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    // object Mode source_line=441 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(2, 5, 0, 16, 60, 1, 0, 0, 0.8975979f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=442 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(2, 6, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(3);
+    // object Mode source_line=444 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(3, 3);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(3, 8, 6);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(3, $G, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(3, %A, 0.0f);
+    // object Mode source_line=448 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(3, 2.0f, 2.0f);
+    // object Mode source_line=449 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(3, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=450 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(3, 1, 0, 16, 60, 1, 0, 0, -1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=451 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(3, 2, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    // object Mode source_line=452 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(3, 3, 0, 16, 60, 1, 0, 0, 1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=453 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(3, 4, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // object Mode source_line=454 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(3, 5, 0, 16, 60, 1, 0, 0, -1.2566371f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=455 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(3, 6, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(4);
+    // object Mode source_line=457 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(4, 3);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(4, 8, 6);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(4, $G, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(4, %A, 0.0f);
+    // object Mode source_line=461 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(4, 2.0f, 2.0f);
+    // object Mode source_line=462 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(4, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=463 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(4, 1, 0, 16, 60, 1, 0, 0, -1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=464 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(4, 2, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // object Mode source_line=465 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(4, 3, 0, 16, 60, 1, 0, 0, 1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=466 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(4, 4, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    // object Mode source_line=467 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(4, 5, 0, 16, 60, 1, 0, 0, -1.5707964f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=468 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(4, 6, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(5);
+    // object Mode source_line=470 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(5, 3);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(5, 8, 6);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(5, $G, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(5, %A, 0.0f);
+    // object Mode source_line=474 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(5, 2.0f, 2.0f);
+    // object Mode source_line=475 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(5, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=476 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(5, 1, 0, 16, 60, 1, 0, 0, 1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=477 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(5, 2, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    // object Mode source_line=478 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(5, 3, 0, 16, 60, 1, 0, 0, -1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=479 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(5, 4, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // object Mode source_line=480 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(5, 5, 0, 16, 60, 1, 0, 0, 1.0471976f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=481 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(5, 6, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(6);
+    // object Mode source_line=483 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(6, 3);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(6, 8, 6);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(6, $G, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(6, %A, 0.0f);
+    // object Mode source_line=487 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(6, 2.0f, 2.0f);
+    // object Mode source_line=488 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(6, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=489 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(6, 1, 0, 16, 60, 1, 0, 0, -1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=490 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(6, 2, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // object Mode source_line=491 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(6, 3, 0, 16, 60, 1, 0, 0, 1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=492 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(6, 4, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    // object Mode source_line=493 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(6, 5, 0, 16, 60, 1, 0, 0, -0.8975979f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=494 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(6, 6, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(7);
+    // object Mode source_line=496 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(7, 3);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(7, 8, 6);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(7, $G, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(7, %A, 0.0f);
+    // object Mode source_line=500 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(7, 2.0f, 2.0f);
+    // object Mode source_line=501 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(7, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=502 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(7, 1, 0, 16, 60, 1, 0, 0, 1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=503 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(7, 2, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    // object Mode source_line=504 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(7, 3, 0, 16, 60, 1, 0, 0, -1.5707964f, -999999.0f, -999999.0f, -999999.0f);
+    // object Mode source_line=505 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(7, 4, 0, 512, 8, 2, -999999.0f, -999999.0f);
+    // object Mode source_line=506 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(7, 5, 0, 16, 60, 1, 0, 0, 1.2566371f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=507 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16384 semantic=shape_change target_th12=2048 target_th15=512
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(7, 6, 0, 512, 8, 6, -999999.0f, -999999.0f);
+    goto BossCard1_7224 @ 510;
+    BossCard1_4448:
+    %A = [-9998.0f];
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(1, %A, 0.0f);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(2, %A, 0.0f);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(3, %A, 0.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    !NHL
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(2);
+    !*
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(3);
+    unless ([-9959] >= 2) goto BossCard1_5788 @ 330;
+    %B = 1.2f;
+    $F = 2;
+    %A = 1.570796f;
+    %C = -1.047198f;
+    %D = 0.897598f;
+    %E = -1.256637f;
+    goto BossCard1_5372 @ 150;
+    BossCard1_5024:
+    %B = %B + 0.2f;
+    // object Mode source_line=531 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(0, 5, 0, 16, 60, 1, 0, 0, %A, %B, -999999.0f, -999999.0f);
+    // object Mode source_line=532 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(1, 5, 0, 16, 60, 1, 0, 0, %C, %B, -999999.0f, -999999.0f);
+    // object Mode source_line=533 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(2, 5, 0, 16, 60, 1, 0, 0, %D, %B, -999999.0f, -999999.0f);
+    // object Mode source_line=534 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(3, 5, 0, 16, 60, 1, 0, 0, %E, %B, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(2);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(3);
+    BossCard1_5372:
+    if ($F--) goto BossCard1_5024 @ 150;
+    // object Mode source_line=541 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(0, 5, 0, 16, 60, 1, 0, 0, 1.5707964f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=542 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(1, 5, 0, 16, 60, 1, 0, 0, -1.0471976f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=543 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(2, 5, 0, 16, 60, 1, 0, 0, 0.8975979f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=544 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(3, 5, 0, 16, 60, 1, 0, 0, -1.2566371f, 1.2f, -999999.0f, -999999.0f);
+    +60:
+    // object Movement source_line=546 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(60, 4, 2.0f);
+    @BossCard1_at() async;
+    +60:
+    // object Movement source_line=549 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(60, 4, 2.0f);
+    @BossCard1_at() async;
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    @BossCard1_at() async;
+    BossCard1_5788:
+    // object Movement source_line=556 family=th10
+    !EN
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(60, 4, 2.0f);
+    !*
+    !EN
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(120);
+    !*
+    %A = [-9998.0f];
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(4, %A, 0.0f);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(5, %A, 0.0f);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(6, %A, 0.0f);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(7, %A, 0.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(4);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(5);
+    !NHL
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(6);
+    !*
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(7);
+    unless ([-9959] >= 2) goto BossCard1_7176 @ 510;
+    %B = 1.2f;
+    $F = 2;
+    %A = 1.570796f;
+    %C = -1.047198f;
+    %D = 0.897598f;
+    %E = -1.256637f;
+    goto BossCard1_6760 @ 330;
+    BossCard1_6412:
+    %B = %B + 0.2f;
+    // object Mode source_line=580 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(4, 5, 0, 16, 60, 1, 0, 0, %A, %B, -999999.0f, -999999.0f);
+    // object Mode source_line=581 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(5, 5, 0, 16, 60, 1, 0, 0, %C, %B, -999999.0f, -999999.0f);
+    // object Mode source_line=582 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(6, 5, 0, 16, 60, 1, 0, 0, %D, %B, -999999.0f, -999999.0f);
+    // object Mode source_line=583 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(7, 5, 0, 16, 60, 1, 0, 0, %E, %B, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(2);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(3);
+    BossCard1_6760:
+    if ($F--) goto BossCard1_6412 @ 330;
+    // object Mode source_line=590 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(4, 5, 0, 16, 60, 1, 0, 0, -1.5707964f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=591 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(5, 5, 0, 16, 60, 1, 0, 0, 1.0471976f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=592 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(6, 5, 0, 16, 60, 1, 0, 0, -0.8975979f, 1.2f, -999999.0f, -999999.0f);
+    // object Mode source_line=593 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=64 semantic=pause_then_relative_velocity target_th12=16 target_th15=16
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_610
+    ins_610(7, 5, 0, 16, 60, 1, 0, 0, 1.2566371f, 1.2f, -999999.0f, -999999.0f);
+    +60:
+    // object Movement source_line=595 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(60, 4, 2.0f);
+    @BossCard1_at() async;
+    +60:
+    // object Movement source_line=598 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(60, 4, 2.0f);
+    @BossCard1_at() async;
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    @BossCard1_at() async;
+    BossCard1_7176:
+    // object Movement source_line=605 family=th10
+    !EN
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(60, 4, 2.0f);
+    !*
+    !EN
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(120);
+    !*
+    BossCard1_7224:
+    if (1) goto BossCard1_4448 @ 150;
+    return;
+    // detected loops:
+    // - counter_loop BossCard1_5024 lines 529..540 condition=$F--
+    // - counter_loop BossCard1_6412 lines 578..589 condition=$F--
+    // - backedge_loop BossCard1_4448 lines 509..609 condition=1
+}
+
+void BossCard1_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($A, 1, 1, 1, 3);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(4);
+    // object Mode source_line=618 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2 semantic=mode_2 target=2
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(4, 2);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(4, 18, 6);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(4, 10, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(4, 0.0f, 0.0f);
+    // object Mode source_line=622 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3.0f semantic=mode_3.0f target=3.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(4, 3.0f, 2.0f);
+    // object Mode source_line=623 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(4, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    goto BossCard1_at_336 @ 10;
+    BossCard1_at_300:
+    !HL
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(4);
+    !*
+    !HL
+    +10:
+    !*
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCard1_at_336:
+    if ($A--) goto BossCard1_at_300 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard1_at_300 lines 625..632 condition=$A--
+}
+
+void BossCard2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 2700, "BossDead");
+    !EN
+    // semantic op_key lowering th10->th15: boss.spell
+    ins_537(6, 2700, 500000, "�L���u�I���g�V�n�[�x�X�^�[�v");
+    !*
+    !HL
+    // semantic op_key lowering th10->th15: boss.spell3
+    ins_539(8, 2700, 500000, "�L��u�����_�̖񑩁v");
+    !*
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
+    // object Mode source_line=646 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=646 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 128.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(7);
+    unless ([-9986] == 0) goto BossCard2_444 @ 0;
+    // object Enemy source_line=650 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    goto BossCard2_500 @ 0;
+    BossCard2_444:
+    // object Enemy source_line=653 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak_ni", 0.0f, 0.0f, 9999, 0, 0);
+    BossCard2_500:
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(44);
+    +60:
+    // object Animation source_line=657 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    +60:
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    +30:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    goto BossCard2_836 @ 250;
+    BossCard2_604:
+    @BossCard2At1() async;
+    +60:
+    @BossCard2At2() async;
+    !EN
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(140);
+    !*
+    !H
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(90);
+    !*
+    !L
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(40);
+    !*
+    !L
+    @BossCard2At1b() async;
+    !*
+    !L
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(40);
+    !*
+    // object Movement source_line=676 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(40, 4, 3.0f);
+    +40:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    BossCard2_836:
+    if (1) goto BossCard2_604 @ 150;
+    return;
+    // detected loops:
+    // - backedge_loop BossCard2_604 lines 663..680 condition=1
+}
+
+void BossCard2At1()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    %B = [-9998.0f];
+    // semantic op_key lowering th10->th15: unit.diff_f
+    ins_536(%F, 1.4f, 1.4f, 2.0f, 2.0f);
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($A, 8, 32, 32, 64);
+    %E = 6.2831855f / _f($A);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(16);
+    goto BossCard2At1_592 @ 0;
+    BossCard2At1_268:
+    // semantic op_key lowering th10->th15: flow.circle_pos
+    ins_81(%C, %D, [-9998.0f], [-9987.0f] * _f(64));
+    // object Mode source_line=695 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=%C semantic=mode_%C target=%C
+    // dynamic bullet config lowering th10->th15: ins_403 -> ins_603
+    ins_603(0, %C, %D);
+    !EN
+    // semantic op_key lowering th10->th15: laser.on_aimed
+    // legacy laserOnA lowering th10->th15: approximated as target straight laser; reason=TH10/11 laserOnA approximated as target straight laser with same angle/length/width/timing
+    ins_700(3, 0.0f, 0.0f, 0.0f, 14.0f);
+    ins_701(3, 0, 0, 180, 0, 0);
+    ins_708(3, %B);
+    ins_702(3);
+    // original laser style=13; source args: 3, 13, %B, %F, 0.0f, 180.0f, 0, 14.0f
+    !*
+    !HL
+    // semantic op_key lowering th10->th15: laser.straight_on
+    ins_703(0, 3);
+    !*
+    %B = %B + %E;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%B);
+    BossCard2At1_592:
+    if ($A--) goto BossCard2At1_268 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2At1_268 lines 693..704 condition=$A--
+}
+
+void BossCard2At1b()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    %B = [-9998.0f];
+    // semantic op_key lowering th10->th15: unit.diff_f
+    ins_536(%F, 1.4f, 1.4f, 2.0f, 2.5f);
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($A, 16, 32, 32, 48);
+    %E = 6.2831855f / _f($A);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(16);
+    goto BossCard2At1b_440 @ 0;
+    BossCard2At1b_268:
+    // object Mode source_line=718 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0.0f semantic=mode_0.0f target=0.0f
+    // dynamic bullet config lowering th10->th15: ins_403 -> ins_603
+    ins_603(0, 0.0f, 0.0f);
+    // semantic op_key lowering th10->th15: laser.on_aimed
+    // legacy laserOnA lowering th10->th15: approximated as target straight laser; reason=TH10/11 laserOnA approximated as target straight laser with same angle/length/width/timing
+    ins_700(3, 0.0f, 0.0f, 0.0f, 14.0f);
+    ins_701(3, 0, 0, 180, 0, 0);
+    ins_708(3, %B);
+    ins_702(3);
+    // original laser style=2; source args: 3, 2, %B, %F, 0.0f, 180.0f, 0, 14.0f
+    %B = %B + %E;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%B);
+    BossCard2At1b_440:
+    if ($A--) goto BossCard2At1b_268 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2At1b_268 lines 717..723 condition=$A--
+}
+
+void BossCard2At2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D, E, F;
+    %D = 1.0f;
+    $A = 110;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($A, 60, 110, 110, 110);
+    // semantic op_key lowering th10->th15: anm.selected_play
+    ins_313(0);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=735 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 3);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 1.0471976f);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    // object Mode source_line=738 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=739 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=740 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=8192 semantic=offscreen_time target_th12=1024 target_th15=256
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 2, 0, 256, 100, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 2);
+    // object Mode source_line=742 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // semantic op_key lowering th10->th15: bullet.copy
+    ins_614(1, 0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(1, 8, 1);
+    // object Mode source_line=744 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(1, 4);
+    %E = [-9998.0f];
+    %F = %E;
+    goto BossCard2At2_1348 @ 1;
+    BossCard2At2_624:
+    %D = %D + 1.0f;
+    %E = %E - 0.15708f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%E);
+    // semantic op_key lowering th10->th15: flow.circle_pos
+    ins_81(%B, %C, %E, %D);
+    // object Mode source_line=753 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=([-9999.0f] * 0.7f) + 1.0f semantic=mode_([-9999.0f] * 0.7f) + 1.0f target=([-9999.0f] * 0.7f) + 1.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, ([-9999.0f] * 0.7f) + 1.0f, 1.0f);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, [-9998.0f], 1.0471976f);
+    // object Mode source_line=755 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=%B semantic=mode_%B target=%B
+    // dynamic bullet config lowering th10->th15: ins_403 -> ins_603
+    ins_603(0, %B, %C);
+    +1:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    %F = %F + 0.15708f;
+    // semantic op_key lowering th10->th15: flow.valid_rad
+    ins_82(%E);
+    // semantic op_key lowering th10->th15: flow.circle_pos
+    ins_81(%B, %C, %F, %D);
+    // object Mode source_line=761 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=([-9999.0f] * 0.7f) + 1.0f semantic=mode_([-9999.0f] * 0.7f) + 1.0f target=([-9999.0f] * 0.7f) + 1.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(1, ([-9999.0f] * 0.7f) + 1.0f, 1.0f);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(1, [-9998.0f], 1.0471976f);
+    // object Mode source_line=763 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=%B semantic=mode_%B target=%B
+    // dynamic bullet config lowering th10->th15: ins_403 -> ins_603
+    ins_603(1, %B, %C);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(1);
+    BossCard2At2_1348:
+    if ($A--) goto BossCard2At2_624 @ 0;
+    return;
+    return;
+    // detected loops:
+    // - counter_loop BossCard2At2_624 lines 748..766 condition=$A--
+}
+
+void BossDead()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object UnitFlag source_line=774 family=unit_flag
+    // UnitFlag lowering th10->th15: unit.flag_set(68) persist_lr_offscreen+no_global_clear -> 132
+    ins_502(132);
+    // object Animation source_line=775 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(18);
+    // object Animation source_line=777 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    // object Movement source_line=778 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404([-9998.0f], 0.4f);
+    unless ([-9986] == 0) goto BossDead_308 @ 0;
+    // object Enemy source_line=780 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak2", 0.0f, 0.0f, 9999, 0, 0);
+    goto BossDead_364 @ 0;
+    BossDead_308:
+    // object Enemy source_line=783 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak2_ni", 0.0f, 0.0f, 9999, 0, 0);
+    BossDead_364:
+    +60:
+    // semantic op_key lowering th10->th15: bullet.clear_all
+    ins_613();
+    // semantic op_key lowering th10->th15: boss.spell_end
+    ins_523();
+    // semantic op_key lowering th10->th15: unit.drop_main
+    ins_510(0);
+    // semantic op_key lowering th10->th15: unit.set_screen_shake
+    ins_517(30, 12, 0);
+    // object Animation source_line=790 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    // object Animation source_line=791 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(18);
+    // semantic op_key lowering th10->th15: boss.set_boss
+    ins_512(-1);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void Ecl_BGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=802 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=blue source_script=45
+    ins_302(2);
+    ins_306(0, 0);
+    ins_510(2);
+    @Ecl_Girl00(0);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void Ecl_GGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=811 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=green source_script=47
+    ins_302(2);
+    ins_306(0, 35);
+    ins_303(1, 93);
+    ins_510(3);
+    @Ecl_Girl00(35);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void Ecl_Girl00(var A)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=818 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=819 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, $A);
+    // object UnitFlag source_line=820 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // object Mode source_line=822 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=16.0f semantic=mode_16.0f target=16.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // object Movement source_line=823 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404([-9989.0f], 7.0f);
+    // object Mode source_line=824 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=824 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 4, [-9989.0f], 0.0f);
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    !HL
+    @Ecl_Girl00_at() async;
+    !*
+    !HL
+    +200:
+    !*
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    +20:
+    // object Movement source_line=833 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404([-9989.0f] + 3.1415927f, 0.0f);
+    // object Mode source_line=834 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=7 semantic=legacy_exit_accel target=0
+    // object Movement source_line=834 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(-1, 7, 0.0f, 0.03f);
+    goto Ecl_Girl00_424 @ 340;
+    Ecl_Girl00_408:
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Ecl_Girl00_424:
+    if (1) goto Ecl_Girl00_408 @ 280;
+    return;
+    // detected loops:
+    // - backedge_loop Ecl_Girl00_408 lines 836..840 condition=1
+}
+
+void Ecl_Girl00_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=847 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 6);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.09817477f);
+    // object Mode source_line=851 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.5f semantic=mode_2.5f target=2.5f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.5f, 0.0f);
+    !L
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 3, 1);
+    !*
+    // object Mode source_line=854 family=movement_tween_mode
+    !L
+    // Mode IR metadata: movement tween mode raw=4.5f semantic=mode_4.5f target=4.5f
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 4.5f, 1.0f);
+    !*
+    // object Mode source_line=856 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=857 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    goto Ecl_Girl00_at_428 @ 0;
+    Ecl_Girl00_at_368:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    !H
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(45);
+    !*
+    !L
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23(10);
+    !*
+    Ecl_Girl00_at_428:
+    if (1) goto Ecl_Girl00_at_368 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop Ecl_Girl00_at_368 lines 859..867 condition=1
+}
+
+void Ecl_GirlInit()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=874 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=875 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_sprite -> ins_303
+    ins_302(2);
+    ins_303(0, $A);
+    // object UnitFlag source_line=876 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // object Mode source_line=878 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=16.0f semantic=mode_16.0f target=16.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    return;
+    return;
+}
+
+void Ecl_RGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=887 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
+    ins_302(2);
+    ins_306(0, 5);
+    ins_510(1);
+    @Ecl_Girl00(5);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void Ecl_RGirl01()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=897 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
+    ins_302(2);
+    ins_306(0, 5);
+    ins_510(1);
+    // object Animation source_line=896 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, 5);
+    // object UnitFlag source_line=898 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // object Mode source_line=900 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=16.0f semantic=mode_16.0f target=16.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // object Movement source_line=901 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404([-9989.0f], 7.0f);
+    // object Mode source_line=902 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=902 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 4, [-9989.0f], 0.0f);
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    !HL
+    @Ecl_Girl00_at() async;
+    !*
+    !HL
+    +20:
+    !*
+    // object Movement source_line=909 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404([-9989.0f] + 3.1415927f, 0.0f);
+    // object Mode source_line=910 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=7 semantic=legacy_exit_accel target=0
+    // object Movement source_line=910 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(-1, 7, 0.0f, 0.03f);
+    goto Ecl_RGirl01_432 @ 140;
+    Ecl_RGirl01_416:
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Ecl_RGirl01_432:
+    if (1) goto Ecl_RGirl01_416 @ 80;
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+    // detected loops:
+    // - backedge_loop Ecl_RGirl01_416 lines 912..916 condition=1
+}
+
+void Ecl_YGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=924 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=yellow source_script=48
+    ins_302(2);
+    ins_306(0, 40);
+    ins_303(1, 93);
+    ins_510(4);
+    @Ecl_Girl00(40);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void GGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=933 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=green source_script=47
+    ins_302(2);
+    ins_306(0, 35);
+    ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(3);
+    @Girl00(35);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void GGirl00B()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=942 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=green source_script=47
+    ins_302(2);
+    ins_306(0, 35);
+    ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(3);
+    @Girl00B(35);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void GGirl00C()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=953 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=green source_script=47
+    ins_302(2);
+    ins_306(0, 35);
+    ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(3);
+    @Girl00C(35);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void GGirl00D()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=963 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=green source_script=47
+    ins_302(2);
+    ins_306(0, 35);
+    ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(3);
+    @Girl00D(35);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void GGirl00E()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=973 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=green source_script=47
+    ins_302(2);
+    ins_306(0, 35);
+    ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(3);
+    @Girl00E(35);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void Girl00(var A)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=980 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=981 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, $A);
+    // object UnitFlag source_line=982 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // object Mode source_line=984 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=16.0f semantic=mode_16.0f target=16.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    @RGirl00_at() async;
+    // object Movement source_line=986 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 2.7f);
+    +60:
+    // object Mode source_line=988 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // object Movement source_line=988 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 0, 0.0f, -999999.0f);
+    +6000:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    return;
+}
+
+void Girl00B(var A)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=996 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=997 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, $A);
+    // object UnitFlag source_line=998 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // object Mode source_line=1000 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=16.0f semantic=mode_16.0f target=16.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // object Movement source_line=1001 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 2.7f);
+    !HL
+    @Girl00B_at() async;
+    !*
+    !HL
+    +60:
+    !*
+    // object Mode source_line=1006 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // object Movement source_line=1006 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 0, 0.0f, -999999.0f);
+    +6000:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    return;
+}
+
+void Girl00B_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($B, 30, 30, 10, 8);
+    // semantic op_key lowering th10->th15: unit.diff_f
+    ins_536(%C, 1.0f, 1.8f, 2.5f, 3.0f);
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($A, 2, 2, 10, 15);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 6, 6);
+    // object Mode source_line=1020 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 0);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.19634955f);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    // object Mode source_line=1023 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=%C semantic=mode_%C target=%C
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, %C, 1.0f);
+    // object Mode source_line=1024 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=1025 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23([-10000] % 10);
+    goto Girl00B_at_536 @ 0;
+    Girl00B_at_496:
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23($B);
+    !NHL
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    !*
+    Girl00B_at_536:
+    if ($A--) goto Girl00B_at_496 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Girl00B_at_496 lines 1028..1034 condition=$A--
+}
+
+void Girl00C(var A)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var B;
+    // object Animation source_line=1041 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=1042 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, $A);
+    // object UnitFlag source_line=1043 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // object Mode source_line=1045 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=16.0f semantic=mode_16.0f target=16.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // object Movement source_line=1046 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 7.0f);
+    // object Mode source_line=1047 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=1047 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 4, -999999.0f, 0.0f);
+    +60:
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 4, 6);
+    // object Mode source_line=1051 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 0);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.19634955f);
+    !E
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    !*
+    !N
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    !*
+    !H
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 3, 1);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 9, 1);
+    !*
+    // object Mode source_line=1062 family=movement_tween_mode
+    !E
+    // Mode IR metadata: movement tween mode raw=1.0f semantic=mode_1.0f target=1.0f
+    !*
+    !E
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 1.0f, 1.0f);
+    !*
+    // object Mode source_line=1064 family=movement_tween_mode
+    !N
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    !*
+    !N
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.0f, 1.5f);
+    !*
+    // object Mode source_line=1066 family=movement_tween_mode
+    !H
+    // Mode IR metadata: movement tween mode raw=2.5f semantic=mode_2.5f target=2.5f
+    !*
+    !H
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.5f, 2.5f);
+    !*
+    // object Mode source_line=1068 family=movement_tween_mode
+    !L
+    // Mode IR metadata: movement tween mode raw=2.5f semantic=mode_2.5f target=2.5f
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.5f, 2.5f);
+    !*
+    // object Mode source_line=1070 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=1071 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    +120:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    +20:
+    // object Movement source_line=1076 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404([-9989.0f] + 3.1415927f, 0.0f);
+    // object Mode source_line=1077 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=7 semantic=legacy_exit_accel target=0
+    // object Movement source_line=1077 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(-1, 7, 0.0f, 0.03f);
+    goto Girl00C_812 @ 260;
+    Girl00C_796:
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Girl00C_812:
+    if (1) goto Girl00C_796 @ 200;
+    return;
+    // detected loops:
+    // - backedge_loop Girl00C_796 lines 1079..1083 condition=1
+}
+
+void Girl00D(var A)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=1089 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=1090 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, $A);
+    // object UnitFlag source_line=1091 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // object Mode source_line=1093 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=16.0f semantic=mode_16.0f target=16.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // object Movement source_line=1094 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 6.0f);
+    // object Mode source_line=1095 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // object Movement source_line=1095 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 0, 0.0f, 0.0f);
+    @RGirl00D_at() async;
+    +60:
+    // object Movement source_line=1098 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(-1.5707964f, 0.5f);
+    +6000:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    return;
+}
+
+void Girl00E(var A)
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // object Animation source_line=1106 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=1107 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, $A);
+    // object UnitFlag source_line=1108 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(24.0f, 24.0f);
+    // object Mode source_line=1110 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=16.0f semantic=mode_16.0f target=16.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    !HL
+    @RGirl00E_at() async;
+    !*
+    // object Movement source_line=1114 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 1.8f);
+    +60:
+    // object Mode source_line=1116 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // object Movement source_line=1116 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 0, -999999.0f, -999999.0f);
+    +6000:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    return;
+}
+
+void Girl01()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1125 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=1126 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, 40);
+    // object UnitFlag source_line=1127 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(40.0f, 40.0f);
+    // object Mode source_line=1129 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=16.0f semantic=mode_16.0f target=16.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(1, 2);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(2, 3);
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(32.0f, 32.0f);
+    // object Movement source_line=1134 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 5.0f);
+    // object Mode source_line=1135 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=1135 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 4, -999999.0f, 0.0f);
+    +60:
+    @Girl01_at() async 0;
+    // object Movement source_line=1138 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(2.7488935f, 0.0f);
+    // object Mode source_line=1139 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=7 semantic=legacy_exit_accel target=0
+    // object Movement source_line=1139 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(180, 7, 0.0f, 0.005f);
+    +180:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: flow.kill_async
+    ins_17(0);
+    +6000:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void Girl01_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D;
+    // semantic op_key lowering th10->th15: unit.diff_f
+    ins_536(%D, 2.0f, 2.7f, 3.0f, 4.0f);
+    goto Girl01_at_688 @ 20;
+    Girl01_at_96:
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=1155 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1 semantic=ease_or_smooth target=1
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 1);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 4);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, [-9989.0f], 0.049087387f);
+    // object Mode source_line=1159 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=%D semantic=mode_%D target=%D
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, %D, 0.0f);
+    // object Mode source_line=1160 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=1161 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    $A = 1;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($B, 3, 5, 9, 11);
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($C, 10, 10, 7, 4);
+    goto Girl01_at_628 @ 0;
+    Girl01_at_484:
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, $A, 1);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23($C);
+    $A = $A + 1;
+    Girl01_at_628:
+    if ($B--) goto Girl01_at_484 @ 0;
+    +20:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Girl01_at_688:
+    if (1) goto Girl01_at_96 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Girl01_at_484 lines 1166..1172 condition=$B--
+    // - backedge_loop Girl01_at_96 lines 1153..1176 condition=1
+}
+
+void Girl02()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1183 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=1184 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, 40);
+    // object UnitFlag source_line=1185 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(40.0f, 40.0f);
+    // object Mode source_line=1187 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=16.0f semantic=mode_16.0f target=16.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(16.0f, 16.0f);
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(32.0f, 32.0f);
+    // object Movement source_line=1190 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(1.5707964f, 5.0f);
+    // object Mode source_line=1191 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=1191 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(60, 4, -999999.0f, 0.0f);
+    +60:
+    @Girl02_at() async 0;
+    // object Movement source_line=1194 family=th10
+    // movement lowering th10 -> th15: movement.velocity.set -> ins_404
+    ins_404(2.7488935f, 0.0f);
+    // object Mode source_line=1195 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=7 semantic=legacy_exit_accel target=0
+    // object Movement source_line=1195 family=th10
+    // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
+    ins_405(180, 7, 0.0f, 0.005f);
+    +180:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    +6000:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void Girl02_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    goto Girl02_at_572 @ 40;
+    Girl02_at_60:
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=1209 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1 semantic=ease_or_smooth target=1
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 1);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 4, 4);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, [-9989.0f], 0.09817477f);
+    // object Mode source_line=1213 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.5f semantic=mode_2.5f target=2.5f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.5f, 0.0f);
+    // object Mode source_line=1214 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=1215 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    $A = 1;
+    $B = 5;
+    goto Girl02_at_512 @ 10;
+    Girl02_at_416:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    +10:
+    $A = $A + 1;
+    Girl02_at_512:
+    if ($B--) goto Girl02_at_416 @ 0;
+    +30:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    Girl02_at_572:
+    if (1) goto Girl02_at_60 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop Girl02_at_416 lines 1219..1224 condition=$B--
+    // - backedge_loop Girl02_at_60 lines 1207..1228 condition=1
+}
+
+void MBoss()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: boss.set_boss
+    ins_512(0);
+    // object Animation source_line=1236 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.select -> ins_302
+    ins_302(2);
+    // object Animation source_line=1237 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.set_main -> ins_306
+    ins_302(2);
+    ins_306(0, 0);
+    // object UnitFlag source_line=1238 family=unit_flag
+    // UnitFlag lowering th10->th15: dropped unit.flag_set(32); semantic=legacy_th10_blank; dropped=legacy_th10_blank
+    // semantic op_key lowering th10->th15: unit.set_hurtbox
+    ins_500(48.0f, 48.0f);
+    // object Mode source_line=1240 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=32.0f semantic=mode_32.0f target=32.0f
+    // semantic op_key lowering th10->th15: unit.set_hitbox
+    ins_501(32.0f, 32.0f);
+    !EN
+    // semantic op_key lowering th10->th15: boss.life_set
+    ins_511(8400);
+    !*
+    !HL
+    // semantic op_key lowering th10->th15: boss.life_set
+    ins_511(5850);
+    !*
+    // object Mode source_line=1246 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=1246 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 64.0f, 96.0f);
+    !EN
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 4200, 0, "MBoss2");
+    !*
+    !EN
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(1, 0, 1560, "MBossDead");
+    !*
+    !EN
+    // semantic op_key lowering th10->th15: boss.set_timeout
+    ins_521(1, "MBossEscape");
+    !*
+    !HL
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 1650, 1560, "MBossCard1");
+    !*
+    !HL
+    // semantic op_key lowering th10->th15: unit.life_marker
+    ins_527(0, 1650.0f, -24448);
+    !*
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(6);
+    goto MBoss_764 @ 260;
+    MBoss_476:
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    @MBoss_at1();
+    // object Mode source_line=1261 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=1261 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 128.0f);
+    +80:
+    @MBoss_at2();
+    // object Mode source_line=1264 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=1264 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, -64.0f, 96.0f);
+    +60:
+    @MBoss_at1();
+    @MBoss_at2() async;
+    // object Mode source_line=1268 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=1268 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 64.0f, 96.0f);
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Mode source_line=1271 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=1271 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 64.0f, 96.0f);
+    MBoss_764:
+    if (1) goto MBoss_476 @ 0;
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+    // detected loops:
+    // - backedge_loop MBoss_476 lines 1257..1273 condition=1
+}
+
+void MBoss2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C, D;
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(7);
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(1, 1);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(2, 2);
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(48.0f, 48.0f);
+    // semantic op_key lowering th10->th15: unit.drop_items
+    ins_509();
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // object Enemy source_line=1287 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    // object Mode source_line=1288 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=1288 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(30, 4, 0.0f, 144.0f);
+    +30:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Animation source_line=1291 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    +60:
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=1294 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2 semantic=mode_2 target=2
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 2);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 4);
+    // object Mode source_line=1296 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.0f, 1.0f);
+    // object Mode source_line=1297 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    %B = 0.0f;
+    MBoss2_492:
+    $C = 0;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($D, 3, 5, 6, 7);
+    goto MBoss2_968 @ 90;
+    MBoss2_592:
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, %B, 0.040799905f);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 10, 2);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, %B, -0.040799905f);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 10, 1);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    $C = $C + 1;
+    %B = %B + ((3.1415927f * _f(2)) / _f($D));
+    MBoss2_968:
+    if ($C < $D) goto MBoss2_592 @ 90;
+    %B = %B + 0.392699f;
+    +50:
+    goto MBoss2_492 @ 90;
+    goto MBoss2_1188 @ 200;
+    MBoss2_1172:
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    MBoss2_1188:
+    if (1) goto MBoss2_1172 @ 140;
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+    // detected loops:
+    // - counter_loop MBoss2_592 lines 1303..1313 condition=$C < $D
+    // - backedge_loop MBoss2_1172 lines 1318..1322 condition=1
+}
+
+void MBossCard1()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, 0, 2160, "MBossDead");
+    // semantic op_key lowering th10->th15: boss.set_timeout
+    ins_521(0, "MBossEscape");
+    // semantic op_key lowering th10->th15: movement.move_limit
+    ins_504(0.0f, 80.0f, 280.0f, 64.0f);
+    // semantic op_key lowering th10->th15: boss.spell3
+    ins_539(0, 2160, 500000, "�t���u�����̗��t�v");
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(15);
+    // semantic op_key lowering th10->th15: flow.kill_all_async
+    ins_21();
+    // object Mode source_line=1335 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=1335 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, 112.0f);
+    // semantic op_key lowering th10->th15: unit.set_invuln
+    ins_515(60);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(7);
+    // object Enemy source_line=1338 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    +60:
+    // object Animation source_line=1340 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    +60:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    +30:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    @MBossCard1_at() async;
+    goto MBossCard1_504 @ 270;
+    MBossCard1_476:
+    +120:
+    // object Movement source_line=1349 family=th10
+    // movement lowering th10 -> th15: movement.move_rand -> ins_412
+    ins_412(60, 4, 2.0f);
+    MBossCard1_504:
+    if (1) goto MBossCard1_476 @ 150;
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+    // detected loops:
+    // - backedge_loop MBossCard1_476 lines 1347..1351 condition=1
+}
+
+void MBossCard1_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // object Mode source_line=1359 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1 semantic=ease_or_smooth target=1
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 1);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 2);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.0f);
+    // object Mode source_line=1363 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1.0f semantic=mode_1.0f target=1.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 1.0f, 2.0f);
+    // object Mode source_line=1364 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=1365 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=8192 semantic=offscreen_time target_th12=1024 target_th15=256
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 0, 256, 180, -999999, -999999.0f, -999999.0f);
+    unless ([-9959] == 2) goto MBossCard1_at_440 @ 0;
+    // object Mode source_line=1367 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16 semantic=accel target_th12=4 target_th15=4
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 2, 0, 4, 120, -999999, 0.018f, 1.5707964f);
+    goto MBossCard1_at_488 @ 0;
+    MBossCard1_at_440:
+    // object Mode source_line=1370 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16 semantic=accel target_th12=4 target_th15=4
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 2, 0, 4, 120, -999999, 0.018f, 1.5707964f);
+    MBossCard1_at_488:
+    goto MBossCard1_at_2880 @ 3;
+    MBossCard1_at_512:
+    +1:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    %A = [-9998.0f] / 6.0f;
+    unless (%A > 0.0f) goto MBossCard1_at_832 @ 1;
+    %A = %A - 3.1415927f;
+    // object Mode source_line=1379 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16 semantic=accel target_th12=4 target_th15=4
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 3, 0, 4, 120, -999999, 0.01f, 0.0f);
+    goto MBossCard1_at_880 @ 1;
+    MBossCard1_at_832:
+    // object Mode source_line=1382 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16 semantic=accel target_th12=4 target_th15=4
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 3, 0, 4, 120, -999999, 0.01f, 3.1415927f);
+    MBossCard1_at_880:
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 12);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // object Mode source_line=1386 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=([-9999.0f] * 1.5f) + 0.4f semantic=mode_([-9999.0f] * 1.5f) + 0.4f target=([-9999.0f] * 1.5f) + 0.4f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, ([-9999.0f] * 1.5f) + 0.4f, 0.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    +1:
+    %A = [-9998.0f] / 6.0f;
+    unless (%A > 0.0f) goto MBossCard1_at_1452 @ 2;
+    %A = (%A - (3.1415927f * _f(5))) / _f(6);
+    // object Mode source_line=1392 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16 semantic=accel target_th12=4 target_th15=4
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 3, 0, 4, 120, -999999, 0.01f, 0.0f);
+    goto MBossCard1_at_1612 @ 2;
+    MBossCard1_at_1452:
+    %A = %A - (3.1415927f / _f(6));
+    // object Mode source_line=1396 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=16 semantic=accel target_th12=4 target_th15=4
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 3, 0, 4, 120, -999999, 0.01f, 3.1415927f);
+    MBossCard1_at_1612:
+    unless ([-9959] == 2) goto MBossCard1_at_1740 @ 2;
+    // object Mode source_line=1399 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=-2147483648 semantic=wait_next target_th12=4096 target_th15=-2147483648
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 3, 0, -2147483648, -999999, -999999, -999999.0f, -999999.0f);
+    MBossCard1_at_1740:
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 13);
+    // object Mode source_line=1403 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=([-9999.0f] * 1.5f) + 0.4f semantic=mode_([-9999.0f] * 1.5f) + 0.4f target=([-9999.0f] * 1.5f) + 0.4f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, ([-9999.0f] * 1.5f) + 0.4f, 0.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    +1:
+    %A = [-9998.0f] / 6.0f;
+    %A = %A - (3.1415927f / _f(2));
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // object Mode source_line=1409 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=-2147483648 semantic=wait_next target_th12=4096 target_th15=-2147483648
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 3, 0, -2147483648, -999999, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=1410 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=([-9999.0f] * 1.5f) + 0.4f semantic=mode_([-9999.0f] * 1.5f) + 0.4f target=([-9999.0f] * 1.5f) + 0.4f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, ([-9999.0f] * 1.5f) + 0.4f, 0.0f);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 2);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    unless ([-9959] == 3) goto MBossCard1_at_2880 @ 3;
+    %A = [-9998.0f] / 6.0f;
+    %A = %A - (3.1415927f / _f(2));
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, %A, 0.0f);
+    // object Mode source_line=1417 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=-2147483648 semantic=wait_next target_th12=4096 target_th15=-2147483648
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 3, 0, -2147483648, -999999, -999999, -999999.0f, -999999.0f);
+    // object Mode source_line=1418 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=([-9999.0f] * 1.5f) + 0.4f semantic=mode_([-9999.0f] * 1.5f) + 0.4f target=([-9999.0f] * 1.5f) + 0.4f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, ([-9999.0f] * 1.5f) + 0.4f, 0.0f);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 8, 1);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    MBossCard1_at_2880:
+    if (1) goto MBossCard1_at_512 @ 0;
+    return;
+    // detected loops:
+    // - backedge_loop MBossCard1_at_512 lines 1373..1422 condition=1
+}
+
+void MBossDead()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object UnitFlag source_line=1429 family=unit_flag
+    // UnitFlag lowering th10->th15: unit.flag_set(16) hidden_or_noninteractive -> 32
+    ins_502(32);
+    // semantic op_key lowering th10->th15: boss.spell_end
+    ins_523();
+    unless ([-9959] <= 1) goto MBossDead_388 @ 0;
+    unless ([-9986] == 0) goto MBossDead_308 @ 0;
+    // object Enemy source_line=1433 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak", 0.0f, 0.0f, 9999, 0, 0);
+    goto MBossDead_364 @ 0;
+    MBossDead_308:
+    // object Enemy source_line=1436 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_EtBreak_ni", 0.0f, 0.0f, 9999, 0, 0);
+    MBossDead_364:
+    goto MBossDead_532 @ 0;
+    MBossDead_388:
+    unless ([-9986] == 0) goto MBossDead_512 @ 0;
+    // semantic op_key lowering th10->th15: bullet.cancel_radius
+    ins_615(640.0f);
+    goto MBossDead_532 @ 0;
+    MBossDead_512:
+    // semantic op_key lowering th10->th15: bullet.clear_radius
+    ins_616(640.0f);
+    MBossDead_532:
+    // semantic op_key lowering th10->th15: unit.drop_clear
+    ins_506();
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(1, 5);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(4, 1);
+    // semantic op_key lowering th10->th15: unit.drop_extra
+    ins_507(2, 5);
+    // semantic op_key lowering th10->th15: unit.drop_area
+    ins_508(48.0f, 48.0f);
+    // semantic op_key lowering th10->th15: unit.drop_items
+    ins_509();
+    // semantic op_key lowering th10->th15: boss.set_boss
+    ins_512(-1);
+    // semantic op_key lowering th10->th15: unit.set_screen_shake
+    ins_517(30, 12, 0);
+    // object Animation source_line=1454 family=th10_th11
+    // Animation lowering th10_th11 -> th15: anm.play -> ins_307
+    ins_307(1, 102);
+    // semantic op_key lowering th10->th15: unit.play_sound
+    ins_516(18);
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(0);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void MBossEscape()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(0, -1, 0, "");
+    // semantic op_key lowering th10->th15: boss.set_interrupt
+    [-9947] = 1;
+    ins_514(1, -1, 0, "");
+    // semantic op_key lowering th10->th15: boss.spell_end
+    ins_523();
+    // semantic op_key lowering th10->th15: movement.move_limit_reset
+    ins_505();
+    unless ([-9959] >= 1) goto MBossEscape_364 @ 0;
+    unless ([-9986] == 0) goto MBossEscape_344 @ 0;
+    // semantic op_key lowering th10->th15: bullet.cancel_radius
+    ins_615(640.0f);
+    goto MBossEscape_364 @ 0;
+    MBossEscape_344:
+    // semantic op_key lowering th10->th15: bullet.clear_radius
+    ins_616(640.0f);
+    MBossEscape_364:
+    // semantic op_key lowering th10->th15: boss.set_boss
+    ins_512(-1);
+    // object UnitFlag source_line=1476 family=unit_flag
+    // UnitFlag lowering th10->th15: unit.flag_set(8) invincible_hide_boss_bar -> 16
+    ins_502(16);
+    // object Mode source_line=1477 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    // object Movement source_line=1477 family=th10
+    // movement lowering th10 -> th15: movement.position.tween -> ins_401
+    ins_401(60, 4, 0.0f, -32.0f);
+    +60:
+    // semantic op_key lowering th10->th15: boss.set_chapter
+    ins_524(0);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void MBoss_at1()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 4, 13);
+    // object Mode source_line=1488 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1 semantic=ease_or_smooth target=1
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 1);
+    !E
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 1.5707964f, 0.31415927f);
+    !*
+    !NH
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 1.5707964f, 0.2617994f);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 1.5707964f, 0.22439948f);
+    !*
+    // object Mode source_line=1496 family=movement_tween_mode
+    !E
+    // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
+    !*
+    !E
+    // semantic op_key lowering th10->th15: bullet.et_count_r3
+    ins_620(0, 4, 1, 6, 1, 8, 1);
+    !*
+    // object Mode source_line=1498 family=movement_tween_mode
+    !N
+    // Mode IR metadata: movement tween mode raw=5 semantic=mode_5 target=5
+    !*
+    !N
+    // semantic op_key lowering th10->th15: bullet.et_count_r3
+    ins_620(0, 5, 2, 7, 2, 9, 2);
+    !*
+    // object Mode source_line=1500 family=movement_tween_mode
+    !H
+    // Mode IR metadata: movement tween mode raw=7 semantic=legacy_exit_accel target=0
+    !*
+    !H
+    // semantic op_key lowering th10->th15: bullet.et_count_r3
+    ins_620(0, 7, 3, 9, 3, 11, 3);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 14, 4);
+    !*
+    // object Mode source_line=1504 family=movement_tween_mode
+    !E
+    // Mode IR metadata: movement tween mode raw=1.5f semantic=mode_1.5f target=1.5f
+    !*
+    !E
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 1.5f, 1.0f);
+    !*
+    // object Mode source_line=1506 family=movement_tween_mode
+    !N
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    !*
+    !N
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.0f, 1.0f);
+    !*
+    // object Mode source_line=1508 family=movement_tween_mode
+    !H
+    // Mode IR metadata: movement tween mode raw=3.0f semantic=mode_3.0f target=3.0f
+    !*
+    !H
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 3.0f, 1.5f);
+    !*
+    // object Mode source_line=1510 family=movement_tween_mode
+    !L
+    // Mode IR metadata: movement tween mode raw=4.0f semantic=mode_4.0f target=4.0f
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 4.0f, 1.3f);
+    !*
+    // object Mode source_line=1512 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=1513 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    +40:
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 4, 14);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    +40:
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 4, 2);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    return;
+}
+
+void MBoss_at2()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 0, 2);
+    // object Mode source_line=1529 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=3 semantic=mode_3 target=3
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 3);
+    !ENH
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.2617994f);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.09817477f);
+    !*
+    !EN
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 16, 1);
+    !*
+    !H
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 16, 3);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 24, 6);
+    !*
+    // object Mode source_line=1541 family=movement_tween_mode
+    !ENH
+    // Mode IR metadata: movement tween mode raw=2.0f semantic=mode_2.0f target=2.0f
+    !*
+    !ENH
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 2.0f, 1.0f);
+    !*
+    // object Mode source_line=1543 family=movement_tween_mode
+    !L
+    // Mode IR metadata: movement tween mode raw=3.0f semantic=mode_3.0f target=3.0f
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 3.0f, 1.0f);
+    !*
+    // object Mode source_line=1545 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=1546 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    $A = 3;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($B, 20, 20, 20, 20);
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23($B);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    !ENH
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, -0.2617994f);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, -0.09817477f);
+    !*
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23($B);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    !ENH
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.2617994f);
+    !*
+    !L
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.09817477f);
+    !*
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23($B);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    return;
+}
+
+void MainSub()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    +20:
+    // object Enemy source_line=1571 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GGirl00B", -144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1573 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GGirl00B", -144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1575 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1577 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1579 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -144.0f, -64.0f, 20, 1000, 3);
+    +20:
+    // object Enemy source_line=1581 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1583 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1585 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1587 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1589 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -84.0f, -64.0f, 20, 1000, 3);
+    +20:
+    // object Enemy source_line=1591 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1593 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1595 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1597 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1599 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00B", -24.0f, -64.0f, 20, 1000, 3);
+    return;
+}
+
+void MapleEnemy()
+{
+    // omitted function by IR rewrite: TH10 MapleEnemy is a visual helper; target runtime entity is unstable and nonessential
+    return;
+}
+
+void RGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=1618 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
+    ins_302(2);
+    ins_306(0, 5);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(1);
+    @Girl00(5);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void RGirl00B()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=1628 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
+    ins_302(2);
+    ins_306(0, 5);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(1);
+    @Girl00B(5);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void RGirl00C()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=1639 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
+    ins_302(2);
+    ins_306(0, 5);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(1);
+    @Girl00C(5);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void RGirl00D()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=1649 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
+    ins_302(2);
+    ins_306(0, 5);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(1);
+    @Girl00D(5);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void RGirl00D_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    $A = 2;
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 0, 6);
+    // object Mode source_line=1660 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=2 semantic=mode_2 target=2
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 2);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.19634955f);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 20, 1);
+    // object Mode source_line=1663 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1.0f semantic=mode_1.0f target=1.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 1.0f, 1.0f);
+    // object Mode source_line=1664 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=1665 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    goto RGirl00D_at_372 @ 60;
+    RGirl00D_at_352:
+    +60:
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    RGirl00D_at_372:
+    if ($A--) goto RGirl00D_at_352 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop RGirl00D_at_352 lines 1667..1671 condition=$A--
+}
+
+void RGirl00E()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=1680 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=red source_script=46
+    ins_302(2);
+    ins_306(0, 5);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(1);
+    @Girl00E(5);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void RGirl00E_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($B, 50, 50, 20, 10);
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($A, 1, 1, 5, 9);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 6, 6);
+    // object Mode source_line=1692 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 0);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.19634955f);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    // object Mode source_line=1695 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=1.0f semantic=mode_1.0f target=1.0f
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, 1.0f, 1.0f);
+    // object Mode source_line=1696 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=1697 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    goto RGirl00E_at_424 @ 0;
+    RGirl00E_at_384:
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23($B);
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    RGirl00E_at_424:
+    if ($A--) goto RGirl00E_at_384 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop RGirl00E_at_384 lines 1699..1703 condition=$A--
+}
+
+void RGirl00_at()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($B, 30, 30, 10, 3);
+    // semantic op_key lowering th10->th15: unit.diff_f
+    ins_536(%C, 1.5f, 2.2f, 2.5f, 4.0f);
+    // semantic op_key lowering th10->th15: unit.diff_i
+    ins_535($A, 2, 2, 10, 20);
+    // dynamic bullet config lowering th10->th15: ins_400 -> ins_600
+    ins_600(0);
+    // dynamic bullet config lowering th10->th15: ins_402 -> ins_602
+    ins_602(0, 6, 6);
+    // object Mode source_line=1715 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=0 semantic=linear_or_default target=0
+    // dynamic bullet config lowering th10->th15: ins_407 -> ins_607
+    ins_607(0, 0);
+    // dynamic bullet config lowering th10->th15: ins_404 -> ins_604
+    ins_604(0, 0.0f, 0.19634955f);
+    // dynamic bullet config lowering th10->th15: ins_406 -> ins_606
+    ins_606(0, 1, 1);
+    // object Mode source_line=1718 family=movement_tween_mode
+    // Mode IR metadata: movement tween mode raw=%C semantic=mode_%C target=%C
+    // dynamic bullet config lowering th10->th15: ins_405 -> ins_605
+    ins_605(0, %C, 1.0f);
+    // object Mode source_line=1719 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=4 semantic=legacy_unknown_4 target_th12=4 target_th15=4
+    // semantic op_key lowering th10->th15: bullet.transform
+    // dropped by IR op lowering policy for th15: bullet.transform(0, 0, 1, 4, -999999, -999999, -999999.0f, -999999.0f); reason=source_specific_runtime_helper
+    // object Mode source_line=1720 family=bullet_transform_mode
+    // Mode IR metadata: bullet transform mode raw=1 semantic=spawn_step target_th12=1 target_th15=1
+    // dynamic bullet transform lowering th10->th15: ins_409 -> ins_609
+    ins_609(0, 1, 1, 1, -999999, -999999, -999999.0f, -999999.0f);
+    goto RGirl00_at_460 @ 0;
+    RGirl00_at_420:
+    // semantic op_key lowering th10->th15: flow.wait
+    ins_23($B);
+    !NHL
+    // dynamic bullet fire lowering th10->th15: ins_401 -> ins_601
+    ins_601(0);
+    !*
+    RGirl00_at_460:
+    if ($A--) goto RGirl00_at_420 @ 0;
+    return;
+    // detected loops:
+    // - counter_loop RGirl00_at_420 lines 1722..1728 condition=$A--
+}
+
+void YGirl00()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object Animation source_line=1735 family=th10_th11
+    // IR stage_enemy_wrapper_anm lowering th10->th15: source_script=48
+    ins_302(2);
+    ins_306(0, 40);
+    ins_303(1, 93);
+    @Girl00(40);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void YGirl00B()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=1744 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=yellow source_script=48
+    ins_302(2);
+    ins_306(0, 40);
+    ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(4);
+    @Girl00B(40);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void YGirl00C()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=1753 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=yellow source_script=48
+    ins_302(2);
+    ins_306(0, 40);
+    ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(4);
+    @Girl00C(40);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void YGirl00D()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=1762 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=yellow source_script=48
+    ins_302(2);
+    ins_306(0, 40);
+    ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(4);
+    @Girl00D(40);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void YGirl00E()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A;
+    // object EnemyVisual source_line=1771 family=stage_enemy_visual
+    // semantic EnemyVisual stage_enemy_visual th10->th15: color=yellow source_script=48
+    ins_302(2);
+    ins_306(0, 40);
+    ins_303(1, 93);
+    // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
+    ins_510(4);
+    @Girl00E(40);
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+}
+
+void main()
+{
+    // Timeline lowering structured -> th15; interleaved structured draft
+    // control-flow, async scheduling, and expression semantics require target-game verification
+    var A, B, C;
+    // object UnitFlag source_line=1779 family=unit_flag
+    // UnitFlag lowering th10->th15: unit.flag_set(16) hidden_or_noninteractive -> 32
+    ins_502(32);
+    +160:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    %B = _f(-144);
+    $C = 0;
+    goto main_572 @ 180;
+    main_176:
+    unless (($C % 2) == 0) goto main_368 @ 160;
+    // object Enemy source_line=1787 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_BGirl00", %B, -16.0f, 20, 1000, 2);
+    goto main_420 @ 160;
+    main_368:
+    // object Enemy source_line=1790 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_RGirl00", %B, -16.0f, 20, 1000, 1);
+    main_420:
+    %B;
+    +20:
+    32;
+    // semantic op_key lowering th10->th15: flow.addf
+    ins_51();
+    // semantic op_key lowering th10->th15: flow.setf
+    ins_45(%B);
+    $C = $C + 1;
+    main_572:
+    if ($C < 9) goto main_176 @ 160;
+    // object Enemy source_line=1800 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_GGirl00", %B, -16.0f, 20, 1000, 3);
+    +300:
+    // semantic op_key lowering th10->th15: flow.nop
+    ins_0();
+    // object Enemy source_line=1803 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    +20:
+    // object Enemy source_line=1805 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    +20:
+    // object Enemy source_line=1807 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", -144.0f, -64.0f, 20, 1000, 1);
+    +20:
+    // object Enemy source_line=1809 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +80:
+    // object Enemy source_line=1811 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    +20:
+    // object Enemy source_line=1813 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    +20:
+    // object Enemy source_line=1815 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1817 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1819 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("GGirl00", 144.0f, -64.0f, 20, 1000, 3);
+    +60:
+    // object Enemy source_line=1821 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Girl01", 64.0f, -16.0f, 300, 1000, 4);
+    +100:
+    // object Enemy source_line=1823 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    +10:
+    // object Enemy source_line=1825 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    +10:
+    // object Enemy source_line=1827 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("RGirl00", 144.0f, -64.0f, 20, 1000, 1);
+    +10:
+    // object Enemy source_line=1829 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1831 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("GGirl00", 144.0f, -64.0f, 20, 1000, 3);
+    +60:
+    // object Enemy source_line=1833 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1835 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1837 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1839 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1841 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GGirl00", -144.0f, -64.0f, 20, 1000, 3);
+    +60:
+    // object Enemy source_line=1843 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("Girl01", -64.0f, -16.0f, 300, 1000, 3);
+    +120:
+    %B = _f(144);
+    $C = 0;
+    goto main_2228 @ 1200;
+    main_1832:
+    unless (($C % 2) == 0) goto main_2024 @ 1180;
+    // object Enemy source_line=1850 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_BGirl00", %B, -16.0f, 20, 1000, 2);
+    goto main_2076 @ 1180;
+    main_2024:
+    // object Enemy source_line=1853 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_RGirl00", %B, -16.0f, 20, 1000, 1);
+    main_2076:
+    %B;
+    +20:
+    32;
+    // semantic op_key lowering th10->th15: flow.subf
+    ins_53();
+    // semantic op_key lowering th10->th15: flow.setf
+    ins_45(%B);
+    $C = $C + 1;
+    main_2228:
+    if ($C < 9) goto main_1832 @ 1180;
+    // object Enemy source_line=1863 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Ecl_GGirl00", %B, -16.0f, 20, 1000, 3);
+    +80:
+    // object Enemy source_line=1865 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("GGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1867 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("GGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1869 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1871 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1873 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00", 144.0f, -64.0f, 20, 1000, 3);
+    @MainSub() async;
+    +20:
+    // object Enemy source_line=1876 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1878 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1880 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1882 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1884 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00B", 84.0f, -64.0f, 20, 1000, 3);
+    +20:
+    // object Enemy source_line=1886 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00", 24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1888 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00", 24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1890 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00", 24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1892 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00", 24.0f, -64.0f, 20, 1000, 2);
+    +20:
+    // object Enemy source_line=1894 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00", 24.0f, -64.0f, 20, 1000, 3);
+    +200:
+    // object Enemy source_line=1896 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Girl01", 64.0f, -16.0f, 300, 1000, 0);
+    +10:
+    // object Enemy source_line=1898 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1900 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1902 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1904 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", -144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1906 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GGirl00", -144.0f, -64.0f, 20, 1000, 3);
+    +10:
+    // object Enemy source_line=1908 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1910 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1912 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1914 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00", 144.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1916 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("GGirl00", 144.0f, -64.0f, 20, 1000, 3);
+    +80:
+    // object Enemy source_line=1918 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1919 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 0.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1920 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 48.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=1922 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1923 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -24.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1924 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 24.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1925 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 72.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=1927 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1928 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1929 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1930 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 96.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=1932 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1933 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1934 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1935 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 120.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=1937 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -144.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1938 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1939 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1940 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 144.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=1942 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -168.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1943 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1944 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=1945 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 168.0f, -16.0f, 30, 1000, 2);
+    +160:
+    // object Enemy source_line=1947 family=th10_th11
+    // omitted runtime entity by IR target policy: maple_enemy_visual_helper
+    // object Enemy source_line=1948 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("MBoss", -64.0f, -16.0f, 6000, 10000, 1);
+    +400:
+    // object Enemy source_line=1950 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
+    ins_309("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1952 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
+    ins_311("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1954 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
+    ins_309("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1956 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
+    ins_311("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1958 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
+    ins_309("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1960 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
+    ins_311("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1962 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
+    ins_309("RGirl00D", -144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1964 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
+    ins_311("RGirl00D", 144.0f, -16.0f, 160, 1000, 1);
+    +80:
+    // object Enemy source_line=1966 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_func -> ins_309
+    ins_309("RGirl00D", -144.0f, -16.0f, 160, 1000, 2);
+    +80:
+    // object Enemy source_line=1968 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror_func -> ins_311
+    ins_311("RGirl00D", 144.0f, -16.0f, 160, 1000, 2);
+    !HL
+    // semantic op_key lowering th10->th15: unit.boss_wait
+    ins_520();
+    !*
+    !HL
+    +100:
+    !*
+    // object Enemy source_line=1973 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Girl01", 64.0f, -16.0f, 300, 1000, 3);
+    // object Enemy source_line=1974 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("Girl01", -64.0f, -16.0f, 300, 1000, 3);
+    +160:
+    $C = 0;
+    goto main_6044 @ 3590;
+    main_5648:
+    %B = [-9987.0f] * _f(128);
+    unless (($C % 2) == 0) goto main_5916 @ 3580;
+    // object Enemy source_line=1981 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00E", %B, -16.0f, 20, 1000, 2);
+    goto main_5968 @ 3580;
+    main_5916:
+    // object Enemy source_line=1984 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00E", %B, -16.0f, 20, 1000, 1);
+    main_5968:
+    +10:
+    $C = $C + 1;
+    main_6044:
+    if ($C < 20) goto main_5648 @ 3580;
+    +60:
+    // object Enemy source_line=1991 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("Girl01", 128.0f, -16.0f, 300, 1000, 0);
+    // object Enemy source_line=1992 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("Girl01", -128.0f, -16.0f, 300, 1000, 0);
+    +80:
+    // object Enemy source_line=1994 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1996 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=1998 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=2000 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00B", 84.0f, -64.0f, 20, 1000, 2);
+    +10:
+    // object Enemy source_line=2002 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_mirror -> ins_304
+    ins_304("BGirl00B", 84.0f, -64.0f, 20, 1000, 3);
+    // semantic op_key lowering th10->th15: unit.boss_wait
+    ins_520();
+    +100:
+    // object Enemy source_line=2005 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2006 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 0.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2007 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", 48.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=2009 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("RGirl00C", -72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2010 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -24.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2011 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 24.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2012 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 72.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=2014 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2015 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2016 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 48.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2017 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 96.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=2019 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2020 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2021 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 72.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2022 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 120.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=2024 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -144.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2025 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2026 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 96.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2027 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 144.0f, -16.0f, 30, 1000, 2);
+    +20:
+    // object Enemy source_line=2029 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -168.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2030 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", -120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2031 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 120.0f, -16.0f, 30, 1000, 2);
+    // object Enemy source_line=2032 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create -> ins_300
+    ins_300("BGirl00C", 168.0f, -16.0f, 30, 1000, 2);
+    +400:
+    // semantic op_key lowering th10->th15: unit.dialog_read
+    ins_518(0);
+    // semantic op_key lowering th10->th15: unit.dialog_wait
+    ins_519();
+    // object Enemy source_line=2036 family=th10_th11
+    // Enemy lowering th10_th11 -> th15: enemy.create_abs -> ins_301
+    ins_301("Boss", -144.0f, -16.0f, 40, 10000, 1);
+    // semantic op_key lowering th10->th15: unit.dialog_wait
+    ins_519();
+    // semantic op_key lowering th10->th15: unit.boss_wait
+    ins_520();
+    // semantic op_key lowering th10->th15: unit.dialog_read
+    ins_518(1);
+    // semantic op_key lowering th10->th15: unit.dialog_wait
+    ins_519();
+    // semantic op_key lowering th10->th15: flow.delete
+    ins_1();
+    // detected loops:
+    // - counter_loop main_176 lines 1785..1799 condition=$C < 9
+    // - counter_loop main_1832 lines 1848..1862 condition=$C < 9
+    // - counter_loop main_5648 lines 1978..1989 condition=$C < 20
+}

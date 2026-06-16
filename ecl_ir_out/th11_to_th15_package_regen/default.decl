@@ -1,5 +1,5 @@
-// source: th062/th10/default.decl
-// source game: th10
+// source: th062/th11/default.decl
+// source game: th11
 // target: th15
 // whole-file lowering is a structured draft; verify target-game scheduling and resources
 anim { "enemy.anm"; }
@@ -11,22 +11,22 @@ void Ecl_EtBreak()
     var A, B;
     %B = 16.0f;
     // object UnitFlag source_line=7 family=unit_flag
-    // UnitFlag lowering th10->th15: unit.flag_set(16) hidden_or_noninteractive -> 32
+    // UnitFlag lowering th11->th15: unit.flag_set(32) hidden_or_noninteractive -> 32
     ins_502(32);
     goto Ecl_EtBreak_216 @ 1;
     Ecl_EtBreak_120:
-    // semantic op_key lowering th10->th15: bullet.cancel_radius
+    // semantic op_key lowering th11->th15: bullet.cancel_radius
     ins_615(%B);
     %B;
     +1:
     10;
-    // semantic op_key lowering th10->th15: flow.addf
+    // semantic op_key lowering th11->th15: flow.addf
     ins_51();
-    // semantic op_key lowering th10->th15: flow.setf
+    // semantic op_key lowering th11->th15: flow.setf
     ins_45(%B);
     Ecl_EtBreak_216:
     if (%B < 640.0f) goto Ecl_EtBreak_120 @ 0;
-    // semantic op_key lowering th10->th15: flow.delete
+    // semantic op_key lowering th11->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop Ecl_EtBreak_120 lines 9..17 condition=%B < 640.0f
@@ -39,22 +39,22 @@ void Ecl_EtBreak2()
     var A, B;
     %B = 16.0f;
     // object UnitFlag source_line=25 family=unit_flag
-    // UnitFlag lowering th10->th15: unit.flag_set(16) hidden_or_noninteractive -> 32
+    // UnitFlag lowering th11->th15: unit.flag_set(32) hidden_or_noninteractive -> 32
     ins_502(32);
     goto Ecl_EtBreak2_216 @ 1;
     Ecl_EtBreak2_120:
-    // semantic op_key lowering th10->th15: bullet.cancel_radius
+    // semantic op_key lowering th11->th15: bullet.cancel_radius
     ins_615(%B);
     %B;
     +1:
     6;
-    // semantic op_key lowering th10->th15: flow.addf
+    // semantic op_key lowering th11->th15: flow.addf
     ins_51();
-    // semantic op_key lowering th10->th15: flow.setf
+    // semantic op_key lowering th11->th15: flow.setf
     ins_45(%B);
     Ecl_EtBreak2_216:
     if (%B < 640.0f) goto Ecl_EtBreak2_120 @ 0;
-    // semantic op_key lowering th10->th15: flow.delete
+    // semantic op_key lowering th11->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop Ecl_EtBreak2_120 lines 27..35 condition=%B < 640.0f
@@ -67,22 +67,22 @@ void Ecl_EtBreak2_ni()
     var A, B;
     %B = 16.0f;
     // object UnitFlag source_line=43 family=unit_flag
-    // UnitFlag lowering th10->th15: unit.flag_set(16) hidden_or_noninteractive -> 32
+    // UnitFlag lowering th11->th15: unit.flag_set(32) hidden_or_noninteractive -> 32
     ins_502(32);
     goto Ecl_EtBreak2_ni_216 @ 1;
     Ecl_EtBreak2_ni_120:
-    // semantic op_key lowering th10->th15: bullet.clear_radius
+    // semantic op_key lowering th11->th15: bullet.clear_radius
     ins_616(%B);
     %B;
     +1:
     6;
-    // semantic op_key lowering th10->th15: flow.addf
+    // semantic op_key lowering th11->th15: flow.addf
     ins_51();
-    // semantic op_key lowering th10->th15: flow.setf
+    // semantic op_key lowering th11->th15: flow.setf
     ins_45(%B);
     Ecl_EtBreak2_ni_216:
     if (%B < 640.0f) goto Ecl_EtBreak2_ni_120 @ 0;
-    // semantic op_key lowering th10->th15: flow.delete
+    // semantic op_key lowering th11->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop Ecl_EtBreak2_ni_120 lines 45..53 condition=%B < 640.0f
@@ -95,22 +95,22 @@ void Ecl_EtBreak_ni()
     var A, B;
     %B = 16.0f;
     // object UnitFlag source_line=61 family=unit_flag
-    // UnitFlag lowering th10->th15: unit.flag_set(16) hidden_or_noninteractive -> 32
+    // UnitFlag lowering th11->th15: unit.flag_set(32) hidden_or_noninteractive -> 32
     ins_502(32);
     goto Ecl_EtBreak_ni_216 @ 1;
     Ecl_EtBreak_ni_120:
-    // semantic op_key lowering th10->th15: bullet.clear_radius
+    // semantic op_key lowering th11->th15: bullet.clear_radius
     ins_616(%B);
     %B;
     +1:
     10;
-    // semantic op_key lowering th10->th15: flow.addf
+    // semantic op_key lowering th11->th15: flow.addf
     ins_51();
-    // semantic op_key lowering th10->th15: flow.setf
+    // semantic op_key lowering th11->th15: flow.setf
     ins_45(%B);
     Ecl_EtBreak_ni_216:
     if (%B < 640.0f) goto Ecl_EtBreak_ni_120 @ 0;
-    // semantic op_key lowering th10->th15: flow.delete
+    // semantic op_key lowering th11->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop Ecl_EtBreak_ni_120 lines 63..71 condition=%B < 640.0f
@@ -121,11 +121,11 @@ void et_ofs_r()
     // Timeline lowering structured -> th15; interleaved structured draft
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B, C, D;
-    // semantic op_key lowering th10->th15: flow.circle_pos
+    // semantic op_key lowering th11->th15: flow.circle_pos
     ins_81(%C, %D, [-9998.0f], %B * [-9999.0f]);
     // object Mode source_line=79 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=%C semantic=mode_%C target=%C
-    // dynamic bullet config lowering th10->th15: ins_403 -> ins_603
+    // dynamic bullet config lowering th11->th15: ins_403 -> ins_603
     ins_603($A, %C, %D);
     return;
 }
@@ -136,15 +136,15 @@ void test()
     // control-flow, async scheduling, and expression semantics require target-game verification
     var A, B;
     [-9997.0f];
-    // semantic op_key lowering th10->th15: flow.negf
+    // semantic op_key lowering th11->th15: flow.negf
     ins_84();
     %A;
-    // semantic op_key lowering th10->th15: flow.addf
+    // semantic op_key lowering th11->th15: flow.addf
     ins_51();
     -3;
-    // semantic op_key lowering th10->th15: flow.addf
+    // semantic op_key lowering th11->th15: flow.addf
     ins_51();
-    // semantic op_key lowering th10->th15: flow.setf
+    // semantic op_key lowering th11->th15: flow.setf
     ins_45(%A);
     return;
 }
