@@ -237,6 +237,17 @@ def policy_args(args: list[str], policy: dict[str, object]) -> list[str]:
     if isinstance(defaults, list):
         while len(out) < len(defaults):
             out.append(str(defaults[len(out)]))
+    indices = arg_policy.get("indices")
+    if isinstance(indices, list):
+        selected: list[str] = []
+        for raw_index in indices:
+            try:
+                index = int(raw_index)
+            except (TypeError, ValueError):
+                continue
+            if 0 <= index < len(out):
+                selected.append(out[index])
+        out = selected
     int_indices = arg_policy.get("int_indices")
     if isinstance(int_indices, list):
         for raw_index in int_indices:
@@ -247,6 +258,35 @@ def policy_args(args: list[str], policy: dict[str, object]) -> list[str]:
             if 0 <= index < len(out):
                 out[index] = as_int_expr(out[index])
     return out
+
+
+def compile_legacy_laser_on_aimed_policy(event: dict[str, object], target: str, policy: dict[str, object]) -> str | None:
+    args = [str(arg) for arg in event.get("args", [])]
+    if len(args) < 8:
+        return None
+    et_id, style, angle, _speed, length, active_time, _flags, width = args[:8]
+    active_time_i = as_int_expr(active_time)
+    if generation_for_game(target) == "th13_plus":
+        lines = [
+            f"// legacy laserOnA lowering {event.get('source_game')}->{target}: approximated as target straight laser; reason={policy.get('reason', '')}",
+            f"ins_700({et_id}, 0.0f, {length}, 0.0f, {width});",
+            f"ins_701({et_id}, 0, 0, {active_time_i}, 0, 0);",
+            f"ins_708({et_id}, {angle});",
+            f"ins_702({et_id});",
+            f"// original laser style={style}; source args: {', '.join(args)}",
+        ]
+        return "\n".join(lines)
+    if target == "th12":
+        lines = [
+            f"// legacy laserOnA lowering {event.get('source_game')}->{target}: approximated as target straight laser; reason={policy.get('reason', '')}",
+            f"ins_600({et_id}, 0.0f, {length}, 0.0f, {width});",
+            f"ins_601({et_id}, 0, 0, {active_time_i}, 0, 0);",
+            f"ins_608({et_id}, {angle});",
+            f"ins_602({et_id});",
+            f"// original laser style={style}; source args: {', '.join(args)}",
+        ]
+        return "\n".join(lines)
+    return None
 
 
 def compile_op_lowering_policy(event: dict[str, object], target: str) -> str | None:
@@ -270,6 +310,8 @@ def compile_op_lowering_policy(event: dict[str, object], target: str) -> str | N
         opcode = int(policy.get("opcode", 0))
         line = f"ins_{opcode}({', '.join(rendered_args)});" if rendered_args else f"ins_{opcode}();"
         return f"// emitted raw instruction by IR op lowering policy for {target}: {op_key}; reason={reason}\n{line}"
+    if strategy == "legacy_laser_on_aimed":
+        return compile_legacy_laser_on_aimed_policy(event, target, policy)
     if strategy == "legacy_conditional_jump":
         legacy_args = adapt_values_for_generation(args_list, generation_for_game(str(event.get("source_game") or "")), generation_for_game(target))
         if len(legacy_args) != 4:
@@ -352,7 +394,7 @@ def compile_preemptive_op_lowering_policy(event: dict[str, object], target: str)
         return None
     strategy = str(policy.get("strategy", ""))
     reason = str(policy.get("reason", ""))
-    if strategy in {"emit_target_op", "emit_target_op_sequence", "stack_vm_sequence", "emit_raw_ins", "legacy_conditional_jump", "legacy_loop_jump", "catalog_sprite"}:
+    if strategy in {"emit_target_op", "emit_target_op_sequence", "stack_vm_sequence", "emit_raw_ins", "legacy_laser_on_aimed", "legacy_conditional_jump", "legacy_loop_jump", "catalog_sprite"}:
         return compile_op_lowering_policy(event, target)
     if strategy == "drop" and reason in {"disabled_async_call", "debug_only"}:
         return compile_op_lowering_policy(event, target)

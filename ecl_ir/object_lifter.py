@@ -413,6 +413,10 @@ def lift_lasers(program: Program, func: Function) -> list[LaserEmitter]:
         start_ops = {600}
         laser_ops = set(range(601, 616))
         family = "th12"
+    elif program.game in {"th10", "th11"}:
+        start_ops = {412, 413, 428, 429}
+        laser_ops = {412, 413, 414, 415, 416, 417, 418, 419, 428, 429}
+        family = "th10_th11"
     else:
         return objects
     for ins in func.body:
@@ -438,10 +442,16 @@ def apply_laser(obj: LaserEmitter, ins: Instruction, game: str) -> None:
             701: "timing", 702: "on", 703: "straight_on", 704: "offset", 705: "trajectory",
             706: "length", 707: "width", 708: "angle", 709: "rotation", 710: "end", 711: "curve_on", 712: "cancel_rect",
         }
-    else:
+    elif game == "th12":
         names = {
             601: "timing", 602: "on", 603: "straight_on", 604: "offset", 605: "trajectory",
             606: "length", 607: "width", 608: "angle", 609: "rotation", 610: "end", 611: "curve_on",
+        }
+    else:
+        names = {
+            412: "on_aimed", 413: "straight_on", 414: "unknown414", 415: "unknown415",
+            416: "unknown416", 417: "unknown417", 418: "unknown418", 419: "unknown419",
+            428: "on", 429: "straight_on2",
         }
     key = names.get(op, f"ins_{op}")
     obj.fields.setdefault(key, []).append({"args": ins.args, "line": ins.line_no})

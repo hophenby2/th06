@@ -267,7 +267,7 @@ def target_opcode_for_op_key(op_key: str, target: str) -> int | None:
 
 SOURCE_SPECIFIC_DROP_OP_KEYS = {
     "unit.unknown569", "raw.spec1", "raw.spec2", "laser.debug700", "movement.unknown444",
-    "enemy.create_legacy270", "enemy.create_maple", "anm.reset", "bullet.distance",
+    "enemy.create_maple", "anm.reset", "bullet.distance",
     "raw.eff_create", "raw.eff_create_angle", "raw.card_eff", "raw.timer_threshold", "raw.ins_129",
     "raw.et_on_auto_delay", "flow.familiar_create", "flow.familiar_create_f", "flow.familiar_create_a",
     "flow.trail_familiar_set", "anm.play_attack", "movement.move_rand_time", "flow.ins_79",
@@ -443,8 +443,22 @@ def op_lowering_policy(key: str, args: list[str]) -> dict[str, object] | None:
         return {"strategy": "drop", "reason": "disabled_async_call"}
     if key in OLD_TARGET_PRESENTATION_HELPERS:
         return {"strategy": "drop", "reason": "unsupported_presentation_helper", "target_generations": ["th10_th11"]}
+    if key == "enemy.create_legacy270":
+        return {
+            "strategy": "emit_target_op",
+            "target_op_key": "enemy.create_func",
+            "reason": "TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create",
+            "source_generations": ["th10_th11"],
+            "target_generations": ["th12", "th13_plus"],
+            "arg_policy": {"indices": [0, 1, 2, 4, 5, 6]},
+        }
     if key == "laser.on_aimed":
-        return {"strategy": "approximate", "reason": "old_aimed_laser_macro", "target_generations": ["th12", "th13_plus"], "approximation": "no_op_setup"}
+        return {
+            "strategy": "legacy_laser_on_aimed",
+            "reason": "TH10/11 laserOnA approximated as target straight laser with same angle/length/width/timing",
+            "source_generations": ["th10_th11"],
+            "target_generations": ["th12", "th13_plus"],
+        }
     return None
 
 

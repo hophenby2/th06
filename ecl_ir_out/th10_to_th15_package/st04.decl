@@ -1,4 +1,4 @@
-// source: E:\fork\th062\th10\stage04.decl
+// source: th062/th10/stage04.decl
 // source game: th10
 // target: th15
 // whole-file lowering is a structured draft; verify target-game scheduling and resources
@@ -14,7 +14,7 @@ void BGirl00()
     // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(2);
     @Girl00(20, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -26,7 +26,7 @@ void BGirl01()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(2);
     @Girl01(20, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -38,7 +38,7 @@ void BGirl03()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(2);
     @Girl03(20, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -50,7 +50,7 @@ void BGirl04()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(2);
     @Girl04(20, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -127,7 +127,7 @@ void Boss()
     // Animation lowering th10_th11 -> th15: anm.select -> ins_302
     ins_302(2);
     @Boss1();
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -738,11 +738,11 @@ void BossCard1()
     ins_514(0, 0, 3600, "Boss2");
     !EN
     // semantic op_key lowering th10->th15: boss.spell
-    ins_537(42, 3600, 1000000, "Šò•„u“V‚Ì”ªåËv");
+    ins_537(42, 3600, 1000000, "ï¿½ò•„uï¿½Vï¿½Ì”ï¿½ï¿½Ëv");
     !*
     !HL
     // semantic op_key lowering th10->th15: boss.spell3
-    ins_539(44, 3600, 1000000, "Šò•„uƒTƒ‹ƒ^ƒNƒƒXv");
+    ins_539(44, 3600, 1000000, "ï¿½ò•„uï¿½Tï¿½ï¿½ï¿½^ï¿½Nï¿½ï¿½ï¿½Xï¿½v");
     !*
     // semantic op_key lowering th10->th15: flow.kill_all_async
     ins_21();
@@ -902,15 +902,16 @@ void BossCard2()
     ins_514(0, 0, 3600, "Boss3");
     !EN
     // semantic op_key lowering th10->th15: boss.spell
-    ins_537(46, 3600, 1000000, "•—_u•—_–Ø‚Ì—t‰B‚êv");
+    ins_537(46, 3600, 1000000, "ï¿½ï¿½ï¿½_ï¿½uï¿½ï¿½ï¿½_ï¿½Ø‚Ì—tï¿½Bï¿½ï¿½v");
     !*
     !H
     // semantic op_key lowering th10->th15: boss.spell3
-    ins_539(48, 3600, 1000000, "•—_u“V‹çéCv");
+    ins_539(48, 3600, 1000000, "ï¿½ï¿½ï¿½_ï¿½uï¿½Vï¿½ï¿½ï¿½Cï¿½v");
     !*
     !L
     // semantic op_key lowering th10->th15: boss.spell_ex
-    ins_522(49, 3600, 1000000, "•—_u“ñ•S\\“úv");
+    // emitted by IR op lowering policy for th15: boss.spell_ex -> boss.spell_ex; reason=extended spell descriptor is a shared boss phase header in TH10+
+    ins_522(49, 3600, 1000000, "ï¿½ï¿½ï¿½_ï¿½uï¿½ï¿½Sï¿½\\ï¿½ï¿½ï¿½v");
     !*
     // semantic op_key lowering th10->th15: flow.kill_all_async
     ins_21();
@@ -1101,18 +1102,20 @@ void BossCard3()
     ins_514(0, 2300, 1080, "BossCard4");
     !N
     // semantic op_key lowering th10->th15: boss.spell_ex
-    ins_522(50, 1080, 1000000, "uŒ¶‘z•—êrv");
+    // emitted by IR op lowering policy for th15: boss.spell_ex -> boss.spell_ex; reason=extended spell descriptor is a shared boss phase header in TH10+
+    ins_522(50, 1080, 1000000, "ï¿½uï¿½ï¿½ï¿½zï¿½ï¿½ï¿½rï¿½v");
     !*
     !H
     // semantic op_key lowering th10->th15: boss.spell3
-    ins_539(51, 1080, 1000000, "uŒ¶‘z•—êrv");
+    ins_539(51, 1080, 1000000, "ï¿½uï¿½ï¿½ï¿½zï¿½ï¿½ï¿½rï¿½v");
     !*
     !L
     // semantic op_key lowering th10->th15: boss.spell_ex
-    ins_522(52, 1080, 1000000, "u–³‘o•—_v");
+    // emitted by IR op lowering policy for th15: boss.spell_ex -> boss.spell_ex; reason=extended spell descriptor is a shared boss phase header in TH10+
+    ins_522(52, 1080, 1000000, "ï¿½uï¿½ï¿½ï¿½oï¿½ï¿½ï¿½_ï¿½v");
     !*
-    // semantic op_key lowering th10->th15: raw.th10_th11.362
-    // unsupported semantic op without IR lowering policy for th15: raw.th10_th11.362()
+    // semantic op_key lowering th10->th15: enemy.spell_timeout
+    // unsupported semantic op without IR lowering policy for th15: enemy.spell_timeout()
     // semantic op_key lowering th10->th15: flow.kill_all_async
     ins_21();
     // object Mode source_line=636 family=movement_tween_mode
@@ -1349,7 +1352,12 @@ void BossCard3()
     // movement lowering th10 -> th15: movement.position.set -> ins_400
     ins_400(-384.0f, 96.0f + ([-9987.0f] * 96.0f));
     // semantic op_key lowering th10->th15: laser.on_aimed
-    // approximated by IR op lowering policy for th15: laser.on_aimed(3, 2, [-9998.0f] / _f(16), 60.0f, 192.0f, 800.0f, 0, 32.0f); reason=old_aimed_laser_macro; approximation=no_op_setup
+    // legacy laserOnA lowering th10->th15: approximated as target straight laser; reason=TH10/11 laserOnA approximated as target straight laser with same angle/length/width/timing
+    ins_700(3, 0.0f, 192.0f, 0.0f, 32.0f);
+    ins_701(3, 0, 0, 800, 0, 0);
+    ins_708(3, [-9998.0f] / _f(16));
+    ins_702(3);
+    // original laser style=2; source args: 3, 2, [-9998.0f] / _f(16), 60.0f, 192.0f, 800.0f, 0, 32.0f
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(15);
     // semantic op_key lowering th10->th15: unit.diff_wait
@@ -1361,7 +1369,12 @@ void BossCard3()
     // movement lowering th10 -> th15: movement.position.set -> ins_400
     ins_400(384.0f, 96.0f + ([-9987.0f] * 96.0f));
     // semantic op_key lowering th10->th15: laser.on_aimed
-    // approximated by IR op lowering policy for th15: laser.on_aimed(3, 2, ([-9998.0f] / _f(16)) + 3.1415927f, 60.0f, 192.0f, 800.0f, 0, 32.0f); reason=old_aimed_laser_macro; approximation=no_op_setup
+    // legacy laserOnA lowering th10->th15: approximated as target straight laser; reason=TH10/11 laserOnA approximated as target straight laser with same angle/length/width/timing
+    ins_700(3, 0.0f, 192.0f, 0.0f, 32.0f);
+    ins_701(3, 0, 0, 800, 0, 0);
+    ins_708(3, ([-9998.0f] / _f(16)) + 3.1415927f);
+    ins_702(3);
+    // original laser style=2; source args: 3, 2, ([-9998.0f] / _f(16)) + 3.1415927f, 60.0f, 192.0f, 800.0f, 0, 32.0f
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(15);
     // semantic op_key lowering th10->th15: unit.diff_wait
@@ -1515,7 +1528,7 @@ void BossCard3_at2()
     ins_23(1);
     BossCard3_at2_1564:
     if ($B--) goto BossCard3_at2_1032 @ 0;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop BossCard3_at2_1032 lines 777..788 condition=$B--
@@ -1620,7 +1633,7 @@ void BossCard3_at3()
     ins_23(1);
     BossCard3_at3_1564:
     if ($B--) goto BossCard3_at3_1032 @ 0;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop BossCard3_at3_1032 lines 816..827 condition=$B--
@@ -1678,15 +1691,16 @@ void BossCard4()
     ins_514(0, 0, 4200, "BossDead");
     !EN
     // semantic op_key lowering th10->th15: boss.spell
-    ins_537(53, 4200, 1000000, "Ç•„uŽR_“nŒäv");
+    ins_537(53, 4200, 1000000, "ï¿½Ç•ï¿½ï¿½uï¿½Rï¿½_ï¿½nï¿½ï¿½v");
     !*
     !H
     // semantic op_key lowering th10->th15: boss.spell3
-    ins_539(55, 4200, 1000000, "Ç•„u“V‘·~—Õv");
+    ins_539(55, 4200, 1000000, "ï¿½Ç•ï¿½ï¿½uï¿½Vï¿½ï¿½ï¿½~ï¿½Õv");
     !*
     !L
     // semantic op_key lowering th10->th15: boss.spell_ex
-    ins_522(56, 4200, 1000000, "Ç•„u“Vã“V‰º‚ÌÆš v");
+    // emitted by IR op lowering policy for th15: boss.spell_ex -> boss.spell_ex; reason=extended spell descriptor is a shared boss phase header in TH10+
+    ins_522(56, 4200, 1000000, "ï¿½Ç•ï¿½ï¿½uï¿½Vï¿½ï¿½Vï¿½ï¿½ï¿½ÌÆšï¿½ï¿½v");
     !*
     // object Mode source_line=861 family=movement_tween_mode
     // Mode IR metadata: movement tween mode raw=4 semantic=decelerate_or_curve target=4
@@ -2028,7 +2042,7 @@ void BossChargeP()
     ins_315(1, 61, [-9958.0f]);
     BossChargeP_232:
     if ($B--) goto BossChargeP_188 @ 0;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop BossChargeP_188 lines 1049..1054 condition=$B--
@@ -2055,7 +2069,7 @@ void BossChargeP2()
     ins_315(1, 62, [-9958.0f]);
     BossChargeP2_232:
     if ($B--) goto BossChargeP2_188 @ 0;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop BossChargeP2_188 lines 1065..1070 condition=$B--
@@ -2102,7 +2116,7 @@ void BossDead()
     // semantic op_key lowering th10->th15: boss.set_boss
     ins_512(-1);
     // semantic op_key lowering th10->th15: unit.set_screen_shake
-    // unsupported semantic op without IR lowering policy for th15: unit.set_screen_shake(30, 12, 0)
+    ins_517(30, 12, 0);
     // object Animation source_line=1095 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
     ins_307(1, 102);
@@ -2111,7 +2125,7 @@ void BossDead()
     ins_307(1, 102);
     // semantic op_key lowering th10->th15: unit.play_sound
     ins_516(18);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -2148,7 +2162,7 @@ void Crow00L()
     +6000:
     // semantic op_key lowering th10->th15: flow.nop
     ins_0();
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -2185,7 +2199,7 @@ void Crow00R()
     +6000:
     // semantic op_key lowering th10->th15: flow.nop
     ins_0();
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -2280,7 +2294,7 @@ void Crow01L()
     +6000:
     // semantic op_key lowering th10->th15: flow.nop
     ins_0();
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -2318,7 +2332,7 @@ void Crow01R()
     +6000:
     // semantic op_key lowering th10->th15: flow.nop
     ins_0();
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -2393,7 +2407,7 @@ void DiveEnemy00()
     ins_314(2, 15);
     DiveEnemy00_1012:
     if ($B--) goto DiveEnemy00_988 @ 80;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop DiveEnemy00_988 lines 1231..1234 condition=$B--
@@ -2470,7 +2484,7 @@ void DiveEnemy00B()
     ins_314(2, 15);
     DiveEnemy00B_1012:
     if ($B--) goto DiveEnemy00B_988 @ 120;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop DiveEnemy00B_988 lines 1272..1275 condition=$B--
@@ -2547,7 +2561,7 @@ void DiveEnemy01()
     ins_314(2, 15);
     DiveEnemy01_1012:
     if ($B--) goto DiveEnemy01_988 @ 110;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop DiveEnemy01_988 lines 1313..1316 condition=$B--
@@ -2624,7 +2638,7 @@ void DiveEnemy01B()
     ins_314(2, 15);
     DiveEnemy01B_1068:
     if ($B--) goto DiveEnemy01B_1044 @ 170;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop DiveEnemy01B_1044 lines 1354..1357 condition=$B--
@@ -2681,7 +2695,7 @@ void DiveEnemy02()
     ins_314(2, 18);
     DiveEnemy02_480:
     if ($B--) goto DiveEnemy02_456 @ 230;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop DiveEnemy02_456 lines 1381..1384 condition=$B--
@@ -2738,7 +2752,7 @@ void DiveEnemy02B()
     ins_314(2, 18);
     DiveEnemy02B_480:
     if ($B--) goto DiveEnemy02B_456 @ 310;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop DiveEnemy02B_456 lines 1408..1411 condition=$B--
@@ -2815,7 +2829,7 @@ void DiveEnemy04()
     ins_314(2, 15);
     DiveEnemy04_1196:
     if ($B--) goto DiveEnemy04_1172 @ 170;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop DiveEnemy04_1172 lines 1449..1452 condition=$B--
@@ -2853,9 +2867,9 @@ void DiveEnemy04B()
     // movement lowering th10 -> th15: movement.velocity.tween -> ins_405
     ins_405(300, 0, -1.5707964f, -3.8f);
     +300:
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -2900,7 +2914,7 @@ void GGirl00()
     // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(3);
     @Girl00(35, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -2912,7 +2926,7 @@ void GGirl01()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(3);
     @Girl01(35, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -2924,7 +2938,7 @@ void GGirl03()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(3);
     @Girl03(35, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -2936,7 +2950,7 @@ void GGirl04()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(3);
     @Girl04(35, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -3158,7 +3172,7 @@ void Girl02()
     +6000:
     // semantic op_key lowering th10->th15: flow.nop
     ins_0();
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -3711,7 +3725,7 @@ void MBoss()
     +60:
     // semantic op_key lowering th10->th15: boss.set_chapter
     ins_524(0);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - counter_loop MBoss_460 lines 1885..1897 condition=$B--
@@ -3822,7 +3836,7 @@ void MBossDead()
     // semantic op_key lowering th10->th15: enemy.enm_kill_all
     ins_525();
     // semantic op_key lowering th10->th15: unit.set_screen_shake
-    // unsupported semantic op without IR lowering policy for th15: unit.set_screen_shake(30, 12, 0)
+    ins_517(30, 12, 0);
     // object Animation source_line=1962 family=th10_th11
     // Animation lowering th10_th11 -> th15: anm.play -> ins_307
     ins_307(1, 102);
@@ -3868,9 +3882,9 @@ void MBossDead()
     +60:
     // semantic op_key lowering th10->th15: boss.set_boss
     ins_512(-1);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -3911,7 +3925,7 @@ void MBossEscape()
     +60:
     // semantic op_key lowering th10->th15: boss.set_chapter
     ins_524(0);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -3941,101 +3955,122 @@ void MainSub1()
     [-9985] = 0;
     +30:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", -128.0f, 160.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", -128.0f, 160.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", -64.0f, 160.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", -64.0f, 160.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 0.0f, 160.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 0.0f, 160.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 64.0f, 160.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 64.0f, 160.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 128.0f, 160.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 128.0f, 160.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9984] = 2;
     [-9981.0f] = 3.141593f;
     +300:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", 128.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", 128.0f, -512.0f, 60, 1000, 1);
     [-9985] = 1;
     [-9981.0f] = 0.392699f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", -64.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", -64.0f, -512.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9981.0f] = 0.392699f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", 64.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", 64.0f, -512.0f, 60, 1000, 1);
     [-9985] = 1;
     [-9981.0f] = 0.0f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", -128.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", -128.0f, -512.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9981.0f] = 1.570796f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", 0.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", 0.0f, -512.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9984] = 2;
     [-9981.0f] = 3.141593f;
     +60:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", -96.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", -96.0f, -512.0f, 60, 1000, 1);
     [-9985] = 1;
     [-9981.0f] = 0.392699f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", 96.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", 96.0f, -512.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9981.0f] = 0.392699f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", -32.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", -32.0f, -512.0f, 60, 1000, 1);
     [-9985] = 1;
     [-9981.0f] = 3.141593f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", 160.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", 160.0f, -512.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9981.0f] = 1.570796f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", 32.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", 32.0f, -512.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9984] = 2;
     [-9981.0f] = 3.141593f;
     +60:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", 96.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", 96.0f, -512.0f, 60, 1000, 1);
     [-9985] = 1;
     [-9981.0f] = 0.392699f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", -96.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", -96.0f, -512.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9981.0f] = 0.392699f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", 32.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", 32.0f, -512.0f, 60, 1000, 1);
     [-9985] = 1;
     [-9981.0f] = 0.0f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", -160.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", -160.0f, -512.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9981.0f] = 1.570796f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01", -32.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01", -32.0f, -512.0f, 60, 1000, 1);
     +50:
     [-9981.0f] = -1.570796f;
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy02", 0.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy02", 0.0f, -512.0f, 60, 1000, 1);
     +600:
     @MainSub2() async;
     return;
@@ -4153,55 +4188,71 @@ void MainSub2()
     [-9985] = 2;
     +30:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 128.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 128.0f, -512.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 64.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 64.0f, -512.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 0.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 0.0f, -512.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", -64.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", -64.0f, -512.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", -128.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", -128.0f, -512.0f, 60, 1000, 1);
     [-9985] = 1;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 128.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 128.0f, -576.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 64.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 64.0f, -576.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 0.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 0.0f, -576.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", -64.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", -64.0f, -576.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", -128.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", -128.0f, -576.0f, 60, 1000, 1);
     [-9985] = 0;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 128.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 128.0f, -640.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 64.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 64.0f, -640.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", 0.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", 0.0f, -640.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", -64.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", -64.0f, -640.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00", -128.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00", -128.0f, -640.0f, 60, 1000, 1);
     +50:
     [-9981.0f] = -1.570796f;
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy02", 64.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy02", 64.0f, -512.0f, 60, 1000, 1);
     +600:
     @MainSub3() async;
     @MainSub3B() async;
@@ -4222,7 +4273,8 @@ void MainSub3()
     MainSub3_156:
     [-9985] = 1;
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy04", %A, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy04", %A, -512.0f, 60, 1000, 1);
     %A;
     +40:
     32;
@@ -4241,7 +4293,8 @@ void MainSub3()
     MainSub3_528:
     [-9985] = 1;
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy04", %A + ([-9987.0f] * _f(32)), -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy04", %A + ([-9987.0f] * _f(32)), -512.0f, 60, 1000, 1);
     %A;
     +10:
     7;
@@ -4270,12 +4323,14 @@ void MainSub3B()
     goto MainSub3B_496 @ 70;
     MainSub3B_156:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy04B", %A, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy04B", %A, -512.0f, 60, 1000, 1);
     +20:
     // semantic op_key lowering th10->th15: flow.nop
     ins_0();
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy04B", (%A + ([-9999.0f] * _f(128))) + _f(32), -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy04B", (%A + ([-9999.0f] * _f(128))) + _f(32), -512.0f, 60, 1000, 1);
     %A;
     +20:
     32;
@@ -4550,99 +4605,129 @@ void MainSub5()
     [-9985] = 2;
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 192.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 192.0f, -512.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 128.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 128.0f, -512.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 64.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 64.0f, -512.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 0.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 0.0f, -512.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", -64.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", -64.0f, -512.0f, 60, 1000, 1);
     [-9985] = 1;
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", -64.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", -64.0f, -576.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 0.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 0.0f, -576.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 64.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 64.0f, -576.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 128.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 128.0f, -576.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 192.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 192.0f, -576.0f, 60, 1000, 1);
     [-9985] = 0;
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 192.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 192.0f, -640.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 128.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 128.0f, -640.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 64.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 64.0f, -640.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 0.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 0.0f, -640.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", -64.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", -64.0f, -640.0f, 60, 1000, 1);
     [-9985] = 2;
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", -64.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", -64.0f, -512.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 0.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 0.0f, -512.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 64.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 64.0f, -512.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 128.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 128.0f, -512.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 192.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 192.0f, -512.0f, 60, 1000, 1);
     [-9985] = 1;
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 192.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 192.0f, -576.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 128.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 128.0f, -576.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 64.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 64.0f, -576.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 0.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 0.0f, -576.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", -64.0f, -576.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", -64.0f, -576.0f, 60, 1000, 1);
     [-9985] = 0;
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", -64.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", -64.0f, -640.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 0.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 0.0f, -640.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 64.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 64.0f, -640.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 128.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 128.0f, -640.0f, 60, 1000, 1);
     +10:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy00B", 192.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy00B", 192.0f, -640.0f, 60, 1000, 1);
     +200:
     @MainSub7() async;
     return;
@@ -4869,98 +4954,116 @@ void MainSub7()
     [-9981.0f] = 3.141593f;
     [-9980.0f] = 0.19635f;
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", 96.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", 96.0f, -640.0f, 60, 1000, 1);
     [-9985] = 2;
     [-9981.0f] = 0.392699f;
     [-9980.0f] = 0.19635f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", -48.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", -48.0f, -640.0f, 60, 1000, 1);
     [-9985] = 2;
     [-9981.0f] = 0.392699f;
     [-9980.0f] = -0.19635f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", 48.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", 48.0f, -640.0f, 60, 1000, 1);
     [-9985] = 2;
     [-9981.0f] = 0.0f;
     [-9980.0f] = -0.19635f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", -98.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", -98.0f, -640.0f, 60, 1000, 1);
     [-9985] = 2;
     [-9981.0f] = 1.570796f;
     [-9980.0f] = _f(0);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", 0.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", 0.0f, -640.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9984] = 2;
     [-9981.0f] = 3.141593f;
     [-9980.0f] = -0.19635f;
     +60:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", -64.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", -64.0f, -640.0f, 60, 1000, 1);
     [-9985] = 1;
     [-9981.0f] = 0.392699f;
     [-9980.0f] = -0.19635f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", 80.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", 80.0f, -640.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9981.0f] = 0.392699f;
     [-9980.0f] = 0.19635f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", -16.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", -16.0f, -640.0f, 60, 1000, 1);
     [-9985] = 1;
     [-9981.0f] = 3.141593f;
     [-9980.0f] = 0.19635f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", 130.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", 130.0f, -640.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9981.0f] = 1.570796f;
     [-9980.0f] = _f(0);
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", 32.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", 32.0f, -640.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9984] = 2;
     [-9981.0f] = 3.141593f;
     +60:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", 64.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", 64.0f, -640.0f, 60, 1000, 1);
     [-9985] = 1;
     [-9981.0f] = 0.392699f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", -80.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", -80.0f, -640.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9981.0f] = 0.392699f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", 16.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", 16.0f, -640.0f, 60, 1000, 1);
     [-9985] = 1;
     [-9981.0f] = 0.0f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", -128.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", -128.0f, -640.0f, 60, 1000, 1);
     [-9985] = 0;
     [-9981.0f] = 1.570796f;
     +20:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy01B", -32.0f, -640.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy01B", -32.0f, -640.0f, 60, 1000, 1);
     +50:
     [-9981.0f] = -1.570796f;
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy02B", -96.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy02B", -96.0f, -512.0f, 60, 1000, 1);
     +300:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy02B", 96.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy02B", 96.0f, -512.0f, 60, 1000, 1);
     +300:
     // semantic op_key lowering th10->th15: enemy.create_legacy270
-    // dropped by IR op lowering policy for th15: enemy.create_legacy270("DiveEnemy02B", 0.0f, -512.0f, -1073741824, 60, 1000, 1); reason=source_specific_runtime_helper
+    // emitted by IR op lowering policy for th15: enemy.create_legacy270 -> enemy.create_func; reason=TH10/11 enmCreate270 is used as background/helper enemy create; argument 3 is a legacy runtime flag not present in target func-create
+    ins_309("DiveEnemy02B", 0.0f, -512.0f, 60, 1000, 1);
     +660:
     @MainSub8L() async;
     +60:
@@ -5203,7 +5306,7 @@ void RGirl00()
     // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(1);
     @Girl00(25, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -5267,7 +5370,7 @@ void RGirl01()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(1);
     @Girl01(25, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -5279,7 +5382,7 @@ void RGirl03()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(1);
     @Girl03(25, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -5291,7 +5394,7 @@ void RGirl04()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(1);
     @Girl04(25, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -5304,7 +5407,7 @@ void YGirl00()
     // timeline order rewrite: TH13+ target should apply item-drop state after wrapper ANM setup, before shared enemy body
     ins_510(0);
     @Girl00(40, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -5316,7 +5419,7 @@ void YGirl01()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(0);
     @Girl01(40, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -5328,7 +5431,7 @@ void YGirl03()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(0);
     @Girl03(40, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -5340,7 +5443,7 @@ void YGirl04()
     // semantic op_key lowering th10->th15: unit.drop_main
     ins_510(0);
     @Girl04(40, 93);
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
 }
 
@@ -5367,8 +5470,8 @@ void main()
     +1:
     // semantic op_key lowering th10->th15: unit.dialog_wait
     ins_519();
-    // semantic op_key lowering th10->th15: unit.boss_wait
-    ins_520();
+    // semantic op_key lowering th10->th15: unit.death_wait
+    // approximated by IR op lowering policy for th15: unit.death_wait(); reason=target_without_death_wait; approximation=no_op
     // semantic op_key lowering th10->th15: unit.dialog_read
     ins_518(1);
     +1:
@@ -5384,7 +5487,7 @@ void main()
     ins_0();
     main_380:
     if (1) goto main_364 @ 8762;
-    // semantic op_key lowering th10->th15: raw.th10_th11.1
+    // semantic op_key lowering th10->th15: flow.delete
     ins_1();
     // detected loops:
     // - backedge_loop main_364 lines 2895..2899 condition=1
