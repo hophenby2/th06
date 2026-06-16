@@ -202,6 +202,24 @@ class BulletTransformIR:
     def encoded_mode(self, target: str) -> str:
         return encode_bullet_transform_mode(self.mode_semantic, target, self.values.get("mode", "0"))
 
+    def encoded_b(self, target: str) -> str:
+        value = self.values.get("b", "-999999")
+        if generation_for_game(target) == "th13_plus":
+            return {
+                "bounce_all": "15",
+                "bounce_no_bottom": "13",
+                "bounce_bottom": "2",
+                "bounce_horizontal": "12",
+                "wall_pass_horizontal": "12",
+            }.get(self.mode_semantic, value)
+        return value
+
+    def encoded_r(self, target: str) -> str:
+        value = self.values.get("r", "-999999.0f")
+        if generation_for_game(target) == "th13_plus" and self.mode_semantic == "wall_pass_horizontal":
+            return "-999999.0f"
+        return normalize_target_float_sentinel(value, target)
+
     def base_fields_for(self, target: str) -> list[str]:
         return [
             self.values.get("emitter_id", "0"),
@@ -209,8 +227,8 @@ class BulletTransformIR:
             self.values.get("channel", "0"),
             self.encoded_mode(target),
             self.encoded_a(target),
-            self.values.get("b", "-999999"),
-            normalize_target_float_sentinel(self.values.get("r", "-999999.0f"), target),
+            self.encoded_b(target),
+            self.encoded_r(target),
             normalize_target_float_sentinel(self.values.get("s", "-999999.0f"), target),
         ]
 

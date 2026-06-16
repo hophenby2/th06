@@ -138,7 +138,7 @@ OP_ALIASES = {
     "hitbox_rotate": "unit.hitbox_rotate",
     "life_marker": "unit.life_marker",
     "laser_cancel": "unit.laser_cancel",
-    "death_wait": "unit.death_wait",
+    "death_wait": "unit.boss_wait",
     "stars": "unit.stars",
     "set_screen_shake": "unit.set_screen_shake",
     "func_set": "unit.func_set",

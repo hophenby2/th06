@@ -76,6 +76,7 @@ def emit_transpile(program, objects, target: str) -> str:
         lines.extend(top_level_lines)
 
     by_function: dict[str, list[object]] = {}
+    legacy270_capture_functions = legacy270_mode_capture_functions(program, objects)
     for obj in objects:
         by_function.setdefault(getattr(obj, "function", ""), []).append(obj)
 
@@ -96,6 +97,7 @@ def emit_transpile(program, objects, target: str) -> str:
         lines.append(target_function_header(function, params, target))
         lines.append("{")
         body_lines = emit_function_body(function_objects, target)
+        body_lines = apply_legacy270_mode_capture(body_lines, function, legacy270_capture_functions)
         body_lines = apply_timeline_order_rewrites(body_lines, function_objects, target)
         if generation_for_game(target) == "th06_th08" and params:
             body_lines = old_target_param_initializers(params) + body_lines
@@ -654,6 +656,39 @@ def object_for_timeline_compile(obj, bullet_state: BulletLoweringState | None):
         cloned.semantics["curve_laser_fire"] = True
         return cloned
     return obj
+
+
+def legacy270_mode_capture_functions(program, objects: list[object]) -> set[str]:
+    created = set()
+    for obj in objects:
+        if getattr(obj, "kind", None) != "Enemy" or getattr(obj, "game", "") not in {"th10", "th11", "th12"}:
+            continue
+        raw = getattr(obj, "raw", [])
+        if not raw or getattr(raw[0], "opcode", None) != 270:
+            continue
+        args = getattr(raw[0], "args", [])
+        if args:
+            created.add(str(args[0]).strip().strip('"'))
+    return created
+
+
+def apply_legacy270_mode_capture(lines: list[str], function: str, capture_functions: set[str]) -> list[str]:
+    if function not in capture_functions:
+        return lines
+    if not any("[-9985]" in line for line in lines):
+        return lines
+    output: list[str] = []
+    inserted = False
+    for line in lines:
+        current = line.replace("[-9985]", "$A") if "unless ([-9985]" in line else line
+        output.append(current)
+        if not inserted and current.strip().startswith("var "):
+            output.append("    // legacy 270 mode capture: preserve [-9985] at enemy creation time")
+            output.append("    $A = [-9985];")
+            inserted = True
+    if not inserted:
+        output.insert(0, "    $A = [-9985];")
+    return output
 
 
 def emit_function_body(function_objects: list[object], target: str) -> list[str]:

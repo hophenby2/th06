@@ -429,7 +429,8 @@ BULLET_TRANSFORM_MODES: tuple[SemanticValue, ...] = (
     SemanticValue("shape_change_no_mist", {GEN_TH10_TH11: "16777216"}),
     SemanticValue("legacy_turn_unknown", {GEN_TH10_TH11: "33554432"}),
     SemanticValue("legacy_unknown_67108864", {GEN_TH10_TH11: "67108864"}),
-    SemanticValue("independent_velocity", {GEN_TH13_PLUS: "524288", GEN_TH12: "134217728", GEN_TH10_TH11: "134217728"}),
+    SemanticValue("bounce_horizontal", {GEN_TH10_TH11: "134217728"}),
+    SemanticValue("independent_velocity", {GEN_TH13_PLUS: "524288", GEN_TH12: "134217728"}),
     SemanticValue("highlight", {GEN_TH13_PLUS: "1048576", GEN_TH12: "268435456", GEN_TH10_TH11: "268435456"}),
     SemanticValue("velocity_over_time", {GEN_TH13_PLUS: "2097152", GEN_TH12: "536870912", GEN_TH10_TH11: "536870912"}),
     SemanticValue("legacy_ds_unknown_1073741824", {GEN_TH10_TH11: "1073741824"}),
@@ -439,6 +440,14 @@ for mode in BULLET_TRANSFORM_MODES:
     for generation, value in mode.values.items():
         BULLET_TRANSFORM_MODE_BY_GENERATION_VALUE.setdefault((generation, value), mode)
 BULLET_TRANSFORM_MODE_BY_SEMANTIC = {mode.semantic: mode for mode in BULLET_TRANSFORM_MODES}
+
+SPECIAL_BULLET_TRANSFORM_MODE_ENCODINGS: dict[tuple[str, str], str] = {
+    ("bounce_all", GEN_TH13_PLUS): "64",
+    ("bounce_no_bottom", GEN_TH13_PLUS): "64",
+    ("bounce_bottom", GEN_TH13_PLUS): "64",
+    ("bounce_horizontal", GEN_TH13_PLUS): "64",
+    ("wall_pass_horizontal", GEN_TH13_PLUS): "4096",
+}
 
 UNSUPPORTED_BULLET_TRANSFORM_MODE_REASONS: dict[tuple[str, str, str], str] = {
     (
@@ -530,6 +539,9 @@ def bullet_transform_mode_semantic(game: str, mode: Any) -> str:
 def encode_bullet_transform_mode(semantic: str, target: str, fallback: Any = None) -> str:
     if semantic.startswith("raw:"):
         return semantic[4:]
+    special = SPECIAL_BULLET_TRANSFORM_MODE_ENCODINGS.get((semantic, generation_for_game(target)))
+    if special is not None:
+        return special
     mode = BULLET_TRANSFORM_MODE_BY_SEMANTIC.get(semantic)
     if mode:
         encoded = mode.encode(generation_for_game(target))
