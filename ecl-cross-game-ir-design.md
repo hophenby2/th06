@@ -13,6 +13,38 @@
   - TH08 及第一世代更像宏 opcode：一次 `ins_96/97/98/99...` 就包含 style/color/way/layer/speed/angle/flags，变换由 `ins_111` 预置。
 - 移植例如“TH15 发弹逻辑到 TH12”可行，但不是所有语义都可无损：TH15 的 `etEx/etExSet2`、部分 flags、游戏特有资源、取消/道具/灵击/季节/动物灵等需要降级、模拟或忽略。
 
+### 0.1 当前 `ecl_ir` 实现基线
+
+本文后续不少段落保留了早期对象 IR 设计草案。与当前实现冲突时，以已经落地的统一链路为准：
+
+```text
+SourceDocument
+  -> Program
+  -> DialectDecoder
+  -> SemanticModule
+       -> ExpressionIR
+            -> VariableUse -> VariableRef
+            -> StackUse    -> StackRef
+  -> derived analyses (bullet state / CFG / patterns)
+  -> LoweringPlanner(GameProfile)
+  -> TargetModule
+  -> .decl
+```
+
+- `SemanticModule` 是唯一拥有 lowering 顺序的 canonical effect stream；对象、状态和 CFG 都是引用 `NodeId` 的派生分析，不重复拥有源指令。
+- `DifficultyGuard` 固定为八个独立 lane：`E/N/H/L/X/O/6/7`。旧作的 `4/5`、TH18.5 的 `0..7` 和现代的 `X/O` 只是方言拼写，raw marker 仍会保留。
+- 运行时按难度选择的 literal table 使用 `SelectedValue(selector=difficulty)` 和 `SelectionCase`，并归实际消费它的 `SemanticOperation`、`RawInstructionOp` 或 `SyntaxStatement` 所有，不再只靠占位符文本。同游戏 identity lowering 会按原顺序重建所有表；尚未实现的跨游戏选择 lowering 会给出 `value_selection.unsupported`。
+- `game_profile.TransformForm` 是 transform 具体布局的唯一 registry：记录 `opcode`、`write_kind`、`parameter_set` 和 operand 顺序。`BulletTransformIR` 统一承载 canonical operand state 与 semantic mode，避免维护游戏对游戏的 opcode 特化表。
+- routine CFG 使用 Tarjan SCC 标记循环。循环内的 append cursor 是 loop-carried state，resolved index 强制为未知；降到只支持显式 index 的目标时给出结构化 unsupported，而不是猜一个槽位。
+- 同游戏编译走 provenance opcode + canonical operands 的 identity 路径，不经过跨代 backend；selected values 也在该路径恢复。
+- bullet shape 先按源游戏 catalog 解码为语义名称，再按目标 catalog 编码。TH06、TH07、TH08 分开，TH13/14 的 pre-TH15 插号与 TH15+ 现代表分开；目标没有条目或发生视觉合并时显式报告 unsupported/lossy。
+- transform sentinel 由 `(game, semantic mode, operand role)` 共同解释。`unused`、`keep_current` 与引擎动态值互不混用；live player/random angle 使用 `EngineValueKind` 和 `PER_FRAME` evaluation time，在目标存在编码时重编码。
+- `ExpressionIR` 以 source-preserving text 加 typed `VariableUse` / `StackUse` span 统一承载 instruction、selected value 与 syntax expression 中的引用。`VariableRef` 区分 semantic ID、value/storage type、scope、access、propagation、confidence 和结构化 source encoding；`StackRef` 表示 TH13+ routine ABI 的相对槽位，不冒充可以按 semantic ID 重编码的游戏变量。每个 `GameProfile` 持有独立 `VariableDialect` 与 `RoutineDialect`。跨游戏找不到同语义目标、数值碰撞、写权限收窄或 routine ABI 不兼容时 structured unsupported，TH06/07 不套用 TH08 表。
+- 未识别的 `[number]` 也不会留作裸文本：它成为 `Confidence.UNKNOWN` 的 opaque reference，只允许同游戏 identity。legacy timeline 成员则携带 typed `DialectRegion`，整个 game-specific timeline opcode block 跨游戏统一拒绝。
+- target opcode 必须在目标游戏 registry 中有同一 semantic key 的明确条目；不能从 TH13/TH15/TH08 借一个同世代数字。canonical 默认关闭 lossy/drop 与跨游戏 RAW，只有显式 policy opt-in 才开放，并把 warning 写在对应目标语句旁。
+- ANM bank/script ID 当前没有完整 typed resource flow，因此相关 `select/set/play` 操作跨游戏返回 `anm.resource_context_unresolved`；`layer/alpha/scale/rotate` 等非资源参数不受此 gate 影响。
+- 当前 `TargetStatement` 仍以 `lines: tuple[str, ...]` 为 envelope，并非完整 typed target AST；完整 expression node union 与 typed target statement union 仍属于下一阶段。
+
 ## 1. 数据集概况
 
 | 游戏目录 | 文件数 | 函数/子程序数 | 指令总数 | 唯一 opcode 数 | 世代 |
@@ -60,13 +92,15 @@ sub/void PatternName_at() {
 
 常见命名也反映语义：`*_at` 多为 attack task，`*func` 多为行为函数，`*Dead` 为死亡反击/清理，`BossCard*`/`MBossCard*` 为卡或非。
 
+routine 语法不能只按文本直通。`RoutineDialect` 分别声明 call、local、structured-expression 与 relative-stack 编码：TH06-08 使用 numbered-call/fixed-register ABI，TH10+ 使用 named-call/named-stack ABI，TH13+ 另外支持相对栈槽。具名调用、局部变量、routine parameter、现代 goto/assign/return/raw-expression/prototype 或 `StackRef` 跨入不兼容 ABI 时分别产生结构化诊断，而不是为每对游戏维护特化转换。
+
 ### 2.2 时间结构
 
 跨游戏常见：
 
 - `wait(t)`：第四世代 `ins_23` 极高频；第一世代/TH08 以时间标签 `+N`、`ins_2/ins_105/ins_106` 等表达等待。
 - `goto label @ time` + `if counter-- goto`：所有世代都存在循环结构。
-- 难度块：`!E !N !H !L/!LO !*` 在反编译脚本中作为条件覆盖参数。应抽象为 `DifficultyValue<T>`。
+- 难度块：`!E !N !H !L/!LO !*` 在反编译脚本中作为条件覆盖参数。canonical guard 应抽象为八 lane `DifficultyGuard(E/N/H/L/X/O/6/7)`；instruction 或 syntax consumer 的运行时难度选择则用 `SelectedValue<T>`，不能把两者混成一个四难度值。
 - 异步任务：第四世代 `@Sub() async` / 调用子任务；第一世代也有子例程调用，但表示方式不同。
 
 高级 IR 应把时间提升为：
@@ -205,18 +239,15 @@ TH12 eclmap 显示：
 506 etCount
 507 etAim
 508 etSound
-509 etExSet
-510 etExSet2
-511 etEx
-512 etEx2
-513 etClearAll
-514 etCopy
-515 etCancel
-516 etClear
+509 etEx
+510 etClearAll
+511 etCopy
+512 etCancel
+513 etClear
 ...
 ```
 
-组合与 TH13+ 基本同构，但编号整体少 100，参数顺序/细节可能不同。
+其中只有 `509` 是 indexed transform write。`510` 是全屏清弹，`511` 是 manager copy，`512` 是范围消弹；它们不能作为 `609/610/611/612` 的四个旧版对应项。基础 manager 配置与 TH13+ 接近，但 transform form、cursor 模型和参数能力必须分别 lowering。
 
 #### 第二世代 TH10/TH11
 
@@ -372,20 +403,30 @@ BulletEmitter:
   transforms:
     - BulletTransform
   difficultyOverrides:
-    easy: partial BulletEmitter
-    normal: partial BulletEmitter
-    hard: partial BulletEmitter
-    lunatic: partial BulletEmitter
+    E: partial BulletEmitter
+    N: partial BulletEmitter
+    H: partial BulletEmitter
+    L: partial BulletEmitter
+    X: partial BulletEmitter
+    O: partial BulletEmitter
+    6: partial BulletEmitter
+    7: partial BulletEmitter
 ```
 
-`null`/缺省表示“不使用”；编译到旧游戏时不可支持字段应进入 lowering 策略：忽略、近似、展开成多个 emitter、或报错。
+`null`/缺省表示“不使用”；编译到旧游戏时不可支持字段应进入 lowering 策略：忽略、近似、展开成多个 emitter、或报错。实际 canonical IR 中难度覆盖不以内嵌对象字典作为唯一真相：execution mask 使用 `DifficultyGuard`，literal selection 使用 `SelectedValue`，派生的 `BulletEmitter` state 只引用对应 canonical `NodeId`。
+
+`appearance.style` 在上述并集草图里是源方言输入，不应成为跨游戏 identity。当前实现先用源游戏优先的 catalog 将它提升为 `bullet_shape` semantic，再查询目标 catalog；若没有经过验证的目标形状，则拒绝 direct lowering。这样可以区分 TH06/07/08 同一数字的不同含义，以及 TH13/14 与 TH15+ 插号造成的编号漂移。
 
 ### 3.3 BulletTransform 并集
 
 ```yaml
 BulletTransform:
-  index: int
+  writeKind: replace | append
+  parameterSet: base | extended
+  manager: expr? = null
+  index: expr? = null       # replace 时显式；append 跨代 materialize 后才可能得到 resolved index
   channel: int = 0
+  modeSemantic: string
   trigger:
     afterFrames: int? = null
     condition: none | distance | offscreen | graze | custom
@@ -409,8 +450,10 @@ BulletTransform:
 
 - TH08 `ins_111(index,type,channel,a,b,x,y)` → `BulletTransform`。
 - TH10/11 `ins_409(slot,index,mode,type,a,b,x,y)` → `BulletTransform`。
-- TH12 `ins_509/510/511/512` → `BulletTransform`。
-- TH13+ `ins_609/610/611/612` → `BulletTransform`。
+- TH12 只有 `ins_509` → indexed `replace/base` transform；`510/511/512` 分别是 clear-all、copy、cancel。
+- TH13+ `ins_609/610/611/612` 正交为 `replace/base`、`replace/extended`、`append/base`、`append/extended`。
+
+具体 opcode 布局由各游戏 `TransformDialect.forms: tuple[TransformForm, ...]` 统一注册。transform reducer 和 backend 都查询同一 registry，不再各自维护一份 layout 表。append 降到 TH10/11/12 时，只有 CFG/难度 lane 分析得到唯一静态 index 才能 materialize 为 `409/509`。
 
 ### 3.4 LaserEmitter 并集
 
@@ -450,7 +493,7 @@ LaserEmitter:
 
 ## 4. 高级 IR 总体设计
 
-建议设计一个跨游戏 DSL/IR，分三层：
+概念上可分为源 AST、canonical effect stream、派生对象分析和目标 lowering。当前实现不把派生对象当作第二条 lowering 主链；它们只能引用 canonical `NodeId`。
 
 ### 4.1 AST 层：保留脚本结构
 
@@ -472,7 +515,7 @@ Statement:
   kind: wait | loop | if | goto | call | async | setVar | rawIns | objectOp
 ```
 
-### 4.2 Object IR 层：把 opcode 组合提升为对象
+### 4.2 派生 Object Analysis：把 opcode 组合投影为对象
 
 核心对象：
 
@@ -518,27 +561,39 @@ BulletEmitter:
   fire: once
 ```
 
+该对象是便于状态分析和模式识别的 projection。真正的 source order、ownership 和 lowering owner 仍在 `SemanticModule`，避免 canonical node 与 object cluster 同时发射同一条指令。
+
 ### 4.3 Backend lowering 层：按目标游戏生成 opcode
 
-每个目标游戏一个 backend：
+当前 canonical 路径使用一个由 profile/registry 参数化的 emitter，不为每一对源/目标游戏复制 backend：
 
 ```text
-BackendTH08
-BackendTH10
-BackendTH12
-BackendTH13Plus
+CanonicalBackendEmitter
+  + GameProfile(capabilities, sentinels)
+  + BulletDialect
+  + TransformDialect(TransformForm registry)
+  + semantic catalogs
 ```
 
 职责：
 
 1. 选择 opcode 族。
 2. 把对象字段降到目标支持的 opcode 参数。
-3. 处理缺省值与 sentinel：第四世代常用 `-999999` / `-999999.0f` 表示“不变/未用”；旧作可能用 `-1` 或根本无字段。
+3. 按 `(game, transform semantic mode, operand role)` 处理缺省值与 sentinel，而不是全局替换某个数字：同一 token 可能是 `unused`、`keep_current` 或普通数值。
 4. 对不支持字段进行策略处理：
    - `ignore`: 忽略非关键视觉字段。
    - `approximate`: 近似，例如把复杂 transform 展开为多个简单变换。
    - `expand`: 展开成多个 emitter/subtask。
    - `error`: 无法正确移植时报错。
+
+transform operand 当前使用 `OperandState.VALUE/UNUSED/KEEP_CURRENT/ENGINE_SENTINEL`。引擎每帧求值的动态角度另有 typed 表示：
+
+| 语义 | TH13/14 | TH15-17 | TH18/18.5 |
+| --- | --- | --- | --- |
+| `live_player_angle` | `999.0f` | `999999.0f` | `3000000.0f` |
+| `live_random_angle` | 不支持 | 不支持 | `4000000.0f` |
+
+这些 token 解码为 `EngineValueKind`，evaluation time 是 `PER_FRAME`。目标没有相应 token 时必须 structured unsupported，不能把它当普通 float 或 keep-current 值。
 
 ## 5. 反编译：从 ECL 汇编恢复高级对象
 
@@ -555,7 +610,8 @@ TH13+ BulletEmitter 识别：
 
 TH12 BulletEmitter 识别：
   起点：ins_500(id)
-  收集 502/503/504/505/506/507/508/509/510/511/512
+  收集配置 502/503/504/505/506/507/508 与 transform 509
+  将 510 clear-all、511 copy、512 cancel、513 clear 作为独立 manager/system action
   终点：ins_501(id)
 
 TH10/11 BulletEmitter 识别：
@@ -579,11 +635,19 @@ TH08 BulletEmitter 识别：
 !*  ins_605(0, [-1.0f], 1.0f);
 ```
 
-应恢复为：
+其中 `!E...!LO` 是各 literal case 的 guard，`!*` 是实际消费占位符的 instruction 或 syntax statement。literal group 直接附着到该 consumer，canonical 层应恢复为：
 
 ```yaml
-speed.first: DifficultyValue({E:1.5,N:1.5,H:2.0,L:3.0})
+SelectedValue:
+  selector: difficulty
+  cases:
+    - {guard: E, value: 1.5f}
+    - {guard: N, value: 1.5f}
+    - {guard: H, value: 2.0f}
+    - {guard: L, value: 3.0f}
 ```
+
+`DifficultyGuard` 仍按 `E/N/H/L/X/O/6/7` 八 lane 建模；示例只出现四个 case 不代表 IR 只有四个 lane。原 marker spelling 同时保留，以便 identity rendering。
 
 ### 5.3 循环恢复
 
@@ -646,11 +710,11 @@ ins_502(0, 4, 6);           // etSprite
 ins_506(0, 1, 1);           // etCount
 ins_504(0, 0.0f, 0.05235988f); // etAngle
 ins_505(0, 2.0f, 1.0f);     // etSpeed
-ins_511(...);               // etEx, 若 type 支持
+ins_509(0, resolvedIndex, channel, mode, ...); // etEx，需唯一静态 index 且 mode 可编码
 ins_501(0);                 // etOn
 ```
 
-注意：上面是语义 lowering 示例，实际参数顺序必须以目标 eclmap/THBWiki 对照表核验。
+注意：上面是语义 lowering 示例，实际参数顺序必须以目标 eclmap/THBWiki 对照表核验。若源是 `611/612` append，而 CFG 或难度 lane 无法证明唯一 `resolvedIndex`，该 transform 必须 unsupported；`511` 是 manager copy，绝不能用于代替 transform。
 
 ### 6.2 若目标不支持某 transform
 
@@ -723,15 +787,14 @@ body:
 ```yaml
 target:
   game: th12
-  backend: th12
   policy:
     unsupported: warn
-    sentinelInt: -999999
-    sentinelFloat: -999999.0
     resourceMap:
       bulletStyle: th15_to_th12_bullet_style.yaml
       color: common
 ```
+
+sentinel 不应作为一个全局 `sentinelInt/sentinelFloat` 开关暴露；它由目标 `GameProfile` 再结合 transform mode 和 operand role 编码。
 
 ## 8. 指令组合到对象的建议映射表
 
@@ -741,13 +804,13 @@ target:
 | `500 → 501 → 502/503` | `CollisionProfile/Flags` | hurtbox/hitbox/flag 设置 |
 | `400/401/404/405` | `MovementController` | 位置/速度/插值移动 |
 | `600 → 607 → 602 → 606 → 604 → 605 → 611* → 601` | `BulletEmitter` | TH13+ 标准发弹对象 |
-| `500 → 507 → 502 → 506 → 504 → 505 → 509/511* → 501` | `BulletEmitter` | TH12 标准发弹对象 |
+| `500 → 507 → 502 → 506 → 504 → 505 → 509* → 501` | `BulletEmitter` | TH12 标准发弹对象；`511` 是 manager copy，不是 transform |
 | `400/402/404/405/406/407 → 409* → on` | `BulletEmitter + BulletTransform` | TH10/11 弹幕槽对象 |
 | `111* → 96/97/98/99` | `BulletEmitter + BulletTransform` | TH08 宏发弹对象 |
 | `700 → 701 → 704/705/706/707/708/709 → 702/711` | `LaserEmitter` | TH13+ 激光对象 |
 | `600 → 601/602/604...` in TH12 laser range | `LaserEmitter` | TH12 激光对象 |
 | `511/512/513/514/521/523/537/538/539` | `BossPattern` | Boss 血量、timer、spell、interrupt |
-| `535/536/548 + !E/!N/!H/!L` | `DifficultyValue` | 难度参数选择/插值 |
+| instruction/call/async consumer + difficulty literal table | `SelectedValue + DifficultyGuard` | 八 lane 难度参数选择/执行 guard；consumer 拥有 ordered tables |
 | `23 + goto + if counter--` | `TimelineLoop` | 时间循环 |
 
 ## 9. 可移植性等级
@@ -767,32 +830,19 @@ target:
 ### 10.1 项目结构
 
 ```text
-ecl-ir/
-  schema/
-    program.schema.yaml
-    bullet.schema.yaml
-    laser.schema.yaml
-    boss.schema.yaml
-  frontends/
-    decl_parser.py
-    pattern_lifter.py
-  backends/
-    th08_backend.py
-    th10_backend.py
-    th12_backend.py
-    th13plus_backend.py
-  maps/
-    opcode_map.yaml
-    bullet_style_map.yaml
-    color_map.yaml
-    transform_map.yaml
-    movement_mode_map.yaml
-  stdlib/
-    bullet.yaml
-    laser.yaml
-    boss.yaml
-  reports/
-    unsupported.md
+ecl_ir/
+  source/              SourceDocument + Program
+  canonical/           semantic nodes, lifter, operations, variables
+  dialects/            profiles, references, catalogs, ANM data
+  analysis/            bullet reducer, CFG, transform/spread analysis
+  target/              capability planner + TargetModule renderer
+  artifact/            standalone schema + validation
+  compat/              text emitter still used by canonical lowering
+  legacy/              schema-v1 object projections
+  integrations/        optional external integrations
+  commands/            CLI implementation
+  deprecated/          unreferenced one-off code only
+  cli.py               stable command facade
 ```
 
 ### 10.2 编译流程
@@ -800,30 +850,35 @@ ecl-ir/
 ```text
 DECL/ECL 汇编
   ↓ parse
-AST: functions, labels, vars, raw ins
-  ↓ pattern lifting
-Object IR: BulletEmitter/LaserEmitter/BossPattern/Movement...
-  ↓ normalization
-Canonical IR: 难度值、循环、资源、表达式统一
+SourceDocument + Program: functions, labels, vars, raw ins
+  ↓ DialectDecoder
+SemanticModule: ordered canonical nodes + ownership/provenance
+  ↓ derived analyses
+Bullet state / CFG / Pattern projections (reference NodeId only)
   ↓ target lowering
-Target ECL AST
+LoweringPlanner(GameProfile) -> TargetModule
   ↓ emit
 目标游戏 .decl/.ecl
 ```
 
+当前 `TargetModule` 的 statement payload 仍是字符串 lines；将其替换为 `TargetInstruction/TargetSyntax/TargetComment/TargetUnsupported` typed union 是后续工作，而不是已完成前提。
+
 ### 10.3 设计原则
 
-1. **保留 raw escape hatch**：每个对象都允许 `rawInsBefore/rawInsAfter/rawArgs`，避免无法表达的游戏特有细节丢失。
+1. **保留 raw 证据，不默认执行 raw**：无法表达的细节保留 source/provenance；同游戏可 identity，跨游戏 RAW 必须显式 opt-in 并带节点 warning。
 2. **字段取并集，后端取交集**：IR 字段覆盖所有游戏，编译目标只消化其支持子集。
 3. **显式 unsupported**：不可无损移植的字段必须输出 warning/error，而不是静默生成错误弹幕。
 4. **资源映射独立**：style/color/anm/script 在不同游戏不等价，必须有 `resourceMap`。
 5. **参数语义优先于 opcode 编号**：不要做简单编号偏移；应先升格到语义对象再 lowering。
 6. **先支持第四代与第三代互转**：TH12 ↔ TH13+ 结构最接近，最适合作 MVP。
 7. **TH08/第一世代作为宏后端处理**：它的发弹 opcode 更高层，但可表达字段较少，适合把多个 IR 字段折叠进 `ins_96..99`。
+8. **同游戏 identity 独立**：同目标重建应使用 provenance opcode 与 canonical operands，不要把数据送进跨游戏近似规则。
+9. **变量与栈槽必须先分类再跨代**：当前实现使用 `VariableRef` + per-game `VariableDialect`，instruction operand、difficulty-selected value 和 syntax expression 共用 `ExpressionIR` 的 typed spans；TH13+ 相对槽位则使用独立 `StackRef` 并由 `RoutineDialect` 判断 ABI。数字相同不代表语义相同，例如 TH16/TH17 的 `-9903` 会得到 `variable.semantic_collision`；目标缺少 BF/GF 等槽位时得到 `variable.target_unavailable`。`INFERRED` 变量只允许同游戏 identity，不开放跨游戏 direct。完整的 literal/unary/binary/cast/call expression AST 仍需继续实现，但 typed relative-stack span 已经落地。
+10. **资源 ID 必须有 typed context**：ANM 的 bank/script/current-bank 应进入 `AnmResourceRef` 与 ordered analysis。文件名、函数名和相同数字都不能作为 DIRECT 等价证明。
 
-## 11. MVP 范围
+## 11. 阶段范围
 
-建议第一阶段只做：
+以下是早期 MVP 建议，当前 canonical pipeline、bullet reducer、transform registry、八 lane difficulty 和 CFG cycle analysis 已经超过该范围：
 
 - 解析 `.decl` 函数、label、变量、`ins_N`、难度块。
 - Lifter 支持：
@@ -836,8 +891,10 @@ Target ECL AST
   - TH12 → TH13+ 的基础 fan/ring 发弹。
 - 报告所有 unsupported transforms/laser/game-specific opcodes。
 
-第二阶段再扩展 TH10/11 与 TH08。
+下一阶段重点不是继续增加逐游戏替换表，而是完成统一 `OperationSchema`、typed target statement union、完整 expression node union、CFG state join、`AnmResourceRef`/bank-flow，以及 laser/movement/animation 等 canonical analyses。TH10/11 与 TH08 的新增 lowering 只有在变量/资源语义和 operand predicate 可证明时才应开放。
+
+最终验证基线：210 个源文件同目标 render/reparse 覆盖 251,710 个 canonical 节点，instruction/syntax/SelectedValue/timeline region 请求字段 mismatch 均为 0，且没有 unsupported/lossy。210×12 strict matrix 共处理 3,020,520 个节点和 2,520 次 build，无异常、无 lossy；1,233,676 个不可证明节点全部保留为 structured unsupported。
 
 ## 12. 结语
 
-把 ECL 当作“多平台汇编”是合理的：每个游戏/世代是一个 ISA，弹幕、移动、激光、Boss 是高级语义。真正可维护的移植器应采用“反编译到对象 IR → 目标后端编译”的方式，而不是维护大量 opcode-to-opcode 替换表。对于发弹逻辑，`BulletEmitter + BulletTransform + TimelineLoop + DifficultyValue` 足以覆盖大多数可移植语义；对于激光、Boss、游戏系统，需要明确能力矩阵和降级策略。
+把 ECL 当作“多平台汇编”是合理的：每个游戏/世代是一个 ISA，弹幕、移动、激光、Boss 是高级语义。真正可维护的移植器应采用“源方言 → ordered canonical IR → 派生 analyses → capability lowering”的方式，而不是维护大量 opcode-to-opcode 替换表。对于发弹逻辑，`BulletEmitter + BulletTransform + TimelineLoop + DifficultyGuard + SelectedValue` 能覆盖大量可移植语义；变量已经进入 typed dialect 基础，但激光、Boss、资源和游戏系统仍需要更完整的能力矩阵、canonical analysis 和降级策略。

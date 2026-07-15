@@ -1,91 +1,100 @@
 # Standalone ECL IR Roadmap
 
-Goal: make the pipeline work as `source .decl -> standalone .eclir.json -> source .decl` and `source .decl -> standalone .eclir.json -> target .decl`, without reparsing the original source during the compile step.
+Goal:
 
-## Current State
+```text
+source .decl -> standalone .eclir.json -> exact source bytes
+source .decl -> standalone .eclir.json -> target .decl
+```
 
-- `lift` exports a semantic object summary, but it is not a full standalone program IR.
-- `transpile` reparses source `.decl` and mixes raw program state with lifted objects.
-- Most IR objects have `to_dict()`, but there is no complete `from_dict()` path.
-- Exact byte roundtrip is implemented by storing `source_bytes_base64` plus `source_sha256` in `.eclir.json`.
-- `source_layout` now stores per-line layout metadata, allowing byte-identical reconstruction without reading `source_bytes_base64`; Program canonical roundtrip is still structural and not byte-perfect.
+The compile step must not read the original source or sibling files.
 
-## Required IR Layers
+## Current Layers
 
-| Layer | Purpose | Required Data | Status |
-|---|---|---|---|
-| Raw Program IR | Lossless source preservation plus parsed fallback representation | game, source, raw source bytes/hash, source encoding, source layout lines, resources, top-level statements, functions, params, statements, instructions, raw text, line numbers, difficulty blocks | implemented in `ir_file.py` |
-| Semantic Object IR | Cross-game objects used by target lowering | BulletEmitter, Enemy, Animation, Timeline, BossTimer, MotionModifier, policies, raw covered instructions | first implementation in `ir_file.py` |
-| Rewrite/Policy IR | Non-local conversion policy | ResourcePlan, EntryAlias, TimelineRewrite, FunctionRewrite, lowering policies | included as normal objects |
-| Identity Backend | Compile IR back to source generation | emits original source bytes by default; `--layout` emits line-layout reconstruction; canonical mode emits parsed Program IR | exact byte and layout roundtrip implemented; Program canonical mode is structural |
-| Target Backend | Compile IR to target generation | uses semantic objects and raw fallback from IR file | first implementation: reuses existing `emit_transpile()` with reconstructed Program/objects |
-
-## CLI Targets
-
-| Command | Meaning | Status |
+| Layer | Role | Status |
 |---|---|---|
-| `emit-ir source.decl -o file.eclir.json` | Parse and lift source into standalone IR JSON | first implementation |
-| `roundtrip-ir file.eclir.json -o source.decl` | Reconstruct exact original `.decl` bytes from IR only | implemented |
-| `roundtrip-ir file.eclir.json --layout -o source.decl` | Reconstruct `.decl` from line-level layout IR without using raw source bytes | implemented |
-| `roundtrip-ir file.eclir.json --canonical -o source.decl` | Reconstruct canonical source from parsed Program IR | implemented, not byte-perfect |
-| `validate-ir file.eclir.json` | Validate schema/hash/parse consistency | implemented |
-| `compile-ir file.eclir.json --target th15 -o target.decl` | Compile target `.decl` from IR only | first implementation |
+| `SourceDocument` | Reversible bytes, encoding, malformed-byte escapes | implemented |
+| `DeclTextCodec` | Artifact-level encoding of generated thecl source; separate from semantic/game profiles | implemented |
+| Dialect `Program` | Parsed statements, resources, instructions, exact raw text | implemented |
+| `SemanticModule` | Ordered canonical nodes with identity/ownership/provenance | implemented |
+| `ExpressionIR` / dialect registries | `VariableUse/VariableRef` and `StackUse/StackRef` shared by instruction, selected-value, and syntax expressions | implemented conservative foundation |
+| `DialectRegion` | Typed membership for legacy timeline syntax blocks | implemented; cross-game timeline lowering remains unsupported |
+| Analysis projections | State, CFG, and pattern views that reference canonical nodes | bullet manager and conservative CFG cycle analysis implemented; others partial |
+| `LoweringPlanner` | Target capability decisions and structured diagnostics | implemented foundation |
+| `TargetModule` | Ordered string-backed `TargetStatement` envelopes and renderer | implemented foundation; typed statement union pending |
+| Legacy Pattern objects | Compatibility with older specialized lowerers | retained behind `--legacy-patterns` |
 
-## What “Perfect Roundtrip” Still Needs
+Schema v2 serializes the Program, canonical IR, bullet analysis, legacy objects, source layout, exact bytes, and discovered external `RoutineSignature` records. `compile-ir` consumes only serialized data.
 
-Exact byte roundtrip is handled by `source_bytes_base64`; layout roundtrip is handled by `source_layout`. These items remain for Program-only canonical roundtrip after intentionally dropping source bytes/layout:
+## Command Contract
 
-1. Preserve every blank line and comment position in `Program.top_level` and `Function.statements`.
-2. Preserve resource block formatting, not just entries.
-3. Preserve exact function header spelling and brace style.
-4. Ensure difficulty literal groups (`!E`, `!*`) are emitted exactly as read.
-5. Store non-instruction raw statements and labels in a single ordered stream.
-6. Add schema version migrations so old `.eclir.json` files remain loadable.
-7. Add tests that compare instruction/resource/function equivalence after `source -> ir -> source`.
+| Command | Contract |
+|---|---|
+| `emit-ir source.decl -o file.eclir.json` | Parse once and serialize all standalone inputs |
+| `roundtrip-ir file.eclir.json -o source.decl` | Restore exact stored source bytes |
+| `roundtrip-ir file.eclir.json --layout -o source.decl` | Restore exact bytes through reversible layout metadata |
+| `roundtrip-ir file.eclir.json --canonical -o source.decl` | Render structural Program IR |
+| `validate-ir file.eclir.json` | Check hashes, structure, canonical counts, NodeIds, ownership, signatures, and analysis references |
+| `compile-ir file.eclir.json --target X -o target.decl` | Strictly lower ordered canonical IR; return nonzero when unsupported nodes remain |
+| `compile-ir ... --allow-lossy/--preserve-raw-*` | Explicitly opt into approximations or warned raw passthrough |
+| `compile-ir ... --legacy-patterns` | Use schema-v1 Pattern compatibility lowering |
 
-## What “IR -> Any Target” Still Needs
+## Completed Invariants
 
-1. Finish `backend-special-cases.md` remaining `todo`/`partial` entries.
-2. Move dynamic bullet/timeline lowering out of `cli.py` into IR policies.
-3. Move ANM generic remap logic fully into animation semantic objects.
-4. Make LuaSTG lifter emit standard BulletEmitter/LaserEmitter objects, not backend-specific objects.
-5. Add target capability metadata for unsupported lasers/bullet shapes/tool ABI hazards.
+1. Exact source and layout roundtrips do not decode with replacement characters.
+2. CP932 spell names survive Program and canonical IR serialization.
+3. Malformed TH08 files use reversible byte escapes and remain byte-identical.
+4. Canonical routines preserve statement order and instruction count.
+5. Canonical `NodeId` values are non-empty and unique; ownership is validated.
+6. Analysis action IDs must reference canonical nodes.
+7. External routine parameters are serialized; changing or deleting sibling files after `emit-ir` does not affect `compile-ir`.
+8. TH06/TH07 do not inherit TH08 opcode numbers.
+9. `DifficultyGuard` is an eight-lane mask (`E/N/H/L/X/O/6/7`); numeric and legacy marker spellings are dialect encodings, not different semantics. Ordinary rank markers persist until changed, while `!X:` is scoped to one instruction and then resets to `*`.
+10. Runtime difficulty literal tables are represented by typed `SelectedValue` and `SelectionCase` records owned by the semantic, raw-instruction, or syntax node that consumes them. Only complete uninterrupted candidates are folded; ordinary ranked expressions remain syntax. Same-game identity emission reconstructs tables, while unimplemented cross-game selection lowering is structured unsupported.
+11. Bullet transform replace/append/cursor/copy semantics are reduced through one state model. `TransformForm` is the single registry for concrete transform layouts.
+12. Routine CFGs use Tarjan strongly connected components to identify loop-carried append writes. Their index is deliberately unresolved and cannot be materialized into a legacy indexed write.
+13. Same-game canonical compilation uses the provenance opcode and canonical operands, avoiding cross-generation compatibility rewrites.
+14. Bullet visual lowering uses source-game-first shape catalogs and reports missing or merged target shapes explicitly.
+15. Transform sentinel decoding distinguishes unused, keep-current, and typed per-frame engine values by game, semantic mode, and operand role.
+16. Numeric variable IDs decode through a per-game `VariableDialect`; semantic collisions, unavailable target slots, and unsafe access narrowing are structured unsupported. TH06/TH07 do not borrow TH08 variable meanings.
+17. TH13+ relative stack slots are `StackRef` values and project only between compatible relative-stack routine dialects.
+18. Named locals, declarations, routine parameters, calls, and structured stack-expression syntax cannot silently cross into the TH06-08 register ABI.
+19. `RoutineDialect` is the shared profile contract for call, local, expression, and relative-stack encodings; lowering does not infer those contracts from opcode-generation labels.
+20. Unknown bracket-number encodings are opaque and identity-only; a target cannot reinterpret them as its own variable or stack slot.
+21. Legacy timeline members carry a typed `DialectRegion`; cross-game timeline opcode passthrough is structured unsupported.
+22. Target opcode selection requires an exact target-game semantic registry entry; same-generation numeric fallback is forbidden.
+23. Lossy policies and cross-game raw instructions are disabled by default. Explicitly enabled node warnings are rendered next to the emitted statement.
+24. ANM bank/script operations require typed, verified resource projection before cross-game emission.
+25. Unsupported target behavior remains visible as a structured diagnostic and source comment.
+26. Generated `.decl` files use the standalone envelope's `DeclTextCodec`; character encoding is an artifact contract rather than canonical semantics or a per-game capability.
+27. Physical line splitting recognizes LF/CRLF rather than Unicode control separators; embedded legacy string bytes survive Program, TargetModule, and `.decl` emission on one physical line.
+28. Inferred external routine parameters replace matching decompiler-emitted local aliases in the target frame; they are never allocated twice.
 
-## Acceptance Tests
+## Next Behavior Work
 
-| Test | Command Pattern | Expected |
-|---|---|---|
-| IR generation | `emit-ir src.decl -o src.eclir.json` | JSON contains `program` and `objects` |
-| Source roundtrip | `roundtrip-ir src.eclir.json -o rt.decl` and `cmp src.decl rt.decl` | exact byte match, then `thecl -c source_game rt.decl rt.ecl` compiles |
-| Layout roundtrip | `roundtrip-ir src.eclir.json --layout -o rt.decl` and `cmp src.decl rt.decl` | exact byte match from `source_layout` |
-| Canonical roundtrip | `roundtrip-ir src.eclir.json --canonical -o rt.decl` | structure-preserving source-like output; formatting may differ |
-| IR validation | `validate-ir src.eclir.json` | hash and parsed instruction/function counts are consistent |
-| Target compile | `compile-ir src.eclir.json --target th15 -o out.decl` | `thecl -c 15 out.decl out.ecl` compiles |
-| Equivalence scan | parse source and roundtrip | same function names/resources/instruction opcode+args order |
+1. Replace `TargetStatement.lines` and remaining compatibility string emission with typed instruction, syntax, comment, and unsupported target nodes.
+2. Expand `ExpressionIR` from typed variable and relative-stack source spans to a complete literal/variable/unary/binary/cast/call expression union with routine symbol binding.
+3. Merge `DialectDecoder` operand names/use kinds and `arg_adapter` target layouts into one `OperationSchema`.
+4. Add typed `AnmResourceRef` values and difficulty/CFG-aware current-bank analysis before enabling ANM resource projection.
+5. Extend verified variable catalogs without treating eclmap supersets as availability, especially TH06/07 and TH18.5.
+6. Extend CFG analysis from conservative SCC cycle rejection to full state joins for divergent branches and difficulty-lane append cursors.
+7. Model laser definitions and instances with the same action/reducer approach as bullet managers.
+8. Move movement, animation, enemy, boss, and resource Pattern objects to canonical analyses.
+9. Add target compiler validation for every supported game and representative runtime equivalence tests.
+10. Define schema migrations before changing canonical node layouts.
 
-## Latest Validation
+## Current Verification
 
-Validated on `th062/th10/stage01.decl`:
+- 90 Python unit tests cover source decoding and output codecs, embedded control bytes, persistent/scoped rank state, selected-value candidate rollback, standalone signatures and inferred frame reconciliation, typed variable/stack projection, routine/timeline ABI gates, exact opcode selection, strict RAW/lossy policy, ANM resource guards, semantic/backend compatibility, bullet state semantics, capability planning, `TargetStatement` rendering, and IR validation.
+- All 210 repository `.decl` files parse, build canonical IR, and run bullet analysis without exceptions.
+- All 210 source documents and source layouts roundtrip byte-identically.
+- Representative TH12 -> TH15 canonical lowering selects indexed replace (`509 -> 609`).
+- Representative TH13+ -> TH12 lowering materializes append cursors into explicit `509` indices when lanes agree.
+- Cyclic TH13+ append writes are diagnosed instead of being assigned a static TH10/12 index.
+- Same-target compilation covers 251,701 nodes (`160,275` instructions and `91,426` syntax nodes) with zero statement, instruction-shape, and effective-guard mismatches. This includes 1,978 semantic-operation and 104 syntax `SelectedValue` groups plus 56 typed timeline blocks / 12,707 timeline members.
+- Independent rank-state replay over all 210 files reports zero statement/order mismatches and zero effective-guard mismatches; it covers 1,492 instructions affected by persistent inline rank markers and 1,948 complete selected-value candidates / 8,309 literal lines.
+- Touhou Toolkit release 12 under Wine accepts both the original and canonical same-target source for 209/209 comparable repository files, and every resulting ECL pair is byte-identical. The remaining `th08/ecldata_yy.decl` input is baseline-invalid: both forms fail with the same unterminated-string and unexpected-EOF diagnostics.
+- The final 210-file by 12-target strict matrix completed all 2,520 builds and 3,020,520 node decisions without an exception: `direct=950,485`, `raw=836,359`, `lossy=0`, `unsupported=1,233,676`. All 1,235,398 diagnostics are structured errors; the extra 1,722 are module-level routine-parameter ABI diagnostics.
+- Same-target rendering intentionally normalizes 17,291 time-label comment attributes and 1,746 explicit `!*` spellings; time values and difficulty masks are unchanged.
 
-- `emit-ir` produced `/tmp/th10_stage01_layout.eclir.json` with 68 functions, 1032 instructions, 682 semantic objects, and 2042 `source_layout` lines.
-- `validate-ir` passed with matching `source_sha256` and `source_layout_sha256_actual`.
-- `roundtrip-ir --layout` produced `/tmp/th10_stage01_layout_roundtrip.decl`; `cmp th062/th10/stage01.decl /tmp/th10_stage01_layout_roundtrip.decl` returned `0`.
-- `compile-ir --target th15` produced `/tmp/th10_stage01_layout_to_th15.decl`.
-- `wine thtkGUI-th20tr/thtk/thtk12/thecl.exe -c 10 /tmp/th10_stage01_layout_roundtrip.decl /tmp/th10_stage01_layout_roundtrip.ecl` succeeded.
-- `wine thtkGUI-th20tr/thtk/thtk12/thecl.exe -c 15 /tmp/th10_stage01_layout_to_th15.decl /tmp/th10_stage01_layout_to_th15.ecl` succeeded.
-
-## Direct vs IR Target Lowering
-
-`transpile source.decl --target X` and `emit-ir source.decl` followed by `compile-ir source.eclir.json --target X` now use the same `emit_transpile(program, objects, target)` backend and have byte-identical target `.decl` output for validated samples.
-
-Important serialized fields for parity:
-
-- Raw instruction/statement text keeps original leading whitespace instead of stripping it.
-- Semantic objects preserve dynamic `source` path attributes, so path-dependent stage policies behave the same after IR deserialization.
-
-Validated parity samples:
-
-- `th062/th10/stage01.decl -> th15`: direct output equals IR output.
-- `th062/th08/ecldata1.decl -> th15`: direct output equals IR output.
-- `th062/th12/stage01.decl -> th15`: direct output equals IR output.
-- `th062/th15/st01.decl -> th12`: direct output equals IR output.
+Cross-game target `.decl` compiler success and runtime equivalence remain required before claiming cross-game behavioral parity.

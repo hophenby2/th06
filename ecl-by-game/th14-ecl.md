@@ -279,6 +279,7 @@
 - 体系：第四世代
 - 指令：普通指令 316 条；已说明 257/316。主要分组：系统/流程/栈/算术 / System；敌机创建与 ANM 管理 / Enemy creation and ANM script management；移动管理 / Movement management；敌机属性与杂项 / Enemy property management and other miscellaneous things；子弹创建与删除 / Bullet creation and deletion；激光创建 / Laser creation；敌机交互 / Enemy interaction；调试 / Debug；游戏特有 / Game specific。
 - 变量：变量范围 -10000..-9907；本文列出有说明/命名记录的 94 条，未列空洞/未知项。
+- 语料补充：TH14 原作脚本有 7 处使用 `[-9906]`，行为上下文与镜像状态一致；上游表未文档化该槽，因此 IR 仅以 `INFERRED` 置信度保留同游戏 identity，不据此开放跨游戏编码。
 
 ### TH14 指令：系统/流程/栈/算术 / System
 
@@ -739,4 +740,3 @@
 | -9909 | UNKNOWN9 | int | 只读 | local/敌机局部 | Enemy ID of the parent enemy. | 是 | 继承自 TH12.8 |
 | -9908 | ENM_CNT | int | 只读 | global/全局 | Amount of killable enemies alive (that is, doesn't include hitboxless/intangible enemies etc). | 是 | 继承自 TH13 |
 | -9907 | SPELL_ID | int | 只读 | global/全局 | Spellcard ID, used by spell practice. Unknown meaning in LoLK. | 是 | 继承自 TH13 |
-

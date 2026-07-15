@@ -1,88 +1,142 @@
 # Experimental ECL IR Tool
 
-This is an experimental cross-game Touhou ECL IR implementation. It parses `.decl` scripts, lifts common opcode clusters into higher-level objects, and lowers a conservative subset back into target-game opcode shapes.
+This package is an experimental cross-game Touhou ECL parser, semantic IR, and lowering pipeline. It favors explicit preservation and diagnostics over guessed opcode equivalence.
 
-## Implemented Object Lifting
+## Architecture
 
-- `BulletEmitter`
-  - TH13+ style: `600/607/602/606/604/605/609-612/601`.
-  - TH12 style: `500/507/502/506/504/505/509-512/501`.
-  - TH10/TH11 slot style: partial `400/401/402/404/405/406/407/408/409`.
-  - TH08 macro style: `96..104` plus pending `111` transforms.
-- `LaserEmitter`
-  - TH13+ `700..714` cluster.
-  - TH12 `600..615` cluster.
-- `Movement`
-  - TH13+ common movement opcodes `400..407`, ellipse, bezier, curve/reset subset.
-  - TH12 corresponding `300..327` subset.
-  - TH10/TH11 partial movement subset.
-- `Animation`
-  - TH13+ `302/303/306/307/308/317/318`.
-  - TH10-TH12 `258/259/262/263/264`.
-- `Enemy`
-  - TH13+ `300/301/304/305/309..312`.
-  - TH10-TH12 `256/257/260/261/265..268`.
-- `BossPattern`
-  - TH13+ life/boss/timer/interrupt/spell/chapter subset.
-  - TH12 corresponding subset.
-- `Timeline`
-  - Preserves function-level statements as structured events: labels, time labels, `goto`, conditional `goto`, calls, async calls, returns, variable declarations, assignments, raw lines, and wait instructions.
-  - Detects simple backward-edge loops, including counter-like conditions such as `$A--`.
+For a current-state, implementation-oriented architecture description, see
+[`current-architecture.md`](current-architecture.md). It distinguishes the
+canonical pipeline from legacy compatibility projections and records the
+verified boundaries of cross-game lowering.
 
-The parser also preserves resource headers (`anim` / `ecli`) and simple difficulty literal blocks such as `!E ... !LO ... !* ins_605(...[-1.0f]...)`.
+The schema-v2 pipeline is:
 
-## Implemented Lowering
-
-- `BulletEmitter -> TH12` and `BulletEmitter -> TH13+`.
-- `LaserEmitter -> TH12/TH13+` via opcode-family offset where safe enough to emit with verification comments.
-- `Movement -> TH12/TH13+` for mapped semantic movement ops.
-- `Animation -> TH12/TH13+` for mapped semantic animation ops.
-- `Enemy -> TH12/TH13+` for mapped semantic enemy creation ops.
-- `BossPattern -> TH12/TH13+` for mapped semantic boss ops.
-- `Timeline -> TH12/TH13+` as a structure-preserving draft that keeps control flow and comments out instruction bodies that should be lowered by object-specific passes.
-
-Every non-trivial lowering emits comments like `semantic verification required`; unsupported pieces are preserved as comments rather than silently dropped.
-
-## Usage
-
-```bash
-python3 -m th062.ecl_ir.cli scan th062
-python3 -m th062.ecl_ir.cli scan th062 --json
-python3 -m th062.ecl_ir.cli lift th062/th15/st01.decl
-python3 -m th062.ecl_ir.cli compile th062/th15/st01.decl --kind BulletEmitter --target th12 --index 0
-python3 -m th062.ecl_ir.cli compile th062/th12/stage01.decl --kind BulletEmitter --target th13 --index 0
-python3 -m th062.ecl_ir.cli compile th062/th15/st01.decl --kind Movement --target th12 --index 0
-python3 -m th062.ecl_ir.cli compile th062/th15/st01.decl --kind Enemy --target th12 --index 0
-python3 -m th062.ecl_ir.cli compile th062/th13/st01bs.decl --kind BossPattern --target th12 --index 0
-python3 -m th062.ecl_ir.cli compile th062/th15/st01.decl --kind Timeline --target th12 --index 0
-python3 -m th062.ecl_ir.cli transpile th062/th15/st01.decl --target th12 --output /tmp/st01.th12.draft.decl
+```text
+source bytes
+  -> SourceDocument + lossless dialect Program
+  -> per-game DialectDecoder
+  -> ordered SemanticModule
+  -> optional state/pattern analyses
+  -> LoweringPlanner(GameProfile capabilities)
+  -> TargetModule
+  -> DeclTextCodec
+  -> target .decl bytes
 ```
 
-## Files
+Important boundaries:
 
-- `model.py`: IR dataclasses.
-- `parser.py`: `.decl` parser with resource, statement, and difficulty-block preservation.
-- `lifter.py`: bullet emitter lifter.
-- `object_lifter.py`: multi-object lifter.
-- `timeline_lifter.py`: control-flow/time-line lifter.
-- `backend.py`: target lowering.
-- `cli.py`: command-line entrypoint.
+- `SemanticModule` is the ordered canonical effect stream. Every source statement has a stable `NodeId` and one lowering owner.
+- Confirmed instructions become typed `SemanticOperation` nodes. Unconfirmed instructions remain `RawInstructionOp` nodes with provenance.
+- `analysis_projections` are derived views. They reference canonical `NodeId` values and never own lowering.
+- Target policy is computed by `LoweringPlanner`; it is not stored on canonical nodes.
+- `DeclTextCodec` is an artifact/toolchain contract restored from the standalone envelope. Text encoding is not ECL semantics and is not a `GameProfile` capability.
+- Schema-v1 `objects` remain available as a compatibility backend through `compile-ir --legacy-patterns`.
+
+## Implemented Foundations
+
+- Byte-exact source handling:
+  - strict UTF-8/CP932/Shift-JIS decoding;
+  - reversible private-use byte escapes for malformed legacy files;
+  - physical source lines split only on LF/CRLF, so in-string control bytes are never reinterpreted as layout;
+  - exact `source_bytes_base64` and `source_layout` roundtrip;
+  - canonical `.decl` output encoded through the serialized source codec contract, including direct compatibility commands.
+- Ordered semantic IR:
+  - typed operands, provenance, ownership, and raw fallback;
+  - source-preserving `ExpressionIR` values with typed `VariableUse` and `StackUse` spans;
+  - `VariableRef` records that separate semantic identity, value/storage type, scope, access, propagation, confidence, and source encoding;
+  - `StackRef` records for TH13+ routine-relative slots, kept separate from semantic game variables because their offsets belong to the routine ABI;
+  - unknown bracket-number encodings become identity-only opaque references instead of being reinterpreted by a target dialect;
+  - one per-game `VariableDialect` registry shared by instruction operands, selected values, and syntax expressions;
+  - syntax lvalues are tracked as `WRITE`, while mutation operators are `READ_WRITE`, so target access checks use the actual operand role;
+  - eight-lane `DifficultyGuard` masks (`E/N/H/L/X/O/6/7`) with the source dialect spelling retained; ordinary thecl rank markers persist, while the colon form is scoped to one instruction;
+  - typed `SelectedValue` / `SelectionCase` records owned by their consuming semantic, raw-instruction, or syntax node; only complete uninterrupted rank-value table candidates are folded, so ordinary ranked expressions remain ordered syntax;
+  - serialized external `RoutineSignature` records for standalone compilation; inferred parameters are reconciled with their decompiler-emitted `var` aliases exactly once in the target frame;
+  - separate TH06, TH07, TH08, TH10/11, TH12, TH13+, TH14+, and TH18 profiles, with a profile-level `RoutineDialect` for call, local, expression, and relative-stack conventions.
+  - typed `DialectRegion` membership for legacy timeline blocks, so their game-specific timeline opcodes cannot pass through to another game as ordinary syntax.
+- Bullet state analysis:
+  - persistent manager definitions and immutable fire snapshots;
+  - guarded difficulty lanes;
+  - transform slot maps, last-write-wins replacement, holes, append cursor, copy-without-cursor, patch, and cursor decrement;
+  - routine CFG construction and Tarjan strongly connected components; append writes in a cycle keep an unresolved index instead of guessing a loop-carried cursor;
+  - TH08 defer/enable/immediate fire and auto-fire schedule separation;
+  - contextual sentinel states (`unused` versus `keep_current`) selected by game, transform mode, and operand role, with raw tokens retained;
+  - typed per-frame engine values for live player/random angles, re-encoded with the target game's sentinel token when representable.
+- Canonical transform ABI:
+  - `game_profile.TransformForm` is the encoding registry for opcode, write kind (`replace`/`append`), parameter set (`base`/`extended`), and operand order;
+  - `BulletTransformIR` carries canonical operands and semantic modes independently of source opcode layout;
+  - TH13+ `609/610/611/612` forms and legacy indexed writes lower through the same registry rather than pairwise opcode rewrites;
+  - TH12 registers only `509` as a transform form; `510`, `511`, and `512` are clear-all, manager-copy, and cancel operations.
+- Capability lowering:
+  - `direct`, `lossy`, `raw`, and `unsupported` decisions;
+  - structured diagnostics tied to `NodeId`;
+  - a `TargetStatement` rendering envelope that preserves unsupported source and node-level warnings as comments;
+  - strict defaults: lossy policies and cross-game raw opcode passthrough require explicit opt-in;
+  - same-game identity lowering from provenance opcode plus canonical operands, including reconstruction of selected literal tables;
+  - source-game-first bullet-shape catalogs, including separate TH06/TH07/TH08 and pre-TH15 layouts, with explicit unsupported/lossy decisions when a semantic shape has no exact target entry;
+  - stateful TH13+ append-to-TH10/12 indexed-transform materialization when the resolved slot is unambiguous.
+  - semantic variable projection with structured `variable.target_unavailable`, `variable.semantic_collision`, and storage/access diagnostics; TH06/07 stay opaque instead of borrowing TH08 IDs;
+  - routine ABI gates for named calls, structured stack syntax, locals, parameters, and relative stack slots instead of silently passing incompatible TH10+ source into TH06-08;
+  - exact target-game opcode lookup with no same-generation numeric fallback;
+  - cross-game ANM bank/script operations remain unsupported until a typed resource reference and verified catalog projection are available;
+  - conservative legacy macro rejection for opaque TH06 runtime behavior, dynamic/nonzero transform flags, unverified colors, and dynamic random ranges.
 
 ## Commands
 
-- `scan`: recursively scan `.decl` files and count lifted object kinds.
-- `lift`: emit JSON IR, including resources, top-level declarations, Timeline objects, and semantic objects.
-- `compile`: lower one selected lifted object.
-- `transpile`: lower a whole `.decl` as an interleaved structured draft, keeping waits/control flow in place and replacing recognized clusters with target-family opcode drafts.
+Run from the repository root:
+
+```bash
+python3 -m ecl_ir.cli emit-ir th12/stage01.decl -o /tmp/stage01.eclir.json
+python3 -m ecl_ir.cli validate-ir /tmp/stage01.eclir.json
+python3 -m ecl_ir.cli roundtrip-ir /tmp/stage01.eclir.json --layout -o /tmp/stage01.roundtrip.decl
+python3 -m ecl_ir.cli compile-ir /tmp/stage01.eclir.json --target th15 -o /tmp/stage01.th15.decl
+```
+
+`compile-ir` uses ordered canonical IR and a strict policy by default. It writes `.decl` bytes with the codec serialized in the standalone envelope, which is required by older thecl builds that do not provide UTF-8 conversion. `--allow-lossy`, `--preserve-raw-same-family`, and `--preserve-raw-cross-family` are explicit unsafe/approximation opt-ins; node warnings are rendered beside the affected statement. Use `--legacy-patterns` only to compare against the older object-cluster backend.
+
+Other compatibility commands remain available:
+
+- `lift`: inspect legacy lifted objects.
+- `compile`: lower one selected legacy object.
+- `transpile`: run the legacy interleaved whole-file backend directly from source.
+- `scan`: count liftable legacy object kinds.
+
+## Package Layout
+
+```text
+ecl_ir/
+  source/        source bytes, Program model, and parser
+  canonical/     ordered semantic IR, lifter, operations, and variables
+  dialects/      game profiles, references, semantic catalogs, and ANM data
+  analysis/      bullet state, CFG, spread, and transform analysis
+  target/        capability planner, target module, and argument encoding
+  artifact/      standalone schema-v2 serialization and validation
+  compat/        text backend still used at the canonical encoding boundary
+  legacy/        schema-v1 object projections retained for compatibility
+  integrations/  optional LuaSTG integration
+  commands/      CLI implementation
+  deprecated/    unreferenced one-off code only
+  cli.py          stable `python -m ecl_ir.cli` facade
+```
+
+The legacy and compatibility directories are deliberately separate. Code in
+`legacy/` remains part of the schema-v1 compatibility contract; code in
+`compat/` is still called by canonical target encoding. Neither may be treated
+as dead code. See [`legacy/README.md`](legacy/README.md) and
+[`deprecated/README.md`](deprecated/README.md).
 
 ## Current Limits
 
-This is not a verified binary-compatible transpiler yet. Missing or incomplete areas:
+This is not a verified binary-equivalent transpiler. Remaining work includes:
 
-- Resource remapping for bullet styles, colors, ANM scripts, sounds, spell names.
-- Exact transform semantic conversion, especially TH10/TH11 `409` and TH13+ `609..612` edge cases.
-- TH06/TH07 lifting beyond generic unsupported/raw handling.
-- Full expression normalization and async task graph recovery; Timeline currently identifies structure but does not prove binary-equivalent scheduling.
-- Game-specific systems such as season, animal spirits, pointdevice, cards, score items, dialogue/UI.
+- target-dialect rewriting for all control-flow and expression syntax, especially TH06-08;
+- a complete expression-node union and routine symbol table beyond the current source-preserving typed variable and relative-stack spans;
+- one shared `OperationSchema` for canonical operand names/use kinds and target layouts; anonymous `operand_N` values still defer too much meaning to `arg_adapter`;
+- additional verified variable catalog entries for TH06/07, game-specific overlays, and currently opaque TH18.5 slots;
+- full CFG state joins beyond conservative cycle detection, including transform branches whose difficulty lanes resolve to different append cursors;
+- long transform forms that have no representable target form;
+- replacement of `TargetStatement.lines` with a typed target union such as instruction, syntax, comment, and unsupported nodes;
+- complete laser lifecycle, typed `AnmResourceRef` plus bank-flow analysis, other resources, and game-specific system semantics;
+- target compiler checks and runtime equivalence tests across the full corpus;
+- migration of remaining schema-v1 object-specific behavior into canonical analyses and capability lowerers.
 
-Use the emitted target code as a structured draft that still needs semantic verification.
+Unsupported behavior is retained with a structured diagnostic; it is not silently dropped.
