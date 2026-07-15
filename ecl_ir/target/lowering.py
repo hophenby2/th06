@@ -616,18 +616,23 @@ class LoweringPlanner:
                     "emitting the instruction placeholders would read uninitialized values"
                 ),
             )
-        if operation_uses_anm_resource(node.operation):
+        candidate_resolver = getattr(self.backend_emitter, "has_anm_candidate", None)
+        has_anm_candidate = (
+            callable(candidate_resolver)
+            and bool(candidate_resolver(node))
+        )
+        if operation_uses_anm_resource(node.operation) and not has_anm_candidate:
             return self._unsupported(
                 node,
                 routine,
                 code="anm.resource_context_unresolved",
                 message=(
-                    "cross-game ANM bank/script IDs require a typed resource reference and "
-                    "verified target catalog projection"
+                    "cross-game ANM bank/script IDs require either a manifest-scoped target "
+                    "candidate or a typed resource reference"
                 ),
                 details={
                     "resource_operation": node.operation,
-                    "required_ir": "AnmResourceRef",
+                    "required_ir": "AnmResourceRef|AnmCandidateSelection",
                 },
             )
         from ..canonical.variable_ir import project_semantic_operation
@@ -912,6 +917,23 @@ class LoweringPlanner:
                     },
                 )
             target_text = projected_text
+        syntax_emitter = getattr(self.backend_emitter, "emit_syntax", None)
+        if callable(syntax_emitter):
+            try:
+                emitted_text = syntax_emitter(
+                    node,
+                    target_text,
+                    self.target_profile.game,
+                )
+            except Exception as exc:
+                return self._unsupported(
+                    node,
+                    routine,
+                    code="backend.syntax_exception",
+                    message=str(exc),
+                )
+            if emitted_text is not None:
+                target_text = str(emitted_text)
         return self._decision(
             node,
             routine,

@@ -5,7 +5,9 @@ from dataclasses import dataclass, replace
 import re
 from typing import Any
 
+from ..analysis.anm_resources import AnmCandidateSelection, build_anm_lowering_plan
 from ..analysis.bullet_ir import active_difficulty_lanes, analyze_bullet_module
+from ..canonical.op_ir import target_opcode_for_op_key
 from ..dialects.game_profile import (
     CAP_BULLET_MANAGER,
     CAP_TRANSFORM_APPEND,
@@ -24,7 +26,7 @@ from .lowering import (
     identity_instruction_text,
 )
 from ..canonical.semantic_ir import DIFFICULTY_LANES, DifficultyGuard, SemanticModule, SemanticNode
-from ..canonical.semantic_ir import SemanticOperation
+from ..canonical.semantic_ir import SemanticOperation, SyntaxStatement
 from ..dialects.semantics import (
     bullet_shape_can_encode,
     bullet_shape_is_lossy,
@@ -296,12 +298,16 @@ class TargetAstBuilder:
                     params_inferred=bool(inferred_params),
                 )
             )
+        resources = {name: list(entries) for name, entries in module.resources.items()}
+        project_resources = getattr(self.planner.backend_emitter, "project_resources", None)
+        if callable(project_resources):
+            resources = project_resources(resources)
         return TargetModule(
             source=module.source,
             source_game=module.source_game,
             target_game=result.target_profile.game,
             target_generation=result.target_profile.generation,
-            resources={name: list(entries) for name, entries in module.resources.items()},
+            resources=resources,
             top_level=tuple(top_level),
             routines=tuple(routines),
             diagnostics=(*result.diagnostics, *syntax_diagnostics),
@@ -314,6 +320,7 @@ class CanonicalBackendEmitter:
     def __init__(self, module: SemanticModule, target_game: str) -> None:
         analysis = analyze_bullet_module(module)
         self.target_profile = profile_for_game(target_game)
+        self.anm_plan = build_anm_lowering_plan(module, target_game)
         self.transform_indices = {
             node_id: lanes
             for routine in analysis.routines
@@ -323,6 +330,31 @@ class CanonicalBackendEmitter:
 
     def begin_module(self, _module: SemanticModule) -> None:
         self.initialized_implicit_manager_lanes.clear()
+
+    def has_anm_candidate(self, node: SemanticOperation) -> bool:
+        return str(node.node_id) in self.anm_plan.selections
+
+    def project_resources(self, resources: dict[str, list[str]]) -> dict[str, list[str]]:
+        projected = {name: list(entries) for name, entries in resources.items()}
+        if self.anm_plan.target_anim:
+            projected["anim"] = list(self.anm_plan.target_anim)
+        return projected
+
+    def emit_syntax(
+        self,
+        node: SyntaxStatement,
+        projected_text: str,
+        _target_game: str,
+    ) -> str | None:
+        materialization = self.anm_plan.call_materializations.get(str(node.node_id))
+        if materialization is None:
+            return None
+        emitted = self.lower_anm_candidate(materialization.selection)
+        if emitted.strategy is not None and emitted.strategy is not LoweringStrategy.DIRECT:
+            raise ValueError(
+                emitted.reason or "call-bound ANM materialization could not be emitted directly"
+            )
+        return f"{emitted.text}\n{projected_text}"
 
     def __call__(self, node: SemanticOperation, target_game: str) -> BackendEmission | str | None:
         from ..compat.backend import compile_ir_op_emission
@@ -335,6 +367,8 @@ class CanonicalBackendEmitter:
                     node.selected_values,
                 )
             )
+        if selection := self.anm_plan.selections.get(str(node.node_id)):
+            return self.lower_anm_candidate(selection)
         from ..canonical.variable_ir import project_semantic_operation
 
         projected, variable_issues = project_semantic_operation(node, target_game)
@@ -397,6 +431,69 @@ class CanonicalBackendEmitter:
             initialized_lanes,
             compile_ir_op_emission(node, target_game),
         )
+
+    def lower_anm_candidate(self, selection: AnmCandidateSelection) -> BackendEmission:
+        details = selection.details()
+        evidence = ", ".join(selection.evidence[:3]) or "target package corpus"
+        if selection.folded_into:
+            text = (
+                "// ANM source action folded into manifest-scoped candidate at canonical node "
+                f"{selection.folded_into}; evidence={evidence}"
+            )
+        else:
+            lines = [
+                "// ANM candidate from target original ECL: "
+                f"stage={selection.target_stage_id or '-'} match={selection.match_kind} "
+                f"evidence={evidence}"
+            ]
+            for action in selection.actions:
+                opcode = target_opcode_for_op_key(action.operation, self.target_profile.game)
+                if opcode is None:
+                    return BackendEmission(
+                        text="",
+                        strategy=LoweringStrategy.UNSUPPORTED,
+                        code="anm.candidate_target_opcode_unavailable",
+                        reason=f"target has no opcode for candidate action {action.operation}",
+                        details=details,
+                    )
+                if action.operation == "anm.select":
+                    args = [action.bank]
+                elif action.operation in {"anm.set_main", "anm.set_sprite"}:
+                    args = [action.slot, action.script]
+                elif action.operation in {"anm.play", "anm.play_abs"}:
+                    args = [action.bank, action.script]
+                elif action.operation == "anm.selected_play":
+                    args = [action.script]
+                else:
+                    return BackendEmission(
+                        text="",
+                        strategy=LoweringStrategy.UNSUPPORTED,
+                        code="anm.candidate_action_unsupported",
+                        reason=f"candidate action {action.operation} has no target renderer",
+                        details=details,
+                    )
+                if any(value is None for value in args):
+                    return BackendEmission(
+                        text="",
+                        strategy=LoweringStrategy.UNSUPPORTED,
+                        code="anm.candidate_operand_unresolved",
+                        reason=f"candidate action {action.operation} has an unresolved operand",
+                        details=details,
+                    )
+                lines.append(f"ins_{opcode}({', '.join(str(value) for value in args)});")
+            text = "\n".join(lines)
+        if selection.lossy:
+            return BackendEmission(
+                text=text,
+                strategy=LoweringStrategy.LOSSY,
+                code="anm.dynamic_script_candidate",
+                reason=(
+                    "dynamic source ANM script was replaced with a deterministic candidate "
+                    "observed in the target package"
+                ),
+                details=details,
+            )
+        return BackendEmission(text=text, details=details)
 
     def implicit_manager_initialization(
         self,
