@@ -5,7 +5,11 @@ from dataclasses import dataclass, replace
 import re
 from typing import Any
 
-from ..analysis.anm_resources import AnmCandidateSelection, build_anm_lowering_plan
+from ..analysis.anm_resources import (
+    AnmCandidatePool,
+    AnmCandidateSelection,
+    build_anm_lowering_plan,
+)
 from ..analysis.bullet_ir import active_difficulty_lanes, analyze_bullet_module
 from ..canonical.op_ir import target_opcode_for_op_key
 from ..dialects.game_profile import (
@@ -23,9 +27,11 @@ from .lowering import (
     LoweringPlanner,
     LoweringResult,
     LoweringStrategy,
+    evaluation_stack_offsets,
     identity_instruction_text,
+    target_difficulty_guard,
 )
-from ..canonical.semantic_ir import DIFFICULTY_LANES, DifficultyGuard, SemanticModule, SemanticNode
+from ..canonical.semantic_ir import DifficultyGuard, SemanticModule, SemanticNode
 from ..canonical.semantic_ir import SemanticOperation, SyntaxStatement
 from ..dialects.semantics import (
     bullet_shape_can_encode,
@@ -317,10 +323,20 @@ class TargetAstBuilder:
 class CanonicalBackendEmitter:
     """State-aware adapter from canonical operations to the legacy text backend."""
 
-    def __init__(self, module: SemanticModule, target_game: str) -> None:
+    def __init__(
+        self,
+        module: SemanticModule,
+        target_game: str,
+        *,
+        target_anm_pool: AnmCandidatePool | None = None,
+    ) -> None:
         analysis = analyze_bullet_module(module)
         self.target_profile = profile_for_game(target_game)
-        self.anm_plan = build_anm_lowering_plan(module, target_game)
+        self.anm_plan = build_anm_lowering_plan(
+            module,
+            target_game,
+            target_pool=target_anm_pool,
+        )
         self.transform_indices = {
             node_id: lanes
             for routine in analysis.routines
@@ -371,7 +387,11 @@ class CanonicalBackendEmitter:
             return self.lower_anm_candidate(selection, node)
         from ..canonical.variable_ir import project_semantic_operation
 
-        projected, variable_issues = project_semantic_operation(node, target_game)
+        projected, variable_issues = project_semantic_operation(
+            node,
+            target_game,
+            evaluation_stack_offsets=evaluation_stack_offsets(node.selected_values),
+        )
         if projected is None:
             issue = variable_issues[0]
             return BackendEmission(
@@ -483,6 +503,9 @@ class CanonicalBackendEmitter:
                     projected, issues = project_semantic_operation(
                         source_node,
                         self.target_profile.game,
+                        evaluation_stack_offsets=evaluation_stack_offsets(
+                            source_node.selected_values
+                        ),
                     )
                     if projected is None or issues:
                         return BackendEmission(
@@ -970,33 +993,6 @@ def target_top_level_statements(
         )
         index += 1
     return statements, tuple(diagnostics)
-
-
-def target_difficulty_guard(
-    guard: DifficultyGuard,
-    target_generation: str,
-    target_game: str = "",
-) -> DifficultyGuard:
-    if guard.is_unconditional or guard.raw == "-" or not guard.mask:
-        return guard
-    if target_game == "th185":
-        spelling = dict(zip(DIFFICULTY_LANES, "01234567"))
-    elif target_generation == "fourth":
-        spelling = {lane: lane for lane in DIFFICULTY_LANES}
-    elif target_generation in {"first", "second", "third"}:
-        spelling = {
-            "E": "E",
-            "N": "N",
-            "H": "H",
-            "L": "L",
-            "X": "4",
-            "O": "5",
-            "6": "6",
-            "7": "7",
-        }
-    else:
-        return guard
-    return DifficultyGuard.from_marker("".join(spelling[lane] for lane in guard.mask))
 
 
 def render_target_statement(statement: TargetStatement, indent: str) -> list[str]:

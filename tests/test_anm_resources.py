@@ -544,6 +544,120 @@ class AnmResourceCandidateTests(unittest.TestCase):
         )
         self.assertTrue(all(not selection.lossy for selection in selections))
 
+    def test_ambiguous_selected_bank_uses_only_lossy_role_scoped_candidate(self) -> None:
+        module = build_semantic_module(parse_decl("th10/stage01.decl"))
+        emitter = CanonicalBackendEmitter(module, "th15")
+        routine = next(item for item in module.routines if item.name == "Boss1At1")
+        source = next(
+            node
+            for node in routine.body
+            if getattr(node, "operation", None) == "anm.selected_play"
+        )
+        selection = emitter.anm_plan.selections[str(source.node_id)]
+
+        self.assertTrue(selection.lossy)
+        self.assertTrue(selection.dynamic_source)
+        self.assertEqual(
+            [(action.operation, action.bank, action.script) for action in selection.actions],
+            [("anm.select", 3, None), ("anm.selected_play", 3, 0)],
+        )
+        strict = LoweringPlanner.for_game(
+            "th15",
+            backend_emitter=CanonicalBackendEmitter(module, "th15"),
+        ).plan_node(source, routine.name)
+        permissive = LoweringPlanner.for_game(
+            "th15",
+            policy=LoweringPolicy(allow_lossy=True),
+            backend_emitter=emitter,
+        ).plan_node(source, routine.name)
+
+        self.assertEqual(strict.strategy.value, "unsupported")
+        self.assertEqual(strict.diagnostics[-1].code, "backend.lossy_forbidden")
+        self.assertEqual(permissive.strategy.value, "lossy")
+        self.assertIn("ins_302(3);", permissive.target_text or "")
+        self.assertIn("ins_313(0);", permissive.target_text or "")
+
+    def test_stage_routine_with_boss_mapped_source_bank_stays_stage_scoped(self) -> None:
+        module = build_semantic_module(parse_decl("th12/stage01.decl"))
+        for target_game, target_slot, target_script in (
+            ("th10", 1, 45),
+            ("th11", 0, 63),
+        ):
+            with self.subTest(target_game=target_game):
+                emitter = CanonicalBackendEmitter(module, target_game)
+                routine = next(item for item in module.routines if item.name == "ShipShadow")
+                select = next(
+                    node
+                    for node in routine.body
+                    if getattr(node, "operation", None) == "anm.select"
+                )
+                set_sprite = next(
+                    node
+                    for node in routine.body
+                    if getattr(node, "operation", None) == "anm.set_sprite"
+                )
+
+                select_choice = emitter.anm_plan.selections[str(select.node_id)]
+                sprite_choice = emitter.anm_plan.selections[str(set_sprite.node_id)]
+                self.assertEqual(select_choice.actions[0].bank, 1)
+                self.assertEqual(
+                    [
+                        (action.operation, action.bank, action.slot, action.script)
+                        for action in sprite_choice.actions
+                    ],
+                    [("anm.set_sprite", 1, target_slot, target_script)],
+                )
+                self.assertTrue(sprite_choice.lossy)
+                self.assertTrue(
+                    all("Boss" not in evidence for evidence in sprite_choice.evidence)
+                )
+
+    def test_set_sprite_uses_only_lossy_same_role_setup_family_fallback(self) -> None:
+        module = build_semantic_module(parse_decl("th11/stage01.decl"))
+        emitter = CanonicalBackendEmitter(module, "th15")
+
+        for routine_name in ("MBoss", "MBoss2", "MBoss3"):
+            with self.subTest(routine=routine_name):
+                routine = next(item for item in module.routines if item.name == routine_name)
+                source = next(
+                    node
+                    for node in routine.body
+                    if getattr(node, "operation", None) == "anm.set_sprite"
+                    and any(
+                        operand.name == "script" and operand.value.source_text == "0"
+                        for operand in node.operands
+                    )
+                )
+                selection = emitter.anm_plan.selections[str(source.node_id)]
+
+                self.assertEqual(selection.match_kind, "target_corpus_candidate")
+                self.assertTrue(selection.lossy)
+                self.assertEqual(
+                    [
+                        (action.operation, action.bank, action.slot, action.script)
+                        for action in selection.actions
+                    ],
+                    [("anm.set_main", 3, 0, 0)],
+                )
+                self.assertTrue(
+                    all(evidence.startswith("st01mbs") for evidence in selection.evidence)
+                )
+
+                strict = LoweringPlanner.for_game(
+                    "th15",
+                    backend_emitter=CanonicalBackendEmitter(module, "th15"),
+                ).plan_node(source, routine.name)
+                permissive = LoweringPlanner.for_game(
+                    "th15",
+                    policy=LoweringPolicy(allow_lossy=True),
+                    backend_emitter=emitter,
+                ).plan_node(source, routine.name)
+                self.assertEqual(strict.strategy.value, "unsupported")
+                self.assertEqual(strict.diagnostics[-1].code, "backend.lossy_forbidden")
+                self.assertEqual(permissive.strategy.value, "lossy")
+                self.assertIn("ins_306(0, 0);", permissive.target_text or "")
+                self.assertNotIn("ins_313(", permissive.target_text or "")
+
     def test_unknown_stage_never_falls_back_to_whole_game_pool(self) -> None:
         pool = candidate_pool_for_module("th15", "th11/stage4c01a.decl")
 

@@ -9,6 +9,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from ..analysis.execution_check import check_ecl_file
+from ..analysis.anm_resources import (
+    AnmCandidatePool,
+    candidate_pool_for_stage,
+    stage_id_from_source,
+)
 from ..analysis.spread_ir import add_float_expr, double_flower_aux_config_args, double_flower_center_delta, double_flower_lowering_for_th12, halve_double_flower_layer_args, negated_float_expr, th12_aux_emitter_id
 from ..analysis.transform_ir import BulletTransformIR, TransformTimelineState, build_th12_to_th13plus_slot_maps_from_args, lower_transform_opcode_to_instruction
 from ..artifact.ir_file import DeclTextCodec, build_eclir, dump_eclir, emit_layout_roundtrip_bytes, emit_roundtrip_bytes, emit_roundtrip_source, load_eclir, validate_eclir_data
@@ -22,7 +27,7 @@ from ..integrations.luastg.backend import emit_luastg_file
 from ..integrations.luastg.lifter import emit_luastg_ir_json
 from ..integrations.luastg.normalizer import emit_normalized_json, normalize_luastg_file
 from ..legacy.object_lifter import lift_all_objects, summarize_by_kind
-from ..source.parser import parse_decl
+from ..source.parser import infer_game, parse_decl
 from ..target.lowering import LoweringPlanner, LoweringPolicy
 from ..target.target_ir import CanonicalBackendEmitter, TargetAstBuilder
 
@@ -31,6 +36,19 @@ CHECK_ECL_GAMES = [
     "th06", "th07", "th08", "th10", "th11", "th12",
     "th13", "th14", "th15", "th16", "th17", "th18",
 ]
+
+
+@dataclass(frozen=True, slots=True)
+class _PackageSourceModule:
+    path: Path
+    relative_path: Path
+    data: dict[str, object]
+
+
+@dataclass(frozen=True, slots=True)
+class _CanonicalCompileResult:
+    text: str
+    unsupported: int
 
 
 def load_objects(path: str):
@@ -1728,6 +1746,24 @@ def positive_state_budget(value: str) -> int:
     return budget
 
 
+def add_lowering_policy_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--allow-lossy",
+        action="store_true",
+        help="allow explicit approximation/drop policies",
+    )
+    parser.add_argument(
+        "--preserve-raw-same-family",
+        action="store_true",
+        help="allow warned raw opcode passthrough within one opcode family",
+    )
+    parser.add_argument(
+        "--preserve-raw-cross-family",
+        action="store_true",
+        help="allow warned raw opcode passthrough across opcode families",
+    )
+
+
 def cmd_check_ecl(args: argparse.Namespace) -> int:
     try:
         report = check_ecl_file(
@@ -1770,28 +1806,228 @@ def cmd_check_ecl(args: argparse.Namespace) -> int:
     return 0
 
 
+def _lowering_policy_from_args(args: argparse.Namespace) -> LoweringPolicy:
+    return LoweringPolicy(
+        allow_lossy=bool(args.allow_lossy),
+        preserve_raw_same_family=bool(args.preserve_raw_same_family),
+        preserve_raw_cross_family=bool(args.preserve_raw_cross_family),
+    )
+
+
+def _compile_canonical_data(
+    data: dict[str, object],
+    target: str,
+    policy: LoweringPolicy,
+    *,
+    target_anm_pool: AnmCandidatePool | None = None,
+) -> _CanonicalCompileResult:
+    canonical_data = data.get("canonical_ir")
+    if not isinstance(canonical_data, dict):
+        raise ValueError("canonical IR is missing from the input artifact")
+    module = SemanticModule.from_dict(canonical_data)
+    planner = LoweringPlanner.for_game(
+        target,
+        policy=policy,
+        backend_emitter=CanonicalBackendEmitter(
+            module,
+            target,
+            target_anm_pool=target_anm_pool,
+        ),
+    )
+    target_module = TargetAstBuilder(planner).build(module)
+    return _CanonicalCompileResult(
+        text=target_module.render_decl(),
+        unsupported=target_module.strategy_counts().get("unsupported", 0),
+    )
+
+
 def cmd_compile_ir(args: argparse.Namespace) -> int:
     program, objects, data = load_eclir(args.input)
     canonical_data = data.get("canonical_ir")
     exit_code = 0
     if isinstance(canonical_data, dict) and not args.legacy_patterns:
-        module = SemanticModule.from_dict(canonical_data)
-        planner = LoweringPlanner.for_game(
+        compiled = _compile_canonical_data(
+            data,
             args.target,
-            policy=LoweringPolicy(
-                allow_lossy=args.allow_lossy,
-                preserve_raw_same_family=args.preserve_raw_same_family,
-                preserve_raw_cross_family=args.preserve_raw_cross_family,
-            ),
-            backend_emitter=CanonicalBackendEmitter(module, args.target),
+            _lowering_policy_from_args(args),
         )
-        target_module = TargetAstBuilder(planner).build(module)
-        output = target_module.render_decl()
-        exit_code = 1 if target_module.strategy_counts().get("unsupported", 0) else 0
+        output = compiled.text
+        exit_code = 1 if compiled.unsupported else 0
     else:
         output = emit_transpile(program, objects, args.target)
     write_decl_output(output, args.output, DeclTextCodec.from_eclir(data))
     return exit_code
+
+
+def _ecli_decl_relative_path(entry: object) -> Path:
+    normalized = str(entry).strip().replace("\\", "/")
+    if not normalized:
+        raise ValueError("an ecli dependency has an empty path")
+    if normalized.startswith("/") or re.match(r"^[A-Za-z]:/", normalized):
+        raise ValueError(f"ecli dependency must be relative to the source package: {entry!r}")
+    relative = Path(normalized)
+    if relative.name in {"", ".", ".."}:
+        raise ValueError(f"invalid ecli dependency path: {entry!r}")
+    return relative.with_suffix(".decl")
+
+
+def _path_within(path: Path, directory: Path) -> Path:
+    try:
+        return path.relative_to(directory)
+    except ValueError as exc:
+        raise ValueError(
+            f"source ECL dependency escapes the package directory: {path}"
+        ) from exc
+
+
+def _discover_package_modules(source_root: Path) -> list[_PackageSourceModule]:
+    package_dir = source_root.parent.resolve()
+    root = source_root.resolve()
+    pending: list[Path] = [root]
+    seen: set[Path] = set()
+    modules: list[_PackageSourceModule] = []
+
+    while pending:
+        path = pending.pop(0)
+        if path in seen:
+            continue
+        if not path.is_file():
+            raise ValueError(f"source ECL module does not exist: {path}")
+        relative_path = _path_within(path, package_dir)
+        data = build_eclir(path)
+        modules.append(_PackageSourceModule(path, relative_path, data))
+        seen.add(path)
+
+        program_data = data.get("program")
+        resources = (
+            program_data.get("resources")
+            if isinstance(program_data, dict)
+            else None
+        )
+        ecli_entries = resources.get("ecli", []) if isinstance(resources, dict) else []
+        if not isinstance(ecli_entries, list):
+            raise ValueError(f"invalid ecli resource list in source module: {path}")
+        for entry in ecli_entries:
+            relative = _ecli_decl_relative_path(entry)
+            dependency = (path.parent / relative).resolve()
+            _path_within(dependency, package_dir)
+            if not dependency.is_file():
+                raise ValueError(
+                    f"source ECL dependency {entry!r} referenced by "
+                    f"{relative_path} does not exist: {dependency}"
+                )
+            if dependency not in seen and dependency not in pending:
+                pending.append(dependency)
+
+    return modules
+
+
+def _package_output_paths(
+    modules: list[_PackageSourceModule],
+    source_root: Path,
+    reference_root: Path,
+    output_dir: Path,
+) -> list[Path]:
+    root = source_root.resolve()
+    output_paths = [
+        output_dir / (reference_root.name if module.path == root else module.relative_path)
+        for module in modules
+    ]
+    collision_keys: set[str] = set()
+    for path in output_paths:
+        key = str(path.resolve()).casefold()
+        if key in collision_keys:
+            raise ValueError(f"multiple package modules map to the same output path: {path}")
+        collision_keys.add(key)
+
+    protected = {module.path.resolve() for module in modules}
+    protected.add(reference_root.resolve())
+    for path in output_paths:
+        if path.resolve() in protected:
+            raise ValueError(f"package output would overwrite an input file: {path}")
+    return output_paths
+
+
+def cmd_compile_package(args: argparse.Namespace) -> int:
+    try:
+        source_root = Path(args.input)
+        reference_root = Path(args.reference_package)
+        output_dir = Path(args.output_dir)
+        if not source_root.is_file():
+            raise ValueError(f"source package root does not exist: {source_root}")
+        if not reference_root.is_file():
+            raise ValueError(f"reference package root does not exist: {reference_root}")
+        if source_root.suffix.lower() != ".decl":
+            raise ValueError(f"source package root must be a .decl file: {source_root}")
+        if reference_root.suffix.lower() != ".decl":
+            raise ValueError(f"reference package root must be a .decl file: {reference_root}")
+        if output_dir.exists() and not output_dir.is_dir():
+            raise ValueError(f"output path is not a directory: {output_dir}")
+
+        source_game = infer_game(source_root)
+        reference_game = infer_game(reference_root)
+        if source_game == "unknown":
+            raise ValueError(
+                "source game cannot be inferred; place the package under a thXX directory"
+            )
+        if reference_game != "unknown" and reference_game != args.target:
+            raise ValueError(
+                "reference package game does not match --target: "
+                f"{reference_game} != {args.target}"
+            )
+
+        source_stage_id = stage_id_from_source(str(source_root))
+        reference_stage_id = stage_id_from_source(str(reference_root))
+        if source_stage_id is None:
+            raise ValueError(f"source package root has no stage id: {source_root.name}")
+        if reference_stage_id is None:
+            raise ValueError(f"reference package root has no stage id: {reference_root.name}")
+        if source_stage_id != reference_stage_id:
+            raise ValueError(
+                "source and reference package roots identify different stages: "
+                f"{source_stage_id} != {reference_stage_id}"
+            )
+
+        modules = _discover_package_modules(source_root)
+        output_paths = _package_output_paths(
+            modules,
+            source_root,
+            reference_root,
+            output_dir,
+        )
+        target_pool = candidate_pool_for_stage(
+            args.target,
+            reference_stage_id,
+            reference_root.resolve(),
+        )
+        policy = _lowering_policy_from_args(args)
+        compiled = [
+            _compile_canonical_data(
+                module.data,
+                args.target,
+                policy,
+                target_anm_pool=(
+                    target_pool
+                    if stage_id_from_source(str(module.path)) == source_stage_id
+                    else None
+                ),
+            )
+            for module in modules
+        ]
+
+        output_dir.mkdir(parents=True, exist_ok=True)
+        for module, output_path, result in zip(modules, output_paths, compiled):
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            write_decl_output(
+                result.text,
+                output_path,
+                DeclTextCodec.from_eclir(module.data),
+            )
+    except (OSError, ValueError) as exc:
+        print(f"compile-package: {exc}", file=sys.stderr)
+        return 2
+
+    return 1 if any(result.unsupported for result in compiled) else 0
 
 
 def cmd_transpile(args: argparse.Namespace) -> int:
@@ -2086,10 +2322,27 @@ def main(argv: list[str] | None = None) -> int:
     compile_ir.add_argument("--target", required=True, choices=["th06", "th07", "th08", "th10", "th11", "th12", "th13", "th14", "th15", "th16", "th17", "th18"])
     compile_ir.add_argument("--output", "-o", help="write target .decl to file instead of stdout")
     compile_ir.add_argument("--legacy-patterns", action="store_true", help="use schema-v1 Pattern object lowering instead of canonical ordered IR")
-    compile_ir.add_argument("--allow-lossy", action="store_true", help="allow explicit approximation/drop policies")
-    compile_ir.add_argument("--preserve-raw-same-family", action="store_true", help="allow warned raw opcode passthrough within one opcode family")
-    compile_ir.add_argument("--preserve-raw-cross-family", action="store_true", help="allow warned raw opcode passthrough across opcode families")
+    add_lowering_policy_arguments(compile_ir)
     compile_ir.set_defaults(func=cmd_compile_ir)
+
+    compile_package = sub.add_parser(
+        "compile-package",
+        help="compile a root .decl and all recursive ecli siblings through canonical IR",
+    )
+    compile_package.add_argument("input", help="source package root .decl")
+    compile_package.add_argument("--target", required=True, choices=CHECK_ECL_GAMES)
+    compile_package.add_argument(
+        "--reference-package",
+        required=True,
+        help="corresponding target original package root .decl",
+    )
+    compile_package.add_argument(
+        "--output-dir",
+        required=True,
+        help="directory for the complete generated .decl package",
+    )
+    add_lowering_policy_arguments(compile_package)
+    compile_package.set_defaults(func=cmd_compile_package)
 
 
     transpile = sub.add_parser("transpile", help="lower a whole .decl file as a structured draft")

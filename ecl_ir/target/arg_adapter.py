@@ -26,6 +26,16 @@ ARG_LAYOUT_OVERRIDES: dict[tuple[str, str, int], ArgLayout] = {}
 # 参数语义表：同一个 op_key 下，不同世代可以有不同 layout。
 # lowering 时先 source args -> semantic fields，再 semantic fields -> target args。
 ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
+    "enemy.create": {
+        GEN_10: ArgLayout(("routine", "x", "y", "health", "score_reward", "item_drop"), {}),
+        GEN_12: ArgLayout(("routine", "x", "y", "health", "score_reward", "item_drop"), {}),
+        GEN_13: ArgLayout(("routine", "x", "y", "health", "score_reward", "item_drop"), {}),
+    },
+    "enemy.create_func": {
+        GEN_10: ArgLayout(("routine", "x", "y", "health", "score_reward", "item_drop"), {}),
+        GEN_12: ArgLayout(("routine", "x", "y", "health", "score_reward", "item_drop"), {}),
+        GEN_13: ArgLayout(("routine", "x", "y", "health", "score_reward", "item_drop"), {}),
+    },
     "movement.circle.set": {
         # TH08 moveCircle(t, theta, angSpd, radSpd): t 是圆周运动持续时间，半径从 0 开始增长。
         GEN_OLD: ArgLayout(("duration", "theta", "angular_speed", "radius_delta"), {"radius": "0.0f"}),
@@ -77,12 +87,12 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
     },
 
     "movement.ellipse.set": {
-        GEN_10: ArgLayout(("theta", "angular_speed", "radius", "radius_delta", "ellipse_mode", "ellipse_angle", "ellipse_ratio"), {"ellipse_mode": "0"}),
+        GEN_10: ArgLayout(("theta", "angular_speed", "radius", "radius_delta", "ellipse_angle", "ellipse_ratio"), {}),
         GEN_12: ArgLayout(("theta", "angular_speed", "radius", "radius_delta", "ellipse_angle", "ellipse_ratio"), {"ellipse_mode": "0"}),
         GEN_13: ArgLayout(("theta", "angular_speed", "radius", "radius_delta", "ellipse_angle", "ellipse_ratio"), {"ellipse_mode": "0"}),
     },
     "movement.ellipse_rel.set": {
-        GEN_10: ArgLayout(("theta", "angular_speed", "radius", "radius_delta", "ellipse_mode", "ellipse_angle", "ellipse_ratio"), {"ellipse_mode": "0"}),
+        GEN_10: ArgLayout(("theta", "angular_speed", "radius", "radius_delta", "ellipse_angle", "ellipse_ratio"), {}),
         GEN_12: ArgLayout(("theta", "angular_speed", "radius", "radius_delta", "ellipse_angle", "ellipse_ratio"), {"ellipse_mode": "0"}),
         GEN_13: ArgLayout(("theta", "angular_speed", "radius", "radius_delta", "ellipse_angle", "ellipse_ratio"), {"ellipse_mode": "0"}),
     },
@@ -105,6 +115,10 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_10: ArgLayout(("duration", "x1", "y1", "x2", "y2", "x3", "y3"), {}),
         GEN_12: ArgLayout(("duration", "x1", "y1", "x2", "y2", "x3", "y3"), {}),
         GEN_13: ArgLayout(("duration", "x1", "y1", "x2", "y2", "x3", "y3"), {}),
+    },
+    "movement.move_vel_nm_time": {
+        GEN_12: ArgLayout(("duration", "interpolation", "angle", "speed"), {}),
+        GEN_13: ArgLayout(("duration", "interpolation", "angle", "speed"), {}),
     },
     "movement.move_dir": {
         GEN_OLD: ArgLayout(("angle", "speed"), {}),
@@ -129,6 +143,19 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_10: ArgLayout(("width", "height"), {}),
         GEN_12: ArgLayout(("width", "height"), {}),
         GEN_13: ArgLayout(("width", "height"), {}),
+    },
+    "unit.special_collision_flag": {
+        GEN_12: ArgLayout(("enabled",), {}),
+        GEN_13: ArgLayout(("enabled",), {}),
+    },
+    "unit.kill_rate": {
+        GEN_13: ArgLayout(("weight",), {}),
+    },
+    "unit.spirit_drop_decay_frames": {
+        GEN_13: ArgLayout(("frames",), {}),
+    },
+    "unit.spirit_drop_max_count": {
+        GEN_13: ArgLayout(("count",), {}),
     },
     "flow.jmp": {
         GEN_OLD: ArgLayout(("time", "label"), {}),
@@ -497,6 +524,10 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
 }
 
 ARG_LAYOUT_OVERRIDES.update({
+    ("enemy.create", GEN_10, 270): ArgLayout(("routine", "x", "y", "legacy_parameter", "health", "score_reward", "item_drop"), {}),
+    ("enemy.create", GEN_12, 270): ArgLayout(("routine", "x", "y", "legacy_parameter", "health", "score_reward", "item_drop"), {}),
+    ("enemy.create_func", GEN_10, 271): ArgLayout(("routine", "x", "y", "legacy_parameter", "health", "score_reward", "item_drop"), {}),
+    ("enemy.create_func", GEN_12, 271): ArgLayout(("routine", "x", "y", "legacy_parameter", "health", "score_reward", "item_drop"), {}),
     ("movement.circle_rel.tween", GEN_10, 291): ArgLayout(("duration", "mode", "angular_speed", "radius", "radius_delta", "compat_flag"), {"compat_flag": "0"}),
     ("laser.on", GEN_10, 412): ArgLayout(("sprite", "color", "angle", "speed", "unknown1", "length1", "length2", "width"), {"et_id": "0"}),
     ("laser.on", GEN_10, 431): ArgLayout(("sprite", "color", "angle", "speed", "unknown1", "length1", "length2", "width"), {"et_id": "0"}),
@@ -565,6 +596,10 @@ def adapt_args_for_op_key(
         fields["x_speed"] = f"({speed}) * cos({angle})"
         fields["y_speed"] = f"({speed}) * sin({angle})"
     result = [adapt_field_value(field, fields.get(field, target_defaults.get(field, "")), source_gen, target_gen) for field in target_fields]
+    if op_key == "movement.move_vel_nm_time" and target_gen == GEN_12 and len(result) > 1:
+        match = re.fullmatch(r"(-?\d+)", result[1].strip())
+        if match:
+            result[1] = f"{match.group(1)}.0f"
     return result
 
 
@@ -580,6 +615,10 @@ def adapt_field_value(field: str, value: str, source_gen: str, target_gen: str) 
     if field in {"sub", "function"}:
         return adapt_sub_value(value, source_gen, target_gen)
     if field == "layers" and source_gen == GEN_12 and target_gen == GEN_13:
+        match = re.fullmatch(r"(-?\d+)\.0f", str(value).strip())
+        if match:
+            return match.group(1)
+    if field == "interpolation" and source_gen == GEN_12 and target_gen == GEN_13:
         match = re.fullmatch(r"(-?\d+)\.0f", str(value).strip())
         if match:
             return match.group(1)

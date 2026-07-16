@@ -91,6 +91,50 @@ class VariableIrTests(unittest.TestCase):
             "bullet.active_count",
         )
 
+    def test_spell_practice_selection_projects_across_modern_games(self) -> None:
+        games = ("th13", "th14", "th15", "th16", "th17", "th18")
+        for source in games:
+            reference = parse_expression(source, "[-9907]").variable_uses[0].reference
+            with self.subTest(source=source, property="typed_reference"):
+                self.assertEqual(reference.semantic_id, "game.spell.practice.selection_id")
+                self.assertEqual(reference.storage_type, ValueType.INT32)
+                self.assertEqual(reference.storage_scope, VariableStorageScope.ENGINE_GLOBAL)
+                self.assertEqual(reference.access, VariableAccess.READ_ONLY)
+                self.assertEqual(reference.propagation, VariablePropagation.SHARED)
+                self.assertEqual(reference.confidence, Confidence.DOCUMENTED)
+            for target in games:
+                if source == target:
+                    continue
+                with self.subTest(source=source, target=target):
+                    result = project(source, target, "[-9907]")
+                    self.assertEqual(result.issues, ())
+                    self.assertEqual(result.expression.text, "[-9907]")
+
+        write = project("th14", "th15", "[-9907]", VariableUseKind.WRITE)
+        self.assertIsNone(write.expression)
+        self.assertEqual(write.issues[0].code, "variable.storage_or_access_mismatch")
+
+    def test_modern_main_spell_practice_guard_survives_cross_game_lowering(self) -> None:
+        program = parse_decl_text(
+            """void main()
+{
+    unless ([-9907] >= 0) goto main_100 @ 0;
+    return;
+main_100:
+    return;
+}
+""",
+            "th14/st01.decl",
+        )
+        module = build_semantic_module(program)
+        planner = LoweringPlanner.for_game(
+            "th15",
+            backend_emitter=CanonicalBackendEmitter(module, "th15"),
+        )
+        rendered = TargetAstBuilder(planner).build(module).render_decl()
+        self.assertIn("unless ([-9907] >= 0) goto main_100 @ 0;", rendered)
+        self.assertNotIn("variable.unconfirmed_semantics", rendered)
+
     def test_th07_does_not_borrow_the_th08_variable_table(self) -> None:
         th07 = project("th07", "th15", "[10004.0f]")
         self.assertIsNone(th07.expression)
@@ -296,6 +340,31 @@ Done:
 
         modern_target = LoweringPlanner.for_game("th15").plan_node(node, "test")
         self.assertEqual(modern_target.strategy, LoweringStrategy.DIRECT)
+
+    def test_selected_evaluation_placeholder_context_never_allows_a_write(self) -> None:
+        read = project_expression(
+            parse_expression(
+                "th15",
+                "[-1]",
+                use_kind=VariableUseKind.READ,
+            ),
+            "th12",
+            evaluation_stack_offsets=frozenset({-1}),
+        )
+        self.assertEqual(read.issues, ())
+        self.assertEqual(read.expression.text, "[-1]")
+
+        write = project_expression(
+            parse_expression(
+                "th15",
+                "[-1]",
+                use_kind=VariableUseKind.WRITE,
+            ),
+            "th12",
+            evaluation_stack_offsets=frozenset({-1}),
+        )
+        self.assertIsNone(write.expression)
+        self.assertEqual(write.issues[0].code, "stack.relative_abi_unsupported")
 
     def test_projection_rebuilds_missing_or_stale_expression_spans(self) -> None:
         operation = semantic_operation(

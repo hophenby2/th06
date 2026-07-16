@@ -14,11 +14,135 @@ from ecl_ir.target.lowering import LoweringStrategy
 from ecl_ir.source.model import Instruction, Statement
 from ecl_ir.legacy.object_lifter import lift_all_objects
 from ecl_ir.canonical.op_ir import op_event, semantic_operation, target_opcode_for_op_key
+from ecl_ir.dialects.reference import is_opcode_supported, opcode_signature
 from ecl_ir.source.parser import parse_decl
 from ecl_ir.legacy.timeline_lifter import statement_to_event
 
 
 class SemanticBackendTests(unittest.TestCase):
+    def test_th11_inherits_alcostg_movement_formats_used_by_original_ecl(self) -> None:
+        self.assertTrue(is_opcode_supported("th11", 302))
+        self.assertEqual(opcode_signature("th11", 302), "ffffff")
+        self.assertTrue(is_opcode_supported("th11", 303))
+        self.assertEqual(opcode_signature("th11", 303), "ffffff")
+        self.assertFalse(is_opcode_supported("th10", 302))
+
+    def test_ellipse_rel_uses_shared_six_field_form_th11_and_newer(self) -> None:
+        args = ["0.0f", "0.1f", "32.0f", "0.0f", "1.0f", "0.5f"]
+        modern = semantic_operation("th18", 422, args)
+        legacy = semantic_operation("th11", 302, args)
+
+        self.assertEqual(
+            [operand.name for operand in modern.operands],
+            [
+                "theta",
+                "angular_speed",
+                "radius",
+                "radius_delta",
+                "ellipse_angle",
+                "ellipse_ratio",
+            ],
+        )
+        self.assertEqual(
+            compile_ir_op_event(modern, "th11"),
+            f"ins_302({', '.join(args)});",
+        )
+        self.assertEqual(
+            compile_ir_op_event(legacy, "th15"),
+            f"ins_422({', '.join(args)});",
+        )
+
+    def test_bezier_coordinates_are_not_normalized_as_interpolation_mode(self) -> None:
+        args = ["120", "1.0f", "2.0f", "3.0f", "4.0f", "5.0f", "6.0f"]
+        bezier = semantic_operation("th13", 425, args)
+
+        self.assertEqual(
+            compile_ir_op_event(bezier, "th12"),
+            f"ins_325({', '.join(args)});",
+        )
+        self.assertEqual(
+            compile_ir_op_event(bezier, "th11"),
+            f"ins_305({', '.join(args)});",
+        )
+        unsupported = compile_ir_op_emission(bezier, "th10")
+        self.assertIsNotNone(unsupported)
+        self.assertEqual(unsupported.strategy, LoweringStrategy.UNSUPPORTED)
+
+    def test_move_vel_nm_time_projects_th12_float_mode_to_modern_int_mode(self) -> None:
+        th12 = semantic_operation("th12", 329, ["60", "0.0f", "0.1f", "1.0f"])
+        modern = semantic_operation("th13", 429, ["60", "0", "0.1f", "1.0f"])
+
+        self.assertEqual(
+            [operand.name for operand in th12.operands],
+            ["duration", "interpolation", "angle", "speed"],
+        )
+        self.assertEqual(
+            compile_ir_op_event(th12, "th15"),
+            "ins_429(60, 0, 0.1f, 1.0f);",
+        )
+        self.assertEqual(
+            compile_ir_op_event(modern, "th12"),
+            "ins_329(60, 0.0f, 0.1f, 1.0f);",
+        )
+
+    def test_non_equivalent_or_unavailable_movement_forms_stay_unsupported(self) -> None:
+        cases = (
+            (semantic_operation("th15", 441, ["120", "7", "0.1f"]), "th13"),
+            (semantic_operation("th15", 445, ["120", "1", "2.0f"]), "th12"),
+            (semantic_operation("th13", 433, ["1"]), "th12"),
+            (semantic_operation("th13", 429, ["60", "0", "0.1f", "1.0f"]), "th10"),
+            (
+                semantic_operation(
+                    "th15",
+                    423,
+                    ["60", "0", "0.1f", "32.0f", "0.0f", "1.0f", "0.5f"],
+                ),
+                "th11",
+            ),
+            (
+                semantic_operation(
+                    "th13",
+                    409,
+                    ["120", "0", "0.1f", "32.0f", "0.0f"],
+                ),
+                "th10",
+            ),
+            (
+                semantic_operation(
+                    "th12",
+                    311,
+                    ["120", "9", "0.1f", "32.0f", "0.0f"],
+                ),
+                "th11",
+            ),
+        )
+        for node, target in cases:
+            with self.subTest(operation=node.operation, target=target):
+                emission = compile_ir_op_emission(node, target)
+                self.assertIsNotNone(emission)
+                self.assertEqual(emission.strategy, LoweringStrategy.UNSUPPORTED)
+
+    def test_circle_tween_uses_only_abi_equivalent_target_forms(self) -> None:
+        absolute = semantic_operation(
+            "th13",
+            409,
+            ["120", "0", "0.1f", "32.0f", "0.0f"],
+        )
+        relative = semantic_operation(
+            "th12",
+            311,
+            ["120", "9", "0.1f", "32.0f", "0.0f"],
+        )
+
+        self.assertEqual(
+            compile_ir_op_event(absolute, "th11"),
+            "ins_289(120, 0, 0.1f, 32.0f, 0.0f);",
+        )
+        self.assertEqual(
+            compile_ir_op_event(relative, "th10"),
+            "ins_291(120, 9, 0.1f, 32.0f, 0.0f, 0);",
+        )
+
     def test_typed_and_schema_v1_events_lower_identically(self) -> None:
         cases = [
             ("th08", 21, ["[-10000]", "1"], "th12"),
@@ -59,6 +183,136 @@ class SemanticBackendTests(unittest.TestCase):
         self.assertIsNotNone(emission)
         self.assertEqual(emission.strategy, LoweringStrategy.UNSUPPORTED)
         self.assertNotIn("ins_324", emission.text)
+
+    def test_evidence_backed_reused_opcodes_have_game_scoped_semantics(self) -> None:
+        cases = [
+            ("th12", 444, ["1"], "unit.special_collision_flag", "enabled", "th15", "ins_544(1);"),
+            ("th15", 544, ["0"], "unit.special_collision_flag", "enabled", "th12", "ins_444(0);"),
+            ("th15", 569, ["6"], "unit.kill_rate", "weight", "th17", "ins_569(6);"),
+            (
+                "th13",
+                1001,
+                ["120"],
+                "unit.spirit_drop_decay_frames",
+                "frames",
+                "th15",
+                "ins_1001(120);",
+            ),
+            (
+                "th15",
+                1002,
+                ["5"],
+                "unit.spirit_drop_max_count",
+                "count",
+                "th14",
+                "ins_1002(5);",
+            ),
+        ]
+        for source, opcode, args, operation, operand, target, expected in cases:
+            with self.subTest(source=source, opcode=opcode, target=target):
+                node = semantic_operation(source, opcode, args)
+                self.assertEqual(node.operation, operation)
+                self.assertEqual([item.name for item in node.operands], [operand])
+                self.assertEqual(node.provenance.confidence.value, "documented")
+                self.assertEqual(compile_ir_op_event(node, target), expected)
+
+        self.assertIsNone(target_opcode_for_op_key("unit.special_collision_flag", "th11"))
+        self.assertIsNone(target_opcode_for_op_key("unit.kill_rate", "th14"))
+        self.assertIsNone(
+            target_opcode_for_op_key("unit.spirit_drop_decay_frames", "th16")
+        )
+        self.assertIsNone(
+            target_opcode_for_op_key("unit.spirit_drop_max_count", "th17")
+        )
+
+    def test_game_specific_opcode_reuse_is_not_treated_as_an_alias(self) -> None:
+        th11_debug = semantic_operation("th11", 500, ["100"])
+        th12_emitter = semantic_operation("th12", 500, ["0"])
+        th13_hurtbox = semantic_operation("th13", 500, ["24.0f", "24.0f"])
+        th13_debug = semantic_operation("th13", 900, ["4"])
+        th16_season = semantic_operation("th16", 1001, ["200"])
+        th17_spec = semantic_operation("th17", 1001, ["1"])
+        th18_timed_drop = semantic_operation("th18", 573, ["1", "1"])
+
+        self.assertTrue(th11_debug.operation.startswith("raw."))
+        self.assertEqual(th12_emitter.operation, "bullet.manager.reset")
+        self.assertEqual(th13_hurtbox.operation, "unit.set_hurtbox")
+        self.assertTrue(th13_debug.operation.startswith("raw."))
+        self.assertEqual(th13_debug.provenance.confidence.value, "unknown")
+        self.assertNotEqual(th16_season.operation, "unit.spirit_drop_decay_frames")
+        self.assertNotEqual(th17_spec.operation, "unit.spirit_drop_decay_frames")
+        self.assertNotEqual(th18_timed_drop.operation, "unit.kill_rate")
+
+        for node, target in (
+            (th11_debug, "th15"),
+            (th16_season, "th15"),
+            (th18_timed_drop, "th17"),
+        ):
+            with self.subTest(operation=node.operation, target=target):
+                emission = compile_ir_op_emission(node, target)
+                self.assertIsNotNone(emission)
+                self.assertEqual(emission.strategy, LoweringStrategy.UNSUPPORTED)
+
+    def test_enemy_create_target_form_is_selected_by_typed_arity(self) -> None:
+        normal_args = ['"Girl"', "1.0f", "2.0f", "100", "1000", "1"]
+        normal = semantic_operation("th15", 300, normal_args)
+
+        self.assertEqual(normal.operation, "enemy.create")
+        self.assertEqual(target_opcode_for_op_key(normal.operation, "th12"), 256)
+        self.assertEqual(
+            compile_ir_op_event(normal, "th12"),
+            f"ins_256({', '.join(normal_args)});",
+        )
+
+    def test_legacy_extended_enemy_create_keeps_its_typed_form(self) -> None:
+        extended_args = [
+            '"DiveEnemy"',
+            "1.0f",
+            "2.0f",
+            "-1073741824",
+            "100",
+            "1000",
+            "1",
+        ]
+        create = semantic_operation("th10", 270, extended_args)
+        create_func = semantic_operation("th11", 271, extended_args)
+
+        self.assertEqual(create.operation, "enemy.create")
+        self.assertEqual(create_func.operation, "enemy.create_func")
+        self.assertEqual(
+            [operand.name for operand in create.operands],
+            [
+                "routine",
+                "x",
+                "y",
+                "legacy_parameter",
+                "health",
+                "score_reward",
+                "item_drop",
+            ],
+        )
+        self.assertEqual(
+            compile_ir_op_event(create, "th12"),
+            f"ins_270({', '.join(extended_args)});",
+        )
+        self.assertEqual(
+            compile_ir_op_event(create_func, "th12"),
+            f"ins_271({', '.join(extended_args)});",
+        )
+        self.assertEqual(
+            compile_ir_op_event(create, "th15"),
+            'ins_300("DiveEnemy", 1.0f, 2.0f, 100, 1000, 1);',
+        )
+
+        th12_drop = semantic_operation(
+            "th12",
+            270,
+            ['"DiveEnemy"', "1.0f", "2.0f", "0", "100", "1000", "5"],
+        )
+        self.assertEqual(
+            compile_ir_op_event(th12_drop, "th15"),
+            'ins_300("DiveEnemy", 1.0f, 2.0f, 100, 1000, 6);',
+        )
 
     def test_th13_reused_opcodes_dispatch_by_semantics(self) -> None:
         cases = [

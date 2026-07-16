@@ -180,6 +180,39 @@ OP_ALIASES = {
     "et_protect_range": "unit.et_protect_range",
 }
 
+# Some opcode names in the external maps are intentionally generic
+# (``unknownNNN``/``specN``), while the same number is reused with unrelated
+# meanings in adjacent games.  Keep the disambiguation game-local and assign
+# one semantic key only where the references and original corpus agree.
+OP_KEY_BY_GAME_OPCODE = {
+    **{
+        (game, 270): "enemy.create"
+        for game in ("th10", "th11", "th12")
+    },
+    **{
+        (game, 271): "enemy.create_func"
+        for game in ("th10", "th11", "th12")
+    },
+    ("th12", 422): "boss.spell_ex",
+    ("th12", 444): "unit.special_collision_flag",
+    **{
+        (game, 544): "unit.special_collision_flag"
+        for game in ("th13", "th14", "th15", "th16", "th17", "th18")
+    },
+    **{
+        (game, 569): "unit.kill_rate"
+        for game in ("th15", "th16", "th17", "th18")
+    },
+    **{
+        (game, 1001): "unit.spirit_drop_decay_frames"
+        for game in ("th13", "th14", "th15")
+    },
+    **{
+        (game, 1002): "unit.spirit_drop_max_count"
+        for game in ("th13", "th14", "th15")
+    },
+}
+
 OP_KEY_PREFIX_BY_DOMAIN = {
     "flow": "flow",
     "enemy": "enemy",
@@ -198,6 +231,7 @@ class OpSpec:
     name: str
     by_game: dict[str, int]
     signatures: dict[str, str]
+    forms_by_game: dict[str, tuple[tuple[int, str], ...]]
 
 
 def snake_name(name: str) -> str:
@@ -223,6 +257,9 @@ def domain_for(game: str, opcode: int, name: str) -> str:
 
 
 def op_key_for_name(game: str, opcode: int, name: str) -> str:
+    override = OP_KEY_BY_GAME_OPCODE.get((game.lower(), opcode))
+    if override is not None:
+        return override
     domain = domain_for(game, opcode, name)
     snake = snake_name(name)
     aliased = OP_ALIASES.get(snake)
@@ -235,12 +272,9 @@ def op_key_for_name(game: str, opcode: int, name: str) -> str:
 
 
 def op_key_for_opcode(game: str, opcode: int) -> str:
-    if game.lower() in {"th10", "th11", "th12"} and opcode == 270:
-        return "enemy.create"
-    if game.lower() in {"th10", "th11", "th12"} and opcode == 271:
-        return "enemy.create_func"
-    if game.lower() == "th12" and opcode == 422:
-        return "boss.spell_ex"
+    override = OP_KEY_BY_GAME_OPCODE.get((game.lower(), opcode))
+    if override is not None:
+        return override
     info = opcode_info(game, opcode)
     if info and info.name:
         return op_key_for_name(game, opcode, info.name)
@@ -251,20 +285,42 @@ def op_key_for_opcode(game: str, opcode: int) -> str:
 def op_specs() -> dict[str, OpSpec]:
     specs: dict[str, OpSpec] = {}
     for game, table in opcode_reference().items():
-        for opcode, info in table.items():
+        for opcode, info in sorted(table.items()):
             if not info.name:
                 continue
             key = op_key_for_name(game, opcode, info.name)
             old = specs.get(key)
             by_game = dict(old.by_game) if old else {}
             signatures = dict(old.signatures) if old else {}
-            by_game[game] = opcode
-            signatures[game] = info.signature
-            specs[key] = OpSpec(key=key, domain=domain_for(game, opcode, info.name), name=info.name, by_game=by_game, signatures=signatures)
+            forms_by_game = dict(old.forms_by_game) if old else {}
+            forms = list(forms_by_game.get(game, ()))
+            form = (opcode, info.signature)
+            if form not in forms:
+                forms.append(form)
+            forms_by_game[game] = tuple(forms)
+
+            # One semantic operation may have more than one native ABI.  Keep
+            # the first (lowest opcode) form as the stable default and retain
+            # every form for arity-aware target selection.
+            by_game.setdefault(game, opcode)
+            signatures.setdefault(game, info.signature)
+            specs[key] = OpSpec(
+                key=key,
+                domain=old.domain if old else domain_for(game, opcode, info.name),
+                name=old.name if old else info.name,
+                by_game=by_game,
+                signatures=signatures,
+                forms_by_game=forms_by_game,
+            )
     return specs
 
 
-def target_opcode_for_op_key(op_key: str, target: str) -> int | None:
+def target_opcode_for_op_key(
+    op_key: str,
+    target: str,
+    *,
+    operand_count: int | None = None,
+) -> int | None:
     """Return only an opcode explicitly registered for the target game.
 
     Shared generation numbers are not evidence of shared semantics.  Any
@@ -275,7 +331,16 @@ def target_opcode_for_op_key(op_key: str, target: str) -> int | None:
     spec = op_specs().get(op_key)
     if not spec:
         return None
-    return spec.by_game.get(profile_for_game(target).game)
+    target_game = profile_for_game(target).game
+    if operand_count is not None:
+        matching = [
+            opcode
+            for opcode, signature in spec.forms_by_game.get(target_game, ())
+            if "*" not in signature and len(signature) == operand_count
+        ]
+        if matching:
+            return matching[0]
+    return spec.by_game.get(target_game)
 
 
 SOURCE_SPECIFIC_DROP_OP_KEYS = {
@@ -496,7 +561,11 @@ def semantic_operation(
     confidence = Confidence.DOCUMENTED
     if not profile_operation and (dialect_operation.startswith("raw.") or not mnemonic):
         confidence = Confidence.UNKNOWN
-    elif not profile_operation and ("unknown" in mnemonic.lower() or mnemonic.lower().startswith("ins_")):
+    elif (
+        not profile_operation
+        and ("unknown" in mnemonic.lower() or mnemonic.lower().startswith("ins_"))
+        and (game.lower(), opcode) not in OP_KEY_BY_GAME_OPCODE
+    ):
         confidence = Confidence.INFERRED
     annotations: dict[str, object] = {
         "dialect_operation": dialect_operation,

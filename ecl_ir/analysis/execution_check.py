@@ -11,6 +11,7 @@ from .anm_resources import (
     AnmActionCandidate,
     AnmCandidatePool,
     build_anm_lowering_plan,
+    candidate_pool_for_module,
     candidate_pool_for_stage,
     stage_id_from_source,
 )
@@ -66,6 +67,36 @@ LOWERING_COMMENT_RE = re.compile(
     r"^\s*//\s*\[([^\]]+)\]\s+node=(\S+)"
     r"(?:\s+operation=([^\s:]+))?"
     r"(?:\s+strategy=(direct|raw|lossy|unsupported))?\s*:\s*(.*)$"
+)
+LEGACY_LOWERING_COMMENT_PATTERNS = (
+    (
+        re.compile(r"^\s*//\s*unlifted instruction\s*:\s*(.*)$", re.IGNORECASE),
+        "legacy.unlifted_instruction",
+        "unlifted instruction",
+    ),
+    (
+        re.compile(
+            r"^\s*//\s*no safe lowering implemented\b\s*(.*)$",
+            re.IGNORECASE,
+        ),
+        "legacy.no_safe_lowering",
+        "no safe lowering implemented",
+    ),
+    (
+        re.compile(r"^\s*//\s*unsupported transform\b\s*(.*)$", re.IGNORECASE),
+        "legacy.unsupported_transform",
+        "unsupported transform",
+    ),
+    (
+        re.compile(r"^\s*//\s*old target drops\b\s*(.*)$", re.IGNORECASE),
+        "legacy.dropped_syntax",
+        "old target drops",
+    ),
+    (
+        re.compile(r"^\s*//\s*raw\s*:\s*(.*)$", re.IGNORECASE),
+        "legacy.raw_omission",
+        "raw",
+    ),
 )
 GENERATED_HEADER_RE = re.compile(
     r"^\s*//\s*(source|source game|target)\s*:\s*(.*?)\s*$",
@@ -700,6 +731,10 @@ class _ExecutionChecker:
 
     def scan_lowering_comments(self) -> None:
         for unit in self.package.units:
+            headers = _generated_headers(unit.text)
+            generated_output = all(
+                headers.get(name) for name in ("source", "source game", "target")
+            )
             routine = ""
             for line_no, line in enumerate(unit.text.splitlines(), 1):
                 function = FUNC_RE.match(line)
@@ -724,6 +759,38 @@ class _ExecutionChecker:
                         "source_node_id": node_id,
                     },
                 )
+
+            # Legacy prefixes are only meaningful in generated artifacts.
+            # Hand-written ECL may use phrases such as ``raw:`` as prose.
+            if not generated_output:
+                continue
+            routine = ""
+            for line_no, line in enumerate(unit.text.splitlines(), 1):
+                function = FUNC_RE.match(line)
+                if function:
+                    routine = function.group(1)
+                for pattern, code, marker in LEGACY_LOWERING_COMMENT_PATTERNS:
+                    match = pattern.match(line)
+                    if match is None:
+                        continue
+                    payload = match.group(1).strip()
+                    message = f"legacy lowering omitted source behavior: {marker}"
+                    if payload:
+                        message = f"{message}: {payload}"
+                    self.add(
+                        "error",
+                        code,
+                        unit=unit,
+                        routine=routine,
+                        line=line_no,
+                        message=message,
+                        details={
+                            "origin": "legacy_lowering_comment",
+                            "marker": marker,
+                            "source_text": payload,
+                        },
+                    )
+                    break
 
     def static_preflight(self) -> None:
         units_by_key = {unit.key: unit for unit in self.package.units}
@@ -827,11 +894,59 @@ class _ExecutionChecker:
             expressions.extend(parse_expression(self.package.game, arg) for arg in node.args)
         return expressions
 
-    def _node_variable_uses(self, node: SemanticNode) -> list[Any]:
-        expressions = self._node_primary_expressions(node)
-        for selected in node.selected_values:
-            expressions.extend(case.value for case in selected.cases)
-        return [use for expression in expressions for use in expression.variable_uses]
+    @staticmethod
+    def _is_selected_evaluation_consumer(node: SemanticNode, use: Any) -> bool:
+        """Recognize only this node's read-side selection result slots."""
+
+        encoding = use.reference.source_encoding
+        offset = encoding.numeric_id
+        return (
+            bool(node.selected_values)
+            and encoding.kind is VariableEncodingKind.UNKNOWN
+            and isinstance(offset, int)
+            and -len(node.selected_values) <= offset <= -1
+            and use.kind in {VariableUseKind.READ, VariableUseKind.UNKNOWN}
+        )
+
+    def _check_selected_evaluation_binding(
+        self,
+        unit: _ModuleUnit,
+        routine: SemanticRoutine,
+        node: SemanticNode,
+        use: Any,
+    ) -> None:
+        offset = int(use.reference.source_encoding.numeric_id)
+        for lane in self.report.difficulties:
+            if not _guard_active(node, lane):
+                continue
+            selected_depth = sum(
+                1
+                for selected in node.selected_values
+                if any(
+                    case.guard.is_unconditional or lane in case.guard.mask
+                    for case in selected.cases
+                )
+            )
+            if -offset <= selected_depth:
+                continue
+            self.add(
+                "error",
+                "stack.relative_reference_unbound",
+                difficulty=lane,
+                unit=unit,
+                routine=routine.name,
+                node=node,
+                message=(
+                    f"evaluation stack reference {use.reference.source_encoding.raw} "
+                    "has no selected value in this difficulty lane"
+                ),
+                details={
+                    "offset": offset,
+                    "available_depth": selected_depth,
+                    "use_kind": use.kind.value,
+                    "origin": "selected_value_consumer",
+                },
+            )
 
     def _check_node_variables(
         self,
@@ -877,9 +992,36 @@ class _ExecutionChecker:
                             "use_kind": use.kind.value,
                         },
                     )
-        for use in self._node_variable_uses(node):
+        primary_expressions = self._node_primary_expressions(node)
+        selected_expressions = [
+            case.value
+            for selected in node.selected_values
+            for case in selected.cases
+        ]
+        variable_uses = [
+            (use, True)
+            for expression in primary_expressions
+            for use in expression.variable_uses
+        ]
+        variable_uses.extend(
+            (use, False)
+            for expression in selected_expressions
+            for use in expression.variable_uses
+        )
+        for use, is_consumer_expression in variable_uses:
             encoding = use.reference.source_encoding
             if encoding.kind is VariableEncodingKind.UNKNOWN:
+                if (
+                    is_consumer_expression
+                    and self._is_selected_evaluation_consumer(node, use)
+                ):
+                    self._check_selected_evaluation_binding(
+                        unit,
+                        routine,
+                        node,
+                        use,
+                    )
+                    continue
                 self.add(
                     "error",
                     "variable.numeric_reference_unsupported",
@@ -2079,10 +2221,25 @@ class _ExecutionChecker:
             return
         try:
             source_module = _semantic_module_from_path(source_path, source_game)
+            source_stage_id = stage_id_from_source(source_name)
+            generated_stage_id = stage_id_from_source(unit.key)
+            uses_package_pool = (
+                source_stage_id == self.package.stage_id
+                if source_stage_id is not None
+                else (
+                    generated_stage_id is not None
+                    and generated_stage_id == self.package.stage_id
+                )
+            )
+            target_pool = (
+                self.package.pool
+                if uses_package_pool
+                else candidate_pool_for_module(self.package.game, source_name)
+            )
             plan = build_anm_lowering_plan(
                 source_module,
                 self.package.game,
-                target_pool=self.package.pool,
+                target_pool=target_pool,
             )
         except (OSError, ValueError) as exc:
             self.add(

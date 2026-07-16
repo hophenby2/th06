@@ -188,14 +188,14 @@ def _parse_thtk_formats() -> dict[str, dict[int, OpcodeInfo]]:
         "th07": (THTK_THECL06, ["th07_fmts"]),
         "th08": (THTK_THECL06, ["th08_fmts"]),
         "th10": (THTK_THECL10, ["th10_fmts"]),
-        "th11": (THTK_THECL10, ["th11_fmts", "th10_fmts"]),
-        "th12": (THTK_THECL10, ["th12_fmts", "th11_fmts", "th10_fmts"]),
-        "th13": (THTK_THECL10, ["th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "th10_fmts"]),
-        "th14": (THTK_THECL10, ["th14_fmts", "th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "th10_fmts"]),
-        "th15": (THTK_THECL10, ["th15_fmts", "th143_fmts", "th14_fmts", "th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "th10_fmts"]),
-        "th16": (THTK_THECL10, ["th16_fmts", "th15_fmts", "th143_fmts", "th14_fmts", "th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "th10_fmts"]),
-        "th17": (THTK_THECL10, ["th17_fmts", "th165_fmts", "th16_fmts", "th15_fmts", "th143_fmts", "th14_fmts", "th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "th10_fmts"]),
-        "th18": (THTK_THECL10, ["th18_fmts", "th17_fmts", "th165_fmts", "th16_fmts", "th15_fmts", "th143_fmts", "th14_fmts", "th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "th10_fmts"]),
+        "th11": (THTK_THECL10, ["th11_fmts", "alcostg_fmts", "th10_fmts"]),
+        "th12": (THTK_THECL10, ["th12_fmts", "th11_fmts", "alcostg_fmts", "th10_fmts"]),
+        "th13": (THTK_THECL10, ["th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "alcostg_fmts", "th10_fmts"]),
+        "th14": (THTK_THECL10, ["th14_fmts", "th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "alcostg_fmts", "th10_fmts"]),
+        "th15": (THTK_THECL10, ["th15_fmts", "th143_fmts", "th14_fmts", "th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "alcostg_fmts", "th10_fmts"]),
+        "th16": (THTK_THECL10, ["th16_fmts", "th15_fmts", "th143_fmts", "th14_fmts", "th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "alcostg_fmts", "th10_fmts"]),
+        "th17": (THTK_THECL10, ["th17_fmts", "th165_fmts", "th16_fmts", "th15_fmts", "th143_fmts", "th14_fmts", "th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "alcostg_fmts", "th10_fmts"]),
+        "th18": (THTK_THECL10, ["th18_fmts", "th17_fmts", "th165_fmts", "th16_fmts", "th15_fmts", "th143_fmts", "th14_fmts", "th13_fmts", "th128_fmts", "th125_fmts", "th12_fmts", "th11_fmts", "alcostg_fmts", "th10_fmts"]),
     }
     result: dict[str, dict[int, OpcodeInfo]] = {}
     for game, (source_path, chain) in arrays.items():

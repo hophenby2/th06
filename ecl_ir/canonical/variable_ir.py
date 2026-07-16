@@ -433,25 +433,16 @@ def _build_game_specs() -> dict[str, dict[int, VariableSpec]]:
             MODERN_128,
         ),
     }
-    stable_modern = merged(base, add11, MODERN_12, stable125, MODERN_128)
+    # TH13-TH18 originals use -9907 as the same read-only, engine-global
+    # spell-practice selection ID in stage, boss, and midboss modules.  The
+    # per-game reference tables document that inheritance, so both MODERN_13
+    # additions are part of the verified shared modern dialect.
+    stable_modern = merged(base, add11, MODERN_12, stable125, MODERN_128, MODERN_13)
     for game in ("th13", "th14", "th143", "th15", "th16", "th165", "th17", "th18", "th185"):
         games[game] = merged(
             stable_modern,
             _opaque_overlay(game, MODERN_125_DS),
-            {
-                -9907: _spec(
-                    -9907,
-                    "game.spell.practice.selection_id",
-                    I,
-                    E,
-                    RO,
-                    SHARED,
-                    confidence=Confidence.INFERRED,
-                )
-            },
-            {-9908: MODERN_13[-9908]},
         )
-    games["th13"].update(MODERN_13)
     for game in ("th14", "th143", "th15", "th16", "th165", "th17", "th18", "th185"):
         games[game].update(MODERN_14)
     for game in ("th15", "th16", "th165", "th17", "th18", "th185"):
@@ -848,19 +839,57 @@ def syntax_expression_bindings(
     return bindings
 
 
-def project_expression(expression: ExpressionIR, target_game: str) -> ExpressionProjection:
+def project_expression(
+    expression: ExpressionIR,
+    target_game: str,
+    *,
+    evaluation_stack_offsets: frozenset[int] = frozenset(),
+) -> ExpressionProjection:
     target = variable_dialect_for_game(target_game)
     replacements: list[tuple[int, int, str, VariableUse | StackUse]] = []
     issues: list[VariableProjectionIssue] = []
+    target_game = normalize_game_id(target_game)
+    target_routines = _routine_dialect_for_game(target_game)
+
+    def preserves_evaluation_placeholder(
+        use: VariableUse | StackUse,
+    ) -> str | None:
+        if use.kind not in {VariableUseKind.READ, VariableUseKind.UNKNOWN}:
+            return None
+        if isinstance(use, StackUse):
+            offset = use.reference.offset
+            source_game = normalize_game_id(use.reference.source_game)
+            source_encoding = use.reference.source_encoding
+        else:
+            reference = use.reference
+            offset = reference.source_encoding.numeric_id
+            source_game = normalize_game_id(reference.source_encoding.game)
+            source_encoding = reference.source_encoding.raw
+            if reference.confidence is not Confidence.UNKNOWN:
+                return None
+        if offset not in evaluation_stack_offsets:
+            return None
+        source_routines = _routine_dialect_for_game(source_game)
+        if not (
+            source_routines.supports_structured_syntax
+            and target_routines.supports_structured_syntax
+        ):
+            return None
+        return source_encoding
+
     for use in expression.variable_uses:
+        if encoded := preserves_evaluation_placeholder(use):
+            replacements.append((use.start, use.end, encoded, use))
+            continue
         encoded, issue = target.encode(use.reference, use.kind)
         if issue is not None:
             issues.append(issue)
         elif encoded is not None:
             replacements.append((use.start, use.end, encoded, use))
-    target_game = normalize_game_id(target_game)
-    target_routines = _routine_dialect_for_game(target_game)
     for use in expression.stack_uses:
+        if encoded := preserves_evaluation_placeholder(use):
+            replacements.append((use.start, use.end, encoded, use))
+            continue
         source_game = normalize_game_id(use.reference.source_game)
         source_routines = _routine_dialect_for_game(source_game)
         if source_game == target_game or (
@@ -908,6 +937,16 @@ def project_expression(expression: ExpressionIR, target_game: str) -> Expression
                 projected_uses.append(
                     VariableUse(start, output_length, decoded.variable_uses[0].reference, use.kind)
                 )
+            elif decoded.stack_uses:
+                decoded_stack = decoded.stack_uses[0]
+                projected_stack_uses.append(
+                    StackUse(
+                        start,
+                        output_length,
+                        decoded_stack.reference,
+                        use.kind,
+                    )
+                )
         else:
             projected_stack_uses.append(
                 StackUse(
@@ -942,10 +981,12 @@ def rewrite_expression_variables(
     *,
     value_type: ValueType = ValueType.OPAQUE,
     use_kind: VariableUseKind = VariableUseKind.READ,
+    evaluation_stack_offsets: frozenset[int] = frozenset(),
 ) -> tuple[str | None, tuple[VariableProjectionIssue, ...]]:
     projected = project_expression(
         parse_expression(source_game, text, value_type, use_kind),
         target_game,
+        evaluation_stack_offsets=evaluation_stack_offsets,
     )
     return (
         projected.expression.text if projected.expression is not None else None,
@@ -959,6 +1000,7 @@ def rewrite_argument_variables(
     values: Iterable[object],
     *,
     use_kind: VariableUseKind = VariableUseKind.UNKNOWN,
+    evaluation_stack_offsets: frozenset[int] = frozenset(),
 ) -> tuple[list[str] | None, tuple[VariableProjectionIssue, ...]]:
     rendered: list[str] = []
     issues: list[VariableProjectionIssue] = []
@@ -968,6 +1010,7 @@ def rewrite_argument_variables(
             target_game,
             value,
             use_kind=use_kind,
+            evaluation_stack_offsets=evaluation_stack_offsets,
         )
         issues.extend(value_issues)
         if projected is not None:
@@ -978,6 +1021,8 @@ def rewrite_argument_variables(
 def project_semantic_operation(
     operation: SemanticOperation,
     target_game: str,
+    *,
+    evaluation_stack_offsets: frozenset[int] = frozenset(),
 ) -> tuple[SemanticOperation | None, tuple[VariableProjectionIssue, ...]]:
     operands: list[SemanticOperand] = []
     issues: list[VariableProjectionIssue] = []
@@ -1002,7 +1047,11 @@ def project_semantic_operation(
             value.expression.value_type,
             use_kind,
         )
-        projected = project_expression(expression, target_game)
+        projected = project_expression(
+            expression,
+            target_game,
+            evaluation_stack_offsets=evaluation_stack_offsets,
+        )
         issues.extend(projected.issues)
         if projected.expression is None:
             operands.append(operand)
@@ -1032,6 +1081,8 @@ def project_semantic_operation(
 def project_syntax_statement(
     statement: SyntaxStatement,
     target_game: str,
+    *,
+    evaluation_stack_offsets: frozenset[int] = frozenset(),
 ) -> tuple[str | None, tuple[VariableProjectionIssue, ...]]:
     source_game = normalize_game_id(statement.provenance.game)
     target_game = normalize_game_id(target_game)
@@ -1054,7 +1105,11 @@ def project_syntax_statement(
             target_game=target_game,
         )
         return None, (issue,)
-    return_expression = project_expression(parse_syntax_expression(statement), target_game)
+    return_expression = project_expression(
+        parse_syntax_expression(statement),
+        target_game,
+        evaluation_stack_offsets=evaluation_stack_offsets,
+    )
     return (
         return_expression.expression.text if return_expression.expression is not None else None,
         return_expression.issues,

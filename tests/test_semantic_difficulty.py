@@ -1,9 +1,15 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import unittest
 
 from ecl_ir.analysis.bullet_ir import active_difficulty_lanes
-from ecl_ir.target.lowering import LoweringPlanner, LoweringStrategy
+from ecl_ir.target.lowering import (
+    BackendEmission,
+    LoweringPlanner,
+    LoweringPolicy,
+    LoweringStrategy,
+)
 from ecl_ir.source.parser import (
     DifficultySelectionCandidate,
     find_difficulty_selection_candidates,
@@ -188,10 +194,20 @@ timeline Timeline1()
             operation,
             "Boss1_at2",
         )
-        self.assertEqual(decision.strategy, LoweringStrategy.UNSUPPORTED)
-        self.assertIsNone(decision.target_text)
-        self.assertEqual(decision.diagnostics[-1].code, "value_selection.unsupported")
-        self.assertIn("uninitialized values", decision.reason)
+        self.assertEqual(decision.strategy, LoweringStrategy.DIRECT)
+        self.assertIn("!LO\n0.0125f;\n!*", decision.target_text or "")
+        self.assertTrue((decision.target_text or "").endswith(
+            "ins_609(1, 2, 0, 4, 240, -999999, [-1.0f], [-2.0f]);"
+        ))
+
+        # Only [-1] belongs to this selection. The unrelated TH13+ [-2]
+        # routine-stack reference remains unsafe for a TH12 target.
+        old_target = LoweringPlanner.with_compat_backend("th12").plan_node(
+            operation,
+            "Boss1_at2",
+        )
+        self.assertEqual(old_target.strategy, LoweringStrategy.UNSUPPORTED)
+        self.assertEqual(old_target.diagnostics[-1].code, "stack.relative_abi_unsupported")
 
         identity = LoweringPlanner.with_compat_backend("th13").plan_node(
             operation,
@@ -234,8 +250,209 @@ timeline Timeline1()
         self.assertIn("!LO\n14;\n!*\n@Boss1Card_at", identity.target_text or "")
 
         cross_game = LoweringPlanner.for_game("th18").plan_node(call, "BossCard1")
-        self.assertEqual(cross_game.strategy, LoweringStrategy.UNSUPPORTED)
-        self.assertEqual(cross_game.diagnostics[0].code, "value_selection.unsupported")
+        self.assertEqual(cross_game.strategy, LoweringStrategy.RAW)
+        self.assertEqual((cross_game.target_text or "").count("!*"), 3)
+        self.assertTrue((cross_game.target_text or "").endswith(call.text))
+
+        old_spelling = LoweringPlanner.for_game("th12").plan_node(call, "BossCard1")
+        self.assertEqual(old_spelling.strategy, LoweringStrategy.RAW)
+        self.assertEqual((old_spelling.target_text or "").count("!L5"), 3)
+        self.assertNotIn("!LO", old_spelling.target_text or "")
+
+    def test_cross_generation_selection_preserves_the_proven_consumer_slot(self) -> None:
+        module = build_semantic_module(
+            parse_decl_text(
+                """void Main()
+{
+!E
+    90;
+!N
+    90;
+!H
+    30;
+!LO
+    30;
+!*
+    ins_23([-1]);
+}
+""",
+                "th15/selection.decl",
+            )
+        )
+        operation = module.routines[0].body[0]
+        planner = LoweringPlanner.for_game(
+            "th12",
+            backend_emitter=CanonicalBackendEmitter(module, "th12"),
+        )
+        decision = planner.plan_node(operation, "Main")
+        self.assertEqual(decision.strategy, LoweringStrategy.DIRECT)
+        self.assertIn("!L5\n30;\n!*", decision.target_text or "")
+        self.assertTrue((decision.target_text or "").endswith("ins_83([-1]);"))
+
+        class CommentOnlyPlaceholderEmitter:
+            def __call__(self, _node, _target):
+                return BackendEmission("// removed source argument [-1]\nins_83(30);")
+
+        dropped = LoweringPlanner.for_game(
+            "th12",
+            backend_emitter=CommentOnlyPlaceholderEmitter(),
+        ).plan_node(operation, "Main")
+        self.assertEqual(dropped.strategy, LoweringStrategy.UNSUPPORTED)
+        self.assertEqual(dropped.diagnostics[-1].code, "value_selection.unsupported")
+        self.assertEqual(
+            dropped.diagnostics[-1].details["missing_target_placeholders"],
+            [-1],
+        )
+
+        class DelayedConsumerEmitter:
+            def __call__(self, _node, _target):
+                return BackendEmission("ins_1();\nins_83([-1]);")
+
+        delayed = LoweringPlanner.for_game(
+            "th12",
+            backend_emitter=DelayedConsumerEmitter(),
+        ).plan_node(operation, "Main")
+        self.assertEqual(delayed.strategy, LoweringStrategy.UNSUPPORTED)
+        self.assertEqual(delayed.diagnostics[-1].code, "value_selection.unsupported")
+        self.assertIn("first emitted executable statement", delayed.reason)
+        self.assertEqual(
+            delayed.diagnostics[-1].details["first_statement_placeholders"],
+            [],
+        )
+        self.assertEqual(
+            delayed.diagnostics[-1].details["target_placeholders"],
+            [-1],
+        )
+
+    def test_real_multi_slot_operation_keeps_push_order_and_target_spelling(self) -> None:
+        module = build_semantic_module(parse_decl("th13/st04bs.decl"))
+        operation = operation_at(module, "Boss1_at", 110)
+        self.assertEqual(len(operation.selected_values), 2)
+        self.assertEqual(operation.encoded_args(), ["0", "[-1.0f]", "[-2.0f]"])
+
+        decision = LoweringPlanner.for_game(
+            "th12",
+            backend_emitter=CanonicalBackendEmitter(module, "th12"),
+        ).plan_node(operation, "Boss1_at")
+        self.assertEqual(decision.strategy, LoweringStrategy.DIRECT)
+        text = decision.target_text or ""
+        first_table = text.index("0.523599f;")
+        second_table = text.index("[-9987.0f] * 0.017453292f;")
+        consumer = text.index("ins_504(0, [-1.0f], [-2.0f]);")
+        self.assertLess(first_table, second_table)
+        self.assertLess(second_table, consumer)
+        self.assertEqual(text.count("!L5"), 2)
+
+    def test_argument_adaptation_must_not_drop_a_selected_placeholder(self) -> None:
+        module = build_semantic_module(
+            parse_decl_text(
+                """void Main()
+{
+!E
+    1;
+!N
+    2;
+!H
+    3;
+!LO
+    4;
+!*
+    ins_270("Foo", 0.0f, 0.0f, [-1], 100, 0, 0);
+}
+""",
+                "th10/selection-drop.decl",
+            )
+        )
+        operation = module.routines[0].body[0]
+        decision = LoweringPlanner.for_game(
+            "th15",
+            backend_emitter=CanonicalBackendEmitter(module, "th15"),
+        ).plan_node(operation, "Main")
+        self.assertEqual(decision.strategy, LoweringStrategy.UNSUPPORTED)
+        self.assertEqual(decision.diagnostics[-1].code, "value_selection.unsupported")
+        self.assertIn("adaptation removed", decision.reason)
+        self.assertEqual(
+            decision.diagnostics[-1].details["missing_target_placeholders"],
+            [-1],
+        )
+
+    def test_selected_values_require_stack_expression_syntax_on_both_sides(self) -> None:
+        module = build_semantic_module(parse_decl("th15/st01.decl"))
+        operation = operation_at(module, "GirlA01_at", 38)
+        decision = LoweringPlanner.with_compat_backend("th08").plan_node(
+            operation,
+            "GirlA01_at",
+        )
+        self.assertEqual(decision.strategy, LoweringStrategy.UNSUPPORTED)
+        self.assertEqual(decision.diagnostics[-1].code, "value_selection.unsupported")
+        self.assertIn("stack-expression syntax", decision.reason)
+
+    def test_syntax_emitter_must_preserve_every_selected_placeholder(self) -> None:
+        module = build_semantic_module(parse_decl("th17/st06bs.decl"))
+        call = next(
+            node
+            for routine in module.routines
+            if routine.name == "BossCard1"
+            for node in routine.body
+            if isinstance(node, SyntaxStatement) and node.provenance.span.start_line == 849
+        )
+
+        class DroppingSyntaxEmitter:
+            def emit_syntax(self, _node, _projected_text, _target_game):
+                return "@Boss1Card_at(5, 6, %A, 2.0f);"
+
+        decision = LoweringPlanner.for_game(
+            "th18",
+            backend_emitter=DroppingSyntaxEmitter(),
+        ).plan_node(call, "BossCard1")
+        self.assertEqual(decision.strategy, LoweringStrategy.UNSUPPORTED)
+        self.assertEqual(decision.diagnostics[-1].code, "value_selection.unsupported")
+        self.assertEqual(
+            decision.diagnostics[-1].details["missing_target_placeholders"],
+            [-3, -2, -1],
+        )
+
+    def test_raw_selected_values_still_require_passthrough_policy_and_proof(self) -> None:
+        module = build_semantic_module(
+            parse_decl_text(
+                """void Main()
+{
+!E
+    1;
+!N
+    2;
+!H
+    3;
+!LO
+    4;
+!*
+    ins_9999([-1]);
+}
+""",
+                "th10/raw-selection.decl",
+            )
+        )
+        raw = module.routines[0].body[0]
+        blocked = LoweringPlanner.for_game("th11").plan_node(raw, "Main")
+        self.assertEqual(blocked.strategy, LoweringStrategy.UNSUPPORTED)
+        self.assertEqual(blocked.diagnostics[-1].code, "raw.incompatible_dialect")
+
+        policy = LoweringPolicy(preserve_raw_same_family=True)
+        preserved = LoweringPlanner.for_game("th11", policy=policy).plan_node(raw, "Main")
+        self.assertEqual(preserved.strategy, LoweringStrategy.RAW)
+        self.assertIn("!L5\n4;\n!*\nins_9999([-1]);", preserved.target_text or "")
+
+        malformed = replace(raw, args=["0"])
+        rejected = LoweringPlanner.for_game("th11", policy=policy).plan_node(
+            malformed,
+            "Main",
+        )
+        self.assertEqual(rejected.strategy, LoweringStrategy.UNSUPPORTED)
+        self.assertEqual(rejected.diagnostics[-1].code, "value_selection.unsupported")
+        self.assertEqual(
+            rejected.diagnostics[-1].details["missing_source_placeholders"],
+            [-1],
+        )
 
 
 if __name__ == "__main__":

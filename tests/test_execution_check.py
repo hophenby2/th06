@@ -576,6 +576,68 @@ void main()
         self.assertEqual(diagnostics[0].details.get("strategy"), "unsupported")
         self.assertTrue(report.has_errors)
 
+    def test_generated_legacy_lowering_comments_are_errors(self) -> None:
+        target = """
+// source: th14/st01.decl
+// source game: th14
+// target: th15
+anim { "enemy.anm"; "st01enm.anm"; }
+
+void main()
+{
+    // unlifted instruction: ins_1();
+    // no safe lowering implemented for Movement family=th10 to th15
+    // unsupported transform from ins_509: 0, 1
+    // old target drops call: @Child();
+    // raw: opaque source statement
+    return;
+}
+"""
+        with patch(
+            "ecl_ir.analysis.execution_check.candidate_pool_for_stage",
+            return_value=pool_with(),
+        ):
+            report = check_ecl_text(
+                target,
+                source_name="th15/st01.decl",
+                game=GAME,
+                reference_package=self.reference,
+                difficulties=("E",),
+            )
+
+        codes = {
+            "legacy.unlifted_instruction",
+            "legacy.no_safe_lowering",
+            "legacy.unsupported_transform",
+            "legacy.dropped_syntax",
+            "legacy.raw_omission",
+        }
+        diagnostics = [item for item in report.diagnostics if item.code in codes]
+        self.assertEqual({item.code for item in diagnostics}, codes)
+        self.assertTrue(all(item.severity == "error" for item in diagnostics))
+        self.assertTrue(
+            all(
+                item.details.get("origin") == "legacy_lowering_comment"
+                for item in diagnostics
+            )
+        )
+
+    def test_plain_source_comments_are_not_legacy_lowering_diagnostics(self) -> None:
+        report = self.check(
+            """
+void main()
+{
+    // raw: documentation for a hand-written source statement
+    // unsupported transformation is discussed here
+    return;
+}
+"""
+        )
+
+        self.assertFalse(
+            any(item.code.startswith("legacy.") for item in report.diagnostics)
+        )
+
     def test_anm_color_and_alpha_literals_stay_in_byte_range(self) -> None:
         candidates = pool_with(
             combination(2, action("anm.set_main", 0, 40)),
@@ -868,6 +930,121 @@ void main()
         self.assertEqual(diagnostics[0].details.get("offset"), -1)
         self.assertFalse(self.with_code(valid, "stack.relative_reference_unbound"))
 
+    def test_th12_selected_evaluation_slots_are_node_local_read_consumers(self) -> None:
+        def check_th12(body: str, difficulties: tuple[str, ...] = ("E",)):
+            with patch(
+                "ecl_ir.analysis.execution_check.candidate_pool_for_stage",
+                return_value=pool_with(),
+            ):
+                return check_ecl_text(
+                    body,
+                    source_name="th12/stage01.decl",
+                    game="th12",
+                    difficulties=difficulties,
+                )
+
+        valid = check_th12(
+            """void main()
+{
+!E
+    10;
+!N
+    20;
+!H
+    30;
+!L
+    40;
+!E
+    1.0f;
+!N
+    2.0f;
+!H
+    3.0f;
+!L
+    4.0f;
+!*
+    ins_504(0, [-1.0f], [-2.0f]);
+    return;
+}
+""",
+            ("E", "N", "H", "L"),
+        )
+        self.assertFalse(
+            self.with_code(valid, "variable.numeric_reference_unsupported")
+        )
+        self.assertFalse(self.with_code(valid, "stack.relative_reference_unbound"))
+
+        no_selection = check_th12(
+            """void main()
+{
+    ins_83([-1]);
+    return;
+}
+"""
+        )
+        unsupported = self.with_code(
+            no_selection,
+            "variable.numeric_reference_unsupported",
+        )
+        self.assertEqual(len(unsupported), 1)
+        self.assertEqual(unsupported[0].details.get("numeric_id"), -1)
+
+        write_consumer = check_th12(
+            """void main()
+{
+!E
+    1;
+!*
+    [-1] = 5;
+    return;
+}
+"""
+        )
+        unsupported = self.with_code(
+            write_consumer,
+            "variable.numeric_reference_unsupported",
+        )
+        self.assertEqual(len(unsupported), 1)
+        self.assertEqual(unsupported[0].details.get("use_kind"), "write")
+
+        selected_case_variable = check_th12(
+            """void main()
+{
+!E
+    [-10001];
+!*
+    ins_83([-1]);
+    return;
+}
+"""
+        )
+        unsupported = self.with_code(
+            selected_case_variable,
+            "variable.numeric_reference_unsupported",
+        )
+        self.assertEqual(len(unsupported), 1)
+        self.assertEqual(unsupported[0].details.get("numeric_id"), -10001)
+
+        partial_lanes = check_th12(
+            """void main()
+{
+!E
+    10;
+!N
+    20;
+!*
+    ins_83([-1]);
+    return;
+}
+""",
+            ("E", "N", "H", "L"),
+        )
+        unbound = self.with_code(partial_lanes, "stack.relative_reference_unbound")
+        self.assertEqual([item.difficulty for item in unbound], ["H", "L"])
+        self.assertFalse(
+            self.with_code(partial_lanes, "variable.numeric_reference_unsupported")
+        )
+
     def test_candidate_combination_must_match_the_unit_role(self) -> None:
         candidates = pool_with(
             combination(
@@ -1114,6 +1291,87 @@ void main()
 
         self.assertFalse(self.with_code(report, "anm.source_action_unresolved"))
         self.assertFalse(self.with_code(report, "anm.source_target_trace_mismatch"))
+
+    def test_default_and_shared_units_do_not_inherit_the_stage_anm_pool(self) -> None:
+        candidates = pool_with(
+            combination(2, action("anm.set_main", 0, 40)),
+        )
+        for module_stem in ("default", "shared"):
+            with self.subTest(module=module_stem):
+                case_root = self.root / f"trace-{module_stem}"
+                source_directory = case_root / "th14"
+                target_directory = case_root / "generated"
+                source_directory.mkdir(parents=True)
+                target_directory.mkdir()
+
+                source_member = source_directory / f"{module_stem}.decl"
+                source_member.write_text(
+                    """void Effect()
+{
+    ins_302(2);
+    ins_306(0, 40);
+    return;
+}
+""",
+                    encoding="utf-8",
+                )
+                source_root = source_directory / "st01.decl"
+                source_root.write_text(
+                    f"""ecli {{ "{module_stem}.ecl"; }}
+void main()
+{{
+    return;
+}}
+""",
+                    encoding="utf-8",
+                )
+
+                target_member = target_directory / f"{module_stem}.decl"
+                target_member.write_text(
+                    f"""// source: {source_member}
+// source game: th14
+// target: th15
+void Effect()
+{{
+    return;
+}}
+""",
+                    encoding="utf-8",
+                )
+                target_root = target_directory / "st01.decl"
+                target_root.write_text(
+                    f"""// source: {source_root}
+// source game: th14
+// target: th15
+anim {{ "enemy.anm"; "st01enm.anm"; }}
+ecli {{ "{module_stem}.ecl"; }}
+void main()
+{{
+    return;
+}}
+""",
+                    encoding="utf-8",
+                )
+
+                with patch(
+                    "ecl_ir.analysis.execution_check.candidate_pool_for_stage",
+                    return_value=candidates,
+                ):
+                    report = check_ecl_file(
+                        target_root,
+                        game=GAME,
+                        reference_package=self.reference,
+                        difficulties=("E",),
+                    )
+
+                unresolved = self.with_code(report, "anm.source_action_unresolved")
+                self.assertTrue(unresolved)
+                self.assertTrue(
+                    all(Path(item.module) == target_member for item in unresolved)
+                )
+                self.assertFalse(
+                    self.with_code(report, "anm.source_target_trace_mismatch")
+                )
 
     def test_source_target_trace_ignores_unreachable_anm_actions(self) -> None:
         source_directory = self.root / "th14"

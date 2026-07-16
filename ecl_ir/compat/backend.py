@@ -13,7 +13,7 @@ from ..dialects.anm_catalog import choose_script, remap_anm_bank, remap_play_scr
 from ..dialects.game_ids import normalize_game_id
 from ..dialects.game_profile import profile_for_game
 from ..dialects.reference import is_opcode_supported, opcode_signature, validate_opcode_args
-from ..dialects.semantics import boss_phase_prefix_ops, bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_raw_arg_by_semantic, remap_unit_flag_mask, unsupported_bullet_transform_mode_reason
+from ..dialects.semantics import boss_phase_prefix_ops, bullet_shape_semantic, encode_bullet_shape, encode_spread_style, generation_for_game, opcode_map_for, remap_create_item_policy, remap_raw_arg_by_semantic, remap_unit_flag_mask, unsupported_bullet_transform_mode_reason
 from ..legacy.model import BulletEmitter, BulletTransform
 from ..target.lowering import BackendEmission, LoweringStrategy
 from ..target.origin_ir import bullet_origin_instructions
@@ -230,7 +230,6 @@ def normalize_target_args_for_op_key(op_key: str, target: str, args: list[str]) 
         "movement.position.tween", "movement.position_rel.tween",
         "movement.velocity.tween", "movement.velocity_rel.tween",
         "movement.ellipse.tween", "movement.ellipse_rel.tween",
-        "movement.bezier", "movement.bezier_rel",
     }:
         if len(normalized) > 1 and normalized[1] not in {"0", "1", "4", "9"}:
             normalized[1] = "0"
@@ -755,7 +754,15 @@ def compile_ir_op_event(event: SemanticOperation | dict[str, object], target: st
         and len(args) <= 8
     ):
         semantic_op_key = "bullet.transform"
-    opcode = target_bullet[1] if target_bullet else target_opcode_for_op_key(semantic_op_key, target)
+    opcode = (
+        target_bullet[1]
+        if target_bullet
+        else target_opcode_for_op_key(
+            semantic_op_key,
+            target,
+            operand_count=len(args),
+        )
+    )
     if opcode is None and op_key.startswith("raw.") and semantic_map is not None:
         opcode = semantic_map.target_opcode
     if opcode is None or not is_opcode_supported(target, opcode) or not target_opcode_is_safe(target, opcode):
@@ -776,6 +783,21 @@ def compile_ir_op_event(event: SemanticOperation | dict[str, object], target: st
     )
     if adapted_args is None:
         return None
+    if semantic_op_key in {
+        "enemy.create",
+        "enemy.create_abs",
+        "enemy.create_mirror",
+        "enemy.create_abs_mirror",
+        "enemy.create_func",
+        "enemy.create_abs_func",
+        "enemy.create_mirror_func",
+        "enemy.create_abs_mirror_func",
+    } and adapted_args:
+        adapted_args[-1] = remap_create_item_policy(
+            source_game,
+            target,
+            adapted_args[-1],
+        )
     args = normalize_target_args_for_op_key(semantic_op_key, target, adapted_args)
     error = validate_opcode_args(target, opcode, args)
     if error:

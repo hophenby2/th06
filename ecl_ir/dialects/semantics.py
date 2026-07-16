@@ -175,6 +175,7 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("movement.bezier", {GEN_TH13_PLUS: 425, GEN_TH12: 325, GEN_TH10_TH11: 305}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
     SemanticOpcode("movement.bezier_rel", {GEN_TH13_PLUS: 426, GEN_TH12: 326, GEN_TH10_TH11: 306}, {(GEN_TH13_PLUS, GEN_TH12): (0, 1, 2, 3, 4, 5, 6)}),
     SemanticOpcode("movement.reset", {GEN_TH13_PLUS: 427, GEN_TH12: 327}, {(GEN_TH13_PLUS, GEN_TH12): ()}),
+    SemanticOpcode("movement.move_vel_nm_time", {GEN_TH13_PLUS: 429, GEN_TH12: 329}),
     SemanticOpcode("unit.set_hurtbox", {GEN_TH13_PLUS: 500, GEN_TH12: 400, GEN_TH10_TH11: 320}),
     SemanticOpcode("unit.set_hitbox", {GEN_TH13_PLUS: 501, GEN_TH12: 401, GEN_TH10_TH11: 321}),
     SemanticOpcode("unit.flag_set", {GEN_TH13_PLUS: 502, GEN_TH12: 402, GEN_TH10_TH11: 322}),
@@ -219,7 +220,7 @@ SEMANTIC_OPCODES: tuple[SemanticOpcode, ...] = (
     SemanticOpcode("unit.stars", {GEN_TH13_PLUS: 540, GEN_TH12: 440, GEN_TH10_TH11: 360}),
     SemanticOpcode("unit.property.42", {GEN_TH13_PLUS: 542, GEN_TH12: 442}),
     SemanticOpcode("unit.property.43", {GEN_TH13_PLUS: 543, GEN_TH12: 443}),
-    SemanticOpcode("unit.property.44", {GEN_TH13_PLUS: 544, GEN_TH12: 444}),
+    SemanticOpcode("unit.special_collision_flag", {GEN_TH13_PLUS: 544, GEN_TH12: 444}),
     SemanticOpcode("unit.laser_cancel", {GEN_TH13_PLUS: 545, GEN_TH12: 445}),
     SemanticOpcode("unit.bomb_shield", {GEN_TH13_PLUS: 546, GEN_TH12: 446}),
     SemanticOpcode("unit.game_speed", {GEN_TH13_PLUS: 547, GEN_TH12: 447}),
@@ -1046,8 +1047,6 @@ def remap_raw_arg_by_semantic(source_game: str, target: str, source_opcode: int,
             mapped[0] = "1"
         elif mapped[0] == "3":
             mapped[0] = "2"
-    elif source_opcode in {256, 257, 260, 261, 265, 266, 267, 268, 270, 271, 300, 301, 304, 305, 309, 310, 311, 312} and source_opcode != target_opcode and len(mapped) >= 6:
-        mapped[5] = remap_create_item_policy(source_game, target, mapped[5])
     elif semantic_key == "bullet.emitter.02" and source_opcode != target_opcode and len(mapped) >= 3:
         mapped[1] = encode_bullet_shape(bullet_shape_semantic(source_game, mapped[1]), target, mapped[1])
     elif semantic_key == "bullet.emitter.07" and source_opcode != target_opcode and len(mapped) >= 2:

@@ -284,6 +284,11 @@ dialect 按语义重新编码。跨游戏编码必须同时满足：
 缺少目标槽位、语义碰撞、未知 bracket number、写权限不兼容或 ABI 不兼容都会
 返回结构化 issue，而不是保留源数字让目标游戏重新解释。
 
+TH13 至 TH18 的原版 stage、boss 和 midboss 语料都只读取 `[-9907]`，各游戏
+参考表也一致将其记为继承的 `int`、只读、全局 spell-practice selection ID。
+因此该变量在共享 modern overlay 中使用 `DOCUMENTED` 置信度，可以在 TH13+
+目标间投影；这项证据不推广为“相同 numeric ID 自动代表相同语义”。
+
 ### 5.4 ANM 资源边界
 
 ANM 的 bank/script 数字不是跨游戏稳定 ID。当前 canonical 路径不再一律丢弃

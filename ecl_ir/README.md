@@ -93,11 +93,20 @@ python3 -m ecl_ir.cli emit-ir th12/stage01.decl -o /tmp/stage01.eclir.json
 python3 -m ecl_ir.cli validate-ir /tmp/stage01.eclir.json
 python3 -m ecl_ir.cli roundtrip-ir /tmp/stage01.eclir.json --layout -o /tmp/stage01.roundtrip.decl
 python3 -m ecl_ir.cli compile-ir /tmp/stage01.eclir.json --target th15 -o /tmp/stage01.th15.decl
+python3 -m ecl_ir.cli compile-package th15/st01.decl --target th12 --reference-package th12/stage01.decl --output-dir /tmp/th15-to-th12 --allow-lossy
 python3 -m ecl_ir.cli check-ecl th15/st01.decl --difficulty ENHL
 python3 -m ecl_ir.cli check-ecl /tmp/st01.th15.decl --game th15 --reference-package th15/st01.decl --json
 ```
 
 `compile-ir` uses ordered canonical IR and a strict policy by default. It writes `.decl` bytes with the codec serialized in the standalone envelope, which is required by older thecl builds that do not provide UTF-8 conversion. `--allow-lossy`, `--preserve-raw-same-family`, and `--preserve-raw-cross-family` are explicit unsafe/approximation opt-ins; node warnings are rendered beside the affected statement. Use `--legacy-patterns` only to compare against the older object-cluster backend.
+
+`compile-package` applies the same canonical planner and policy flags to the
+root and every recursively referenced `ecli` module, including `default.ecl`.
+The generated root takes the basename of `--reference-package`; other modules
+keep their source-package-relative paths. The reference root also supplies the
+target ANM candidate pool. All modules are written even when a lowering remains
+unsupported (exit `1`). A missing source dependency or an invalid package/path
+configuration is rejected before output is written and returns `2`.
 
 `check-ecl` first validates the input package and then abstractly executes the
 selected entry from the beginning in independent difficulty lanes. It checks

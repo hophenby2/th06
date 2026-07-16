@@ -230,9 +230,7 @@ def _role_for_bank(
         if role == "stage":
             return role
         if role == "boss":
-            return _routine_role(routine) or (
-                artifact_role if artifact_role in {"boss", "midboss"} else role
-            )
+            return _routine_role(routine) or artifact_role
     return _routine_role(routine) or artifact_role
 
 
@@ -671,6 +669,29 @@ def _shape_score(
     return shared * 20 - abs(len(candidate.actions) - len(source_actions)) * 2
 
 
+def _setup_family_score(
+    candidate: AnmCombinationCandidate,
+    source_actions: tuple[SemanticOperation, ...],
+) -> int:
+    target_actions = tuple(
+        action for action in candidate.actions if action.operation in _SET_OPERATIONS
+    )
+    source_slots = Counter(
+        slot for node in source_actions if (slot := _node_slot(node)) is not None
+    )
+    target_slots = Counter(
+        action.slot for action in target_actions if action.slot is not None
+    )
+    shared_slots = sum(
+        min(count, target_slots[slot]) for slot, count in source_slots.items()
+    )
+    return (
+        min(len(target_actions), len(source_actions)) * 20
+        + shared_slots * 4
+        - abs(len(target_actions) - len(source_actions)) * 2
+    )
+
+
 def _choose_combination(
     pool: AnmCandidatePool,
     group: _SourceAnmGroup,
@@ -735,6 +756,22 @@ def _choose_combination(
         if source_operations & {action.operation for action in candidate.actions}
     ]
     if source_operations and not compatible:
+        if source_operations <= _SET_OPERATIONS:
+            setup_family = [
+                candidate
+                for candidate in candidates
+                if candidate.actions
+                and all(action.operation in _SET_OPERATIONS for action in candidate.actions)
+            ]
+            if setup_family:
+                return max(
+                    setup_family,
+                    key=lambda item: (
+                        _setup_family_score(item, group.actions),
+                        item.occurrences,
+                        -len(item.actions),
+                    ),
+                ), "target_corpus_candidate"
         return None, "unresolved"
     if compatible:
         candidates = compatible
@@ -1044,7 +1081,7 @@ def build_anm_lowering_plan(
             str(node.node_id)
             for node in ((group.select,) if group.select is not None else ()) + group.actions
         }
-        if group_node_ids & consumed or group.bank_ambiguous:
+        if group_node_ids & consumed:
             continue
         purpose = _source_purpose(module, group, source_pool)
         if group.select is not None and not group.actions:
@@ -1052,9 +1089,6 @@ def build_anm_lowering_plan(
             match_kind = "role_bank" if candidate is not None else "unresolved"
         else:
             candidate, match_kind = _choose_combination(target_pool, group, purpose)
-        if candidate is None and group.select is not None:
-            candidate = _select_bank(target_pool, group.role)
-            match_kind = "role_bank" if candidate is not None else "unresolved"
         if candidate is None:
             continue
 
@@ -1063,7 +1097,7 @@ def build_anm_lowering_plan(
             for node in group.actions
             if (script := _node_script(node)) is not None
         )
-        dynamic = any(
+        dynamic = group.bank_ambiguous or any(
             _node_script(node) is None
             or (node.operation in _SET_OPERATIONS and _node_slot(node) is None)
             for node in group.actions
