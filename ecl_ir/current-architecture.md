@@ -1,7 +1,7 @@
 # ECL IR 当前架构
 
 本文描述 `ecl_ir` 当前已经实现的架构，而不是最终愿景。状态基线为
-2026-07-15。设计背景、游戏资料和后续路线分别见：
+2026-07-16。设计背景、游戏资料和后续路线分别见：
 
 - [`../ecl-cross-game-ir-design.md`](../ecl-cross-game-ir-design.md)：跨游戏设计与语义背景。
 - [`../ecl-reference-by-game.md`](../ecl-reference-by-game.md)：分游戏 opcode、变量和资料索引。
@@ -66,7 +66,7 @@ manifest-scoped 目标候选；这些 package corpus 不是 envelope 的一部�
 | 工件层 | `SourceDocument`、`DeclTextCodec`、`source_layout` | 字节、字符集、异常字节、行尾和精确恢复 | opcode 语义、游戏能力 |
 | 源方言层 | `Program`、`Function`、`Statement`、`Instruction` | 解析源码结构，保留 routine 内语句顺序和原始文本 | 跨游戏语义等价 |
 | canonical 层 | `SemanticModule`、`SemanticOperation`、`RawInstructionOp`、`SyntaxStatement` | 稳定语义、身份、provenance、ownership 和 lowering 顺序 | 目标 opcode、lossy 策略 |
-| 分析层 | bullet state、CFG、transform index projection、ANM target candidate plan | 从 canonical 节点与目标原版包推导跨语句状态或 lowering 证据 | 源码所有权、直接输出 |
+| 分析层 | bullet state、CFG、transform index projection、ANM target candidate plan、ECL execution checker | 从 canonical 节点与目标原版包推导跨语句状态、lowering 证据或运行前诊断 | 源码所有权、直接输出 |
 | profile/registry 层 | `GameProfile`、`VariableDialect`、semantic/reference catalogs | 描述每个游戏的编码、能力和工具 ABI | 修改 canonical 节点 |
 | lowering 层 | `LoweringPlanner`、`CapabilityDecision`、`TargetModule` | 判断可表示性、生成结构化诊断、编码目标方言 | 猜测未证实等价 |
 | 兼容层 | schema-v1 objects、legacy backend、`--legacy-patterns` | 保留旧实验路径和尚未迁移的 codegen | 充当 canonical 权威层 |
@@ -391,6 +391,59 @@ goto 和 fallthrough 边，并使用 Tarjan SCC 标记循环节点。当前 CFG 
 canonical write kind、parameter set、mode semantic、operand state 分离。目标端
 最后才根据 `TransformDialect.forms` 选择 opcode 和字段布局。
 
+### 6.3 ECL package 检查与抽象执行
+
+[`analysis/execution_check.py`](analysis/execution_check.py) 提供独立于 lowering 的运行前
+检查。`check-ecl` 直接检查待运行的目标方言 `.decl`，分成两个阶段：
+
+1. **package 静态阶段**：装载 root module 与其 `ecli` sibling，并从可选的目标
+   原版 reference package 及实际 sibling 文件建立候选池，检查依赖完整性、routine/
+   named/numeric/relative-stack 变量、访问权限、调用边界、目标 opcode、参数形状、
+   lowering 注释和已知闭区间值，并建立 ANM manifest、bank、script 与原版原子组合
+   证据。
+2. **lane 执行阶段**：从指定 entry 的第一条语句开始，为 `E/N/H/L` 各维护一份
+   抽象状态，沿 routine call、goto 和 fallthrough 推进；每个状态携带当前 module、
+   routine、程序位置、变量事实和 ANM 选择/slot 状态。四个难度互不借用状态，
+   `DifficultyGuard` 只允许对应 lane 执行节点。
+
+同步调用共享当前单位的 ANM 状态；enemy create 建立 fresh unit state，并根据
+stage/boss/midboss routine role 选择有证据的默认 bank；async routine 单独执行，
+若会写 ANM 则 widen caller state 并报告竞态。slot consumer 必须在当前路径上已有
+`set_main/set_sprite`，连续 set 必须整体匹配同关卡原版组合及单位 role。fresh unit
+在可见行为或终止前没有设置 ANM 时会产生诊断；目标原版或 source trace 明确证明
+其为无动画 controller 时不硬报错误。
+
+非 `default.ecl` 的 sibling 只从待检 package 相对路径解析，不能拿 reference 中的
+同名关卡文件掩盖缺失输出；`default.ecl` 是目标游戏公共 ABI，允许从 reference 或
+仓库原版回退。缺少其他 `ecli` 会产生 `package.ecli_unresolved`。
+
+默认只执行 entry 可达的 routine；`--all-routines` 先保留这次完整执行，再按每个
+难度以未知入口状态局部检查尚未到达的 routine，局部检查不重复展开 call/spawn
+子图。递归、循环、动态分派和状态分叉由去重后的 worklist 探索，`--state-budget`
+默认限制每个难度
+最多 200,000 个状态；预算耗尽会让 report 标记为不完整并产生诊断，不能把不完整
+报告解释为没有问题，也不会因此跳过后续难度。
+
+checker 诊断按 `severity/difficulty/module/routine/line` 定位。静态错误不依赖某个
+lane 时 difficulty 为空；运行状态相关问题只归属实际到达它的 lane。JSON report
+保留 entry、已装载 modules、探索状态数和 `analysis_complete`，便于批量比较。
+
+显式 reference package 的 root、manifest 与非 default sibling 会直接构造候选池，
+而非只借它推断 game/stage 后再读取固定仓库路径。该证据仍只能证明“目标原版确实
+加载并使用过该资源编号或原子组合”。候选存在不等于源/目标动画视觉等价，也不能证明播放时机、slot
+用途或画面效果相同；无法从 manifest、当前 bank 和连续原版组合证明的使用必须
+保留为 warning/error，而不是因为数字可编译就视为正确。
+
+若目标文件包含 canonical backend 的 `source/source game/target` 生成头，checker
+会为 root 和每个生成的 ecli sibling 分别重建 `AnmLoweringPlan`，比较逐 routine、
+逐难度、逐 CFG 路径的预期/实际 ANM trace 集，以及可达 call/async/spawn edge。
+互斥分支不会再折成一条 lexical trace，删除调用边、漏发、重排、错误组合和动作挂到
+错误路径/单位均可定位；动作循环超过有限 state/path bound 时只报告
+`anm.source_target_trace_unproven`。计划本身没有候选证据时报告
+`anm.source_action_unresolved`，不再叠加误导性的 trace mismatch。
+未知条件会保守保留两条分支，因此该比较用于发现结构和动作差异，不证明分支谓词、
+调度时序或运行时画面等价。
+
 ## 7. Lowering 与目标输出
 
 ### 7.1 Planner 与 policy
@@ -577,7 +630,7 @@ layout -> target emitter。只有语义跨越多条语句、需要状态归约�
 
 截至本文状态基线：
 
-- 107 项 Python 单元测试通过。
+- 148 项 Python 单元测试通过。
 - 210 个仓库 `.decl` 均可 parse、构建 canonical IR 和 bullet analysis。
 - 210 个 source document 与 source layout 均可逐字节 roundtrip。
 - 同目标 canonical 覆盖 251,701 个节点，其中 160,275 个 instruction，statement
@@ -601,6 +654,12 @@ ANM 候选改造后另以 `--allow-lossy` 重跑同一组 10-18 `stage01/st01`�
 package/frequency 证据的节点带 `anm.heuristic_package_candidate` 警告。8 个转
 TH18 方向仍有共 117 条既有 opcode 535 参数不足提示，没有 ANM 指令参数数量
 错误。
+
+`check-ecl` 对 TH10-TH18 九个原版 `stage01/st01.decl` 从 `main` 分别执行
+E/N/H/L，共 36 条 lane；全部 analysis complete，确定错误为 0，共 486 条动态 ANM、
+async 写入、reset 状态及旧版候选提取证据 warning，探索 189,514 个状态。另以
+多文件生成 package 验证 root、boss、midboss ecli 成员均会独立进行 source-target
+ANM trace 检查。
 
 因此当前正确表述是：同游戏 canonical 行为已达到强二进制证据；跨游戏输出
 已经普遍具备可编译语法，但尚未达到行为完整或运行时等价。

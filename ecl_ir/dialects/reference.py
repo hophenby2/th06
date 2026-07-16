@@ -498,7 +498,9 @@ def argument_matches_type(value: str, expected: str) -> bool:
     if expected in {"S", "D", "H"}:
         return actual in {"S", "expr"}
     if expected == "f":
-        return actual in {"f", "f-var", "expr"}
+        # thecl accepts integer literals/expressions in float positions and
+        # promotes them when encoding the instruction argument.
+        return actual in {"S", "f", "f-var", "expr"}
     if expected == "m":
         return actual in {"m", "expr"}
     if expected in {"o", "t"}:

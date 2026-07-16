@@ -182,12 +182,19 @@ def _pool_paths(game: str, stage_id: str | None) -> tuple[Path, ...]:
     root = _root_stage_path(game, stage_id)
     if root is None:
         return ()
+    return _pool_paths_from_root(root)
+
+
+def _pool_paths_from_root(root: Path) -> tuple[Path, ...]:
+    if not root.is_file():
+        return ()
     program = parse_decl(root)
     paths = [root]
     for entry in program.resources.get("ecli", []):
         if entry.lower() == "default.ecl":
             continue
-        sibling = root.with_name(Path(entry).with_suffix(".decl").name)
+        relative = Path(str(entry).replace("\\", "/")).with_suffix(".decl")
+        sibling = relative if relative.is_absolute() else root.parent / relative
         if sibling.is_file() and sibling not in paths:
             paths.append(sibling)
     return tuple(paths)
@@ -281,7 +288,13 @@ def _candidate_key(
 
 
 @lru_cache(maxsize=64)
-def candidate_pool_for_stage(game: str, stage_id: str | None) -> AnmCandidatePool:
+def candidate_pool_for_stage(
+    game: str,
+    stage_id: str | None,
+    reference_package: str | Path | None = None,
+) -> AnmCandidatePool:
+    if stage_id is None and reference_package is not None:
+        stage_id = stage_id_from_source(str(reference_package))
     if stage_id is None:
         return AnmCandidatePool(game, None, {}, ())
     counts: Counter[tuple[int, str, tuple[AnmActionCandidate, ...]]] = Counter()
@@ -293,7 +306,12 @@ def candidate_pool_for_stage(game: str, stage_id: str | None) -> AnmCandidatePoo
     routine_plays: list[AnmRoutinePlayCandidate] = []
     resources: dict[str, tuple[str, ...]] = {}
 
-    for path in _pool_paths(game, stage_id):
+    paths = (
+        _pool_paths_from_root(Path(reference_package))
+        if reference_package is not None
+        else _pool_paths(game, stage_id)
+    )
+    for path in paths:
         program = parse_decl(path)
         if not resources and _artifact_role(path) == "stage":
             resources = {
@@ -1003,11 +1021,16 @@ def _build_call_bound_materializations(
     return folded_selections, materializations, frozenset(consumed)
 
 
-def build_anm_lowering_plan(module: SemanticModule, target_game: str) -> AnmLoweringPlan:
+def build_anm_lowering_plan(
+    module: SemanticModule,
+    target_game: str,
+    *,
+    target_pool: AnmCandidatePool | None = None,
+) -> AnmLoweringPlan:
     if module.source_game == target_game:
         return AnmLoweringPlan(target_game, stage_id_from_source(module.source), {}, {}, ())
 
-    target_pool = candidate_pool_for_module(target_game, module.source)
+    target_pool = target_pool or candidate_pool_for_module(target_game, module.source)
     source_pool = candidate_pool_for_module(module.source_game, module.source)
     groups = _source_groups(module)
     selections, call_materializations, consumed = _build_call_bound_materializations(

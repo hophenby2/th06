@@ -80,6 +80,8 @@ Important boundaries:
   - ANM 跨游戏 lowering 使用目标同关卡原版 package 的 manifest-scoped 候选池；连续 `select + set_main/set_sprite` 作为原子组合选择，不再静默舍弃资源设置语句；
   - `AnmCandidateSelection` 保留目标原版文件/routine evidence，`AnmCallSiteMaterialization` 只在所有同步直接调用都能把 formal script 绑定为整数 literal 且 semantic-purpose 匹配成功时前移资源组合；
   - 目标 `anim` 声明投影自目标关卡 manifest；semantic-purpose/routine-sequence 候选可用于 strict lowering，仅数字/频率 fallback 与动态 script 固定替代必须显式 `--allow-lossy`；
+  - `check-ecl` 对目标 package 做全节点符号/opcode/参数预检，包括 named/numeric/relative-stack 变量、访问权限和已知 byte 参数范围，并从 `main` 分别抽象执行 E/N/H/L；同步调用共享单位 ANM 状态，spawn 使用 fresh unit state，async ANM 写入保留竞态 warning；
+  - ANM 检查覆盖 manifest、默认/显式 bank、slot 使用前绑定、完整原子组合、单位 stage/boss/midboss role，以及每个生成 ecli 成员逐难度、逐 CFG 路径的 source-plan/target trace 与 call/async/spawn edge 对比；
   - conservative legacy macro rejection for opaque TH06 runtime behavior, dynamic/nonzero transform flags, unverified colors, and dynamic random ranges.
 
 ## Commands
@@ -91,9 +93,40 @@ python3 -m ecl_ir.cli emit-ir th12/stage01.decl -o /tmp/stage01.eclir.json
 python3 -m ecl_ir.cli validate-ir /tmp/stage01.eclir.json
 python3 -m ecl_ir.cli roundtrip-ir /tmp/stage01.eclir.json --layout -o /tmp/stage01.roundtrip.decl
 python3 -m ecl_ir.cli compile-ir /tmp/stage01.eclir.json --target th15 -o /tmp/stage01.th15.decl
+python3 -m ecl_ir.cli check-ecl th15/st01.decl --difficulty ENHL
+python3 -m ecl_ir.cli check-ecl /tmp/st01.th15.decl --game th15 --reference-package th15/st01.decl --json
 ```
 
 `compile-ir` uses ordered canonical IR and a strict policy by default. It writes `.decl` bytes with the codec serialized in the standalone envelope, which is required by older thecl builds that do not provide UTF-8 conversion. `--allow-lossy`, `--preserve-raw-same-family`, and `--preserve-raw-cross-family` are explicit unsafe/approximation opt-ins; node warnings are rendered beside the affected statement. Use `--legacy-patterns` only to compare against the older object-cluster backend.
+
+`check-ecl` first validates the input package and then abstractly executes the
+selected entry from the beginning in independent difficulty lanes. It checks
+`E`, `N`, `H`, and `L` by default; use `--difficulty` to select a subset,
+`--all-routines` to include unreachable routines, and `--state-budget` to bound
+execution (`200000` states per difficulty by default). `--all-routines` first
+runs the normal entry graph, then locally audits other routines with unknown
+entry state without recursively expanding their call/spawn graphs.
+`--reference-package` supplies the corresponding original target
+package and its sibling files as the actual resource-evidence pool. Non-default
+`ecli` dependencies must exist relative to the input package; only
+`default.ecl` may fall back to the target/reference corpus, and unresolved
+dependencies are errors. Human-readable diagnostics include severity, lane,
+module, routine, and source line; `--json` emits the complete structured report.
+Exhausting one lane's budget marks the report incomplete but does not skip the
+remaining selected lanes.
+
+The `check-ecl` exit codes are:
+
+- `0`: no diagnostic reached the configured `--fail-on` threshold;
+- `1`: at least one diagnostic reached the threshold (`error` by default, or
+  warnings and errors with `--fail-on warning`);
+- `2`: invalid arguments, input, game, package configuration, or state budget.
+
+Original-package evidence proves that a resource number or ANM combination is
+loaded and used by that target package. It does not prove that the selected
+animation is visually equivalent to the source behavior. Bounded CFG path
+comparison preserves both sides of unknown conditions; it detects structural
+and action differences but does not prove predicate or scheduling equivalence.
 
 Other compatibility commands remain available:
 
@@ -109,7 +142,7 @@ ecl_ir/
   source/        source bytes, Program model, and parser
   canonical/     ordered semantic IR, lifter, operations, and variables
   dialects/      game profiles, references, semantic catalogs, and ANM data
-  analysis/      bullet state, CFG, transform, and ANM candidate analysis
+  analysis/      bullet/CFG/transform state, ANM candidates, and execution checks
   target/        capability planner, target module, and argument encoding
   artifact/      standalone schema-v2 serialization and validation
   compat/        text backend still used at the canonical encoding boundary

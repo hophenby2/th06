@@ -377,7 +377,7 @@ class AnmResourceCandidateTests(unittest.TestCase):
             routine=wrapper.name,
         )
         self.assertEqual(dispatch.operation, "enemy.create_abs_mirror")
-        self.assertEqual(dispatch.operands[0].name, "operand_0")
+        self.assertEqual(dispatch.operands[0].name, "routine")
         wrapper.body.append(dispatch)
 
         plan = build_anm_lowering_plan(module, "th15")

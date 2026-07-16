@@ -8,6 +8,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from ..analysis.execution_check import check_ecl_file
 from ..analysis.spread_ir import add_float_expr, double_flower_aux_config_args, double_flower_center_delta, double_flower_lowering_for_th12, halve_double_flower_layer_args, negated_float_expr, th12_aux_emitter_id
 from ..analysis.transform_ir import BulletTransformIR, TransformTimelineState, build_th12_to_th13plus_slot_maps_from_args, lower_transform_opcode_to_instruction
 from ..artifact.ir_file import DeclTextCodec, build_eclir, dump_eclir, emit_layout_roundtrip_bytes, emit_roundtrip_bytes, emit_roundtrip_source, load_eclir, validate_eclir_data
@@ -24,6 +25,12 @@ from ..legacy.object_lifter import lift_all_objects, summarize_by_kind
 from ..source.parser import parse_decl
 from ..target.lowering import LoweringPlanner, LoweringPolicy
 from ..target.target_ir import CanonicalBackendEmitter, TargetAstBuilder
+
+
+CHECK_ECL_GAMES = [
+    "th06", "th07", "th08", "th10", "th11", "th12",
+    "th13", "th14", "th15", "th16", "th17", "th18",
+]
 
 
 def load_objects(path: str):
@@ -1703,6 +1710,66 @@ def cmd_validate_ir(args: argparse.Namespace) -> int:
     return 0 if result.get("ok") else 1
 
 
+def check_difficulty_markers(value: str) -> str:
+    if not value or re.fullmatch(r"[ENHL]+", value) is None:
+        raise argparse.ArgumentTypeError(
+            "difficulty must contain only E, N, H, and L"
+        )
+    return value
+
+
+def positive_state_budget(value: str) -> int:
+    try:
+        budget = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("state budget must be an integer") from exc
+    if budget <= 0:
+        raise argparse.ArgumentTypeError("state budget must be greater than zero")
+    return budget
+
+
+def cmd_check_ecl(args: argparse.Namespace) -> int:
+    try:
+        report = check_ecl_file(
+            args.input,
+            game=args.game,
+            reference_package=args.reference_package,
+            entry=args.entry,
+            difficulties=tuple(args.difficulty),
+            all_routines=args.all_routines,
+            state_budget=args.state_budget,
+        )
+    except (OSError, ValueError) as exc:
+        print(f"check-ecl: {exc}", file=sys.stderr)
+        return 2
+
+    if args.json:
+        print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2))
+    else:
+        for diagnostic in report.diagnostics:
+            severity = str(diagnostic.severity)
+            lane = str(diagnostic.difficulty or "-")
+            module = str(diagnostic.module or "<module>")
+            routine = str(diagnostic.routine or "<module>")
+            line = diagnostic.line if diagnostic.line is not None else 0
+            print(
+                f"{severity}/{lane}/{module}:{routine}:{line} "
+                f"{diagnostic.code} {diagnostic.message}"
+            )
+        print(
+            "summary "
+            f"diagnostics={len(report.diagnostics)} "
+            f"errors={len(report.errors)} "
+            f"warnings={len(report.warnings)} "
+            f"states_explored={report.states_explored} "
+            f"analysis_complete={str(report.analysis_complete).lower()}"
+        )
+
+    if report.errors or (args.fail_on == "warning" and report.warnings):
+        return 1
+    return 0
+
+
 def cmd_compile_ir(args: argparse.Namespace) -> int:
     program, objects, data = load_eclir(args.input)
     canonical_data = data.get("canonical_ir")
@@ -1970,6 +2037,49 @@ def main(argv: list[str] | None = None) -> int:
     validate_ir.add_argument("input")
     validate_ir.add_argument("--output", "-o", help="write validation JSON to file instead of stdout")
     validate_ir.set_defaults(func=cmd_validate_ir)
+
+    check_ecl = sub.add_parser(
+        "check-ecl",
+        help="statically validate and abstractly execute an ECL package",
+    )
+    check_ecl.add_argument("input")
+    check_ecl.add_argument(
+        "--game",
+        choices=CHECK_ECL_GAMES,
+        help="override the game inferred from the input path",
+    )
+    check_ecl.add_argument(
+        "--reference-package",
+        help="target original ECL package used as resource evidence",
+    )
+    check_ecl.add_argument("--entry", default="main", help="entry routine (default: main)")
+    check_ecl.add_argument(
+        "--difficulty",
+        type=check_difficulty_markers,
+        default="ENHL",
+        metavar="ENHL",
+        help="difficulty lanes to execute, using only E/N/H/L (default: ENHL)",
+    )
+    check_ecl.add_argument(
+        "--all-routines",
+        action="store_true",
+        help="also analyze routines not reachable from the entry routine",
+    )
+    check_ecl.add_argument(
+        "--state-budget",
+        type=positive_state_budget,
+        default=200000,
+        metavar="N",
+        help="maximum abstract states to explore per difficulty (default: 200000)",
+    )
+    check_ecl.add_argument("--json", action="store_true", help="write the structured report as JSON")
+    check_ecl.add_argument(
+        "--fail-on",
+        choices=["error", "warning"],
+        default="error",
+        help="return 1 at this diagnostic severity (default: error)",
+    )
+    check_ecl.set_defaults(func=cmd_check_ecl)
 
     compile_ir = sub.add_parser("compile-ir", help="compile standalone .eclir.json to target .decl")
     compile_ir.add_argument("input")
