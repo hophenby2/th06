@@ -6,7 +6,12 @@ from functools import lru_cache
 from pathlib import Path
 import re
 from ..canonical.op_ir import op_key_for_opcode
-from ..canonical.semantic_ir import SemanticModule, SemanticOperation, SyntaxStatement
+from ..canonical.semantic_ir import (
+    RawInstructionOp,
+    SemanticModule,
+    SemanticOperation,
+    SyntaxStatement,
+)
 from ..dialects.anm_catalog import SOURCE_SET_PURPOSES, source_bank_role, target_bank_for_role
 from ..dialects.semantics import generation_for_game
 from ..source.parser import parse_decl
@@ -15,7 +20,14 @@ from ..source.parser import parse_decl
 ROOT = Path(__file__).resolve().parents[2]
 _STAGE_NAME_RE = re.compile(r"^(?:stage|st)(\d{2})(.*)\.decl$", re.IGNORECASE)
 _SET_OPERATIONS = {"anm.set_main", "anm.set_sprite"}
-_PLAY_OPERATIONS = {"anm.play", "anm.play_abs", "anm.selected_play"}
+_EXPLICIT_BANK_PLAY_OPERATIONS = {
+    "anm.play",
+    "anm.play_abs",
+    "anm.play_high",
+    "anm.play_pos",
+    "anm.play_rotate",
+}
+_PLAY_OPERATIONS = {*_EXPLICIT_BANK_PLAY_OPERATIONS, "anm.selected_play"}
 _SUPPORTED_OPERATIONS = {"anm.select", *_SET_OPERATIONS, *_PLAY_OPERATIONS}
 
 
@@ -37,11 +49,22 @@ class AnmCombinationCandidate:
 
 
 @dataclass(frozen=True, slots=True)
+class AnmRoutinePlayCandidate:
+    operation: str
+    bank: int
+    script: int
+    routine: str
+    ordinal: int
+    evidence: str
+
+
+@dataclass(frozen=True, slots=True)
 class AnmCandidatePool:
     game: str
     stage_id: str | None
     resources: dict[str, tuple[str, ...]]
     combinations: tuple[AnmCombinationCandidate, ...]
+    routine_plays: tuple[AnmRoutinePlayCandidate, ...] = ()
 
     def for_role(self, role: str | None) -> tuple[AnmCombinationCandidate, ...]:
         if role is None:
@@ -68,6 +91,7 @@ class AnmCandidateSelection:
     source_scripts: tuple[int, ...] = ()
     folded_into: str | None = None
     lossy: bool = False
+    dynamic_source: bool = False
 
     def details(self) -> dict[str, object]:
         return {
@@ -86,6 +110,7 @@ class AnmCandidateSelection:
                 for action in self.actions
             ],
             "folded_into": self.folded_into,
+            "dynamic_source": self.dynamic_source,
         }
 
 
@@ -112,6 +137,8 @@ class _SourceAnmGroup:
     source_bank: int | None
     role: str | None
     routine: str
+    bank_ambiguous: bool = False
+    operation_ordinal: int | None = None
 
 
 def _source_name(source: str) -> str:
@@ -150,7 +177,7 @@ def _pool_paths(game: str, stage_id: str | None) -> tuple[Path, ...]:
     if not directory.is_dir():
         return ()
     if stage_id is None:
-        return tuple(sorted(path for path in directory.glob("*.decl") if path.name != "default.decl"))
+        return ()
 
     root = _root_stage_path(game, stage_id)
     if root is None:
@@ -189,8 +216,8 @@ def _role_for_bank(
     routine: str = "",
 ) -> str:
     if bank is not None:
-        common_bank = 1 if generation_for_game(game) == "th13_plus" else 0
-        if bank == common_bank:
+        common_banks = {0, 1} if generation_for_game(game) == "th13_plus" else {0}
+        if bank in common_banks:
             return "common"
         role = source_bank_role(game, bank)
         if role == "stage":
@@ -255,12 +282,15 @@ def _candidate_key(
 
 @lru_cache(maxsize=64)
 def candidate_pool_for_stage(game: str, stage_id: str | None) -> AnmCandidatePool:
+    if stage_id is None:
+        return AnmCandidatePool(game, None, {}, ())
     counts: Counter[tuple[int, str, tuple[AnmActionCandidate, ...]]] = Counter()
     evidence: dict[tuple[int, str, tuple[AnmActionCandidate, ...]], set[str]] = defaultdict(set)
     purpose_scores: dict[
         tuple[int, str, tuple[AnmActionCandidate, ...]],
         dict[str, int],
     ] = defaultdict(dict)
+    routine_plays: list[AnmRoutinePlayCandidate] = []
     resources: dict[str, tuple[str, ...]] = {}
 
     for path in _pool_paths(game, stage_id):
@@ -272,14 +302,18 @@ def candidate_pool_for_stage(game: str, stage_id: str | None) -> AnmCandidatePoo
             }
         artifact_role = _artifact_role(path)
         for function in program.functions:
+            play_ordinals: Counter[str] = Counter()
             current_bank = target_bank_for_role(game, artifact_role)
+            current_bank_guard = "*"
             pending_bank: int | None = None
+            pending_guard: str | None = None
             pending_actions: list[AnmActionCandidate] = []
 
             def flush() -> None:
-                nonlocal pending_bank, pending_actions
+                nonlocal pending_bank, pending_guard, pending_actions
                 if pending_bank is None or not pending_actions:
                     pending_bank = None
+                    pending_guard = None
                     pending_actions = []
                     return
                 actions = tuple(pending_actions)
@@ -293,47 +327,92 @@ def candidate_pool_for_stage(game: str, stage_id: str | None) -> AnmCandidatePoo
                         score,
                     )
                 pending_bank = None
+                pending_guard = None
                 pending_actions = []
 
-            for instruction in function.body:
-                operation = op_key_for_opcode(game, instruction.opcode)
+            for statement in function.statements:
+                if statement.kind != "instruction":
+                    flush()
+                    if statement.kind in {
+                        "async_call",
+                        "call",
+                        "conditional_goto",
+                        "goto",
+                        "label",
+                        "return",
+                    }:
+                        current_bank = None
+                        current_bank_guard = ""
+                    continue
+                opcode = int(statement.attrs.get("opcode", -1))
+                args = [str(arg) for arg in statement.attrs.get("args", [])]
+                guard = str(statement.difficulty or "*")
+                operation = op_key_for_opcode(game, opcode)
                 if operation == "anm.select":
                     flush()
-                    current_bank = _literal_int(instruction.args[0]) if instruction.args else None
-                    pending_bank = current_bank
+                    current_bank = _literal_int(args[0]) if args else None
+                    current_bank_guard = guard
                     continue
-                if operation in _SET_OPERATIONS and len(instruction.args) >= 2:
+                if current_bank_guard not in {"", "*", guard}:
+                    current_bank = None
+                    current_bank_guard = ""
+                if operation in _SET_OPERATIONS and len(args) >= 2:
                     bank = current_bank
-                    if bank is None:
-                        bank = target_bank_for_role(game, artifact_role)
-                    slot = _literal_int(instruction.args[0])
-                    script = _literal_int(instruction.args[1])
+                    slot = _literal_int(args[0])
+                    script = _literal_int(args[1])
                     if bank is not None and script is not None:
+                        if pending_actions and pending_guard != guard:
+                            flush()
                         if pending_bank is None:
                             pending_bank = bank
                         if pending_bank != bank:
                             flush()
                             pending_bank = bank
+                        pending_guard = guard
                         pending_actions.append(AnmActionCandidate(operation, slot, script))
                         continue
                 flush()
-                if operation in {"anm.play", "anm.play_abs"} and len(instruction.args) >= 2:
-                    bank = _literal_int(instruction.args[0])
-                    script = _literal_int(instruction.args[1])
+                if operation in _EXPLICIT_BANK_PLAY_OPERATIONS and len(args) >= 2:
+                    ordinal = play_ordinals[operation]
+                    play_ordinals[operation] += 1
+                    bank = _literal_int(args[0])
+                    script = _literal_int(args[1])
                     if bank is not None and script is not None:
                         action = AnmActionCandidate(operation, None, script)
                         role = _role_for_bank(game, bank, artifact_role, function.name)
                         key = _candidate_key(bank, role, (action,))
                         counts[key] += 1
                         evidence[key].add(f"{path.name}:{function.name}")
-                elif operation == "anm.selected_play" and instruction.args:
-                    script = _literal_int(instruction.args[0])
+                        routine_plays.append(
+                            AnmRoutinePlayCandidate(
+                                operation,
+                                bank,
+                                script,
+                                function.name,
+                                ordinal,
+                                f"{path.name}:{function.name}",
+                            )
+                        )
+                elif operation == "anm.selected_play" and args:
+                    ordinal = play_ordinals[operation]
+                    play_ordinals[operation] += 1
+                    script = _literal_int(args[0])
                     if current_bank is not None and script is not None:
                         action = AnmActionCandidate(operation, None, script)
                         role = _role_for_bank(game, current_bank, artifact_role, function.name)
                         key = _candidate_key(current_bank, role, (action,))
                         counts[key] += 1
                         evidence[key].add(f"{path.name}:{function.name}")
+                        routine_plays.append(
+                            AnmRoutinePlayCandidate(
+                                operation,
+                                current_bank,
+                                script,
+                                function.name,
+                                ordinal,
+                                f"{path.name}:{function.name}",
+                            )
+                        )
             flush()
 
     combinations = tuple(
@@ -355,15 +434,14 @@ def candidate_pool_for_stage(game: str, stage_id: str | None) -> AnmCandidatePoo
             ),
         )
     )
-    return AnmCandidatePool(game, stage_id, resources, combinations)
+    return AnmCandidatePool(game, stage_id, resources, combinations, tuple(routine_plays))
 
 
 def candidate_pool_for_module(game: str, source: str) -> AnmCandidatePool:
     stage_id = stage_id_from_source(source)
-    pool = candidate_pool_for_stage(game, stage_id)
-    if pool.combinations or pool.resources or stage_id is None:
-        return pool
-    return candidate_pool_for_stage(game, None)
+    if stage_id is None:
+        return AnmCandidatePool(game, None, {}, ())
+    return candidate_pool_for_stage(game, stage_id)
 
 
 def _operand_text(node: SemanticOperation, name: str, index: int) -> str | None:
@@ -403,12 +481,16 @@ def _source_groups(module: SemanticModule) -> tuple[_SourceAnmGroup, ...]:
     groups: list[_SourceAnmGroup] = []
     default_role = _module_role(module.source)
     for routine in module.routines:
+        play_ordinals: Counter[str] = Counter()
         current_bank: int | None = None
+        current_bank_guard = None
+        bank_ambiguous = False
         pending_select: SemanticOperation | None = None
+        pending_guard = None
         pending_actions: list[SemanticOperation] = []
 
         def flush() -> None:
-            nonlocal pending_select, pending_actions
+            nonlocal pending_select, pending_guard, pending_actions
             if pending_select is None and not pending_actions:
                 return
             bank = _node_bank(pending_select) if pending_select is not None else current_bank
@@ -425,25 +507,55 @@ def _source_groups(module: SemanticModule) -> tuple[_SourceAnmGroup, ...]:
                     bank,
                     role,
                     routine.name,
+                    bank_ambiguous,
                 )
             )
             pending_select = None
+            pending_guard = None
             pending_actions = []
 
         for node in routine.body:
             if not isinstance(node, SemanticOperation):
                 flush()
+                if isinstance(node, SyntaxStatement) and node.statement_kind in {
+                    "async_call",
+                    "call",
+                    "conditional_goto",
+                    "goto",
+                    "label",
+                    "return",
+                }:
+                    current_bank = None
+                    current_bank_guard = None
+                    bank_ambiguous = True
                 continue
             if node.operation == "anm.select":
                 flush()
                 current_bank = _node_bank(node)
+                current_bank_guard = node.guard
+                bank_ambiguous = current_bank is None
                 pending_select = node
+                pending_guard = node.guard
                 continue
             if node.operation in _SET_OPERATIONS:
+                if pending_select is not None and node.guard != pending_select.guard:
+                    flush()
+                if (
+                    current_bank_guard is not None
+                    and not current_bank_guard.is_unconditional
+                    and node.guard != current_bank_guard
+                ):
+                    current_bank = None
+                    bank_ambiguous = True
+                if pending_actions and pending_guard != node.guard:
+                    flush()
+                pending_guard = node.guard
                 pending_actions.append(node)
                 continue
             flush()
             if node.operation in _PLAY_OPERATIONS:
+                ordinal = play_ordinals[node.operation]
+                play_ordinals[node.operation] += 1
                 bank = _node_bank(node) if node.operation != "anm.selected_play" else current_bank
                 role = _role_for_bank(
                     module.source_game,
@@ -451,7 +563,18 @@ def _source_groups(module: SemanticModule) -> tuple[_SourceAnmGroup, ...]:
                     default_role,
                     routine.name,
                 )
-                groups.append(_SourceAnmGroup(None, (node,), bank, role, routine.name))
+                groups.append(
+                    _SourceAnmGroup(
+                        None,
+                        (node,),
+                        bank,
+                        role,
+                        routine.name,
+                        bank is None
+                        or (bank_ambiguous and node.operation == "anm.selected_play"),
+                        ordinal,
+                    )
+                )
         flush()
     return tuple(groups)
 
@@ -467,6 +590,8 @@ def _action_matches(
 ) -> bool:
     if candidate.operation != source.operation or candidate.script != script:
         return False
+    if source.operation not in _SET_OPERATIONS:
+        return True
     source_slot = _node_slot(source)
     return source_slot is None or candidate.slot == source_slot
 
@@ -486,7 +611,13 @@ def _source_purpose(
             continue
         kind = "main" if node.operation == "anm.set_main" else "sprite"
         purpose = SOURCE_SET_PURPOSES.get(
-            (module.source_game, role, kind, group.source_bank or -1, script)
+            (
+                module.source_game,
+                role,
+                kind,
+                group.source_bank if group.source_bank is not None else -1,
+                script,
+            )
         )
         if purpose:
             return purpose
@@ -531,6 +662,36 @@ def _choose_combination(
     candidates = list(pool.for_role(group.role))
     if not candidates:
         return None, "unresolved"
+
+    if len(group.actions) == 1 and group.operation_ordinal is not None:
+        source_operation = group.actions[0].operation
+        routine_match = next(
+            (
+                use
+                for use in pool.routine_plays
+                if use.routine == group.routine
+                and use.operation == source_operation
+                and use.ordinal == group.operation_ordinal
+            ),
+            None,
+        )
+        if routine_match is not None:
+            target_action = AnmActionCandidate(
+                routine_match.operation,
+                None,
+                routine_match.script,
+            )
+            matched = next(
+                (
+                    candidate
+                    for candidate in candidates
+                    if candidate.bank == routine_match.bank
+                    and candidate.actions == (target_action,)
+                ),
+                None,
+            )
+            if matched is not None:
+                return matched, "routine_sequence"
 
     if purpose:
         purpose_matches = [
@@ -651,6 +812,11 @@ def _is_entry_anm_group(module: SemanticModule, group: _SourceAnmGroup) -> bool:
     nodes = (group.select, *group.actions)
     if any(not node.guard.is_unconditional or node.selected_values for node in nodes):
         return False
+    if any(
+        node.operation in _SET_OPERATIONS and _node_slot(node) is None
+        for node in group.actions
+    ):
+        return False
     routine = next((item for item in module.routines if item.name == group.routine), None)
     if routine is None:
         return False
@@ -672,11 +838,26 @@ def _direct_calls_to(
     callee: str,
 ) -> tuple[tuple[str, SyntaxStatement], ...] | None:
     calls: list[tuple[str, SyntaxStatement]] = []
+    if any(re.search(rf"\b{re.escape(callee)}\b", node.text) for node in module.top_level):
+        return None
     for routine in module.routines:
         for node in routine.body:
+            if isinstance(node, SemanticOperation):
+                if any(
+                    operand.value.source_text.strip().strip('"\'') == callee
+                    for operand in node.operands
+                ):
+                    return None
+                continue
+            if isinstance(node, RawInstructionOp):
+                if any(str(arg).strip().strip('"\'') == callee for arg in node.args):
+                    return None
+                continue
             if not isinstance(node, SyntaxStatement):
                 continue
             if node.statement_kind not in {"call", "async_call"}:
+                if re.search(rf"\b{re.escape(callee)}\b", node.text):
+                    return None
                 continue
             if str(node.attributes.get("function", "")) != callee:
                 continue
@@ -701,8 +882,30 @@ def _build_call_bound_materializations(
     consumed: set[str] = set()
     seen_routines: set[str] = set()
 
+    source_stage_id = stage_id_from_source(module.source)
+    package_paths = _pool_paths(module.source_game, source_stage_id)
+    module_path = Path(module.source)
+    if not module_path.is_absolute():
+        module_path = ROOT / module_path
+    external_ecli = tuple(
+        entry
+        for entry in module.resources.get("ecli", [])
+        if entry.lower() != "default.ecl"
+    )
+    if (
+        source_stage_id is None
+        or len(package_paths) != 1
+        or package_paths[0].resolve() != module_path.resolve()
+        or external_ecli
+    ):
+        return folded_selections, materializations, frozenset()
+
     for group in groups:
-        if group.routine in seen_routines or not _is_entry_anm_group(module, group):
+        if (
+            group.bank_ambiguous
+            or group.routine in seen_routines
+            or not _is_entry_anm_group(module, group)
+        ):
             continue
         formals = _formal_parameter_names(
             next(routine.params for routine in module.routines if routine.name == group.routine)
@@ -818,10 +1021,14 @@ def build_anm_lowering_plan(module: SemanticModule, target_game: str) -> AnmLowe
             str(node.node_id)
             for node in ((group.select,) if group.select is not None else ()) + group.actions
         }
-        if group_node_ids & consumed:
+        if group_node_ids & consumed or group.bank_ambiguous:
             continue
         purpose = _source_purpose(module, group, source_pool)
-        candidate, match_kind = _choose_combination(target_pool, group, purpose)
+        if group.select is not None and not group.actions:
+            candidate = _select_bank(target_pool, group.role)
+            match_kind = "role_bank" if candidate is not None else "unresolved"
+        else:
+            candidate, match_kind = _choose_combination(target_pool, group, purpose)
         if candidate is None and group.select is not None:
             candidate = _select_bank(target_pool, group.role)
             match_kind = "role_bank" if candidate is not None else "unresolved"
@@ -833,6 +1040,12 @@ def build_anm_lowering_plan(module: SemanticModule, target_game: str) -> AnmLowe
             for node in group.actions
             if (script := _node_script(node)) is not None
         )
+        dynamic = any(
+            _node_script(node) is None
+            or (node.operation in _SET_OPERATIONS and _node_slot(node) is None)
+            for node in group.actions
+        )
+        lossy = dynamic or match_kind in {"exact_script", "target_corpus_candidate"}
         common = {
             "match_kind": match_kind,
             "target_stage_id": target_pool.stage_id,
@@ -844,6 +1057,8 @@ def build_anm_lowering_plan(module: SemanticModule, target_game: str) -> AnmLowe
             selections[str(group.select.node_id)] = AnmCandidateSelection(
                 source_node_id=str(group.select.node_id),
                 actions=(AnmTargetAction("anm.select", bank=candidate.bank),),
+                lossy=lossy,
+                dynamic_source=dynamic,
                 **common,
             )
         if group.actions:
@@ -854,11 +1069,11 @@ def build_anm_lowering_plan(module: SemanticModule, target_game: str) -> AnmLowe
                     group.select is None and _candidate_needs_selected_bank(candidate)
                 ),
             )
-            dynamic = any(_node_script(node) is None for node in group.actions)
             selections[str(primary.node_id)] = AnmCandidateSelection(
                 source_node_id=str(primary.node_id),
                 actions=target_actions,
-                lossy=dynamic,
+                lossy=lossy,
+                dynamic_source=dynamic,
                 **common,
             )
             for folded in group.actions[1:]:
@@ -866,7 +1081,8 @@ def build_anm_lowering_plan(module: SemanticModule, target_game: str) -> AnmLowe
                     source_node_id=str(folded.node_id),
                     actions=(),
                     folded_into=str(primary.node_id),
-                    lossy=dynamic,
+                    lossy=lossy,
+                    dynamic_source=dynamic,
                     **common,
                 )
 
@@ -888,6 +1104,17 @@ def candidate_summary(pool: AnmCandidatePool) -> dict[str, object]:
         "game": pool.game,
         "stage_id": pool.stage_id,
         "resources": {name: list(entries) for name, entries in pool.resources.items()},
+        "routine_plays": [
+            {
+                "operation": candidate.operation,
+                "bank": candidate.bank,
+                "script": candidate.script,
+                "routine": candidate.routine,
+                "ordinal": candidate.ordinal,
+                "evidence": candidate.evidence,
+            }
+            for candidate in pool.routine_plays
+        ],
         "combinations": [
             {
                 "bank": candidate.bank,

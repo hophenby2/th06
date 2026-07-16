@@ -77,7 +77,9 @@ Important boundaries:
   - semantic variable projection with structured `variable.target_unavailable`, `variable.semantic_collision`, and storage/access diagnostics; TH06/07 stay opaque instead of borrowing TH08 IDs;
   - routine ABI gates for named calls, structured stack syntax, locals, parameters, and relative stack slots instead of silently passing incompatible TH10+ source into TH06-08;
   - exact target-game opcode lookup with no same-generation numeric fallback;
-  - cross-game ANM bank/script operations remain unsupported until a typed resource reference and verified catalog projection are available;
+  - ANM 跨游戏 lowering 使用目标同关卡原版 package 的 manifest-scoped 候选池；连续 `select + set_main/set_sprite` 作为原子组合选择，不再静默舍弃资源设置语句；
+  - `AnmCandidateSelection` 保留目标原版文件/routine evidence，`AnmCallSiteMaterialization` 只在所有同步直接调用都能把 formal script 绑定为整数 literal 且 semantic-purpose 匹配成功时前移资源组合；
+  - 目标 `anim` 声明投影自目标关卡 manifest；semantic-purpose/routine-sequence 候选可用于 strict lowering，仅数字/频率 fallback 与动态 script 固定替代必须显式 `--allow-lossy`；
   - conservative legacy macro rejection for opaque TH06 runtime behavior, dynamic/nonzero transform flags, unverified colors, and dynamic random ranges.
 
 ## Commands
@@ -107,7 +109,7 @@ ecl_ir/
   source/        source bytes, Program model, and parser
   canonical/     ordered semantic IR, lifter, operations, and variables
   dialects/      game profiles, references, semantic catalogs, and ANM data
-  analysis/      bullet state, CFG, spread, and transform analysis
+  analysis/      bullet state, CFG, transform, and ANM candidate analysis
   target/        capability planner, target module, and argument encoding
   artifact/      standalone schema-v2 serialization and validation
   compat/        text backend still used at the canonical encoding boundary
@@ -135,7 +137,8 @@ This is not a verified binary-equivalent transpiler. Remaining work includes:
 - full CFG state joins beyond conservative cycle detection, including transform branches whose difficulty lanes resolve to different append cursors;
 - long transform forms that have no representable target form;
 - replacement of `TargetStatement.lines` with a typed target union such as instruction, syntax, comment, and unsupported nodes;
-- complete laser lifecycle, typed `AnmResourceRef` plus bank-flow analysis, other resources, and game-specific system semantics;
+- ANM 候选池尚缺完整的 typed `AnmResourceRef`、CFG state join 与逐 difficulty lane bank-flow；当前目标原版组合证据只能证明 package 内编号有效，不能证明运行时视觉等价；
+- complete laser lifecycle, other resource projections, and game-specific system semantics;
 - target compiler checks and runtime equivalence tests across the full corpus;
 - migration of remaining schema-v1 object-specific behavior into canonical analyses and capability lowerers.
 

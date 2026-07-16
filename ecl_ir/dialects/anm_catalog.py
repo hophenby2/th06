@@ -26,7 +26,6 @@ ANM_RESOURCE_OPERATIONS = frozenset(
         "anm.set_main",
         "anm.set_slot",
         "anm.set_sprite",
-        "anm.on_et",
     }
 )
 

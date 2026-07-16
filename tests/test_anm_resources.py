@@ -5,6 +5,7 @@ import unittest
 from ecl_ir.analysis.anm_resources import (
     AnmActionCandidate,
     build_anm_lowering_plan,
+    candidate_pool_for_module,
     candidate_pool_for_stage,
 )
 from ecl_ir.canonical.op_ir import semantic_operation
@@ -95,6 +96,25 @@ class AnmResourceCandidateTests(unittest.TestCase):
         self.assertTrue(all(item.startswith("st01") for item in first.evidence))
         self.assertTrue(all(item.startswith("st02") for item in second.evidence))
 
+    def test_midboss_role_is_separate_while_shared_banks_stay_common(self) -> None:
+        pool = candidate_pool_for_stage("th15", "01")
+        midboss_main = next(
+            candidate
+            for candidate in pool.combinations
+            if candidate.bank == 3
+            and candidate.actions == (AnmActionCandidate("anm.set_main", 0, 0),)
+            and any(item.startswith("st01mbs.decl:MBoss") for item in candidate.evidence)
+        )
+
+        self.assertEqual(midboss_main.role, "midboss")
+        self.assertTrue(
+            all(
+                candidate.role == "common"
+                for candidate in pool.combinations
+                if candidate.bank in {0, 1}
+            )
+        )
+
     def test_select_and_following_set_actions_lower_as_one_candidate(self) -> None:
         module, nodes = _anm_module(
             "th14",
@@ -169,10 +189,11 @@ class AnmResourceCandidateTests(unittest.TestCase):
         dynamic = nodes[1]
 
         strict_emitter = CanonicalBackendEmitter(module, "th15")
-        strict = LoweringPlanner.for_game(
+        strict_planner = LoweringPlanner.for_game(
             "th15",
             backend_emitter=strict_emitter,
-        ).plan_node(dynamic, "Main")
+        )
+        strict = strict_planner.plan_node(dynamic, "Main")
         permissive_emitter = CanonicalBackendEmitter(module, "th15")
         permissive_planner = LoweringPlanner.for_game(
             "th15",
@@ -185,12 +206,42 @@ class AnmResourceCandidateTests(unittest.TestCase):
         self.assertTrue(selection.lossy)
         self.assertEqual(strict.strategy.value, "unsupported")
         self.assertEqual(strict.diagnostics[-1].code, "backend.lossy_forbidden")
+        strict_target = TargetAstBuilder(strict_planner).build(module)
+        self.assertEqual(
+            [statement.strategy.value for statement in strict_target.routines[0].body],
+            ["unsupported", "unsupported"],
+        )
         self.assertEqual(permissive.strategy.value, "lossy")
         self.assertEqual(permissive.diagnostics[-1].code, "anm.dynamic_script_candidate")
         rendered = TargetAstBuilder(permissive_planner).build(module).render_decl()
         self.assertEqual(rendered.count("ins_302(2);"), 1)
         self.assertIn("ins_306(0, 0);", permissive.target_text or "")
         self.assertTrue(all(item.startswith("st01.decl:") for item in selection.evidence))
+
+    def test_dynamic_slot_is_lossy_and_dynamic_play_bank_is_unresolved(self) -> None:
+        module, nodes = _anm_module(
+            "th12",
+            "th12/stage01.decl",
+            (
+                (258, ["1"]),
+                (262, ["$A", "50"]),
+                (263, ["$A", "101"]),
+            ),
+        )
+        emitter = CanonicalBackendEmitter(module, "th15")
+        plan = emitter.anm_plan
+
+        dynamic_slot = plan.selections[str(nodes[1].node_id)]
+        self.assertTrue(dynamic_slot.lossy)
+        self.assertTrue(dynamic_slot.dynamic_source)
+        self.assertNotIn(str(nodes[2].node_id), plan.selections)
+
+        play = LoweringPlanner.for_game(
+            "th15",
+            backend_emitter=emitter,
+        ).plan_node(nodes[2], "Main")
+        self.assertEqual(play.strategy.value, "unsupported")
+        self.assertEqual(play.diagnostics[-1].code, "anm.resource_context_unresolved")
 
     def test_call_bound_anm_is_materialized_once_before_each_call(self) -> None:
         module = build_semantic_module(parse_decl("th10/stage02.decl"))
@@ -315,6 +366,44 @@ class AnmResourceCandidateTests(unittest.TestCase):
             )
         )
 
+    def test_call_bound_rejects_string_dispatched_callee(self) -> None:
+        module = build_semantic_module(parse_decl("th10/stage02.decl"))
+        wrapper = next(routine for routine in module.routines if routine.name == "BGirl00")
+        dispatch = semantic_operation(
+            "th10",
+            261,
+            ['"Girl00"', "0.0f", "0.0f", "10", "0", "0"],
+            9000,
+            routine=wrapper.name,
+        )
+        self.assertEqual(dispatch.operation, "enemy.create_abs_mirror")
+        self.assertEqual(dispatch.operands[0].name, "operand_0")
+        wrapper.body.append(dispatch)
+
+        plan = build_anm_lowering_plan(module, "th15")
+        callee = next(routine for routine in module.routines if routine.name == "Girl00")
+        callee_anm = [
+            node
+            for node in callee.body
+            if getattr(node, "operation", None)
+            in {"anm.select", "anm.set_main", "anm.set_sprite"}
+        ]
+
+        self.assertFalse(
+            any(item.callee == "Girl00" for item in plan.call_materializations.values())
+        )
+        self.assertTrue(
+            all(
+                plan.selections[str(node.node_id)].match_kind != "call_bound_folded"
+                for node in callee_anm
+            )
+        )
+
+        linked_module = build_semantic_module(parse_decl("th10/stage02.decl"))
+        linked_module.resources.setdefault("ecli", []).append("external.ecl")
+        linked_plan = build_anm_lowering_plan(linked_module, "th15")
+        self.assertFalse(linked_plan.call_materializations)
+
     def test_stage06_blue_candidate_prefers_girl_a01_main_five(self) -> None:
         module = build_semantic_module(parse_decl("th12/stage06.decl"))
         plan = build_anm_lowering_plan(module, "th15")
@@ -357,6 +446,110 @@ class AnmResourceCandidateTests(unittest.TestCase):
         )
         self.assertEqual(statement.lines.count("ins_307(1, 75);"), 1)
         self.assertFalse(any(line.startswith("ins_302(") for line in statement.lines))
+
+    def test_play_pos_keeps_source_context_operands(self) -> None:
+        module = build_semantic_module(parse_decl("th14/st06bs.decl"))
+        emitter = CanonicalBackendEmitter(module, "th18")
+        planner = LoweringPlanner.for_game(
+            "th18",
+            policy=LoweringPolicy(allow_lossy=True),
+            backend_emitter=emitter,
+        )
+        routine = next(item for item in module.routines if item.name == "BossCupEndEff")
+        source = next(
+            node for node in routine.body if getattr(node, "operation", None) == "anm.play_pos"
+        )
+        strict = LoweringPlanner.for_game(
+            "th18",
+            backend_emitter=CanonicalBackendEmitter(module, "th18"),
+        ).plan_node(source, routine.name)
+
+        decision = planner.plan_node(source, routine.name)
+
+        self.assertEqual(strict.strategy.value, "unsupported")
+        self.assertEqual(strict.diagnostics[-1].code, "backend.lossy_forbidden")
+        self.assertEqual(decision.strategy.value, "lossy")
+        self.assertEqual(decision.diagnostics[-1].code, "anm.heuristic_package_candidate")
+        self.assertIn("evidence=st06bs.decl:BossCard2", decision.target_text or "")
+        self.assertIn(
+            "ins_338(1, 73, 64.0f, 0.0f, -1.1780972f);",
+            decision.target_text or "",
+        )
+
+    def test_anm_on_et_is_not_treated_as_a_script_reference(self) -> None:
+        node = semantic_operation("th12", 274, ["0", "1"], 1, routine="Boss")
+        module = SemanticModule(
+            source="th12/stage01.decl",
+            source_game="th12",
+            profile="th12",
+            routines=[SemanticRoutine("Boss", body=[node])],
+        )
+        planner = LoweringPlanner.for_game(
+            "th15",
+            backend_emitter=CanonicalBackendEmitter(module, "th15"),
+        )
+
+        decision = planner.plan_node(node, "Boss")
+
+        self.assertEqual(node.operation, "anm.on_et")
+        self.assertEqual(decision.strategy.value, "direct")
+        self.assertEqual(decision.target_text, "ins_274(0, 1);")
+        self.assertFalse(decision.diagnostics)
+
+    def test_target_candidates_do_not_cross_control_flow_boundaries(self) -> None:
+        cases = (
+            ("th10", "04", "stage04.decl:Boss1"),
+            ("th11", "01", "stage01.decl:RockS"),
+        )
+        for game, stage_id, unsafe_evidence in cases:
+            with self.subTest(game=game, stage=stage_id):
+                pool = candidate_pool_for_stage(game, stage_id)
+                self.assertTrue(
+                    all(
+                        unsafe_evidence not in candidate.evidence
+                        or len(candidate.actions) == 1
+                        for candidate in pool.combinations
+                    )
+                )
+
+    def test_guarded_set_actions_are_not_folded_into_another_lane(self) -> None:
+        module = build_semantic_module(parse_decl("th11/stage06boss.decl"))
+        plan = build_anm_lowering_plan(module, "th15")
+        routine = next(item for item in module.routines if item.name == "BossCard2Bomb")
+        guarded = [
+            node
+            for node in routine.body
+            if getattr(node, "operation", None) == "anm.set_sprite"
+            and node.guard.raw in {"E", "NHL"}
+        ]
+
+        self.assertEqual([node.guard.raw for node in guarded], ["E", "NHL"])
+        selections = [plan.selections[str(node.node_id)] for node in guarded]
+        self.assertTrue(all(selection.actions for selection in selections))
+        self.assertTrue(all(selection.folded_into is None for selection in selections))
+
+    def test_play_sequence_uses_same_target_routine_position(self) -> None:
+        module = build_semantic_module(parse_decl("th10/stage01.decl"))
+        plan = build_anm_lowering_plan(module, "th11")
+        routine = next(item for item in module.routines if item.name == "BossDead")
+        plays = [
+            node for node in routine.body if getattr(node, "operation", None) == "anm.play"
+        ]
+        selections = [plan.selections[str(node.node_id)] for node in plays]
+
+        self.assertEqual([selection.match_kind for selection in selections], ["routine_sequence"] * 4)
+        self.assertEqual(
+            [selection.actions[0].script for selection in selections],
+            [76, 141, 76, 142],
+        )
+        self.assertTrue(all(not selection.lossy for selection in selections))
+
+    def test_unknown_stage_never_falls_back_to_whole_game_pool(self) -> None:
+        pool = candidate_pool_for_module("th15", "th11/stage4c01a.decl")
+
+        self.assertIsNone(pool.stage_id)
+        self.assertEqual(pool.resources, {})
+        self.assertEqual(pool.combinations, ())
 
 
 if __name__ == "__main__":

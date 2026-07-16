@@ -368,7 +368,7 @@ class CanonicalBackendEmitter:
                 )
             )
         if selection := self.anm_plan.selections.get(str(node.node_id)):
-            return self.lower_anm_candidate(selection)
+            return self.lower_anm_candidate(selection, node)
         from ..canonical.variable_ir import project_semantic_operation
 
         projected, variable_issues = project_semantic_operation(node, target_game)
@@ -432,7 +432,11 @@ class CanonicalBackendEmitter:
             compile_ir_op_emission(node, target_game),
         )
 
-    def lower_anm_candidate(self, selection: AnmCandidateSelection) -> BackendEmission:
+    def lower_anm_candidate(
+        self,
+        selection: AnmCandidateSelection,
+        source_node: SemanticOperation | None = None,
+    ) -> BackendEmission:
         details = selection.details()
         evidence = ", ".join(selection.evidence[:3]) or "target package corpus"
         if selection.folded_into:
@@ -460,8 +464,38 @@ class CanonicalBackendEmitter:
                     args = [action.bank]
                 elif action.operation in {"anm.set_main", "anm.set_sprite"}:
                     args = [action.slot, action.script]
-                elif action.operation in {"anm.play", "anm.play_abs"}:
+                elif action.operation in {"anm.play", "anm.play_abs", "anm.play_high"}:
                     args = [action.bank, action.script]
+                elif action.operation in {"anm.play_pos", "anm.play_rotate"}:
+                    if source_node is None:
+                        return BackendEmission(
+                            text="",
+                            strategy=LoweringStrategy.UNSUPPORTED,
+                            code="anm.candidate_context_operands_unavailable",
+                            reason=(
+                                f"candidate action {action.operation} requires source position/rotation "
+                                "operands"
+                            ),
+                            details=details,
+                        )
+                    from ..canonical.variable_ir import project_semantic_operation
+
+                    projected, issues = project_semantic_operation(
+                        source_node,
+                        self.target_profile.game,
+                    )
+                    if projected is None or issues:
+                        return BackendEmission(
+                            text="",
+                            strategy=LoweringStrategy.UNSUPPORTED,
+                            code="anm.candidate_context_operands_unprojectable",
+                            reason=(
+                                f"source position/rotation operands for {action.operation} cannot be "
+                                "projected to the target variable dialect"
+                            ),
+                            details={**details, "issue_count": len(issues)},
+                        )
+                    args = [action.bank, action.script, *projected.encoded_args()[2:]]
                 elif action.operation == "anm.selected_play":
                     args = [action.script]
                 else:
@@ -483,12 +517,23 @@ class CanonicalBackendEmitter:
                 lines.append(f"ins_{opcode}({', '.join(str(value) for value in args)});")
             text = "\n".join(lines)
         if selection.lossy:
+            heuristic = (
+                not selection.dynamic_source
+                and selection.match_kind in {"exact_script", "target_corpus_candidate"}
+            )
             return BackendEmission(
                 text=text,
                 strategy=LoweringStrategy.LOSSY,
-                code="anm.dynamic_script_candidate",
+                code=(
+                    "anm.heuristic_package_candidate"
+                    if heuristic
+                    else "anm.dynamic_script_candidate"
+                ),
                 reason=(
-                    "dynamic source ANM script was replaced with a deterministic candidate "
+                    "target-package membership proves that the ANM combination is valid, but "
+                    "there is no semantic-purpose evidence that it matches the source visual"
+                    if heuristic
+                    else "dynamic source ANM script was replaced with a deterministic candidate "
                     "observed in the target package"
                 ),
                 details=details,

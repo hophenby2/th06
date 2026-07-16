@@ -25,7 +25,7 @@ SourceDocument
        -> ExpressionIR
             -> VariableUse -> VariableRef
             -> StackUse    -> StackRef
-  -> derived analyses (bullet state / CFG / patterns)
+  -> derived analyses (bullet state / CFG / target ANM candidates / patterns)
   -> LoweringPlanner(GameProfile)
   -> TargetModule
   -> .decl
@@ -42,7 +42,7 @@ SourceDocument
 - `ExpressionIR` 以 source-preserving text 加 typed `VariableUse` / `StackUse` span 统一承载 instruction、selected value 与 syntax expression 中的引用。`VariableRef` 区分 semantic ID、value/storage type、scope、access、propagation、confidence 和结构化 source encoding；`StackRef` 表示 TH13+ routine ABI 的相对槽位，不冒充可以按 semantic ID 重编码的游戏变量。每个 `GameProfile` 持有独立 `VariableDialect` 与 `RoutineDialect`。跨游戏找不到同语义目标、数值碰撞、写权限收窄或 routine ABI 不兼容时 structured unsupported，TH06/07 不套用 TH08 表。
 - 未识别的 `[number]` 也不会留作裸文本：它成为 `Confidence.UNKNOWN` 的 opaque reference，只允许同游戏 identity。legacy timeline 成员则携带 typed `DialectRegion`，整个 game-specific timeline opcode block 跨游戏统一拒绝。
 - target opcode 必须在目标游戏 registry 中有同一 semantic key 的明确条目；不能从 TH13/TH15/TH08 借一个同世代数字。canonical 默认关闭 lossy/drop 与跨游戏 RAW，只有显式 policy opt-in 才开放，并把 warning 写在对应目标语句旁。
-- ANM bank/script ID 当前没有完整 typed resource flow，因此相关 `select/set/play` 操作跨游戏返回 `anm.resource_context_unresolved`；`layer/alpha/scale/rotate` 等非资源参数不受此 gate 影响。
+- ANM bank/script ID 当前通过目标同关卡原版 ECL 的 manifest-scoped candidate pool 投影：连续 `select + set_main/set_sprite` 保持原子组合，`play*` 只替换资源参数，目标 `anim` 声明同步投影；动态或无法证明的选择仍按 lossy/unsupported 处理。完整的 CFG/difficulty-aware typed resource flow 尚未完成。
 - 当前 `TargetStatement` 仍以 `lines: tuple[str, ...]` 为 envelope，并非完整 typed target AST；完整 expression node union 与 typed target statement union 仍属于下一阶段。
 
 ## 1. 数据集概况
@@ -140,6 +140,43 @@ AnimationState:
   play: optional
   mirrorPolicy: auto | fixed | no_mirror
 ```
+
+当前实现没有把这个抽象做成一张“源游戏 A 到目标游戏 B”的映射表，而是为目标
+关卡即时构建候选计划：
+
+```text
+目标 stage 主 manifest + 其 ecli 兄弟模块
+  -> AnmCandidatePool
+       combinations: AnmCombinationCandidate[]
+  -> AnmCandidateSelection
+  -> AnmLoweringPlan
+       callSites: AnmCallSiteMaterialization[]
+       targetAnim: string[]
+```
+
+候选池的 scope 是目标 package，不是整个游戏的 bank/script 并集。同关卡原版
+ECL 中连续出现的 `select + set_main/set_sprite` 被视为一个原子 preset；选择器
+不能分别取 bank、slot、script 后拼接成原版未出现的组合。候选按 `common`、
+`stage`、`midboss`、`boss` role 隔离，routine 名称只用于给包内候选提供弱 purpose
+排序证据，不能单独证明资源身份。
+
+`play/play_abs/play_high/play_pos/play_rotate/selected_play` 的候选同样来自目标包。
+bank/script 使用目标候选；位置、角度等非资源参数保留源语义并投影到目标变量
+方言，无法投影时显式 unsupported。资源无关的 `layer/alpha/scale/rotate` 不需要
+通过这个候选 gate。
+
+callee 入口处由 formal parameter 决定 script 时，`AnmCallSiteMaterialization`
+可以把目标组合前移到每个调用点，但安全条件是全有或全无：入口组合必须连续、
+无 guard/selected value，源 package 除 `default.ecl` 外没有 sibling，模块内没有
+routine 字符串 dispatch，所有已见引用必须是非递归同步直接调用，每个相关实参
+必须是整数 literal，并且每个调用点都能得到 semantic-purpose 候选。任一条件
+失败，就不折叠 callee 原组合。
+
+semantic-purpose 或目标同名 routine 的同序 play 候选可在 strict 模式发射；
+仅数字相同/频率 fallback，以及把真正动态的 script 固定成某个目标候选，都属于
+`LOSSY`，必须显式开启 `--allow-lossy`。目标原版 evidence 证明该组合被目标包
+加载和使用，不证明它与源动画在画面、碰撞时序或其他运行时行为上等价。无法
+识别目标 stage package 时返回空候选，不允许退回全游戏并集。
 
 ### 2.4 碰撞、flag、掉落、属性组合
 
@@ -854,7 +891,8 @@ SourceDocument + Program: functions, labels, vars, raw ins
   ↓ DialectDecoder
 SemanticModule: ordered canonical nodes + ownership/provenance
   ↓ derived analyses
-Bullet state / CFG / Pattern projections (reference NodeId only)
+Bullet state / CFG / target ANM candidate plan / Pattern projections
+(reference NodeId only; ANM plan also reads target package evidence)
   ↓ target lowering
 LoweringPlanner(GameProfile) -> TargetModule
   ↓ emit
@@ -868,13 +906,13 @@ LoweringPlanner(GameProfile) -> TargetModule
 1. **保留 raw 证据，不默认执行 raw**：无法表达的细节保留 source/provenance；同游戏可 identity，跨游戏 RAW 必须显式 opt-in 并带节点 warning。
 2. **字段取并集，后端取交集**：IR 字段覆盖所有游戏，编译目标只消化其支持子集。
 3. **显式 unsupported**：不可无损移植的字段必须输出 warning/error，而不是静默生成错误弹幕。
-4. **资源映射独立**：style/color/anm/script 在不同游戏不等价，必须有 `resourceMap`。
+4. **资源映射独立**：style/color/anm/script 在不同游戏不等价。ANM 当前使用目标 package-scoped candidate plan；其他资源仍需要独立 `resourceMap`。
 5. **参数语义优先于 opcode 编号**：不要做简单编号偏移；应先升格到语义对象再 lowering。
 6. **先支持第四代与第三代互转**：TH12 ↔ TH13+ 结构最接近，最适合作 MVP。
 7. **TH08/第一世代作为宏后端处理**：它的发弹 opcode 更高层，但可表达字段较少，适合把多个 IR 字段折叠进 `ins_96..99`。
 8. **同游戏 identity 独立**：同目标重建应使用 provenance opcode 与 canonical operands，不要把数据送进跨游戏近似规则。
 9. **变量与栈槽必须先分类再跨代**：当前实现使用 `VariableRef` + per-game `VariableDialect`，instruction operand、difficulty-selected value 和 syntax expression 共用 `ExpressionIR` 的 typed spans；TH13+ 相对槽位则使用独立 `StackRef` 并由 `RoutineDialect` 判断 ABI。数字相同不代表语义相同，例如 TH16/TH17 的 `-9903` 会得到 `variable.semantic_collision`；目标缺少 BF/GF 等槽位时得到 `variable.target_unavailable`。`INFERRED` 变量只允许同游戏 identity，不开放跨游戏 direct。完整的 literal/unary/binary/cast/call expression AST 仍需继续实现，但 typed relative-stack span 已经落地。
-10. **资源 ID 必须有 typed context**：ANM 的 bank/script/current-bank 应进入 `AnmResourceRef` 与 ordered analysis。文件名、函数名和相同数字都不能作为 DIRECT 等价证明。
+10. **资源 ID 必须有 typed context**：当前 `AnmCandidatePool`、`AnmCombinationCandidate`、`AnmCandidateSelection` 和 `AnmCallSiteMaterialization` 只提供目标 package 内可用组合及其 evidence；文件名、函数名和相同数字都不能作为运行时等价证明。下一步仍需让 bank/script/current-bank 进入 `AnmResourceRef` 与 CFG/difficulty-aware ordered analysis。
 
 ## 11. 阶段范围
 
@@ -891,10 +929,10 @@ LoweringPlanner(GameProfile) -> TargetModule
   - TH12 → TH13+ 的基础 fan/ring 发弹。
 - 报告所有 unsupported transforms/laser/game-specific opcodes。
 
-下一阶段重点不是继续增加逐游戏替换表，而是完成统一 `OperationSchema`、typed target statement union、完整 expression node union、CFG state join、`AnmResourceRef`/bank-flow，以及 laser/movement/animation 等 canonical analyses。TH10/11 与 TH08 的新增 lowering 只有在变量/资源语义和 operand predicate 可证明时才应开放。
+下一阶段重点不是继续增加逐游戏替换表，而是完成统一 `OperationSchema`、typed target statement union、完整 expression node union、CFG state join，并在现有 ANM package candidate plan 上补齐 `AnmResourceRef`、逐 difficulty lane bank-flow 和运行时等价验证，以及 laser/movement 等 canonical analyses。TH10/11 与 TH08 的新增 lowering 只有在变量/资源语义和 operand predicate 可证明时才应开放。
 
 最终验证基线：210 个源文件同目标 render/reparse 覆盖 251,710 个 canonical 节点，instruction/syntax/SelectedValue/timeline region 请求字段 mismatch 均为 0，且没有 unsupported/lossy。210×12 strict matrix 共处理 3,020,520 个节点和 2,520 次 build，无异常、无 lossy；1,233,676 个不可证明节点全部保留为 structured unsupported。
 
 ## 12. 结语
 
-把 ECL 当作“多平台汇编”是合理的：每个游戏/世代是一个 ISA，弹幕、移动、激光、Boss 是高级语义。真正可维护的移植器应采用“源方言 → ordered canonical IR → 派生 analyses → capability lowering”的方式，而不是维护大量 opcode-to-opcode 替换表。对于发弹逻辑，`BulletEmitter + BulletTransform + TimelineLoop + DifficultyGuard + SelectedValue` 能覆盖大量可移植语义；变量已经进入 typed dialect 基础，但激光、Boss、资源和游戏系统仍需要更完整的能力矩阵、canonical analysis 和降级策略。
+把 ECL 当作“多平台汇编”是合理的：每个游戏/世代是一个 ISA，弹幕、移动、激光、Boss 是高级语义。真正可维护的移植器应采用“源方言 → ordered canonical IR → 派生 analyses → capability lowering”的方式，而不是维护大量 opcode-to-opcode 替换表。对于发弹逻辑，`BulletEmitter + BulletTransform + TimelineLoop + DifficultyGuard + SelectedValue` 能覆盖大量可移植语义；ANM 已有目标 package 候选池和调用点物化基础，变量也已进入 typed dialect，但激光、Boss、完整资源流和游戏系统仍需要更完整的能力矩阵、CFG/difficulty analysis 和运行时验证。

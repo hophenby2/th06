@@ -42,8 +42,10 @@ TargetModule -> DeclTextCodec -> target .decl bytes -> thecl
 ```
 
 独立 `.eclir.json` envelope 同时保存原始字节、布局、`Program`、
-`SemanticModule`、派生分析和旧 object projection。`compile-ir` 只读取这个
-envelope，不读取原始 `.decl` 或兄弟文件。
+`SemanticModule`、派生分析和旧 object projection。普通 lowering 的源侧信息只
+从这个 envelope 读取。跨游戏 ANM lowering 是明确的例外依赖：它按 stage id
+读取仓库内源/目标游戏原版 stage package，分别取得 purpose/调用边界证据和
+manifest-scoped 目标候选；这些 package corpus 不是 envelope 的一部分。
 
 架构上的权威关系是：
 
@@ -64,7 +66,7 @@ envelope，不读取原始 `.decl` 或兄弟文件。
 | 工件层 | `SourceDocument`、`DeclTextCodec`、`source_layout` | 字节、字符集、异常字节、行尾和精确恢复 | opcode 语义、游戏能力 |
 | 源方言层 | `Program`、`Function`、`Statement`、`Instruction` | 解析源码结构，保留 routine 内语句顺序和原始文本 | 跨游戏语义等价 |
 | canonical 层 | `SemanticModule`、`SemanticOperation`、`RawInstructionOp`、`SyntaxStatement` | 稳定语义、身份、provenance、ownership 和 lowering 顺序 | 目标 opcode、lossy 策略 |
-| 分析层 | bullet state、CFG、transform index projection | 从 canonical 节点推导跨语句状态 | 源码所有权、直接输出 |
+| 分析层 | bullet state、CFG、transform index projection、ANM target candidate plan | 从 canonical 节点与目标原版包推导跨语句状态或 lowering 证据 | 源码所有权、直接输出 |
 | profile/registry 层 | `GameProfile`、`VariableDialect`、semantic/reference catalogs | 描述每个游戏的编码、能力和工具 ABI | 修改 canonical 节点 |
 | lowering 层 | `LoweringPlanner`、`CapabilityDecision`、`TargetModule` | 判断可表示性、生成结构化诊断、编码目标方言 | 猜测未证实等价 |
 | 兼容层 | schema-v1 objects、legacy backend、`--legacy-patterns` | 保留旧实验路径和尚未迁移的 codegen | 充当 canonical 权威层 |
@@ -258,7 +260,7 @@ TH18 的十二个正作目标，不包含 TH09 和 side games。
 | [`dialects/semantics.py`](dialects/semantics.py) | 跨方言 semantic opcode/value、bullet shape、transform mode、spread 和 flag 词汇 |
 | [`target/arg_adapter.py`](target/arg_adapter.py) | 按 semantic operand 名称适配目标参数布局和默认值 |
 | [`canonical/variable_ir.py`](canonical/variable_ir.py) | 每游戏变量目录、表达式扫描和跨游戏变量/stack 投影 |
-| [`dialects/anm_catalog.py`](dialects/anm_catalog.py) | 已观察到的 game/role/bank/script inventory；canonical strict 路径尚不据此猜测资源流 |
+| [`dialects/anm_catalog.py`](dialects/anm_catalog.py) | 源 bank 的 role/purpose 语义证据和已观察 inventory；具体目标数字仍必须来自目标同关卡候选池 |
 
 目标 opcode 必须在目标游戏的 `OpSpec` 或目标 dialect 中有明确条目。共享世代或
 共享数字不是语义证据，不能作为 fallback。
@@ -284,21 +286,84 @@ dialect 按语义重新编码。跨游戏编码必须同时满足：
 
 ### 5.4 ANM 资源边界
 
-ANM bank/script 数字依赖当前资源 bank、stage/boss role、控制流和难度。现有
-`AnmRoleCatalog` 只是 inventory 和 legacy heuristic 的依据，不足以证明某个
-canonical operation 的资源身份。因此 strict cross-game lowering 对资源相关
-ANM 操作返回 `anm.resource_context_unresolved`，直到引入 typed
-`AnmResourceRef` 和 bank-flow analysis。
+ANM 的 bank/script 数字不是跨游戏稳定 ID。当前 canonical 路径不再一律丢弃
+`anm.select`、`anm.set_main`、`anm.set_sprite` 和 `anm.play*`，而是在
+[`analysis/anm_resources.py`](analysis/anm_resources.py) 中为每次跨游戏 lowering
+建立目标候选计划：
+
+```text
+target stage manifest
+  -> root stage .decl + manifest ecli siblings
+  -> AnmCandidatePool
+       -> AnmCombinationCandidate
+  + source canonical ANM groups
+  -> AnmCandidateSelection / AnmCallSiteMaterialization
+  -> AnmLoweringPlan
+```
+
+`stage01.decl` 与 `st01.decl` 都归一到 stage id `01`。候选只从目标游戏该关卡
+主文件和其 `ecli` manifest 引用的兄弟模块提取；`default.ecl` 不作为关卡候选
+来源。无法识别 stage id、目标不存在同编号 root，或 manifest 内没有合适组合
+时返回空候选/structured unsupported，不会退回全游戏 corpus，也不会跨关卡借
+数字。因此原版 ECL 在这里证明的是“这组 bank/script 确实由目标包加载并使用”，
+不是源动画与目标动画视觉等价。
+
+`AnmCombinationCandidate` 把一个 bank 与连续出现的 `set_main/set_sprite` 动作
+序列作为一个原子组合保存。lowering 选择组合后，会一起发射所需的
+`select + set`，而不是分别挑选 bank、slot 和 script 后拼出目标原版从未出现的
+组合。`play/play_abs/play_high/play_pos/play_rotate/selected_play` 也从同一包收集；
+候选只替换资源 bank/script。`play_pos/play_rotate` 的位置、角度等非资源参数仍
+取自源节点，并先经过目标变量方言投影；无法投影时返回 structured unsupported。
+`layer/alpha/scale/rotate` 等本身不引用资源 ID 的 ANM 操作不受候选 gate 影响。
+
+候选按 `common`、`stage`、`midboss`、`boss` role 隔离。`common` bank 由游戏
+世代的已知布局识别（TH10-12 为 0，TH13+ 为 0/1），stage/boss bank 再结合
+目标 artifact 身份判断，midboss 不会并入 boss。routine 名称可以给目标包中
+已经存在的组合增加 purpose 排序
+证据，例如 `stage_blue`，但名称本身不能授权包外 script，也不是 role 的唯一
+依据。
+
+`AnmCandidateSelection` 记录目标动作、匹配种类、目标 stage、源 bank/script
+以及原版文件/routine evidence。同名 routine 中同类 play 的相同顺序位置优先
+形成 `routine_sequence` 匹配；明确的 semantic purpose 也可走 strict lowering。
+只有数字相同或包内频率 fallback 时标记 `LOSSY`，诊断码为
+`anm.heuristic_package_candidate`；动态 script 若只能固定替代则使用
+`anm.dynamic_script_candidate`。两者都需要 `--allow-lossy`。没有同 role 候选、
+目标缺少对应 opcode，或 play 的上下文参数无法投影时仍是 unsupported。这里的
+strict/direct 表示选择证据与发射条件可验证，不表示运行时动画已经等价。
+
+有一类动态 script 可以安全前移到调用点。`AnmCallSiteMaterialization` 只在以下
+条件全部满足时生成：callee 开头是连续且无难度 guard/selected value 的
+`select + set` 组，之前只有 `var`/comment；script 只由 literal 或直接 formal
+parameter 构成；当前源 package 除 `default.ecl` 外没有 sibling module；模块内
+没有 routine 字符串 dispatch，且所有已见引用都是非递归同步直接调用；每个调用
+点实参都是整数 literal；每个调用点都能按 semantic purpose 选到目标组合。分析
+采用全有或全无策略：任一条件不满足，就不折叠 callee 中的原组。成功时在每个
+call 前发射相应目标组合，并把 callee 原资源动作标记为 folded，而不是把某一个
+固定 script 猜回动态参数。
+
+`AnmLoweringPlan.target_anim` 取目标关卡主 manifest 的 `anim` 列表，
+`TargetAstBuilder` 用它替换目标模块的 `anim` 声明，使已选组合对应的原版 ANM
+文件确实被加载。当前只投影 `anim`，其他资源类别仍沿用原有资源路径。
+
+当前候选提取会在 call/goto/label/return 等控制边界断开 bank 状态，并在 guard
+变化时断开原子组；源 lowering 也不会把不同 difficulty guard 的动作折叠到同一
+statement。不过它仍是保守的 routine 线性分析，尚未执行完整 CFG state join 或
+逐 difficulty lane bank-flow。分支后 bank 不一致、难度专用资源状态和更复杂的
+跨 routine 数据流会保留为 unsupported；这些情况需要后续 typed `AnmResourceRef`
+与 CFG/difficulty-aware analysis。thecl 能编译候选输出只证明目标语法与资源编号
+可接受，不能证明画面、时序或运行时行为等价。
 
 ## 6. 派生分析
 
-派生分析只读取 canonical IR，输出中必须保留 `source_node_id`。它们不能改变
-源码顺序，也不能独立拥有 lowering。
+canonical state 分析只读取 canonical IR；目标 ANM candidate analysis 还读取
+目标原版 package evidence。两类结果都通过 `source_node_id` 关联 canonical
+节点，不能改变源码顺序，也不能独立拥有 lowering。
 
 当前 `.eclir` 中正式持久化的 canonical analysis projection 是
-`bullet_manager`。CFG 和 transform index resolution 由 bullet analysis 使用，
-目标端也会按需从 `SemanticModule` 重算；它们尚未作为独立 projection schema
-持久化。
+`bullet_manager`。CFG、transform index resolution 和目标相关的 ANM lowering
+plan 都由目标端按需重算；它们尚未作为独立 projection schema 持久化。ANM
+候选还依赖目标原版 package corpus，因此不是 `SemanticModule` 自身的一部分。
 
 ### 6.1 Bullet state projection
 
@@ -353,7 +418,7 @@ preserve_raw_cross_family = false
 
 1. 验证 node kind 与 ownership。
 2. 同游戏优先使用 provenance opcode + canonical operands 的 identity 路径。
-3. 检查 selected value、ANM resource、变量、routine ABI 和 legacy timeline
+3. 检查 selected value、ANM candidate、变量、routine ABI 和 legacy timeline
    dialect region 等前置条件。
 4. 按 semantic feature 匹配 capability rule。
 5. 调用目标 emitter 选择具体 opcode、参数布局或 state-aware lowering。
@@ -372,12 +437,14 @@ preserve_raw_cross_family = false
 
 `TargetAstBuilder` 保持 canonical routine/statement 顺序，并协调外部推断参数。
 `CanonicalBackendEmitter` 使用 bullet/CFG analysis 处理隐式 manager 初始化、
-transform append index 和 bullet visual catalog，其他 operation 暂时通过 typed
+transform append index 和 bullet visual catalog，并使用 manifest-scoped
+`AnmLoweringPlan` 发射目标原版 ANM 候选；其他 operation 暂时通过 typed
 `BackendEmission` 接入 legacy text backend。
 
-`TargetModule.resources` 当前直接复制 `SemanticModule.resources`。资源声明本身
-尚无通用跨游戏投影；资源相关 instruction 则由 strict planner 在缺少 typed
-resource context 时拒绝。
+`TargetModule.resources` 默认复制 `SemanticModule.resources`，但 ANM plan 有目标
+关卡 manifest 时会把 `anim` 投影为目标原版列表。其他资源声明尚无通用跨游戏
+投影；没有候选或缺少必要上下文的资源相关 instruction 仍由 strict planner
+拒绝。
 
 `TargetStatement` 目前仍以 `tuple[str, ...]` 承载目标文本，不是完整 typed target
 AST。unsupported 节点会渲染为：
@@ -474,6 +541,8 @@ analysis projection 的完整 schema 一致性。
 - source-first bullet shape semantic catalog。
 - transform replace/append/cursor/copy 的统一 state model。
 - instruction、syntax、selected value 共用变量/stack projection。
+- manifest-scoped ANM candidate pool、原子组合选择、调用点物化和目标 `anim`
+  manifest 投影。
 - unsupported/lossy/raw 的结构化诊断，不静默丢失。
 
 仍处于过渡状态的部分：
@@ -483,8 +552,9 @@ analysis projection 的完整 schema 一致性。
   codegen 特化，详见 `backend-special-cases.md`。
 - operation decoder、semantic mapping 与 argument layout 尚未合并为
   `OperationSchema`。
-- movement、animation、enemy、boss、laser 和 resource 的旧 Pattern analysis
-  尚未全部迁入 canonical non-owning analysis。
+- movement、enemy、boss、laser 和其他 resource 的旧 Pattern analysis 尚未全部
+  迁入 canonical non-owning analysis；ANM 候选已进入 canonical target 路径，但
+  仍缺 CFG/difficulty-aware typed resource flow。
 - `TargetStatement.lines` 和 `ExpressionIR.text` 仍是 string-backed 边界。
 
 新增实现时应遵守：
@@ -507,7 +577,7 @@ layout -> target emitter。只有语义跨越多条语句、需要状态归约�
 
 截至本文状态基线：
 
-- 90 项 Python 单元测试通过。
+- 107 项 Python 单元测试通过。
 - 210 个仓库 `.decl` 均可 parse、构建 canonical IR 和 bullet analysis。
 - 210 个 source document 与 source layout 均可逐字节 roundtrip。
 - 同目标 canonical 覆盖 251,701 个节点，其中 160,275 个 instruction，statement
@@ -525,6 +595,13 @@ TH10-TH18 的 `stage01/st01.decl` 两两双向 Wine 检查覆盖 36 对、72 个
 - 64 个方向无 thecl 消息；8 个转 TH18 的方向有 opcode 535 参数不足警告。
 - strict lowering 完整成功为 0/72，共有 10,074 个 unsupported 节点。
 
+ANM 候选改造后另以 `--allow-lossy` 重跑同一组 10-18 `stage01/st01`，明确排除
+`default.decl`：72/72 IR validation 和 72/72 Wine/thecl 编译通过，输出包含
+4,232 处目标原版候选发射与 304 处源动作折叠；1,113 个仅有
+package/frequency 证据的节点带 `anm.heuristic_package_candidate` 警告。8 个转
+TH18 方向仍有共 117 条既有 opcode 535 参数不足提示，没有 ANM 指令参数数量
+错误。
+
 因此当前正确表述是：同游戏 canonical 行为已达到强二进制证据；跨游戏输出
 已经普遍具备可编译语法，但尚未达到行为完整或运行时等价。
 
@@ -536,7 +613,8 @@ TH10-TH18 的 `stage01/st01.decl` 两两双向 Wine 检查覆盖 36 对、72 个
    target node union。
 2. 把 `ExpressionIR` 扩展为完整表达式 AST 和 routine symbol binding。
 3. 合并 decoder、operand use 和 target layout 为一个 `OperationSchema`。
-4. 引入 `AnmResourceRef` 与 difficulty/CFG-aware bank-flow analysis。
+4. 在现有 ANM 候选计划之上引入 `AnmResourceRef` 与 difficulty/CFG-aware
+   bank-flow analysis，处理分支和 lane 歧义。
 5. 补全有证据的变量 catalog，尤其 TH06/07 和 side-game overlay。
 6. 为 CFG 增加 divergent branch state join 和 difficulty-lane merge。
 7. 将 laser lifecycle 及其他旧 Pattern 对象迁为 canonical action/reducer analysis。
