@@ -1,0 +1,7 @@
+!eclmap
+!ins_signatures
+# Touhou Toolkit release 12 incorrectly uses TH18.5's nine-integer
+# signature for opcode 535 when compiling TH18.  TH18's diffI form is
+# (destination, easy, normal, hard, lunatic), as documented by the TH18
+# eclmap and every original TH18 declaration in this corpus.
+535 SSSSS

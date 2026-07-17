@@ -111,6 +111,180 @@ class ControlFlowTests(unittest.TestCase):
             {lane: None for lane in ("E", "N", "H", "L", "X", "O", "6", "7")},
         )
 
+    def test_reset_barrier_stabilizes_append_indices_inside_loop(self) -> None:
+        label = syntax("label", 1, "again:", name="again")
+        reset = semantic_operation("th15", 600, ["$A"], 2, routine="Loop")
+        first = semantic_operation(
+            "th15",
+            611,
+            ["$A", "0", "2", "1", "-999999", "-999999.0f", "-999999.0f"],
+            3,
+            routine="Loop",
+        )
+        second = semantic_operation(
+            "th15",
+            611,
+            ["$A", "0", "4", "60", "-999999", "0.1f", "-999999.0f"],
+            4,
+            routine="Loop",
+        )
+        branch = syntax(
+            "conditional_goto",
+            5,
+            "if ($B--) goto again @ 0;",
+            condition_type="if",
+            condition="$B--",
+            label="again",
+            time="0",
+        )
+        routine = SemanticRoutine("Loop", body=[label, reset, first, second, branch])
+
+        bullet = analyze_bullet_routine(routine, "th15")
+
+        self.assertEqual(
+            bullet.resolved_transform_indices["Loop:3:0"],
+            {lane: 0 for lane in ("E", "N", "H", "L", "X", "O", "6", "7")},
+        )
+        self.assertEqual(
+            bullet.resolved_transform_indices["Loop:4:0"],
+            {lane: 1 for lane in ("E", "N", "H", "L", "X", "O", "6", "7")},
+        )
+        self.assertFalse(bullet.diagnostics)
+
+        module = SemanticModule(
+            source="fixture.decl",
+            source_game="th15",
+            profile="th15",
+            routines=[routine],
+        )
+        planner = LoweringPlanner.for_game(
+            "th12",
+            policy=LoweringPolicy(allow_lossy=True),
+            backend_emitter=CanonicalBackendEmitter(module, "th12"),
+        )
+        rendered = TargetAstBuilder(planner).build(module).render_decl()
+        self.assertIn("ins_509($A, 0, 0, 2", rendered)
+        self.assertIn("ins_509($A, 1, 0, 4", rendered)
+
+    def test_manager_copy_preserves_the_destination_append_cursor(self) -> None:
+        label = syntax("label", 1, "again:", name="again")
+        reset_destination = semantic_operation("th15", 600, ["0"], 2, routine="Loop")
+        destination_append = semantic_operation(
+            "th15",
+            611,
+            ["0", "0", "2", "1", "-999999", "-999999.0f", "-999999.0f"],
+            3,
+            routine="Loop",
+        )
+        reset_source = semantic_operation("th15", 600, ["1"], 4, routine="Loop")
+        source_append_1 = semantic_operation(
+            "th15",
+            611,
+            ["1", "0", "2", "1", "-999999", "-999999.0f", "-999999.0f"],
+            5,
+            routine="Loop",
+        )
+        source_append_2 = semantic_operation(
+            "th15",
+            611,
+            ["1", "0", "4", "60", "-999999", "0.1f", "-999999.0f"],
+            6,
+            routine="Loop",
+        )
+        copy = semantic_operation("th15", 614, ["0", "1"], 7, routine="Loop")
+        after_copy = semantic_operation(
+            "th15",
+            611,
+            ["0", "0", "8", "60", "-999999", "0.2f", "0.3f"],
+            8,
+            routine="Loop",
+        )
+        branch = syntax(
+            "conditional_goto",
+            9,
+            "if ($A--) goto again @ 0;",
+            condition_type="if",
+            condition="$A--",
+            label="again",
+            time="0",
+        )
+        routine = SemanticRoutine(
+            "Loop",
+            body=[
+                label,
+                reset_destination,
+                destination_append,
+                reset_source,
+                source_append_1,
+                source_append_2,
+                copy,
+                after_copy,
+                branch,
+            ],
+        )
+
+        bullet = analyze_bullet_routine(routine, "th15")
+
+        self.assertEqual(
+            bullet.resolved_transform_indices["Loop:8:0"],
+            {lane: 1 for lane in ("E", "N", "H", "L", "X", "O", "6", "7")},
+        )
+
+    def test_branch_divergent_append_cursor_stays_unresolved(self) -> None:
+        label = syntax("label", 1, "again:", name="again")
+        reset = semantic_operation("th15", 600, ["0"], 2, routine="Loop")
+        skip = syntax(
+            "conditional_goto",
+            3,
+            "if ($A) goto skip @ 0;",
+            condition_type="if",
+            condition="$A",
+            label="skip",
+            time="0",
+        )
+        optional_append = semantic_operation(
+            "th15",
+            611,
+            ["0", "0", "2", "1", "-999999", "-999999.0f", "-999999.0f"],
+            4,
+            routine="Loop",
+        )
+        skip_label = syntax("label", 5, "skip:", name="skip")
+        joined_append = semantic_operation(
+            "th15",
+            611,
+            ["0", "0", "4", "60", "-999999", "0.1f", "-999999.0f"],
+            6,
+            routine="Loop",
+        )
+        branch = syntax(
+            "conditional_goto",
+            7,
+            "if ($B--) goto again @ 0;",
+            condition_type="if",
+            condition="$B--",
+            label="again",
+            time="0",
+        )
+        routine = SemanticRoutine(
+            "Loop",
+            body=[label, reset, skip, optional_append, skip_label, joined_append, branch],
+        )
+
+        bullet = analyze_bullet_routine(routine, "th15")
+
+        self.assertEqual(
+            bullet.resolved_transform_indices["Loop:6:0"],
+            {lane: None for lane in ("E", "N", "H", "L", "X", "O", "6", "7")},
+        )
+        self.assertTrue(
+            any(
+                item["source_node_id"] == "Loop:6:0"
+                and item["code"] == "bullet.transform.append.cyclic_control_flow"
+                for item in bullet.diagnostics
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

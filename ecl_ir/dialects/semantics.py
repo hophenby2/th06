@@ -326,13 +326,25 @@ add_reference_name_opcode_maps()
 
 BULLET_SHAPES: tuple[SemanticValue, ...] = (
     SemanticValue("point", {GEN_TH13_PLUS: "0", GEN_TH12: "0", GEN_TH10_TH11: "0", GEN_TH06_TH08: "0"}),
-    SemanticValue("point_highlight", {GEN_TH13_PLUS: "1", GEN_TH12: "1", GEN_TH06_TH08: "0"}),
+    SemanticValue(
+        "point_highlight",
+        {GEN_TH13_PLUS: "1", GEN_TH12: "1", GEN_TH10_TH11: "0", GEN_TH06_TH08: "0"},
+        lossy_targets=(GEN_TH10_TH11,),
+    ),
     SemanticValue("grape", {GEN_TH13_PLUS: "2", GEN_TH12: "2", GEN_TH10_TH11: "24"}),
     SemanticValue("particle", {GEN_TH13_PLUS: "3"}),
     SemanticValue("orb_small", {GEN_TH13_PLUS: "4", GEN_TH12: "3", GEN_TH10_TH11: "1", GEN_TH06_TH08: "3"}),
-    SemanticValue("orb_small_highlight", {GEN_TH13_PLUS: "5", GEN_TH12: "4", GEN_TH06_TH08: "3"}),
+    SemanticValue(
+        "orb_small_highlight",
+        {GEN_TH13_PLUS: "5", GEN_TH12: "4", GEN_TH10_TH11: "1", GEN_TH06_TH08: "3"},
+        lossy_targets=(GEN_TH10_TH11,),
+    ),
     SemanticValue("orb_ring", {GEN_TH13_PLUS: "6", GEN_TH12: "5", GEN_TH10_TH11: "2", GEN_TH06_TH08: "6"}),
-    SemanticValue("orb_ring_highlight", {GEN_TH13_PLUS: "7", GEN_TH12: "6", GEN_TH06_TH08: "6"}),
+    SemanticValue(
+        "orb_ring_highlight",
+        {GEN_TH13_PLUS: "7", GEN_TH12: "6", GEN_TH10_TH11: "2", GEN_TH06_TH08: "6"},
+        lossy_targets=(GEN_TH10_TH11,),
+    ),
     SemanticValue("rice", {GEN_TH13_PLUS: "8", GEN_TH12: "7", GEN_TH10_TH11: "3", GEN_TH06_TH08: "7"}),
     SemanticValue("chain", {GEN_TH13_PLUS: "9", GEN_TH12: "8", GEN_TH10_TH11: "4", GEN_TH06_TH08: "8"}),
     SemanticValue("needle", {GEN_TH13_PLUS: "10", GEN_TH12: "9", GEN_TH10_TH11: "5", GEN_TH06_TH08: "9"}),
@@ -352,21 +364,37 @@ BULLET_SHAPES: tuple[SemanticValue, ...] = (
     SemanticValue("butterfly", {GEN_TH13_PLUS: "22", GEN_TH12: "21", GEN_TH10_TH11: "15", GEN_TH06_TH08: "21"}),
     SemanticValue("butterfly_highlight", {GEN_TH13_PLUS: "22", GEN_TH12: "21", GEN_TH10_TH11: "22"}, lossy_targets=(GEN_TH13_PLUS, GEN_TH12)),
     SemanticValue("big_star", {GEN_TH13_PLUS: "23", GEN_TH12: "22", GEN_TH10_TH11: "16", GEN_TH06_TH08: "8"}),
-    SemanticValue("big_star_reverse", {GEN_TH13_PLUS: "24", GEN_TH12: "22", GEN_TH06_TH08: "8"}, lossy_targets=(GEN_TH12, GEN_TH06_TH08)),
+    SemanticValue(
+        "big_star_reverse",
+        {GEN_TH13_PLUS: "24", GEN_TH12: "22", GEN_TH10_TH11: "16", GEN_TH06_TH08: "8"},
+        lossy_targets=(GEN_TH12, GEN_TH10_TH11, GEN_TH06_TH08),
+    ),
     SemanticValue("light_orb", {GEN_TH13_PLUS: "33", GEN_TH12: "23", GEN_TH10_TH11: "18"}),
     SemanticValue("light_flame", {GEN_TH13_PLUS: "25", GEN_TH12: "24", GEN_TH10_TH11: "25"}),
     SemanticValue("blue_flame", {GEN_TH13_PLUS: "27"}),
     SemanticValue("yellow_flame", {GEN_TH13_PLUS: "28"}),
     SemanticValue("heart", {GEN_TH13_PLUS: "29", GEN_TH12: "25", GEN_TH10_TH11: "27", GEN_TH06_TH08: "25"}),
-    SemanticValue("orb_medium_pulse", {GEN_TH13_PLUS: "30"}),
+    SemanticValue(
+        "orb_medium_pulse",
+        {GEN_TH13_PLUS: "30", GEN_TH10_TH11: "12"},
+        lossy_targets=(GEN_TH10_TH11,),
+    ),
     SemanticValue("arrow", {GEN_TH13_PLUS: "31"}),
     SemanticValue("orb_large", {GEN_TH13_PLUS: "32", GEN_TH12: "26", GEN_TH10_TH11: "17"}),
     SemanticValue("drop", {GEN_TH13_PLUS: "34", GEN_TH12: "28"}),
     SemanticValue("rose", {GEN_TH13_PLUS: "34", GEN_TH12: "27"}, lossy_targets=(GEN_TH13_PLUS,)),
     SemanticValue("purple_flame", {GEN_TH13_PLUS: "26", GEN_TH12: "29"}),
     SemanticValue("rice_spinning", {GEN_TH13_PLUS: "35", GEN_TH10_TH11: "26"}),
-    SemanticValue("needle_spinning", {GEN_TH13_PLUS: "36"}),
-    SemanticValue("small_star_reverse", {GEN_TH13_PLUS: "37"}),
+    SemanticValue(
+        "needle_spinning",
+        {GEN_TH13_PLUS: "36", GEN_TH10_TH11: "5"},
+        lossy_targets=(GEN_TH10_TH11,),
+    ),
+    SemanticValue(
+        "small_star_reverse",
+        {GEN_TH13_PLUS: "37", GEN_TH10_TH11: "11"},
+        lossy_targets=(GEN_TH10_TH11,),
+    ),
     SemanticValue("laser_segment", {GEN_TH13_PLUS: "38", GEN_TH12: "30"}),
 )
 BULLET_SHAPE_BY_GENERATION_VALUE: dict[tuple[str, str], SemanticValue] = {}
@@ -564,11 +592,11 @@ UNSUPPORTED_BULLET_TRANSFORM_MODE_REASONS: dict[tuple[str, str, str], str] = {
 }
 
 SPREAD_STYLES: tuple[SemanticValue, ...] = (
-    SemanticValue("fan.aimed", {GEN_TH13_PLUS: "0", GEN_TH10_TH11: "0"}),
-    SemanticValue("fan.fixed", {GEN_TH13_PLUS: "1", GEN_TH10_TH11: "1"}),
-    SemanticValue("random_angle", {GEN_TH13_PLUS: "6", GEN_TH10_TH11: "6"}),
-    SemanticValue("random_speed", {GEN_TH13_PLUS: "7", GEN_TH10_TH11: "7"}),
-    SemanticValue("random_angle_speed", {GEN_TH13_PLUS: "8", GEN_TH10_TH11: "8"}),
+    SemanticValue("fan.aimed", {GEN_TH13_PLUS: "0", GEN_TH12: "0", GEN_TH10_TH11: "0"}),
+    SemanticValue("fan.fixed", {GEN_TH13_PLUS: "1", GEN_TH12: "1", GEN_TH10_TH11: "1"}),
+    SemanticValue("random_angle", {GEN_TH13_PLUS: "6", GEN_TH12: "6", GEN_TH10_TH11: "6"}),
+    SemanticValue("random_speed", {GEN_TH13_PLUS: "7", GEN_TH12: "7", GEN_TH10_TH11: "7"}),
+    SemanticValue("random_angle_speed", {GEN_TH13_PLUS: "8", GEN_TH12: "8", GEN_TH10_TH11: "8"}),
     SemanticValue("single_flower.left.aimed", {GEN_TH13_PLUS: "2", GEN_TH12: "4", GEN_TH10_TH11: "2"}),
     SemanticValue("single_flower.left.fixed", {GEN_TH13_PLUS: "3", GEN_TH12: "5", GEN_TH10_TH11: "3"}),
     SemanticValue("single_flower.offset_left.aimed", {GEN_TH13_PLUS: "4", GEN_TH10_TH11: "4"}),
@@ -1010,6 +1038,20 @@ def encode_spread_style(spread: dict[str, Any], target: str, fallback: Any = Non
         if encoded is not None:
             return encoded
     return plain(fallback, "1")
+
+
+def spread_can_encode(spread: dict[str, Any], target: str) -> bool:
+    semantic = spread_semantic_key(spread)
+    if semantic.startswith("raw:"):
+        return False
+    style = SPREAD_BY_SEMANTIC.get(semantic)
+    return bool(style and style.encode(generation_for_game(target)) is not None)
+
+
+def spread_is_lossy(spread: dict[str, Any], target: str) -> bool:
+    semantic = spread_semantic_key(spread)
+    style = SPREAD_BY_SEMANTIC.get(semantic)
+    return bool(style and generation_for_game(target) in style.lossy_targets)
 
 
 def th12_double_flower_pair(spread: dict[str, Any]) -> tuple[str, str] | None:

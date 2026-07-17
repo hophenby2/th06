@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from decimal import Decimal
 
 from ..canonical.semantic_ir import VariableUseKind
 from ..canonical.variable_ir import rewrite_argument_variables
+from ..dialects.game_ids import normalize_game_id
 from ..dialects.semantics import generation_for_game
 
 GEN_OLD = "th06_th08"
@@ -18,9 +20,11 @@ class ArgLayout:
     fields: tuple[str, ...]
     defaults: dict[str, str]
     target_only_defaults: dict[str, str] | None = None
+    omitted_field_defaults: dict[str, str] | None = None
 
 
 ARG_LAYOUT_OVERRIDES: dict[tuple[str, str, int], ArgLayout] = {}
+ARG_LAYOUT_GAME_OVERRIDES: dict[tuple[str, str, int], ArgLayout] = {}
 
 
 # 参数语义表：同一个 op_key 下，不同世代可以有不同 layout。
@@ -33,6 +37,10 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
     },
     "enemy.create_func": {
         GEN_10: ArgLayout(("routine", "x", "y", "health", "score_reward", "item_drop"), {}),
+        GEN_12: ArgLayout(("routine", "x", "y", "health", "score_reward", "item_drop"), {}),
+        GEN_13: ArgLayout(("routine", "x", "y", "health", "score_reward", "item_drop"), {}),
+    },
+    "enemy.create_maple": {
         GEN_12: ArgLayout(("routine", "x", "y", "health", "score_reward", "item_drop"), {}),
         GEN_13: ArgLayout(("routine", "x", "y", "health", "score_reward", "item_drop"), {}),
     },
@@ -57,8 +65,16 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
     },
     "movement.circle_rel.tween": {
         GEN_10: ArgLayout(("duration", "mode", "angular_speed", "radius", "radius_delta"), {"compat_flag": "0"}),
-        GEN_12: ArgLayout(("duration", "mode", "angular_speed", "radius", "radius_delta"), {}),
-        GEN_13: ArgLayout(("duration", "mode", "angular_speed", "radius", "radius_delta"), {}),
+        GEN_12: ArgLayout(
+            ("duration", "mode", "angular_speed", "radius", "radius_delta"),
+            {},
+            omitted_field_defaults={"compat_flag": "0"},
+        ),
+        GEN_13: ArgLayout(
+            ("duration", "mode", "angular_speed", "radius", "radius_delta"),
+            {},
+            omitted_field_defaults={"compat_flag": "0"},
+        ),
     },
     "movement.move_limit_reset": {
         GEN_10: ArgLayout((), {}),
@@ -238,10 +254,12 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_13: ArgLayout(("et_id", "x", "y"), {"et_id": "0"}),
     },
     "bullet.et_offset_rad": {
+        GEN_10: ArgLayout(("et_id", "angle", "radius"), {"et_id": "0", "angle": "0.0f", "radius": "0.0f"}),
         GEN_12: ArgLayout(("et_id", "angle", "radius"), {"et_id": "0", "angle": "0.0f", "radius": "0.0f"}),
         GEN_13: ArgLayout(("et_id", "angle", "radius"), {"et_id": "0", "angle": "0.0f", "radius": "0.0f"}),
     },
     "bullet.et_offset_abs": {
+        GEN_10: ArgLayout(("et_id", "x", "y"), {"et_id": "0", "x": "0.0f", "y": "0.0f"}),
         GEN_12: ArgLayout(("et_id", "x", "y"), {"et_id": "0", "x": "0.0f", "y": "0.0f"}),
         GEN_13: ArgLayout(("et_id", "x", "y"), {"et_id": "0", "x": "0.0f", "y": "0.0f"}),
     },
@@ -347,6 +365,7 @@ ARG_LAYOUTS: dict[str, dict[str, ArgLayout]] = {
         GEN_13: ArgLayout(("layers",), {}),
     },
     "bullet.distance": {
+        GEN_10: ArgLayout(("et_id", "distance"), {"et_id": "0", "distance": "0.0f"}),
         GEN_12: ArgLayout(("et_id", "distance"), {"et_id": "0", "distance": "0.0f"}),
         GEN_13: ArgLayout(("et_id", "distance"), {"et_id": "0", "distance": "0.0f"}),
     },
@@ -534,6 +553,16 @@ ARG_LAYOUT_OVERRIDES.update({
     ("bullet.transform", GEN_13, 611): ArgLayout(("et_id", "channel", "mode", "a", "b", "r", "s"), {"slot": "0"}),
 })
 
+ARG_LAYOUT_GAME_OVERRIDES.update({
+    # TH10 has a six-field form, while TH11's native ins_291 replaces
+    # radius_delta with a trailing integer compatibility flag.
+    ("movement.circle_rel.tween", "th11", 291): ArgLayout(
+        ("duration", "mode", "angular_speed", "radius", "compat_flag"),
+        {"compat_flag": "0", "radius_delta": "0.0f"},
+        omitted_field_defaults={"radius_delta": "0.0f"},
+    ),
+})
+
 # 旧作条件跳转把比较也塞在同一个 op 里；TH12+ 的 jmpEq/jmpNeq 只吃 VM 条件标志。
 # 没有同步比较栈时不能安全一条指令转换。
 UNSAFE_LAYOUT_OPS: dict[str, set[tuple[str, str]]] = {
@@ -576,8 +605,14 @@ def adapt_args_for_op_key(
     layouts = ARG_LAYOUTS.get(op_key)
     if not layouts:
         return adapt_special_args(op_key, source_gen, target_gen, values)
-    source_layout = ARG_LAYOUT_OVERRIDES.get((op_key, source_gen, source_opcode), layouts.get(source_gen))
-    target_layout = ARG_LAYOUT_OVERRIDES.get((op_key, target_gen, target_opcode), layouts.get(target_gen))
+    source_layout = ARG_LAYOUT_GAME_OVERRIDES.get(
+        (op_key, normalize_game_id(source_game), source_opcode),
+        ARG_LAYOUT_OVERRIDES.get((op_key, source_gen, source_opcode), layouts.get(source_gen)),
+    )
+    target_layout = ARG_LAYOUT_GAME_OVERRIDES.get(
+        (op_key, normalize_game_id(target), target_opcode),
+        ARG_LAYOUT_OVERRIDES.get((op_key, target_gen, target_opcode), layouts.get(target_gen)),
+    )
     if not source_layout or not target_layout:
         return None
 
@@ -586,6 +621,9 @@ def adapt_args_for_op_key(
         return None
     for key, default in source_layout.defaults.items():
         fields.setdefault(key, default)
+    for key, default in (target_layout.omitted_field_defaults or {}).items():
+        if key in fields and not field_value_is_proven_default(fields[key], default):
+            return None
     target_defaults = target_layout.defaults | (target_layout.target_only_defaults or {})
     target_fields = target_layout.fields
     if op_key == "bullet.transform" and target_gen == GEN_13 and target_opcode == 611:
@@ -623,6 +661,17 @@ def adapt_field_value(field: str, value: str, source_gen: str, target_gen: str) 
         if match:
             return match.group(1)
     return value
+
+
+def field_value_is_proven_default(value: str, default: str) -> bool:
+    value_text = str(value).strip()
+    default_text = str(default).strip()
+    if value_text == default_text:
+        return True
+    numeric = re.compile(r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)[fF]?")
+    if not numeric.fullmatch(value_text) or not numeric.fullmatch(default_text):
+        return False
+    return Decimal(value_text.rstrip("fF")) == Decimal(default_text.rstrip("fF"))
 
 
 def adapt_sub_value(value: str, source_gen: str, target_gen: str) -> str:

@@ -28,15 +28,35 @@ python3 scripts/ecl_ir/run_stage01_matrix.py \
   --output-dir /private/tmp/th062-stage01-matrix
 ```
 
+Directions run four at a time by default because each package is isolated.
+Use `--jobs N` to change that limit. Wine/thecl module compilations from all
+directions share a second eight-worker queue; `--wine-jobs N` changes that
+global limit. Summaries are still written in the stable source-target planning
+order.
+
 The output directory must be new or empty. Each direction gets its own package,
 checker report, Wine ECL tree, logs, and `result.json`. Top-level `summary.json`
-and `summary.tsv` are updated after every completed direction, so an interrupted
-run retains its completed evidence.
+and `summary.tsv` are updated as each future completes, then sorted back into
+the stable planning order, so an interrupted run retains every result already
+reported by a worker. Pending directions and Wine modules are cancelled on
+interrupt, and active Python/Wine subprocess groups are terminated before the
+runner exits. The JSON summary also aggregates checker
+diagnostic codes by severity, Wine module counts, and explored states.
 
 A direction fails when any pipeline command returns nonzero, checker analysis
 is incomplete, a checker report is invalid, Wine/thecl emits a diagnostic such
 as `error` or `too few arguments`, or an expected compiled ECL is absent/empty.
 This deliberately treats thecl's return-code-zero diagnostics as failures.
+Exit code 1 from `compile-package` is reported as `lowering_unsupported`, while
+process/configuration failures use `compile_execution_failure`; checker errors
+and checker process failures are distinguished in the same way.
+
+For TH18, the runner loads
+`toolchain/thecl-release12-th18.eclm`. The bundled Touhou Toolkit release 12
+otherwise uses TH18.5's nine-argument format for opcode 535 and reports false `too few
+arguments` diagnostics even for the original `th18/st01.decl`; the corpus and
+TH18 eclmap define the five-argument `diffI` form. The map changes only this
+tool signature and does not alter converted source.
 
 Use `--dry-run` to validate all source/reference entry paths and inspect the
 selected directions without creating the output directory.

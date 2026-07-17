@@ -875,6 +875,262 @@ void Child()
 
         self.assertFalse(self.with_code(report, "anm.unit_without_setup"))
 
+    def test_source_and_target_may_both_delay_setup_until_after_visibility(self) -> None:
+        source_directory = self.root / "th14"
+        source_directory.mkdir()
+        source = source_directory / "st01.decl"
+        source.write_text(
+            """void main()
+{
+    ins_300("Child", 0.0f, 0.0f, 10, 0, 0);
+    return;
+}
+
+void Child()
+{
+    ins_23(1);
+    ins_302(2);
+    ins_306(0, 40);
+    return;
+}
+""",
+            encoding="utf-8",
+        )
+        target = f"""// source: {source}
+// source game: th14
+// target: th15
+anim {{ "enemy.anm"; "st01enm.anm"; }}
+
+void main()
+{{
+    ins_300("Child", 0.0f, 0.0f, 10, 0, 0);
+    return;
+}}
+
+void Child()
+{{
+    ins_23(1);
+    ins_302(2);
+    ins_306(0, 40);
+    return;
+}}
+"""
+        candidates = pool_with(
+            combination(2, action("anm.set_main", 0, 40)),
+        )
+        with patch(
+            "ecl_ir.analysis.execution_check.candidate_pool_for_stage",
+            return_value=candidates,
+        ):
+            report = check_ecl_text(
+                target,
+                source_name="th15/st01.decl",
+                game=GAME,
+                reference_package=self.reference,
+                difficulties=("E",),
+            )
+
+        self.assertFalse(self.with_code(report, "anm.unit_without_setup"))
+
+    def test_missing_target_setup_is_error_when_source_sets_up_before_visibility(self) -> None:
+        source_directory = self.root / "th14"
+        source_directory.mkdir()
+        source = source_directory / "st01.decl"
+        source.write_text(
+            """void main()
+{
+    ins_300("Child", 0.0f, 0.0f, 10, 0, 0);
+    return;
+}
+
+void Child()
+{
+    ins_302(2);
+    ins_306(0, 40);
+    ins_23(1);
+    return;
+}
+""",
+            encoding="utf-8",
+        )
+        target = f"""// source: {source}
+// source game: th14
+// target: th15
+anim {{ "enemy.anm"; "st01enm.anm"; }}
+
+void main()
+{{
+    ins_300("Child", 0.0f, 0.0f, 10, 0, 0);
+    return;
+}}
+
+void Child()
+{{
+    ins_23(1);
+    return;
+}}
+"""
+        candidates = pool_with(
+            combination(2, action("anm.set_main", 0, 40)),
+        )
+        with patch(
+            "ecl_ir.analysis.execution_check.candidate_pool_for_stage",
+            return_value=candidates,
+        ):
+            report = check_ecl_text(
+                target,
+                source_name="th15/st01.decl",
+                game=GAME,
+                reference_package=self.reference,
+                difficulties=("E",),
+            )
+
+        diagnostics = self.with_code(report, "anm.unit_without_setup")
+        self.assertEqual(len(diagnostics), 1)
+        self.assertEqual(diagnostics[0].severity, "error")
+        self.assertIs(diagnostics[0].details.get("source_expected_setup"), True)
+
+    def test_async_source_prefix_before_setup_does_not_report_missing_setup(self) -> None:
+        source_directory = self.root / "th14"
+        source_directory.mkdir()
+        source = source_directory / "st01.decl"
+        source.write_text(
+            """void main()
+{
+    ins_300("Child", 0.0f, 0.0f, 10, 0, 0);
+    return;
+}
+
+void Child()
+{
+    ins_302(2);
+    @Worker() async;
+    ins_306(0, 40);
+    return;
+}
+
+void Worker()
+{
+    ins_23(1);
+    return;
+}
+""",
+            encoding="utf-8",
+        )
+        target = f"""// source: {source}
+// source game: th14
+// target: th15
+anim {{ "enemy.anm"; "st01enm.anm"; }}
+
+void main()
+{{
+    ins_300("Child", 0.0f, 0.0f, 10, 0, 0);
+    return;
+}}
+
+void Child()
+{{
+    ins_302(2);
+    @Worker() async;
+    ins_306(0, 40);
+    return;
+}}
+
+void Worker()
+{{
+    ins_23(1);
+    return;
+}}
+"""
+        candidates = pool_with(
+            combination(2, action("anm.set_main", 0, 40)),
+        )
+        with patch(
+            "ecl_ir.analysis.execution_check.candidate_pool_for_stage",
+            return_value=candidates,
+        ):
+            report = check_ecl_text(
+                target,
+                source_name="th15/st01.decl",
+                game=GAME,
+                reference_package=self.reference,
+                difficulties=("E",),
+            )
+
+        self.assertFalse(self.with_code(report, "anm.unit_without_setup"))
+
+    def test_async_return_is_not_treated_as_entity_termination(self) -> None:
+        source_directory = self.root / "th14"
+        source_directory.mkdir()
+        source = source_directory / "st01.decl"
+        source.write_text(
+            """void main()
+{
+    ins_300("Child", 0.0f, 0.0f, 10, 0, 0);
+    return;
+}
+
+void Child()
+{
+    ins_302(2);
+    @Worker() async;
+    ins_306(0, 40);
+    ins_23(1);
+    return;
+}
+
+void Worker()
+{
+    return;
+}
+""",
+            encoding="utf-8",
+        )
+        target = f"""// source: {source}
+// source game: th14
+// target: th15
+anim {{ "enemy.anm"; "st01enm.anm"; }}
+
+void main()
+{{
+    ins_300("Child", 0.0f, 0.0f, 10, 0, 0);
+    return;
+}}
+
+void Child()
+{{
+    @Worker() async;
+    ins_23(1);
+    return;
+}}
+
+void Worker()
+{{
+    return;
+}}
+"""
+        candidates = pool_with(
+            combination(2, action("anm.set_main", 0, 40)),
+        )
+        with patch(
+            "ecl_ir.analysis.execution_check.candidate_pool_for_stage",
+            return_value=candidates,
+        ):
+            report = check_ecl_text(
+                target,
+                source_name="th15/st01.decl",
+                game=GAME,
+                reference_package=self.reference,
+                difficulties=("E",),
+            )
+
+        diagnostics = self.with_code(report, "anm.unit_without_setup")
+        self.assertTrue(diagnostics)
+        self.assertTrue(all(item.severity == "error" for item in diagnostics))
+        self.assertTrue(
+            all(item.details.get("source_expected_setup") is True for item in diagnostics)
+        )
+
     def test_unknown_numeric_variable_and_read_only_write_are_errors(self) -> None:
         report = self.check(
             """
@@ -1292,6 +1548,55 @@ void main()
         self.assertFalse(self.with_code(report, "anm.source_action_unresolved"))
         self.assertFalse(self.with_code(report, "anm.source_target_trace_mismatch"))
 
+    def test_resource_lowering_comment_suppresses_duplicate_source_action(self) -> None:
+        source_directory = self.root / "th14"
+        source_directory.mkdir()
+        source = source_directory / "st01.decl"
+        source.write_text(
+            """anim { "enemy.anm"; "st01enm.anm"; }
+
+void main()
+{
+    ins_302(2);
+    ins_306(0, 40);
+    return;
+}
+""",
+            encoding="utf-8",
+        )
+        target = f"""// source: {source}
+// source game: th14
+// target: th15
+anim {{ "enemy.anm"; "st01enm.anm"; }}
+
+void main()
+{{
+    // [anm.resource_context_unresolved] node=main:5:0 operation=anm.select: no target candidate
+    // source: ins_302(2);
+    // [anm.resource_context_unresolved] node=main:6:0 operation=anm.set_main: no target candidate
+    // source: ins_306(0, 40);
+    return;
+}}
+"""
+        with patch(
+            "ecl_ir.analysis.execution_check.candidate_pool_for_stage",
+            return_value=pool_with(),
+        ):
+            report = check_ecl_text(
+                target,
+                source_name="th15/st01.decl",
+                game=GAME,
+                reference_package=self.reference,
+                difficulties=("E",),
+            )
+
+        resources = self.with_code(report, "anm.resource_context_unresolved")
+        self.assertEqual(
+            {item.details.get("source_node_id") for item in resources},
+            {"main:5:0", "main:6:0"},
+        )
+        self.assertFalse(self.with_code(report, "anm.source_action_unresolved"))
+
     def test_default_and_shared_units_do_not_inherit_the_stage_anm_pool(self) -> None:
         candidates = pool_with(
             combination(2, action("anm.set_main", 0, 40)),
@@ -1480,6 +1785,60 @@ End:
             diagnostics[0].details.get("expected"),
             diagnostics[0].details.get("actual"),
         )
+
+    def test_source_target_trace_does_not_treat_cfg_join_as_empty_path(self) -> None:
+        source_directory = self.root / "th14"
+        source_directory.mkdir()
+        source = source_directory / "st01.decl"
+        source.write_text(
+            """anim { "enemy.anm"; "st01enm.anm"; }
+
+void main()
+{
+    if ([-9959] == 0) goto Join @ 0;
+    goto Join @ 0;
+Join:
+    ins_302(2);
+    ins_306(0, 40);
+    return;
+}
+""",
+            encoding="utf-8",
+        )
+        candidates = pool_with(
+            combination(2, action("anm.set_main", 0, 40)),
+        )
+        target = f"""// source: {source}
+// source game: th14
+// target: th15
+anim {{ "enemy.anm"; "st01enm.anm"; }}
+
+void main()
+{{
+    ins_302(2);
+    ins_306(0, 40);
+    return;
+}}
+"""
+        with (
+            patch(
+                "ecl_ir.analysis.execution_check.candidate_pool_for_stage",
+                return_value=candidates,
+            ),
+            patch(
+                "ecl_ir.analysis.anm_resources.candidate_pool_for_stage",
+                return_value=candidates,
+            ),
+        ):
+            report = check_ecl_text(
+                target,
+                source_name="th15/st01.decl",
+                game=GAME,
+                reference_package=self.reference,
+                difficulties=("E",),
+            )
+
+        self.assertFalse(self.with_code(report, "anm.source_target_trace_mismatch"))
 
     def test_source_target_check_detects_a_removed_call_edge(self) -> None:
         source_directory = self.root / "th14"

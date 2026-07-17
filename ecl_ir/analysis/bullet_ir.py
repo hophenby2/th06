@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+from collections import deque
 from copy import deepcopy
 from dataclasses import dataclass, field, replace
 import re
 from typing import Any, Iterable
 
-from .control_flow import analyze_routine_control_flow
+from .control_flow import ControlFlowEdge, analyze_routine_control_flow
 from ..dialects.game_profile import GameProfile, profile_for_game
 from ..canonical.semantic_ir import (
     DIFFICULTY_LANES,
@@ -667,18 +668,37 @@ def analyze_bullet_routine(routine: SemanticRoutine, game: str) -> BulletRoutine
         if isinstance(node, SemanticOperation):
             interpreter.apply(node)
             node_id = str(node.node_id)
-            if node.operation == "bullet.transform.append" and node_id in control_flow.cyclic_node_ids:
-                lanes = active_difficulty_lanes(node.guard)
-                interpreter.resolved_transform_indices[node_id] = {lane: None for lane in lanes}
-                interpreter.diagnostics.append(
-                    {
-                        "source_node_id": node_id,
-                        "code": "bullet.transform.append.cyclic_control_flow",
-                        "message": (
-                            "append cursor is loop-carried and cannot be materialized as one static index"
-                        ),
-                    }
-                )
+    cyclic_appends = {
+        str(node.node_id)
+        for node in routine.body
+        if isinstance(node, SemanticOperation)
+        and node.operation == "bullet.transform.append"
+        and str(node.node_id) in control_flow.cyclic_node_ids
+    }
+    cyclic_indices = (
+        _resolve_cyclic_append_indices(routine, interpreter, control_flow.edges)
+        if cyclic_appends
+        else {}
+    )
+    for node in routine.body:
+        if not isinstance(node, SemanticOperation):
+            continue
+        node_id = str(node.node_id)
+        if node_id not in cyclic_appends:
+            continue
+        lanes = active_difficulty_lanes(node.guard)
+        resolved = cyclic_indices.get(node_id, {lane: None for lane in lanes})
+        interpreter.resolved_transform_indices[node_id] = resolved
+        if any(index is None for index in resolved.values()):
+            interpreter.diagnostics.append(
+                {
+                    "source_node_id": node_id,
+                    "code": "bullet.transform.append.cyclic_control_flow",
+                    "message": (
+                        "append cursor is loop-carried and cannot be materialized as one static index"
+                    ),
+                }
+            )
     return BulletRoutineAnalysis(
         routine=routine.name,
         actions=interpreter.actions,
@@ -687,6 +707,86 @@ def analyze_bullet_routine(routine: SemanticRoutine, game: str) -> BulletRoutine
         cyclic_node_ids=control_flow.cyclic_node_ids,
         diagnostics=interpreter.diagnostics,
     )
+
+
+def _resolve_cyclic_append_indices(
+    routine: SemanticRoutine,
+    interpreter: BulletStateInterpreter,
+    edges: tuple[ControlFlowEdge, ...],
+) -> dict[str, dict[str, int | None]]:
+    """Resolve looped append cursors when CFG reset barriers make them stable."""
+
+    if not routine.body:
+        return {}
+    successors: list[list[int]] = [[] for _ in routine.body]
+    for edge in edges:
+        successors[edge.source_index].append(edge.target_index)
+
+    resolved: dict[str, dict[str, int | None]] = {}
+    for lane in DIFFICULTY_LANES:
+        incoming: list[dict[str, int | None] | None] = [None] * len(routine.body)
+        incoming[0] = {}
+        pending = deque([0])
+        queued = {0}
+        while pending:
+            index = pending.popleft()
+            queued.discard(index)
+            state = dict(incoming[index] or {})
+            node = routine.body[index]
+            if isinstance(node, SemanticOperation) and lane in active_difficulty_lanes(node.guard):
+                manager = interpreter.manager_for(node)
+                if node.operation == "bullet.manager.reset":
+                    state[manager] = 0
+                elif node.operation == "bullet.transform.append":
+                    cursor = state.get(manager, 0)
+                    state[manager] = cursor + 1 if cursor is not None else None
+                elif node.operation == "bullet.transform.append_cursor.decrement":
+                    cursor = state.get(manager, 0)
+                    state[manager] = max(0, cursor - 1) if cursor is not None else None
+                elif (
+                    node.operation == "bullet.manager.copy"
+                    and not interpreter.profile.transform_dialect.uses_append_cursor
+                ):
+                    values = [operand.value for operand in node.operands]
+                    destination = raw_operand(values[0], "0") if values else "0"
+                    source = raw_operand(values[1], "0") if len(values) > 1 else "0"
+                    state[destination] = state.get(source, 0)
+
+            for target in successors[index]:
+                merged = _merge_cursor_states(incoming[target], state)
+                if merged == incoming[target]:
+                    continue
+                incoming[target] = merged
+                if target not in queued:
+                    pending.append(target)
+                    queued.add(target)
+
+        for index, node in enumerate(routine.body):
+            if not isinstance(node, SemanticOperation) or node.operation != "bullet.transform.append":
+                continue
+            if lane not in active_difficulty_lanes(node.guard):
+                continue
+            node_id = str(node.node_id)
+            state = incoming[index]
+            manager = interpreter.manager_for(node)
+            resolved.setdefault(node_id, {})[lane] = (
+                state.get(manager, 0) if state is not None else None
+            )
+    return resolved
+
+
+def _merge_cursor_states(
+    current: dict[str, int | None] | None,
+    incoming: dict[str, int | None],
+) -> dict[str, int | None]:
+    if current is None:
+        return dict(incoming)
+    merged: dict[str, int | None] = {}
+    for manager in current.keys() | incoming.keys():
+        left = current.get(manager, 0)
+        right = incoming.get(manager, 0)
+        merged[manager] = left if left == right else None
+    return merged
 
 
 def analyze_bullet_module(module: SemanticModule) -> BulletModuleAnalysis:

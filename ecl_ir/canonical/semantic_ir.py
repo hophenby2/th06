@@ -1134,6 +1134,7 @@ class SourceForm:
     operation: str
     opcode_family: str
     operand_names: tuple[str, ...]
+    source_game: str = ""
 
 
 RANK_SAMPLE_LABELS: dict[int, tuple[str, ...]] = {
@@ -1179,6 +1180,25 @@ SOURCE_FORMS: tuple[SourceForm, ...] = (
     SourceForm("bullet.sounds.set", "th06", ("fire_sound",)),
     SourceForm("bullet.sounds.set", "th07", ("fire_sound", "transform_sound")),
     SourceForm("bullet.sounds.set", "th08", ("fire_sound", "transform_sound")),
+    SourceForm(
+        "movement.circle_rel.tween",
+        "th10_th11",
+        (
+            "duration",
+            "interpolation",
+            "angular_speed",
+            "radius",
+            "radius_delta",
+            "compat_flag",
+        ),
+        source_game="th10",
+    ),
+    SourceForm(
+        "movement.circle_rel.tween",
+        "th10_th11",
+        ("duration", "interpolation", "angular_speed", "radius", "compat_flag"),
+        source_game="th11",
+    ),
 ) + tuple(
     SourceForm(operation, family, rank_operand_names(value_name, sample_count))
     for operation, value_name in (
@@ -1195,10 +1215,31 @@ class DialectDecoder:
         self._layouts = {
             (form.operation, form.opcode_family, len(form.operand_names)): form.operand_names
             for form in source_forms
+            if not form.source_game
+        }
+        self._game_layouts = {
+            (
+                form.operation,
+                form.opcode_family,
+                form.source_game.lower(),
+                len(form.operand_names),
+            ): form.operand_names
+            for form in source_forms
+            if form.source_game
         }
 
-    def operand_names(self, operation: str, opcode_family: str, count: int) -> list[str]:
-        declared = self._layouts.get((operation, opcode_family, count))
+    def operand_names(
+        self,
+        operation: str,
+        opcode_family: str,
+        count: int,
+        source_game: str = "",
+    ) -> list[str]:
+        declared = self._game_layouts.get(
+            (operation, opcode_family, source_game.lower(), count)
+        )
+        if declared is None:
+            declared = self._layouts.get((operation, opcode_family, count))
         if declared is None and operation in INVARIANT_ARG_LAYOUTS:
             invariant = INVARIANT_ARG_LAYOUTS[operation]
             declared = invariant if len(invariant) == count else None
@@ -1221,7 +1262,12 @@ class DialectDecoder:
         names = (
             [str(name) for name in operand_names]
             if operand_names is not None
-            else self.operand_names(operation, opcode_family, len(rendered))
+            else self.operand_names(
+                operation,
+                opcode_family,
+                len(rendered),
+                source_game,
+            )
         )
         if len(names) != len(rendered):
             names = [f"operand_{index}" for index in range(len(rendered))]

@@ -183,6 +183,74 @@ class TargetIrTests(unittest.TestCase):
         self.assertIn("ins_509(0, 1, 0, 8", rendered)
         self.assertIn("folded append cursor decrement", rendered)
 
+    def test_spawn_transform_pair_is_emitted_once_as_two_expanded_records(self) -> None:
+        operations = [
+            semantic_operation(
+                "th12",
+                509,
+                ["0", "3", "0", "524288", "50923526", "12", "2.0f", "0.5f"],
+                1,
+                routine="Main",
+            ),
+            semantic_operation(
+                "th12",
+                509,
+                ["0", "4", "0", "1048576", "1", "0", "0.25f", "0.0f"],
+                2,
+                routine="Main",
+            ),
+        ]
+        module = SemanticModule(
+            source="source.decl",
+            source_game="th12",
+            profile="th12",
+            routines=[SemanticRoutine("Main", body=operations)],
+        )
+        planner = LoweringPlanner.for_game(
+            "th15",
+            backend_emitter=CanonicalBackendEmitter(module, "th15"),
+        )
+        target = TargetAstBuilder(planner).build(module)
+        rendered = target.render_decl()
+        self.assertIn(
+            "ins_610(0, 3, 0, 8192, 6, 3, 12, 1, 0.25f, 0.0f, 2.0f, 0.5f);",
+            rendered,
+        )
+        self.assertIn(
+            "ins_610(0, 4, 0, 16384, 9, 9, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);",
+            rendered,
+        )
+        self.assertIn("folded spawned-bullet payload", rendered)
+        self.assertNotIn("backend.transform.unsupported", rendered)
+
+    def test_same_game_spawn_transform_pair_preserves_raw_records(self) -> None:
+        args = (
+            ["0", "3", "0", "524288", "-1", "12", "2.0f", "0.5f"],
+            ["0", "4", "0", "1048576", "1", "0", "0.25f", "0.0f"],
+        )
+        operations = [
+            semantic_operation("th12", 509, record, line, routine="Main")
+            for line, record in enumerate(args, 1)
+        ]
+        module = SemanticModule(
+            source="source.decl",
+            source_game="th12",
+            profile="th12",
+            routines=[SemanticRoutine("Main", body=operations)],
+        )
+        emitter = CanonicalBackendEmitter(module, "th12")
+        planner = LoweringPlanner.for_game("th12", backend_emitter=emitter)
+
+        target = TargetAstBuilder(planner).build(module)
+
+        self.assertFalse(emitter.spawn_bundle_follower_by_leader)
+        self.assertFalse(emitter.spawn_bundle_leader_by_follower)
+        self.assertEqual(
+            [statement.lines for statement in target.routines[0].body],
+            [(f"ins_509({', '.join(record)});",) for record in args],
+        )
+        self.assertFalse(target.diagnostics)
+
     def test_divergent_difficulty_cursors_are_not_guessed(self) -> None:
         operations = [
             semantic_operation("th13", 600, ["0"], 1, routine="Main"),

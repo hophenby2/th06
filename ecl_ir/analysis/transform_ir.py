@@ -30,13 +30,19 @@ from ..canonical.semantic_ir import (
     transform_keep_current_token,
 )
 from ..dialects.semantics import (
+    bullet_shape_can_encode,
+    bullet_shape_is_lossy,
     bullet_shape_semantic,
     bullet_transform_generation_for_game,
     bullet_transform_mode_can_encode,
     bullet_transform_mode_semantic,
     encode_bullet_shape,
     encode_bullet_transform_mode,
+    encode_spread_style,
     generation_for_game,
+    spread_can_encode,
+    spread_is_lossy,
+    spread_semantic,
     unsupported_bullet_transform_mode_reason,
 )
 
@@ -355,6 +361,13 @@ class BulletTransformIR:
                     f"engine value {value.engine_value.kind.value} in transform operand {name} "
                     "has no verified target encoding"
                 )
+        if self.mode_semantic == "shape_change":
+            shape_semantic = self.shape_semantic or bullet_shape_semantic(
+                self.source_game,
+                self.raw("a", "0"),
+            )
+            if not bullet_shape_can_encode(shape_semantic, target):
+                return f"bullet shape {shape_semantic} has no verified target catalog entry"
         target_form = target_profile.transform_dialect.form_for_write(
             self.target_write_kind(target, resolved_index),
             self.target_parameter_set(target),
@@ -378,6 +391,12 @@ class BulletTransformIR:
 
     def lossy_reason(self, target: str) -> str | None:
         target_generation = bullet_transform_generation_for_game(target)
+        if (
+            self.mode_semantic == "shape_change"
+            and self.shape_semantic is not None
+            and bullet_shape_is_lossy(self.shape_semantic, target)
+        ):
+            return "target bullet catalog merges this shape-change visual with its base shape"
         if (
             (self.mode_semantic == "bounce" and self.raw("b", "") == "2" and target_generation == "th10_th11")
             or (self.mode_semantic == "bounce_bottom" and target_generation in {"th12", "th13_plus"})
@@ -608,6 +627,363 @@ class BulletTransformIR:
             return None
         args = [self.encoded_field(name, target, resolved_index) for name in form.operand_names]
         return LoweredInstruction(form.opcode, args)
+
+
+@dataclass(frozen=True)
+class BulletSpawnTransformBundleIR:
+    """A spawned-bullet operation represented by two transform records.
+
+    TH11/12 mode 524288 consumes the following mode-1048576 record as the
+    second half of its payload. TH13 retains that packed layout under modes
+    8192/16384. TH14+ expands the same fields across two extended records.
+    """
+
+    source_game: str
+    write_kind: str
+    manager: str
+    first_index: str | None
+    second_index: str | None
+    channel: str
+    spread_style: str
+    bullet_shape: str
+    bullet_color: str
+    resume_transform_index: str
+    remove_source_bullet: str
+    way_count: str
+    layer_count: str
+    direction: str
+    direction_delta: str
+    speed: str
+    speed_delta: str
+    cancel_effect_id: str
+
+    @classmethod
+    def from_operations(
+        cls,
+        first_node: SemanticOperation,
+        second_node: SemanticOperation,
+    ) -> "BulletSpawnTransformBundleIR | None":
+        if (
+            first_node.operation not in {"bullet.transform.replace", "bullet.transform.append"}
+            or second_node.operation != first_node.operation
+            or first_node.provenance.game != second_node.provenance.game
+            or first_node.guard != second_node.guard
+            or first_node.selected_values
+            or second_node.selected_values
+        ):
+            return None
+        first = BulletTransformIR.from_semantic_operation(first_node)
+        second = BulletTransformIR.from_semantic_operation(second_node)
+        if first is None or second is None:
+            return None
+        if (
+            first.write_kind != second.write_kind
+            or first.raw("manager", "0") != second.raw("manager", "0")
+            or first.raw("channel", "0") != second.raw("channel", "0")
+        ):
+            return None
+
+        first_index = first.raw("index", "") or None
+        second_index = second.raw("index", "") or None
+        if first.write_kind == "replace":
+            parsed_first = _parse_integer_literal(first_index)
+            parsed_second = _parse_integer_literal(second_index)
+            if parsed_first is None or parsed_second != parsed_first + 1:
+                return None
+
+        packed_pair = (
+            first.mode_semantic == "spawn_bullet_legacy"
+            and second.mode_semantic == "spawn_bullet_layers_legacy"
+            and first.parameter_set == second.parameter_set == "base"
+        ) or (
+            first.mode_semantic == "spawn_bullet_packed_v13"
+            and second.mode_semantic == "contextual_spawn_attributes:th13"
+            and first.parameter_set == second.parameter_set == "base"
+        )
+        if packed_pair:
+            packed = _parse_integer_literal(first.raw("a", ""))
+            if packed is None or not -(1 << 31) <= packed <= 0xFFFFFFFF:
+                return None
+            payload = packed & 0xFFFFFFFF
+            shape_byte = (payload >> 8) & 0xFF
+            jump_and_delete = (payload >> 24) & 0xFF
+            return cls(
+                source_game=first.source_game,
+                write_kind=first.write_kind,
+                manager=first.raw("manager", "0"),
+                first_index=first_index,
+                second_index=second_index,
+                channel=first.raw("channel", "0"),
+                spread_style=str(payload & 0xFF),
+                bullet_shape=str(shape_byte - 0x100 if shape_byte & 0x80 else shape_byte),
+                bullet_color=str((payload >> 16) & 0xFF),
+                resume_transform_index=str(jump_and_delete & 0x7F),
+                remove_source_bullet="1" if jump_and_delete & 0x80 else "0",
+                way_count=first.raw("b", "0"),
+                layer_count=second.raw("a", "0"),
+                direction=second.raw("r", "0.0f"),
+                direction_delta=second.raw("s", "0.0f"),
+                speed=first.raw("r", "0.0f"),
+                speed_delta=first.raw("s", "0.0f"),
+                cancel_effect_id=second.raw("b", "0"),
+            )
+
+        expanded_pair = (
+            first.mode_semantic == "spawn_bullet_expanded"
+            and second.mode_semantic == f"contextual_spawn_attributes:{first.source_game}"
+            and first.parameter_set == second.parameter_set == "extended"
+            and all(
+                _is_zero_float_literal(second.raw(name, ""))
+                for name in ("r", "s", "m", "n")
+            )
+        )
+        if not expanded_pair:
+            return None
+        return cls(
+            source_game=first.source_game,
+            write_kind=first.write_kind,
+            manager=first.raw("manager", "0"),
+            first_index=first_index,
+            second_index=second_index,
+            channel=first.raw("channel", "0"),
+            spread_style=first.raw("a", "0"),
+            bullet_shape=second.raw("a", "0"),
+            bullet_color=second.raw("b", "0"),
+            resume_transform_index=first.raw("b", "0"),
+            remove_source_bullet=second.raw("c", "0"),
+            way_count=first.raw("c", "0"),
+            layer_count=first.raw("d", "0"),
+            direction=first.raw("r", "0.0f"),
+            direction_delta=first.raw("s", "0.0f"),
+            speed=first.raw("m", "0.0f"),
+            speed_delta=first.raw("n", "0.0f"),
+            cancel_effect_id=second.raw("d", "0"),
+        )
+
+    def unsupported_reason(
+        self,
+        target: str,
+        first_index: int | str | None = None,
+        second_index: int | str | None = None,
+    ) -> str | None:
+        target_profile = profile_for_game(target)
+        spread = spread_semantic(self.source_game, self.spread_style)
+        if not spread_can_encode(spread, target):
+            return "spawn bundle spread style has no exact target encoding"
+        if spread_is_lossy(spread, target):
+            return "spawn bundle spread style requires a multi-emitter target expansion"
+        shape = bullet_shape_semantic(self.source_game, self.bullet_shape)
+        if not bullet_shape_can_encode(shape, target):
+            return f"spawn bundle bullet shape {shape} has no verified target catalog entry"
+        if bullet_shape_is_lossy(shape, target):
+            return "target bullet catalog merges the spawn bundle's bullet shape"
+        color = _parse_integer_literal(self.bullet_color)
+        if color is None or not 0 <= color <= 0xFF:
+            return "spawn bundle bullet color must be one literal palette index"
+        if target == "th10":
+            return (
+                "TH10's spawn payload cannot encode the TH11+ bullet color and "
+                "resume-transform fields"
+            )
+        if self.write_kind == "append" and not target_profile.transform_dialect.uses_append_cursor:
+            parsed_first = _parse_integer_literal(first_index)
+            parsed_second = _parse_integer_literal(second_index)
+            if parsed_first is None or parsed_second != parsed_first + 1:
+                return "the target requires one resolved contiguous pair of transform indices"
+        if target == "th13" or bullet_transform_generation_for_game(target) == "th12":
+            return self._packed_payload_error(target)
+        if target_profile.supports(CAP_TRANSFORM_SPAWN_BULLET_EXPANDED):
+            return None
+        return "the target has no verified spawned-bullet transform bundle encoding"
+
+    def lower_to(
+        self,
+        target: str,
+        first_index: int | str | None = None,
+        second_index: int | str | None = None,
+    ) -> list[LoweredInstruction] | None:
+        if self.unsupported_reason(target, first_index, second_index):
+            return None
+        target_profile = profile_for_game(target)
+        write_kind = self.write_kind
+        if write_kind == "append" and not target_profile.transform_dialect.uses_append_cursor:
+            write_kind = "replace"
+
+        if target == "th13" or bullet_transform_generation_for_game(target) == "th12":
+            form = target_profile.transform_dialect.form_for_write(write_kind, "base")
+            packed = self._packed_payload(target)
+            if form is None or packed is None:
+                return None
+            modes = ("8192", "16384") if target == "th13" else ("524288", "1048576")
+            indices = self._target_indices(first_index, second_index)
+            records = (
+                {
+                    "manager": self.manager,
+                    "index": indices[0],
+                    "channel": self.channel,
+                    "mode": modes[0],
+                    "a": packed,
+                    "b": self.way_count,
+                    "r": self._encode_float(self.speed, target, "m", keep_current=True),
+                    "s": self._encode_float(self.speed_delta, target, "n"),
+                },
+                {
+                    "manager": self.manager,
+                    "index": indices[1],
+                    "channel": self.channel,
+                    "mode": modes[1],
+                    "a": self.layer_count,
+                    "b": self.cancel_effect_id,
+                    "r": self._encode_float(self.direction, target, "r", keep_current=True),
+                    "s": self._encode_float(self.direction_delta, target, "s"),
+                },
+            )
+            return [
+                LoweredInstruction(form.opcode, [record[name] for name in form.operand_names])
+                for record in records
+            ]
+
+        form = target_profile.transform_dialect.form_for_write(write_kind, "extended")
+        if form is None:
+            return None
+        indices = self._target_indices(first_index, second_index)
+        records = (
+            {
+                "manager": self.manager,
+                "index": indices[0],
+                "channel": self.channel,
+                "mode": "8192",
+                "a": self._encoded_spread(target),
+                "b": self.resume_transform_index,
+                "c": self.way_count,
+                "d": self.layer_count,
+                "r": self._encode_float(self.direction, target, "r", keep_current=True),
+                "s": self._encode_float(self.direction_delta, target, "s"),
+                "m": self._encode_float(self.speed, target, "m", keep_current=True),
+                "n": self._encode_float(self.speed_delta, target, "n"),
+            },
+            {
+                "manager": self.manager,
+                "index": indices[1],
+                "channel": self.channel,
+                "mode": "16384",
+                "a": self._encoded_shape(target),
+                "b": self.bullet_color,
+                "c": self.remove_source_bullet,
+                "d": self.cancel_effect_id,
+                "r": "0.0f",
+                "s": "0.0f",
+                "m": "0.0f",
+                "n": "0.0f",
+            },
+        )
+        return [
+            LoweredInstruction(form.opcode, [record[name] for name in form.operand_names])
+            for record in records
+        ]
+
+    def _target_indices(
+        self,
+        first_index: int | str | None,
+        second_index: int | str | None,
+    ) -> tuple[str, str]:
+        return (
+            str(first_index) if first_index is not None else str(self.first_index or "0"),
+            str(second_index) if second_index is not None else str(self.second_index or "0"),
+        )
+
+    def _encoded_spread(self, target: str) -> str:
+        return encode_spread_style(
+            spread_semantic(self.source_game, self.spread_style),
+            target,
+            self.spread_style,
+        )
+
+    def _encoded_shape(self, target: str) -> str:
+        return encode_bullet_shape(
+            bullet_shape_semantic(self.source_game, self.bullet_shape),
+            target,
+            self.bullet_shape,
+        )
+
+    def _packed_payload_error(self, target: str) -> str | None:
+        fields = {
+            "spread_style": (self._encoded_spread(target), 0, 0xFF),
+            "bullet_shape": (self._encoded_shape(target), -0x80, 0xFF),
+            "bullet_color": (self.bullet_color, 0, 0xFF),
+            "resume_transform_index": (self.resume_transform_index, 0, 0x7F),
+            "remove_source_bullet": (self.remove_source_bullet, 0, 1),
+        }
+        for name, (value, minimum, maximum) in fields.items():
+            parsed = _parse_integer_literal(value)
+            if parsed is None or not minimum <= parsed <= maximum:
+                return f"spawn bundle field {name} cannot be packed into the target payload"
+        return None
+
+    def _packed_payload(self, target: str) -> str | None:
+        if self._packed_payload_error(target):
+            return None
+        spread = int(self._encoded_spread(target), 0)
+        shape = int(self._encoded_shape(target), 0)
+        color = int(self.bullet_color, 0)
+        jump = int(self.resume_transform_index, 0)
+        remove = int(self.remove_source_bullet, 0)
+        packed = (
+            (spread & 0xFF)
+            | ((shape & 0xFF) << 8)
+            | ((color & 0xFF) << 16)
+            | (((jump & 0x7F) | (remove << 7)) << 24)
+        )
+        return str(packed - (1 << 32) if packed & (1 << 31) else packed)
+
+    def _encode_float(
+        self,
+        raw: str,
+        target: str,
+        operand_name: str,
+        *,
+        keep_current: bool = False,
+    ) -> str:
+        source_codec = profile_for_game(self.source_game).sentinels
+        target_codec = profile_for_game(target).sentinels
+        source_keep = transform_keep_current_token(
+            self.source_game,
+            "spawn_bullet_advanced",
+            operand_name,
+        )
+        if keep_current and (
+            source_codec.is_keep_current_float(raw)
+            or (source_keep is not None and raw == source_keep)
+        ):
+            return (
+                transform_keep_current_token(target, "spawn_bullet_advanced", operand_name)
+                or target_codec.keep_current_float
+                or target_codec.unused_float
+                or raw
+            )
+        if source_codec.is_unused_float(raw):
+            return target_codec.unused_float or raw
+        return raw
+
+
+def _parse_integer_literal(value: object) -> int | None:
+    text = str(value or "").strip()
+    if not re.fullmatch(r"[-+]?(?:0[xX][0-9a-fA-F]+|\d+)", text):
+        return None
+    try:
+        return int(text, 0)
+    except ValueError:
+        return None
+
+
+def _is_zero_float_literal(value: object) -> bool:
+    text = str(value or "").strip().lower()
+    if not re.fullmatch(r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?f?", text):
+        return False
+    try:
+        return float(text.rstrip("f")) == 0.0
+    except ValueError:
+        return False
 
 
 def bullet_transform_ir_from_opcode(source_game: str, opcode: int, args: list[Any], append_slot: int | str | None = None) -> BulletTransformIR | None:

@@ -679,7 +679,9 @@ class _ExecutionChecker:
         self.report = report
         self.state_budget = state_budget
         self._diagnostic_keys: set[tuple[Any, ...]] = set()
+        self._lowering_diagnostic_nodes: set[tuple[str, str, str]] = set()
         self._source_module_cache: dict[str, SemanticModule | None] = {}
+        self._source_setup_prefix_cache: dict[tuple[str, str, str], bool | None] = {}
 
     def add(
         self,
@@ -744,6 +746,7 @@ class _ExecutionChecker:
                 if not match:
                     continue
                 code, node_id, operation, strategy, message = match.groups()
+                self._lowering_diagnostic_nodes.add((unit.key, code, node_id))
                 severity = "warning" if strategy in {"raw", "lossy"} else "error"
                 self.add(
                     severity,
@@ -2121,7 +2124,7 @@ class _ExecutionChecker:
         root_ref = self._routine_for_key(state.entity_root) or state.routine_ref
         if self._is_reference_corpus_unit(root_ref.unit):
             return
-        expected = self._source_routine_has_anm_setup(root_ref, lane)
+        expected = self._source_routine_has_anm_setup_before_visibility(root_ref, lane)
         if expected is False:
             return
         self.add(
@@ -2143,7 +2146,7 @@ class _ExecutionChecker:
             },
         )
 
-    def _source_routine_has_anm_setup(
+    def _source_routine_has_anm_setup_before_visibility(
         self,
         ref: _RoutineRef,
         lane: str,
@@ -2174,30 +2177,12 @@ class _ExecutionChecker:
         )
         if routine is None:
             return None
-        traces, complete = _routine_anm_trace_paths(
-            routine,
-            lane,
-            _default_bank_for_role(
-                source_game,
-                _routine_role(_artifact_role(source_path), routine.name),
-            ),
-        )
-        if not complete:
-            return None
-        setup_by_path = [
-            any(operation in ANM_SET_OPERATIONS for operation, _bank, _slot, _script in trace)
-            for trace in traces
-        ]
-        if setup_by_path and all(setup_by_path):
-            return True
-        if any(
-            kind in {"call", "async_call"}
-            for kind, _target in _routine_control_edges(routine, lane)
-        ):
-            return None
-        if setup_by_path and not any(setup_by_path):
-            return False
-        return None
+        prefix_key = (cache_key, routine.name, lane)
+        if prefix_key not in self._source_setup_prefix_cache:
+            self._source_setup_prefix_cache[prefix_key] = (
+                _module_anm_setup_before_visibility(module, routine, lane)
+            )
+        return self._source_setup_prefix_cache[prefix_key]
 
     def check_source_target_trace(self) -> None:
         for unit in self.package.units:
@@ -2234,7 +2219,11 @@ class _ExecutionChecker:
             target_pool = (
                 self.package.pool
                 if uses_package_pool
-                else candidate_pool_for_module(self.package.game, source_name)
+                else candidate_pool_for_module(
+                    self.package.game,
+                    source_name,
+                    self.package.reference_root,
+                )
             )
             plan = build_anm_lowering_plan(
                 source_module,
@@ -2275,6 +2264,12 @@ class _ExecutionChecker:
                     continue
                 if str(node.node_id) not in plan.selections:
                     unresolved_routines.add(routine.name)
+                    if (
+                        unit.key,
+                        "anm.resource_context_unresolved",
+                        str(node.node_id),
+                    ) in self._lowering_diagnostic_nodes:
+                        continue
                     self.add(
                         "error",
                         "anm.source_action_unresolved",
@@ -2502,6 +2497,169 @@ def _is_anm_visibility_boundary(operation: str) -> bool:
     )
 
 
+def _module_anm_setup_before_visibility(
+    module: SemanticModule,
+    root: SemanticRoutine,
+    lane: str,
+    *,
+    state_limit: int = 20_000,
+) -> bool | None:
+    """Return whether source paths configure ANM before exposing the unit.
+
+    A false result means at least one source execution prefix reaches visible
+    behavior or terminates before setup, so the target doing the same is not a
+    proven conversion regression. Unknown calls and non-terminating prefixes
+    keep the result unproven rather than upgrading it to an error.
+    """
+
+    routines = {routine.name: routine for routine in module.routines}
+    labels = {
+        routine.name: {
+            str(node.attributes.get("name", "")): index
+            for index, node in enumerate(routine.body)
+            if isinstance(node, SyntaxStatement) and node.statement_kind == "label"
+        }
+        for routine in module.routines
+    }
+    _PrefixFrame = tuple[str, int]
+    _PrefixState = tuple[str, int, bool, bool, tuple[_PrefixFrame, ...]]
+    pending: list[tuple[_PrefixState, frozenset[_PrefixState]]] = [
+        ((root.name, 0, False, False, ()), frozenset())
+    ]
+    visited: set[_PrefixState] = set()
+    outcomes: set[bool] = set()
+    complete = True
+
+    def enqueue(
+        routine_name: str,
+        index: int,
+        configured: bool,
+        detached: bool,
+        stack: tuple[_PrefixFrame, ...],
+        ancestors: frozenset[_PrefixState],
+    ) -> None:
+        pending.append(((routine_name, index, configured, detached, stack), ancestors))
+
+    while pending:
+        if len(visited) >= state_limit:
+            complete = False
+            break
+        state, ancestors = pending.pop()
+        if state in ancestors:
+            complete = False
+            continue
+        if state in visited:
+            continue
+        visited.add(state)
+        next_ancestors = frozenset((*ancestors, state))
+        routine_name, index, configured, detached, stack = state
+        routine = routines.get(routine_name)
+        if routine is None:
+            complete = False
+            continue
+        if not 0 <= index < len(routine.body):
+            if stack:
+                caller, return_index = stack[-1]
+                enqueue(caller, return_index, configured, detached, stack[:-1], next_ancestors)
+            elif not detached:
+                outcomes.add(configured)
+            continue
+
+        node = routine.body[index]
+        if not _guard_active(node, lane):
+            enqueue(routine_name, index + 1, configured, detached, stack, next_ancestors)
+            continue
+
+        if isinstance(node, SemanticOperation):
+            if node.operation in ANM_SET_OPERATIONS:
+                configured = True
+            if _is_anm_visibility_boundary(node.operation):
+                outcomes.add(configured)
+                continue
+            if node.operation == "flow.ret":
+                if stack:
+                    caller, return_index = stack[-1]
+                    enqueue(caller, return_index, configured, detached, stack[:-1], next_ancestors)
+                elif not detached:
+                    outcomes.add(configured)
+                continue
+
+        if isinstance(node, SyntaxStatement):
+            kind = node.statement_kind
+            if kind == "goto":
+                target = labels[routine_name].get(str(node.attributes.get("label", "")))
+                if target is None:
+                    complete = False
+                else:
+                    enqueue(routine_name, target, configured, detached, stack, next_ancestors)
+                continue
+            if kind == "conditional_goto":
+                value = _evaluate_condition(str(node.attributes.get("condition", "")), {})
+                if node.attributes.get("condition_type") == "unless" and value is not None:
+                    value = not value
+                target = labels[routine_name].get(str(node.attributes.get("label", "")))
+                if value is not False:
+                    if target is None:
+                        complete = False
+                    else:
+                        enqueue(routine_name, target, configured, detached, stack, next_ancestors)
+                if value is not True:
+                    enqueue(
+                        routine_name,
+                        index + 1,
+                        configured,
+                        detached,
+                        stack,
+                        next_ancestors,
+                    )
+                continue
+            if kind == "return":
+                if stack:
+                    caller, return_index = stack[-1]
+                    enqueue(caller, return_index, configured, detached, stack[:-1], next_ancestors)
+                elif not detached:
+                    outcomes.add(configured)
+                continue
+            if kind in {"call", "async_call"}:
+                callee_name = str(node.attributes.get("function", ""))
+                callee = routines.get(callee_name)
+                if kind == "async_call":
+                    enqueue(
+                        routine_name,
+                        index + 1,
+                        configured,
+                        detached,
+                        stack,
+                        next_ancestors,
+                    )
+                    if callee is None:
+                        complete = False
+                    else:
+                        enqueue(callee.name, 0, configured, True, (), next_ancestors)
+                    continue
+                active_routines = {routine_name, *(frame[0] for frame in stack)}
+                if callee is None or callee.name in active_routines:
+                    complete = False
+                    continue
+                enqueue(
+                    callee.name,
+                    0,
+                    configured,
+                    detached,
+                    (*stack, (routine_name, index + 1)),
+                    next_ancestors,
+                )
+                continue
+
+        enqueue(routine_name, index + 1, configured, detached, stack, next_ancestors)
+
+    if False in outcomes:
+        return False
+    if complete and outcomes == {True}:
+        return True
+    return None
+
+
 def _bounded_constant(value: int | float | None) -> int | float | None:
     if value is None:
         return None
@@ -2724,7 +2882,10 @@ def _routine_trace_paths(
         for index, node in enumerate(routine.body)
         if isinstance(node, SyntaxStatement) and node.statement_kind == "label"
     }
-    pending: list[tuple[int, int | None, _AnmTrace]] = [(0, initial_bank, ())]
+    _TraceState = tuple[int, int | None, _AnmTrace]
+    pending: list[tuple[int, int | None, _AnmTrace, frozenset[_TraceState]]] = [
+        (0, initial_bank, (), frozenset())
+    ]
     visited: set[tuple[int, int | None, _AnmTrace]] = set()
     terminal: set[_AnmTrace] = set()
     complete = True
@@ -2732,18 +2893,21 @@ def _routine_trace_paths(
         if len(visited) >= state_limit or len(pending) + len(terminal) > path_limit:
             complete = False
             break
-        index, bank, trace = pending.pop()
+        index, bank, trace, ancestors = pending.pop()
         state = (index, bank, trace)
-        if state in visited:
+        if state in ancestors:
             terminal.add(trace)
             continue
+        if state in visited:
+            continue
         visited.add(state)
+        next_ancestors = frozenset((*ancestors, state))
         if not 0 <= index < len(routine.body):
             terminal.add(trace)
             continue
         node = routine.body[index]
         if not _guard_active(node, lane):
-            pending.append((index + 1, bank, trace))
+            pending.append((index + 1, bank, trace, next_ancestors))
             continue
         bank, emitted = emit(index, node, bank)
         next_trace = (*trace, *emitted)
@@ -2755,7 +2919,7 @@ def _routine_trace_paths(
             if node.statement_kind == "goto":
                 target = labels.get(str(node.attributes.get("label", "")))
                 if target is not None:
-                    pending.append((target, bank, next_trace))
+                    pending.append((target, bank, next_trace, next_ancestors))
                 else:
                     terminal.add(next_trace)
                 continue
@@ -2768,9 +2932,9 @@ def _routine_trace_paths(
                     value = not value
                 target = labels.get(str(node.attributes.get("label", "")))
                 if value is not False and target is not None:
-                    pending.append((target, bank, next_trace))
+                    pending.append((target, bank, next_trace, next_ancestors))
                 if value is not True:
-                    pending.append((index + 1, bank, next_trace))
+                    pending.append((index + 1, bank, next_trace, next_ancestors))
                 if target is None and value is True:
                     terminal.add(next_trace)
                 continue
@@ -2783,7 +2947,7 @@ def _routine_trace_paths(
         }:
             terminal.add(next_trace)
             continue
-        pending.append((index + 1, bank, next_trace))
+        pending.append((index + 1, bank, next_trace, next_ancestors))
 
     if not terminal:
         terminal.update(state[2] for state in visited)

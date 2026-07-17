@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from pathlib import Path
 import unittest
 
 from ecl_ir.analysis.bullet_ir import active_difficulty_lanes
@@ -76,6 +77,30 @@ class SemanticDifficultyTests(unittest.TestCase):
         self.assertEqual(
             [by_line[line].difficulty for line in (431, 433, 434, 435)],
             ["HL", "HL", "HL", "HL"],
+        )
+
+        th17_default = parse_decl("th17/default.decl")
+        source = Path("th17/default.decl").read_text(encoding="utf-8")
+        self.assertFalse(
+            any(
+                270 <= candidate.consumer_line <= 290
+                for candidate in find_difficulty_selection_candidates(source)
+            )
+        )
+        test_routine = next(
+            routine for routine in th17_default.functions if routine.name == "test"
+        )
+        statements = {
+            statement.line_no: statement
+            for statement in test_routine.statements
+            if 278 <= statement.line_no <= 283
+        }
+        self.assertEqual(
+            [statements[line].difficulty for line in (278, 280, 281, 283)],
+            ["HL", None, None, "HL"],
+        )
+        self.assertTrue(
+            all(not statements[line].attrs.get("difficulty_literals") for line in statements)
         )
 
     def test_rank_markers_follow_thecl_persistent_and_scoped_state(self) -> None:
@@ -342,6 +367,27 @@ timeline Timeline1()
         self.assertLess(first_table, second_table)
         self.assertLess(second_table, consumer)
         self.assertEqual(text.count("!L5"), 2)
+
+    def test_modern_float_time_keeps_selected_values_across_modern_targets(self) -> None:
+        module = build_semantic_module(parse_decl("th16/st01bs.decl"))
+        operation = operation_at(module, "Boss1_at2", 161)
+        self.assertEqual(len(operation.selected_values), 2)
+
+        decision = LoweringPlanner.for_game(
+            "th17",
+            backend_emitter=CanonicalBackendEmitter(module, "th17"),
+        ).plan_node(operation, "Boss1_at2")
+
+        self.assertEqual(decision.strategy, LoweringStrategy.DIRECT)
+        self.assertIn(
+            "ins_91(0, %C, 0, 1200, [-1.0f], [-2.0f]);",
+            decision.target_text or "",
+        )
+        old_target = LoweringPlanner.for_game(
+            "th12",
+            backend_emitter=CanonicalBackendEmitter(module, "th12"),
+        ).plan_node(operation, "Boss1_at2")
+        self.assertEqual(old_target.strategy, LoweringStrategy.UNSUPPORTED)
 
     def test_argument_adaptation_must_not_drop_a_selected_placeholder(self) -> None:
         module = build_semantic_module(

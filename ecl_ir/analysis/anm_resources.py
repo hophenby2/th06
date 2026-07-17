@@ -12,7 +12,7 @@ from ..canonical.semantic_ir import (
     SemanticOperation,
     SyntaxStatement,
 )
-from ..dialects.anm_catalog import SOURCE_SET_PURPOSES, source_bank_role, target_bank_for_role
+from ..dialects.anm_catalog import SOURCE_SET_PURPOSES, target_bank_for_role
 from ..dialects.semantics import generation_for_game
 from ..source.parser import parse_decl
 
@@ -28,6 +28,7 @@ _EXPLICIT_BANK_PLAY_OPERATIONS = {
     "anm.play_rotate",
 }
 _PLAY_OPERATIONS = {*_EXPLICIT_BANK_PLAY_OPERATIONS, "anm.selected_play"}
+_BASE_PLAY_FAMILY = frozenset({"anm.play", "anm.selected_play"})
 _SUPPORTED_OPERATIONS = {"anm.select", *_SET_OPERATIONS, *_PLAY_OPERATIONS}
 
 
@@ -54,8 +55,15 @@ class AnmRoutinePlayCandidate:
     bank: int
     script: int
     routine: str
-    ordinal: int
+    family_ordinal: int
     evidence: str
+    owner_role: str = ""
+
+    @property
+    def ordinal(self) -> int:
+        """Compatibility alias for callers that consumed the old summary."""
+
+        return self.family_ordinal
 
 
 @dataclass(frozen=True, slots=True)
@@ -136,9 +144,10 @@ class _SourceAnmGroup:
     actions: tuple[SemanticOperation, ...]
     source_bank: int | None
     role: str | None
+    owner_role: str
     routine: str
     bank_ambiguous: bool = False
-    operation_ordinal: int | None = None
+    play_family_ordinal: int | None = None
 
 
 def _source_name(source: str) -> str:
@@ -226,12 +235,28 @@ def _role_for_bank(
         common_banks = {0, 1} if generation_for_game(game) == "th13_plus" else {0}
         if bank in common_banks:
             return "common"
-        role = source_bank_role(game, bank)
-        if role == "stage":
-            return role
-        if role == "boss":
-            return _routine_role(routine) or artifact_role
+        # A numeric bank can describe the source manifest layout, but it must
+        # not override the unit that owns the action. For example, TH13's
+        # root-stage MBoss uses bank 2 even though the corresponding TH14
+        # candidate must come from the midboss package, not a stage enemy.
     return _routine_role(routine) or artifact_role
+
+
+def _initial_bank_for_routine(game: str, artifact_role: str, routine: str) -> int | None:
+    role = _routine_role(routine) or artifact_role
+    # Midboss resources use the boss bank even though they remain a distinct
+    # unit role for candidate validation.
+    return target_bank_for_role(game, "boss" if role == "midboss" else role)
+
+
+def _play_family_key(operation: str) -> str:
+    if operation in _BASE_PLAY_FAMILY:
+        return "anm.play_or_selected"
+    return operation
+
+
+def _play_operations_compatible(left: str, right: str) -> bool:
+    return _play_family_key(left) == _play_family_key(right)
 
 
 def _routine_purpose_scores(routine: str) -> dict[str, int]:
@@ -291,9 +316,13 @@ def candidate_pool_for_stage(
     stage_id: str | None,
     reference_package: str | Path | None = None,
 ) -> AnmCandidatePool:
-    if stage_id is None and reference_package is not None:
+    reference_path = Path(reference_package) if reference_package is not None else None
+    module_scoped_default = (
+        reference_path is not None and reference_path.name.lower() == "default.decl"
+    )
+    if stage_id is None and reference_path is not None and not module_scoped_default:
         stage_id = stage_id_from_source(str(reference_package))
-    if stage_id is None:
+    if stage_id is None and not module_scoped_default:
         return AnmCandidatePool(game, None, {}, ())
     counts: Counter[tuple[int, str, tuple[AnmActionCandidate, ...]]] = Counter()
     evidence: dict[tuple[int, str, tuple[AnmActionCandidate, ...]], set[str]] = defaultdict(set)
@@ -305,8 +334,10 @@ def candidate_pool_for_stage(
     resources: dict[str, tuple[str, ...]] = {}
 
     paths = (
-        _pool_paths_from_root(Path(reference_package))
-        if reference_package is not None
+        (reference_path,)
+        if module_scoped_default and reference_path is not None and reference_path.is_file()
+        else _pool_paths_from_root(reference_path)
+        if reference_path is not None
         else _pool_paths(game, stage_id)
     )
     for path in paths:
@@ -318,8 +349,8 @@ def candidate_pool_for_stage(
             }
         artifact_role = _artifact_role(path)
         for function in program.functions:
-            play_ordinals: Counter[str] = Counter()
-            current_bank = target_bank_for_role(game, artifact_role)
+            play_family_ordinals: Counter[str] = Counter()
+            current_bank = _initial_bank_for_routine(game, artifact_role, function.name)
             current_bank_guard = "*"
             pending_bank: int | None = None
             pending_guard: str | None = None
@@ -389,8 +420,9 @@ def candidate_pool_for_stage(
                         continue
                 flush()
                 if operation in _EXPLICIT_BANK_PLAY_OPERATIONS and len(args) >= 2:
-                    ordinal = play_ordinals[operation]
-                    play_ordinals[operation] += 1
+                    family = _play_family_key(operation)
+                    family_ordinal = play_family_ordinals[family]
+                    play_family_ordinals[family] += 1
                     bank = _literal_int(args[0])
                     script = _literal_int(args[1])
                     if bank is not None and script is not None:
@@ -405,13 +437,15 @@ def candidate_pool_for_stage(
                                 bank,
                                 script,
                                 function.name,
-                                ordinal,
+                                family_ordinal,
                                 f"{path.name}:{function.name}",
+                                _routine_role(function.name) or artifact_role,
                             )
                         )
                 elif operation == "anm.selected_play" and args:
-                    ordinal = play_ordinals[operation]
-                    play_ordinals[operation] += 1
+                    family = _play_family_key(operation)
+                    family_ordinal = play_family_ordinals[family]
+                    play_family_ordinals[family] += 1
                     script = _literal_int(args[0])
                     if current_bank is not None and script is not None:
                         action = AnmActionCandidate(operation, None, script)
@@ -425,8 +459,9 @@ def candidate_pool_for_stage(
                                 current_bank,
                                 script,
                                 function.name,
-                                ordinal,
+                                family_ordinal,
                                 f"{path.name}:{function.name}",
+                                _routine_role(function.name) or artifact_role,
                             )
                         )
             flush()
@@ -453,11 +488,25 @@ def candidate_pool_for_stage(
     return AnmCandidatePool(game, stage_id, resources, combinations, tuple(routine_plays))
 
 
-def candidate_pool_for_module(game: str, source: str) -> AnmCandidatePool:
+def candidate_pool_for_module(
+    game: str,
+    source: str,
+    reference_package: str | Path | None = None,
+) -> AnmCandidatePool:
+    if _source_name(source).lower() == "default.decl":
+        if reference_package is None:
+            reference = ROOT / game / "default.decl"
+        else:
+            reference = Path(reference_package)
+            if reference.name.lower() != "default.decl":
+                reference = reference.parent / "default.decl"
+        if not reference.is_file():
+            return AnmCandidatePool(game, None, {}, ())
+        return candidate_pool_for_stage(game, None, reference.resolve())
     stage_id = stage_id_from_source(source)
     if stage_id is None:
         return AnmCandidatePool(game, None, {}, ())
-    return candidate_pool_for_stage(game, stage_id)
+    return candidate_pool_for_stage(game, stage_id, reference_package)
 
 
 def _operand_text(node: SemanticOperation, name: str, index: int) -> str | None:
@@ -484,6 +533,8 @@ def _node_script(node: SemanticOperation) -> int | None:
 
 def _module_role(source: str) -> str:
     name = _source_name(source).lower()
+    if name == "default.decl":
+        return "global"
     match = _STAGE_NAME_RE.match(name)
     suffix = match.group(2) if match else ""
     if "mboss" in suffix or re.fullmatch(r"mbs\d*", suffix):
@@ -497,7 +548,8 @@ def _source_groups(module: SemanticModule) -> tuple[_SourceAnmGroup, ...]:
     groups: list[_SourceAnmGroup] = []
     default_role = _module_role(module.source)
     for routine in module.routines:
-        play_ordinals: Counter[str] = Counter()
+        owner_role = _routine_role(routine.name) or default_role
+        play_family_ordinals: Counter[str] = Counter()
         current_bank: int | None = None
         current_bank_guard = None
         bank_ambiguous = False
@@ -522,6 +574,7 @@ def _source_groups(module: SemanticModule) -> tuple[_SourceAnmGroup, ...]:
                     tuple(pending_actions),
                     bank,
                     role,
+                    owner_role,
                     routine.name,
                     bank_ambiguous,
                 )
@@ -570,8 +623,9 @@ def _source_groups(module: SemanticModule) -> tuple[_SourceAnmGroup, ...]:
                 continue
             flush()
             if node.operation in _PLAY_OPERATIONS:
-                ordinal = play_ordinals[node.operation]
-                play_ordinals[node.operation] += 1
+                family = _play_family_key(node.operation)
+                family_ordinal = play_family_ordinals[family]
+                play_family_ordinals[family] += 1
                 bank = _node_bank(node) if node.operation != "anm.selected_play" else current_bank
                 role = _role_for_bank(
                     module.source_game,
@@ -585,10 +639,11 @@ def _source_groups(module: SemanticModule) -> tuple[_SourceAnmGroup, ...]:
                         (node,),
                         bank,
                         role,
+                        owner_role,
                         routine.name,
                         bank is None
                         or (bank_ambiguous and node.operation == "anm.selected_play"),
-                        ordinal,
+                        family_ordinal,
                     )
                 )
         flush()
@@ -599,12 +654,87 @@ def _candidate_purpose_score(candidate: AnmCombinationCandidate, purpose: str) -
     return dict(candidate.purpose_scores).get(purpose, 0)
 
 
+def _role_compatible(source_role: str | None, candidate_role: str) -> bool:
+    if source_role is None:
+        return True
+    return candidate_role == source_role or candidate_role in {"common", "global"}
+
+
+def _candidate_owner_roles(candidate: AnmCombinationCandidate) -> frozenset[str]:
+    owners: set[str] = set()
+    for item in candidate.evidence:
+        source, separator, routine = item.rpartition(":")
+        if not separator:
+            continue
+        owners.add(_routine_role(routine) or _artifact_role(Path(source)))
+    return frozenset(owners)
+
+
+def _candidate_role_compatible(
+    source_role: str | None,
+    candidate: AnmCombinationCandidate,
+    source_owner_role: str | None = None,
+) -> bool:
+    if not _role_compatible(source_role, candidate.role):
+        return False
+    if source_role is not None and candidate.role == source_role:
+        return True
+    owner_role = source_owner_role or source_role
+    if (
+        owner_role in {"stage", "boss", "midboss"}
+        and candidate.role in {"common", "global"}
+    ):
+        return owner_role in _candidate_owner_roles(candidate)
+    return True
+
+
+def _role_priority(source_role: str | None, candidate_role: str) -> int:
+    if source_role is not None and candidate_role == source_role:
+        return 2
+    if candidate_role in {"common", "global"}:
+        return 1
+    return 0
+
+
+def _role_candidates(
+    pool: AnmCandidatePool,
+    source_role: str | None,
+    source_owner_role: str | None = None,
+) -> tuple[AnmCombinationCandidate, ...]:
+    return tuple(
+        candidate
+        for candidate in pool.combinations
+        if _candidate_role_compatible(source_role, candidate, source_owner_role)
+    )
+
+
+def _prefer_exact_role(
+    candidates: list[AnmCombinationCandidate],
+    source_role: str | None,
+) -> list[AnmCombinationCandidate]:
+    exact = [candidate for candidate in candidates if candidate.role == source_role]
+    return exact or candidates
+
+
+def _candidate_has_routine_evidence(
+    candidate: AnmCombinationCandidate,
+    routine: str,
+) -> bool:
+    return any(
+        evidence.rsplit(":", 1)[-1] == routine
+        for evidence in candidate.evidence
+    )
+
+
 def _action_matches(
     candidate: AnmActionCandidate,
     source: SemanticOperation,
     script: int,
 ) -> bool:
-    if candidate.operation != source.operation or candidate.script != script:
+    if (
+        not _play_operations_compatible(candidate.operation, source.operation)
+        or candidate.script != script
+    ):
         return False
     if source.operation not in _SET_OPERATIONS:
         return True
@@ -643,7 +773,7 @@ def _source_purpose(
         return max(routine_scores, key=lambda purpose: routine_scores[purpose])
 
     corpus_scores: dict[str, int] = {}
-    for candidate in source_pool.for_role(group.role):
+    for candidate in _role_candidates(source_pool, group.role, group.owner_role):
         if group.source_bank is not None and candidate.bank != group.source_bank:
             continue
         if not all(
@@ -663,8 +793,8 @@ def _shape_score(
     candidate: AnmCombinationCandidate,
     source_actions: tuple[SemanticOperation, ...],
 ) -> int:
-    source_kinds = Counter(node.operation for node in source_actions)
-    target_kinds = Counter(action.operation for action in candidate.actions)
+    source_kinds = Counter(_play_family_key(node.operation) for node in source_actions)
+    target_kinds = Counter(_play_family_key(action.operation) for action in candidate.actions)
     shared = sum(min(count, target_kinds[kind]) for kind, count in source_kinds.items())
     return shared * 20 - abs(len(candidate.actions) - len(source_actions)) * 2
 
@@ -698,19 +828,28 @@ def _choose_combination(
     purpose: str | None,
     scripts: tuple[int | None, ...] | None = None,
 ) -> tuple[AnmCombinationCandidate | None, str]:
-    candidates = list(pool.for_role(group.role))
-    if not candidates:
+    if (
+        group.bank_ambiguous
+        and len(group.actions) == 1
+        and group.actions[0].operation in _EXPLICIT_BANK_PLAY_OPERATIONS
+    ):
         return None, "unresolved"
 
-    if len(group.actions) == 1 and group.operation_ordinal is not None:
+    if len(group.actions) == 1 and group.play_family_ordinal is not None:
         source_operation = group.actions[0].operation
+        source_family = _play_family_key(source_operation)
+        routine_uses = tuple(
+            use
+            for use in pool.routine_plays
+            if use.routine == group.routine
+            and _play_family_key(use.operation) == source_family
+            and (not use.owner_role or use.owner_role == group.owner_role)
+        )
         routine_match = next(
             (
                 use
-                for use in pool.routine_plays
-                if use.routine == group.routine
-                and use.operation == source_operation
-                and use.ordinal == group.operation_ordinal
+                for use in routine_uses
+                if use.family_ordinal == group.play_family_ordinal
             ),
             None,
         )
@@ -723,14 +862,79 @@ def _choose_combination(
             matched = next(
                 (
                     candidate
-                    for candidate in candidates
+                    for candidate in pool.combinations
                     if candidate.bank == routine_match.bank
                     and candidate.actions == (target_action,)
+                    and routine_match.evidence in candidate.evidence
+                    and group.owner_role in _candidate_owner_roles(candidate)
                 ),
                 None,
             )
             if matched is not None:
                 return matched, "routine_sequence"
+
+        # A target routine can express one repeated effect with fewer play
+        # statements than the source routine. Reuse it only when every
+        # same-family occurrence in that exact target routine names the same
+        # bank/script combination; otherwise there is no unambiguous mapping.
+        routine_actions = {
+            (use.operation, use.bank, use.script)
+            for use in routine_uses
+        }
+        if len(routine_actions) == 1:
+            operation, bank, script = next(iter(routine_actions))
+            target_action = AnmActionCandidate(operation, None, script)
+            matched = next(
+                (
+                    candidate
+                    for candidate in pool.combinations
+                    if candidate.bank == bank
+                    and candidate.actions == (target_action,)
+                    and any(
+                        use.evidence in candidate.evidence
+                        for use in routine_uses
+                        if (use.operation, use.bank, use.script)
+                        == (operation, bank, script)
+                    )
+                    and group.owner_role in _candidate_owner_roles(candidate)
+                ),
+                None,
+            )
+            if matched is not None:
+                return matched, "routine_family_candidate"
+
+    candidates = list(_role_candidates(pool, group.role, group.owner_role))
+    if not candidates:
+        return None, "unresolved"
+
+    source_operations = {_play_family_key(node.operation) for node in group.actions}
+    if (
+        pool.stage_id is None
+        and source_operations
+        and source_operations <= _SET_OPERATIONS
+    ):
+        same_routine = [
+            candidate
+            for candidate in candidates
+            if candidate.actions
+            and all(action.operation in _SET_OPERATIONS for action in candidate.actions)
+            and _candidate_has_routine_evidence(candidate, group.routine)
+        ]
+        if same_routine:
+            same_routine = _prefer_exact_role(same_routine, group.role)
+            best_score = max(
+                _setup_family_score(candidate, group.actions)
+                for candidate in same_routine
+            )
+            best = [
+                candidate
+                for candidate in same_routine
+                if _setup_family_score(candidate, group.actions) == best_score
+            ]
+            if len(best) == 1:
+                return best[0], "routine_setup_candidate"
+            return None, "unresolved"
+        return None, "unresolved"
 
     if purpose:
         purpose_matches = [
@@ -739,21 +943,47 @@ def _choose_combination(
             if _candidate_purpose_score(candidate, purpose) > 0
         ]
         if purpose_matches:
+            purpose_matches = _prefer_exact_role(purpose_matches, group.role)
             return max(
                 purpose_matches,
                 key=lambda item: (
                     _candidate_purpose_score(item, purpose),
+                    _role_priority(group.role, item.role),
                     _shape_score(item, group.actions),
                     item.occurrences,
                     -len(item.actions),
                 ),
             ), "semantic_purpose"
 
-    source_operations = {node.operation for node in group.actions}
+    if source_operations and source_operations <= _SET_OPERATIONS:
+        exact_role_setup = [
+            candidate
+            for candidate in candidates
+            if candidate.role == group.role
+            and candidate.actions
+            and all(action.operation in _SET_OPERATIONS for action in candidate.actions)
+        ]
+        exact_role_compatible = [
+            candidate
+            for candidate in exact_role_setup
+            if source_operations
+            & {_play_family_key(action.operation) for action in candidate.actions}
+        ]
+        if exact_role_setup and not exact_role_compatible:
+            return max(
+                exact_role_setup,
+                key=lambda item: (
+                    _setup_family_score(item, group.actions),
+                    item.occurrences,
+                    -len(item.actions),
+                ),
+            ), "target_corpus_candidate"
+
     compatible = [
         candidate
         for candidate in candidates
-        if source_operations & {action.operation for action in candidate.actions}
+        if source_operations
+        & {_play_family_key(action.operation) for action in candidate.actions}
     ]
     if source_operations and not compatible:
         if source_operations <= _SET_OPERATIONS:
@@ -764,9 +994,11 @@ def _choose_combination(
                 and all(action.operation in _SET_OPERATIONS for action in candidate.actions)
             ]
             if setup_family:
+                setup_family = _prefer_exact_role(setup_family, group.role)
                 return max(
                     setup_family,
                     key=lambda item: (
+                        _role_priority(group.role, item.role),
                         _setup_family_score(item, group.actions),
                         item.occurrences,
                         -len(item.actions),
@@ -774,7 +1006,7 @@ def _choose_combination(
                 ), "target_corpus_candidate"
         return None, "unresolved"
     if compatible:
-        candidates = compatible
+        candidates = _prefer_exact_role(compatible, group.role)
 
     resolved_scripts = scripts or tuple(_node_script(node) for node in group.actions)
     source_scripts = tuple(script for script in resolved_scripts if script is not None)
@@ -791,12 +1023,17 @@ def _choose_combination(
         if exact:
             return max(
                 exact,
-                key=lambda item: (_shape_score(item, group.actions), item.occurrences),
+                key=lambda item: (
+                    _role_priority(group.role, item.role),
+                    _shape_score(item, group.actions),
+                    item.occurrences,
+                ),
             ), "exact_script"
 
     ranked = sorted(
         candidates,
         key=lambda item: (
+            -_role_priority(group.role, item.role),
             -_shape_score(item, group.actions),
             -item.occurrences,
             item.bank,
@@ -808,11 +1045,18 @@ def _choose_combination(
     return ranked[0], "target_corpus_candidate"
 
 
-def _select_bank(pool: AnmCandidatePool, role: str | None) -> AnmCombinationCandidate | None:
-    candidates = list(pool.for_role(role))
+def _select_bank(
+    pool: AnmCandidatePool,
+    role: str | None,
+    owner_role: str | None,
+) -> AnmCombinationCandidate | None:
+    candidates = list(_role_candidates(pool, role, owner_role))
     if not candidates:
         return None
-    return max(candidates, key=lambda item: item.occurrences)
+    return max(
+        candidates,
+        key=lambda item: (_role_priority(role, item.role), item.occurrences),
+    )
 
 
 def _candidate_target_actions(
@@ -1085,7 +1329,7 @@ def build_anm_lowering_plan(
             continue
         purpose = _source_purpose(module, group, source_pool)
         if group.select is not None and not group.actions:
-            candidate = _select_bank(target_pool, group.role)
+            candidate = _select_bank(target_pool, group.role, group.owner_role)
             match_kind = "role_bank" if candidate is not None else "unresolved"
         else:
             candidate, match_kind = _choose_combination(target_pool, group, purpose)
@@ -1102,7 +1346,12 @@ def build_anm_lowering_plan(
             or (node.operation in _SET_OPERATIONS and _node_slot(node) is None)
             for node in group.actions
         )
-        lossy = dynamic or match_kind in {"exact_script", "target_corpus_candidate"}
+        lossy = dynamic or match_kind in {
+            "exact_script",
+            "routine_family_candidate",
+            "routine_setup_candidate",
+            "target_corpus_candidate",
+        }
         common = {
             "match_kind": match_kind,
             "target_stage_id": target_pool.stage_id,
@@ -1168,6 +1417,8 @@ def candidate_summary(pool: AnmCandidatePool) -> dict[str, object]:
                 "script": candidate.script,
                 "routine": candidate.routine,
                 "ordinal": candidate.ordinal,
+                "family_ordinal": candidate.family_ordinal,
+                "owner_role": candidate.owner_role,
                 "evidence": candidate.evidence,
             }
             for candidate in pool.routine_plays

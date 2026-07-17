@@ -40,7 +40,7 @@ from ..dialects.semantics import (
     encode_bullet_shape,
 )
 from ..analysis.spread_ir import format_float_literal, parse_float_literal
-from ..analysis.transform_ir import BulletTransformIR
+from ..analysis.transform_ir import BulletSpawnTransformBundleIR, BulletTransformIR
 
 
 @dataclass(frozen=True)
@@ -342,6 +342,26 @@ class CanonicalBackendEmitter:
             for routine in analysis.routines
             for node_id, lanes in routine.resolved_transform_indices.items()
         }
+        self.spawn_bundle_follower_by_leader: dict[str, SemanticOperation] = {}
+        self.spawn_bundle_leader_by_follower: dict[str, str] = {}
+        if module.source_game != target_game:
+            for routine in module.routines:
+                index = 0
+                while index + 1 < len(routine.body):
+                    first = routine.body[index]
+                    second = routine.body[index + 1]
+                    if not isinstance(first, SemanticOperation) or not isinstance(second, SemanticOperation):
+                        index += 1
+                        continue
+                    bundle = BulletSpawnTransformBundleIR.from_operations(first, second)
+                    if bundle is None:
+                        index += 1
+                        continue
+                    leader_id = str(first.node_id)
+                    follower_id = str(second.node_id)
+                    self.spawn_bundle_follower_by_leader[leader_id] = second
+                    self.spawn_bundle_leader_by_follower[follower_id] = leader_id
+                    index += 2
         self.initialized_implicit_manager_lanes: dict[str, set[str]] = {}
 
     def begin_module(self, _module: SemanticModule) -> None:
@@ -426,6 +446,21 @@ class CanonicalBackendEmitter:
             lowered = f"ins_{fire_opcode}(0);" if fire_opcode is not None else None
             return self.finish_implicit_manager_initialization(node, prefix, initialized_lanes, lowered)
         if node.operation in {"bullet.transform.replace", "bullet.transform.append"}:
+            node_id = str(node.node_id)
+            if leader_id := self.spawn_bundle_leader_by_follower.get(node_id):
+                return self.finish_implicit_manager_initialization(
+                    node,
+                    prefix,
+                    initialized_lanes,
+                    f"// folded spawned-bullet payload into canonical node {leader_id}",
+                )
+            if follower := self.spawn_bundle_follower_by_leader.get(node_id):
+                return self.finish_implicit_manager_initialization(
+                    node,
+                    prefix,
+                    initialized_lanes,
+                    self.lower_spawn_transform_bundle(node, follower, target_game),
+                )
             return self.finish_implicit_manager_initialization(
                 node,
                 prefix,
@@ -542,7 +577,13 @@ class CanonicalBackendEmitter:
         if selection.lossy:
             heuristic = (
                 not selection.dynamic_source
-                and selection.match_kind in {"exact_script", "target_corpus_candidate"}
+                and selection.match_kind
+                in {
+                    "exact_script",
+                    "routine_family_candidate",
+                    "routine_setup_candidate",
+                    "target_corpus_candidate",
+                }
             )
             return BackendEmission(
                 text=text,
@@ -694,6 +735,70 @@ class CanonicalBackendEmitter:
             code="backend.transform.lossy_semantics" if lossy_reason else "",
             reason=lossy_reason or "",
         )
+
+    def lower_spawn_transform_bundle(
+        self,
+        leader: SemanticOperation,
+        source_follower: SemanticOperation,
+        target_game: str,
+    ) -> BackendEmission:
+        from ..canonical.variable_ir import project_semantic_operation
+
+        follower, issues = project_semantic_operation(source_follower, target_game)
+        if follower is None:
+            issue = issues[0]
+            return BackendEmission(
+                text="",
+                strategy=LoweringStrategy.UNSUPPORTED,
+                code=issue.code,
+                reason=issue.message,
+                details={**issue.details(), "issue_count": len(issues)},
+            )
+        bundle = BulletSpawnTransformBundleIR.from_operations(leader, follower)
+        if bundle is None:
+            return BackendEmission(
+                text="",
+                strategy=LoweringStrategy.UNSUPPORTED,
+                code="backend.transform_bundle.invalid_canonical_form",
+                reason="adjacent transform nodes no longer describe one spawned-bullet bundle",
+            )
+
+        first_index: int | None = None
+        second_index: int | None = None
+        if (
+            bundle.write_kind == "append"
+            and not self.target_profile.transform_dialect.uses_append_cursor
+        ):
+            first_index = self._single_transform_index(leader)
+            second_index = self._single_transform_index(follower)
+        reason = bundle.unsupported_reason(target_game, first_index, second_index)
+        lowered = bundle.lower_to(target_game, first_index, second_index)
+        if lowered is None:
+            return BackendEmission(
+                text="",
+                strategy=LoweringStrategy.UNSUPPORTED,
+                code="backend.transform_bundle.unsupported",
+                reason=reason or "spawned-bullet bundle has no verified target encoding",
+                details={
+                    "source_game": bundle.source_game,
+                    "write_kind": bundle.write_kind,
+                    "first_index": first_index,
+                    "second_index": second_index,
+                },
+            )
+        return BackendEmission(
+            text="\n".join(
+                f"ins_{instruction.opcode}({', '.join(instruction.args)});"
+                for instruction in lowered
+            )
+        )
+
+    def _single_transform_index(self, node: SemanticOperation) -> int | None:
+        lanes = self.transform_indices.get(str(node.node_id), {})
+        indices = {index for index in lanes.values() if index is not None}
+        if len(indices) != 1 or any(index is None for index in lanes.values()):
+            return None
+        return next(iter(indices))
 
     def lower_bullet_visual(self, node: SemanticOperation) -> BackendEmission:
         values = {operand.name: operand.value for operand in node.operands}

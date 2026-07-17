@@ -635,7 +635,7 @@ layout -> target emitter。只有语义跨越多条语句、需要状态归约�
 
 截至本文状态基线：
 
-- 148 项 Python 单元测试通过。
+- 223 项 Python 单元测试通过；`py_compile` 与 `git diff --check` 通过。
 - 210 个仓库 `.decl` 均可 parse、构建 canonical IR 和 bullet analysis。
 - 210 个 source document 与 source layout 均可逐字节 roundtrip。
 - 同目标 canonical 覆盖 251,701 个节点，其中 160,275 个 instruction，statement
@@ -646,19 +646,35 @@ layout -> target emitter。只有语义跨越多条语句、需要状态归约�
 - 210 文件乘 12 目标的 strict planner matrix 完成 2,520 次 build，没有异常，
   但仍有 1,233,676 个 structured unsupported decision。
 
-TH10-TH18 的 `stage01/st01.decl` 两两双向 Wine 检查覆盖 36 对、72 个方向：
+最终 TH10-TH18 交叉矩阵位于
+`/private/tmp/th062-stage01-matrix-final-v3`。它覆盖 36 个无序游戏对、72 个有向
+转换，TH10-TH12 入口固定为 `stage01.decl`，TH13-TH18 固定为 `st01.decl`：
 
-- 72/72 IR validation 通过。
-- 72/72 生成的 `.decl` 被 thecl 接受并产生非空 ECL。
-- 64 个方向无 thecl 消息；8 个转 TH18 的方向有 opcode 535 参数不足警告。
-- strict lowering 完整成功为 0/72，共有 10,074 个 unsupported 节点。
+- 72/72 个 `check-ecl` 分析完整，从生成 root 的 `main` 执行 E/N/H/L。
+- `default.decl` 只作为 package 依赖转换、检查和编译，从不作为入口。
+- root、`default`、boss、midboss 共 240/240 个生成 `.decl` 均被指定
+  Wine/thecl 接受，240 个 ECL 全部非空，运行器识别到的有效 thecl 诊断为 0。
+- TH18 使用 release-12 工具链兼容 map 修正 opcode 535 的 TH18 五参数签名；
+  map 自身的 `signature validation is not yet implemented` 提示不是输入脚本诊断。
+- 72 个方向仍都包含 structured unsupported 或 checker error，因此矩阵总状态
+  为 failed；Wine 可编译不等于行为完整或运行时等价。
 
-ANM 候选改造后另以 `--allow-lossy` 重跑同一组 10-18 `stage01/st01`，明确排除
-`default.decl`：72/72 IR validation 和 72/72 Wine/thecl 编译通过，输出包含
-4,232 处目标原版候选发射与 304 处源动作折叠；1,113 个仅有
-package/frequency 证据的节点带 `anm.heuristic_package_candidate` 警告。8 个转
-TH18 方向仍有共 117 条既有 opcode 535 参数不足提示，没有 ANM 指令参数数量
-错误。
+本轮 checker 共探索 1,126,687 个状态，报告 2,585 个 error 和 6,361 个 warning；
+相对旧的完整 package 矩阵 3,665/6,602，分别减少 1,080/241。主要结果为：
+
+- `anm.source_action_unresolved` 重复记账、`anm.unit_without_setup` 源前缀误判、
+  `anm.source_target_trace_mismatch` CFG 汇合误判、`backend.no_lowering` 和
+  `value_selection.unsupported` 已清零。
+- `anm.resource_context_unresolved` 从 660 降至 456；剩余项全部位于
+  `default.decl`。目标 `default` 没有可证明的同 routine 静态组合，或只存在无法
+  安全投影的动态表达式，因此不会按相近编号猜测。非 `default` 模块为 0。
+- `control_flow.source_target_edge_mismatch` 从 160 降至 96；剩余边对应目标缺少
+  helper、变量或 ABI 的真实 drop，不是 checker 误报。
+- `backend.unsupported` 为 674，其中包含恢复 native lowering 后在更老、确实不支持
+  该能力的目标上产生的明确拒绝；Wine 会编译注释化产物，但这些行为没有被实现。
+
+旧的 72 个 root-only 互转 `.decl` 另经 Wine 审计为 72/72 成功，但最终结论以
+上述完整 package 的 240 模块矩阵为准。
 
 `check-ecl` 对 TH10-TH18 九个原版 `stage01/st01.decl` 从 `main` 分别执行
 E/N/H/L，共 36 条 lane；全部 analysis complete，确定错误为 0，共 486 条动态 ANM、

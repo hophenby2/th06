@@ -85,6 +85,46 @@ class SemanticBackendTests(unittest.TestCase):
             "ins_329(60, 0.0f, 0.1f, 1.0f);",
         )
 
+    def test_et_offsets_use_the_verified_th11_layout(self) -> None:
+        radial = semantic_operation("th11", 437, ["1", "0.25f", "80.0f"])
+        absolute = semantic_operation("th14", 628, ["1", "32.0f", "48.0f"])
+
+        self.assertEqual(
+            compile_ir_op_event(radial, "th12"),
+            "ins_523(1, 0.25f, 80.0f);",
+        )
+        self.assertEqual(
+            compile_ir_op_event(absolute, "th11"),
+            "ins_439(1, 32.0f, 48.0f);",
+        )
+        unsupported = compile_ir_op_emission(absolute, "th10")
+        self.assertIsNotNone(unsupported)
+        self.assertEqual(unsupported.strategy, LoweringStrategy.UNSUPPORTED)
+
+    def test_native_distance_maple_and_anm_reset_are_not_policy_dropped(self) -> None:
+        distance = semantic_operation("th14", 627, ["1", "20.0f"])
+        maple = semantic_operation(
+            "th13",
+            321,
+            ['"MapleEnemy"', "0", "0", "100", "1000", "0"],
+        )
+        reset = semantic_operation("th14", 318, [])
+
+        self.assertEqual(
+            compile_ir_op_event(distance, "th11"),
+            "ins_438(1, 20.0f);",
+        )
+        self.assertEqual(
+            compile_ir_op_event(maple, "th12"),
+            'ins_280("MapleEnemy", 0, 0, 100, 1000, 0);',
+        )
+        self.assertEqual(compile_ir_op_event(reset, "th12"), "ins_276();")
+        for node, target in ((distance, "th10"), (maple, "th11"), (reset, "th10")):
+            with self.subTest(operation=node.operation, target=target):
+                unsupported = compile_ir_op_emission(node, target)
+                self.assertIsNotNone(unsupported)
+                self.assertEqual(unsupported.strategy, LoweringStrategy.UNSUPPORTED)
+
     def test_non_equivalent_or_unavailable_movement_forms_stay_unsupported(self) -> None:
         cases = (
             (semantic_operation("th15", 441, ["120", "7", "0.1f"]), "th13"),
@@ -106,14 +146,6 @@ class SemanticBackendTests(unittest.TestCase):
                     ["120", "0", "0.1f", "32.0f", "0.0f"],
                 ),
                 "th10",
-            ),
-            (
-                semantic_operation(
-                    "th12",
-                    311,
-                    ["120", "9", "0.1f", "32.0f", "0.0f"],
-                ),
-                "th11",
             ),
         )
         for node, target in cases:
@@ -142,6 +174,64 @@ class SemanticBackendTests(unittest.TestCase):
             compile_ir_op_event(relative, "th10"),
             "ins_291(120, 9, 0.1f, 32.0f, 0.0f, 0);",
         )
+        self.assertEqual(
+            compile_ir_op_event(relative, "th11"),
+            "ins_291(120, 9, 0.1f, 32.0f, 0);",
+        )
+
+        th11_relative = semantic_operation(
+            "th11",
+            291,
+            ["120", "9", "0.1f", "32.0f", "0"],
+        )
+        self.assertEqual(
+            [operand.name for operand in th11_relative.operands],
+            ["duration", "interpolation", "angular_speed", "radius", "compat_flag"],
+        )
+        th10_relative = semantic_operation(
+            "th10",
+            291,
+            ["120", "9", "0.1f", "32.0f", "0.0f", "0"],
+        )
+        self.assertEqual(
+            [operand.name for operand in th10_relative.operands],
+            [
+                "duration",
+                "interpolation",
+                "angular_speed",
+                "radius",
+                "radius_delta",
+                "compat_flag",
+            ],
+        )
+        self.assertEqual(
+            compile_ir_op_event(th11_relative, "th10"),
+            "ins_291(120, 9, 0.1f, 32.0f, 0.0f, 0);",
+        )
+        self.assertEqual(
+            compile_ir_op_event(th11_relative, "th12"),
+            "ins_311(120, 9, 0.1f, 32.0f, 0.0f);",
+        )
+
+        for radius_delta in ("1.0f", "0.0f + 0.0f"):
+            incompatible = semantic_operation(
+                "th12",
+                311,
+                ["120", "9", "0.1f", "32.0f", radius_delta],
+            )
+            with self.subTest(radius_delta=radius_delta):
+                emission = compile_ir_op_emission(incompatible, "th11")
+                self.assertIsNotNone(emission)
+                self.assertEqual(emission.strategy, LoweringStrategy.UNSUPPORTED)
+
+        non_default_compat = semantic_operation(
+            "th11",
+            291,
+            ["120", "9", "0.1f", "32.0f", "1"],
+        )
+        emission = compile_ir_op_emission(non_default_compat, "th12")
+        self.assertIsNotNone(emission)
+        self.assertEqual(emission.strategy, LoweringStrategy.UNSUPPORTED)
 
     def test_typed_and_schema_v1_events_lower_identically(self) -> None:
         cases = [

@@ -782,7 +782,7 @@ def compile_ir_op_event(event: SemanticOperation | dict[str, object], target: st
         project_variables=not event_variables_projected_for_target(event, target),
     )
     if adapted_args is None:
-        return None
+        return compile_lossy_semantic_fallback(event, target)
     if semantic_op_key in {
         "enemy.create",
         "enemy.create_abs",

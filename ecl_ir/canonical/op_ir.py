@@ -345,13 +345,12 @@ def target_opcode_for_op_key(
 
 SOURCE_SPECIFIC_DROP_OP_KEYS = {
     "unit.unknown569", "raw.spec1", "raw.spec2", "laser.debug700", "movement.unknown444",
-    "enemy.create_maple", "anm.reset", "bullet.distance",
     "raw.eff_create", "raw.eff_create_angle", "raw.card_eff", "raw.timer_threshold", "raw.ins_129",
     "raw.et_on_auto_delay", "flow.familiar_create", "flow.familiar_create_f", "flow.familiar_create_a",
     "flow.trail_familiar_set", "anm.play_attack", "movement.move_rand_time", "flow.ins_79",
     "anm.set_ex", "anm.set_boss_ex", "movement.move_circle_change", "movement.move_accel", "movement.move_curve",
     "raw.et_delay", "raw.et_on_auto", "raw.set_life_bar", "raw.ins_153", "raw.timer_set", "raw.set_lives",
-    "raw.life_threshold", "flow.float_time", "flow.math_circle_pos", "flow.inc", "raw.ins_173", "raw.ins_184",
+    "raw.life_threshold", "flow.math_circle_pos", "flow.inc", "raw.ins_173", "raw.ins_184",
     "flow.math_angle", "flow.math_distance", "flow.et_protect_range", "raw.val_set", "raw.player_nullify", "anm.familiar",
     "bullet.transform", "bullet.transform2", "anm.play_high",
 }

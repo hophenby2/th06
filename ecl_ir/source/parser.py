@@ -12,6 +12,11 @@ from .model import Function, Instruction, Program, RoutineSignature, Statement
 FUNC_RE = re.compile(r"^\s*(?:void|sub)\s+(\w+)\s*\(([^)]*)\)\s*(?:\{|$)")
 INS_RE = re.compile(r"\bins_(\d+)\s*\((.*)\)\s*;")
 DIFF_RE = re.compile(r"^\s*!([ENHLOX0-7*]+)\s*(:)?\s*(.*)$")
+EVALUATION_TOP_PLACEHOLDER_RE = re.compile(r"\[\s*-1(?:\.0f)?\s*\]")
+NON_CODE_TOKEN_RE = re.compile(
+    r'//[^\n]*|/\*.*?\*/|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'',
+    re.DOTALL,
+)
 
 LABEL_RE = re.compile(r"^\s*([A-Za-z_]\w*)\s*:\s*(?://.*)?$")
 TIME_RE = re.compile(r"^\s*\+(\d+)\s*:\s*(?://(.*))?$")
@@ -314,6 +319,14 @@ def _next_significant_line(lines: list[str], start: int) -> int | None:
     return None
 
 
+def _selection_consumer_is_valid(text: str) -> bool:
+    marker = DIFF_RE.match(text)
+    if marker is not None:
+        return marker.group(1) != "*" and marker.group(2) is None
+    code = NON_CODE_TOKEN_RE.sub("", text)
+    return EVALUATION_TOP_PLACEHOLDER_RE.search(code) is not None
+
+
 def find_difficulty_selection_candidates(source_text: str) -> tuple[DifficultySelectionCandidate, ...]:
     """Find complete, uninterrupted thecl rank-switch tables and their consumer."""
 
@@ -376,6 +389,7 @@ def find_difficulty_selection_candidates(source_text: str) -> tuple[DifficultySe
             and reset_index is not None
             and consumer_index is not None
             and bool(consumer_text)
+            and _selection_consumer_is_valid(consumer_text)
         ):
             candidates.append(
                 DifficultySelectionCandidate(tuple(literal_lines), consumer_index + 1)

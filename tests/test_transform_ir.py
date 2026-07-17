@@ -4,7 +4,7 @@ import unittest
 
 from ecl_ir.canonical.op_ir import semantic_operation
 from ecl_ir.canonical.semantic_ir import EngineValueKind, EvaluationTime, OperandState, SemanticOperation
-from ecl_ir.analysis.transform_ir import BulletTransformIR
+from ecl_ir.analysis.transform_ir import BulletSpawnTransformBundleIR, BulletTransformIR
 
 
 def transform(game: str, opcode: int, args: list[str]) -> BulletTransformIR:
@@ -227,6 +227,107 @@ class TransformIrTests(unittest.TestCase):
         )
         self.assertIsNone(attributes.lower_to("th15"))
         self.assertIn("bundled transform sequence", attributes.unsupported_reason("th15") or "")
+
+    def test_legacy_spawn_pair_decodes_and_expands_as_one_semantic_bundle(self) -> None:
+        first = semantic_operation(
+            "th12",
+            509,
+            ["0", "3", "0", "524288", "50923526", "12", "%B", "2.0f"],
+            1,
+            routine="Main",
+        )
+        second = semantic_operation(
+            "th12",
+            509,
+            ["0", "4", "0", "1048576", "1", "0", "[-9998.0f]", "0.0f"],
+            2,
+            routine="Main",
+        )
+        bundle = BulletSpawnTransformBundleIR.from_operations(first, second)
+        self.assertIsNotNone(bundle)
+        assert bundle is not None
+        self.assertEqual(
+            (
+                bundle.spread_style,
+                bundle.bullet_shape,
+                bundle.bullet_color,
+                bundle.resume_transform_index,
+                bundle.remove_source_bullet,
+            ),
+            ("6", "8", "9", "3", "0"),
+        )
+        lowered = bundle.lower_to("th15")
+        self.assertIsNotNone(lowered)
+        assert lowered is not None
+        self.assertEqual([instruction.opcode for instruction in lowered], [610, 610])
+        self.assertEqual(
+            lowered[0].args,
+            [
+                "0", "3", "0", "8192", "6", "3", "12", "1",
+                "[-9998.0f]", "0.0f", "%B", "2.0f",
+            ],
+        )
+        self.assertEqual(
+            lowered[1].args,
+            [
+                "0", "4", "0", "16384", "9", "9", "0", "0",
+                "0.0f", "0.0f", "0.0f", "0.0f",
+            ],
+        )
+
+    def test_expanded_spawn_pair_repacks_delete_bit_for_th12(self) -> None:
+        first = semantic_operation(
+            "th14",
+            610,
+            [
+                "0", "3", "0", "8192", "6", "3", "12", "1",
+                "0.25f", "0.0f", "2.0f", "0.5f",
+            ],
+            1,
+            routine="Main",
+        )
+        second = semantic_operation(
+            "th14",
+            610,
+            [
+                "0", "4", "0", "16384", "9", "9", "1", "0",
+                "0.0f", "0.0f", "0.0f", "0.0f",
+            ],
+            2,
+            routine="Main",
+        )
+        bundle = BulletSpawnTransformBundleIR.from_operations(first, second)
+        self.assertIsNotNone(bundle)
+        assert bundle is not None
+        lowered = bundle.lower_to("th12")
+        self.assertIsNotNone(lowered)
+        assert lowered is not None
+        payload = int(lowered[0].args[4]) & 0xFFFFFFFF
+        self.assertEqual(payload.to_bytes(4, "little"), bytes((6, 8, 9, 0x83)))
+        self.assertEqual(lowered[1].args[3:8], ["1048576", "1", "0", "0.25f", "0.0f"])
+
+    def test_spawn_pair_rejects_nonzero_contextual_laser_payload(self) -> None:
+        first = semantic_operation(
+            "th15",
+            612,
+            [
+                "0", "0", "8192", "6", "3", "12", "1",
+                "0.25f", "0.0f", "2.0f", "0.5f",
+            ],
+            1,
+            routine="Main",
+        )
+        second = semantic_operation(
+            "th15",
+            612,
+            [
+                "0", "0", "16384", "9", "9", "0", "0",
+                "1.0f", "0.0f", "0.0f", "0.0f",
+            ],
+            2,
+            routine="Main",
+        )
+        self.assertIsNone(BulletSpawnTransformBundleIR.from_operations(first, second))
 
     def test_keep_current_tokens_are_mode_field_and_game_specific(self) -> None:
         th12_accel = transform(

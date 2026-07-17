@@ -11,6 +11,7 @@ from pathlib import Path
 from ..analysis.execution_check import check_ecl_file
 from ..analysis.anm_resources import (
     AnmCandidatePool,
+    candidate_pool_for_module,
     candidate_pool_for_stage,
     stage_id_from_source,
 )
@@ -2000,19 +2001,29 @@ def cmd_compile_package(args: argparse.Namespace) -> int:
             reference_stage_id,
             reference_root.resolve(),
         )
+        target_pools: list[AnmCandidatePool | None] = []
+        for module in modules:
+            if stage_id_from_source(str(module.path)) == source_stage_id:
+                target_pools.append(target_pool)
+            elif module.path.name.lower() == "default.decl":
+                target_pools.append(
+                    candidate_pool_for_module(
+                        args.target,
+                        str(module.path),
+                        reference_root.resolve(),
+                    )
+                )
+            else:
+                target_pools.append(None)
         policy = _lowering_policy_from_args(args)
         compiled = [
             _compile_canonical_data(
                 module.data,
                 args.target,
                 policy,
-                target_anm_pool=(
-                    target_pool
-                    if stage_id_from_source(str(module.path)) == source_stage_id
-                    else None
-                ),
+                target_anm_pool=module_target_pool,
             )
-            for module in modules
+            for module, module_target_pool in zip(modules, target_pools)
         ]
 
         output_dir.mkdir(parents=True, exist_ok=True)

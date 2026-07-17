@@ -4,6 +4,9 @@ import unittest
 
 from ecl_ir.analysis.anm_resources import (
     AnmActionCandidate,
+    AnmCandidatePool,
+    AnmCombinationCandidate,
+    AnmRoutinePlayCandidate,
     build_anm_lowering_plan,
     candidate_pool_for_module,
     candidate_pool_for_stage,
@@ -544,6 +547,282 @@ class AnmResourceCandidateTests(unittest.TestCase):
         )
         self.assertTrue(all(not selection.lossy for selection in selections))
 
+    def test_repeated_play_uses_unique_same_routine_target_candidate(self) -> None:
+        module = build_semantic_module(parse_decl("th18/st01.decl"))
+        routine = next(item for item in module.routines if item.name == "MapleEnemy")
+        plays = [
+            node
+            for node in routine.body
+            if getattr(node, "operation", None) == "anm.play_abs"
+        ]
+        self.assertEqual(len(plays), 11)
+
+        expected = {
+            "th10": (0, 410, 1),
+            "th11": (0, 132, 1),
+            "th12": (0, 101, 1),
+            "th13": (1, 91, 3),
+            "th14": (1, 101, 2),
+            "th15": (1, 102, 2),
+            "th16": (1, 102, 2),
+            "th17": (1, 102, 2),
+        }
+        for target_game, (bank, script, positional_count) in expected.items():
+            with self.subTest(target=target_game):
+                plan = build_anm_lowering_plan(module, target_game)
+                selections = [plan.selections[str(node.node_id)] for node in plays]
+                self.assertEqual(
+                    [(item.actions[0].bank, item.actions[0].script) for item in selections],
+                    [(bank, script)] * len(plays),
+                )
+                self.assertEqual(
+                    [item.match_kind for item in selections[:positional_count]],
+                    ["routine_sequence"] * positional_count,
+                )
+                self.assertTrue(
+                    all(
+                        item.match_kind == "routine_family_candidate" and item.lossy
+                        for item in selections[positional_count:]
+                    )
+                )
+
+    def test_maple_play_candidate_is_symmetric_when_bank_roles_change(self) -> None:
+        for source_game, source_path in (
+            ("th10", "th10/stage01.decl"),
+            ("th11", "th11/stage01.decl"),
+            ("th12", "th12/stage01.decl"),
+            ("th13", "th13/st01.decl"),
+            ("th14", "th14/st01.decl"),
+            ("th15", "th15/st01.decl"),
+            ("th16", "th16/st01.decl"),
+            ("th17", "th17/st01.decl"),
+        ):
+            with self.subTest(source=source_game):
+                module = build_semantic_module(parse_decl(source_path))
+                routine = next(
+                    item for item in module.routines if item.name == "MapleEnemy"
+                )
+                plays = [
+                    node
+                    for node in routine.body
+                    if getattr(node, "operation", None) == "anm.play_abs"
+                ]
+                plan = build_anm_lowering_plan(module, "th18")
+                selections = [plan.selections[str(node.node_id)] for node in plays]
+
+                self.assertTrue(plays)
+                self.assertEqual(len(selections), len(plays))
+                self.assertEqual(
+                    [(item.actions[0].bank, item.actions[0].script) for item in selections],
+                    [(7, 3)] * len(plays),
+                )
+
+    def test_play_family_sequence_can_switch_explicit_and_selected_forms(self) -> None:
+        operations = [
+            semantic_operation("th15", 308, ["1", "10"], 1, routine="Boss"),
+            semantic_operation("th15", 314, ["1", "11"], 2, routine="Boss"),
+            semantic_operation("th15", 307, ["1", "12"], 3, routine="Boss"),
+            semantic_operation("th15", 302, ["1"], 4, routine="Boss"),
+            semantic_operation("th15", 313, ["0"], 5, routine="Boss"),
+        ]
+        module = SemanticModule(
+            source="th15/st01bs.decl",
+            source_game="th15",
+            profile="th15",
+            routines=[SemanticRoutine("Boss", body=operations)],
+        )
+        target_uses = (
+            AnmRoutinePlayCandidate("anm.play_abs", 1, 110, "Boss", 0, "target:Boss"),
+            AnmRoutinePlayCandidate("anm.play_high", 1, 111, "Boss", 0, "target:Boss"),
+            AnmRoutinePlayCandidate("anm.selected_play", 1, 120, "Boss", 0, "target:Boss"),
+            AnmRoutinePlayCandidate("anm.play", 1, 121, "Boss", 1, "target:Boss"),
+        )
+        target_pool = AnmCandidatePool(
+            game="th12",
+            stage_id="01",
+            resources={"anim": ("enemy.anm", "stage.anm")},
+            combinations=tuple(
+                AnmCombinationCandidate(
+                    use.bank,
+                    "common",
+                    (AnmActionCandidate(use.operation, None, use.script),),
+                    1,
+                    (use.evidence,),
+                )
+                for use in target_uses
+            ),
+            routine_plays=target_uses,
+        )
+
+        plan = build_anm_lowering_plan(module, "th12", target_pool=target_pool)
+
+        selections = [
+            plan.selections[str(node.node_id)]
+            for node in (operations[0], operations[1], operations[2], operations[4])
+        ]
+        self.assertEqual([item.match_kind for item in selections], ["routine_sequence"] * 4)
+        self.assertEqual(
+            [(item.actions[-1].operation, item.actions[-1].script) for item in selections],
+            [
+                ("anm.play_abs", 110),
+                ("anm.play_high", 111),
+                ("anm.selected_play", 120),
+                ("anm.play", 121),
+            ],
+        )
+        self.assertTrue(all(not item.lossy for item in selections))
+
+    def test_play_family_cross_routine_fallback_is_role_scoped_and_lossy(self) -> None:
+        source = semantic_operation(
+            "th15",
+            307,
+            ["1", "12"],
+            1,
+            routine="SourceRoutine",
+        )
+        module = SemanticModule(
+            source="th15/st01bs.decl",
+            source_game="th15",
+            profile="th15",
+            routines=[SemanticRoutine("SourceRoutine", body=[source])],
+        )
+        target_action = AnmActionCandidate("anm.selected_play", None, 12)
+        target_pool = AnmCandidatePool(
+            game="th12",
+            stage_id="01",
+            resources={"anim": ("enemy.anm", "stage.anm")},
+            combinations=(
+                AnmCombinationCandidate(
+                    1,
+                    "common",
+                    (target_action,),
+                    1,
+                    ("target.decl:DifferentRoutine",),
+                ),
+                AnmCombinationCandidate(
+                    2,
+                    "boss",
+                    (target_action,),
+                    10,
+                    ("target.decl:BossRoutine",),
+                ),
+            ),
+            routine_plays=(
+                AnmRoutinePlayCandidate(
+                    "anm.selected_play",
+                    1,
+                    12,
+                    "DifferentRoutine",
+                    0,
+                    "target.decl:DifferentRoutine",
+                ),
+            ),
+        )
+
+        plan = build_anm_lowering_plan(module, "th12", target_pool=target_pool)
+        choice = plan.selections[str(source.node_id)]
+
+        self.assertEqual(choice.match_kind, "exact_script")
+        self.assertTrue(choice.lossy)
+        self.assertEqual(
+            [(action.operation, action.bank, action.script) for action in choice.actions],
+            [("anm.select", 1, None), ("anm.selected_play", 1, 12)],
+        )
+        self.assertEqual(choice.evidence, ("target.decl:DifferentRoutine",))
+
+    def test_routine_sequence_evidence_cannot_cross_owner_roles(self) -> None:
+        source = semantic_operation(
+            "th15",
+            308,
+            ["2", "99"],
+            1,
+            routine="Shared",
+        )
+        module = SemanticModule(
+            source="th15/st01bs.decl",
+            source_game="th15",
+            profile="th15",
+            routines=[SemanticRoutine("Shared", body=[source])],
+        )
+        action_99 = AnmActionCandidate("anm.play_abs", None, 99)
+        target_pool = AnmCandidatePool(
+            game="th14",
+            stage_id="01",
+            resources={"anim": ("enemy.anm", "st01enm.anm")},
+            combinations=(
+                AnmCombinationCandidate(
+                    2,
+                    "stage",
+                    (action_99,),
+                    1,
+                    ("st01.decl:Shared",),
+                ),
+                AnmCombinationCandidate(
+                    2,
+                    "boss",
+                    (action_99,),
+                    1,
+                    ("st01bs.decl:Other",),
+                ),
+            ),
+            routine_plays=(
+                AnmRoutinePlayCandidate(
+                    "anm.play_abs",
+                    2,
+                    99,
+                    "Shared",
+                    0,
+                    "st01.decl:Shared",
+                    "stage",
+                ),
+            ),
+        )
+
+        plan = build_anm_lowering_plan(module, "th14", target_pool=target_pool)
+        choice = plan.selections[str(source.node_id)]
+
+        self.assertEqual(choice.match_kind, "exact_script")
+        self.assertTrue(choice.lossy)
+        self.assertEqual(choice.evidence, ("st01bs.decl:Other",))
+
+    def test_th15_stage01_selected_plays_use_th12_boss_role_candidates(self) -> None:
+        selected = []
+        for source in ("th15/st01bs.decl", "th15/st01mbs.decl", "th15/st01mbs2.decl"):
+            module = build_semantic_module(parse_decl(source))
+            plan = build_anm_lowering_plan(module, "th12")
+            for routine in module.routines:
+                for node in routine.body:
+                    if getattr(node, "operation", None) != "anm.selected_play":
+                        continue
+                    choice = plan.selections.get(str(node.node_id))
+                    self.assertIsNotNone(choice, (source, routine.name, node.node_id))
+                    assert choice is not None
+                    selected.append((source, routine.name, node, choice))
+
+        self.assertEqual(len(selected), 10)
+        for source, routine, _node, choice in selected:
+            with self.subTest(source=source, routine=routine):
+                target_play = choice.actions[-1]
+                self.assertEqual(target_play.operation, "anm.selected_play")
+                self.assertEqual((target_play.bank, target_play.script), (2, 0))
+                self.assertTrue(
+                    all(item.startswith("stage01.decl:") for item in choice.evidence)
+                )
+                self.assertTrue(
+                    all(
+                        "Boss" in item.split(":", 1)[1]
+                        for item in choice.evidence
+                    )
+                )
+
+        boss_card2 = next(
+            choice
+            for source, routine, _node, choice in selected
+            if source.endswith("st01bs.decl") and routine == "BossCard2"
+        )
+        self.assertEqual(boss_card2.match_kind, "routine_sequence")
+        self.assertFalse(boss_card2.lossy)
+
     def test_ambiguous_selected_bank_uses_only_lossy_role_scoped_candidate(self) -> None:
         module = build_semantic_module(parse_decl("th10/stage01.decl"))
         emitter = CanonicalBackendEmitter(module, "th15")
@@ -612,6 +891,24 @@ class AnmResourceCandidateTests(unittest.TestCase):
                     all("Boss" not in evidence for evidence in sprite_choice.evidence)
                 )
 
+    def test_midboss_routine_with_stage_mapped_bank_stays_midboss_scoped(self) -> None:
+        module = build_semantic_module(parse_decl("th13/st01.decl"))
+        emitter = CanonicalBackendEmitter(module, "th14")
+        routine = next(item for item in module.routines if item.name == "MBoss")
+        set_sprite = next(
+            node
+            for node in routine.body
+            if getattr(node, "operation", None) == "anm.set_sprite"
+        )
+
+        selection = emitter.anm_plan.selections[str(set_sprite.node_id)]
+
+        self.assertTrue(selection.lossy)
+        self.assertTrue(selection.evidence)
+        self.assertTrue(
+            all(evidence.startswith("st01mbs") for evidence in selection.evidence)
+        )
+
     def test_set_sprite_uses_only_lossy_same_role_setup_family_fallback(self) -> None:
         module = build_semantic_module(parse_decl("th11/stage01.decl"))
         emitter = CanonicalBackendEmitter(module, "th15")
@@ -664,6 +961,127 @@ class AnmResourceCandidateTests(unittest.TestCase):
         self.assertIsNone(pool.stage_id)
         self.assertEqual(pool.resources, {})
         self.assertEqual(pool.combinations, ())
+
+    def test_default_pool_uses_only_reference_sibling_default(self) -> None:
+        pool = candidate_pool_for_module(
+            "th12",
+            "th15/default.decl",
+            "th12/stage01.decl",
+        )
+
+        self.assertIsNone(pool.stage_id)
+        self.assertEqual(pool.resources, {})
+        self.assertEqual(len(pool.combinations), 4)
+        self.assertTrue(
+            all(
+                evidence.startswith("default.decl:UFO_")
+                for candidate in pool.combinations
+                for evidence in candidate.evidence
+            )
+        )
+        self.assertFalse(
+            any(
+                evidence.startswith("stage01.decl:")
+                for candidate in pool.combinations
+                for evidence in candidate.evidence
+            )
+        )
+
+    def test_default_pool_without_target_setup_keeps_source_unresolved(self) -> None:
+        module = build_semantic_module(parse_decl("th15/default.decl"))
+        routine = next(item for item in module.routines if item.name == "EffChargePoint")
+        select = next(
+            node for node in routine.body if getattr(node, "operation", None) == "anm.select"
+        )
+
+        for target_game in ("th10", "th11", "th13"):
+            with self.subTest(target=target_game):
+                pool = candidate_pool_for_module(target_game, module.source)
+                plan = build_anm_lowering_plan(module, target_game, target_pool=pool)
+                self.assertEqual(pool.combinations, ())
+                self.assertNotIn(str(select.node_id), plan.selections)
+
+    def test_default_setup_prefers_unique_same_routine_candidate(self) -> None:
+        module, nodes = _anm_module(
+            "th15",
+            "th15/default.decl",
+            ((302, ["1"]), (303, ["0", "10"])),
+        )
+        same_routine = AnmCombinationCandidate(
+            2,
+            "global",
+            (AnmActionCandidate("anm.set_sprite", 0, 40),),
+            1,
+            ("default.decl:Main",),
+        )
+        frequent_unrelated = AnmCombinationCandidate(
+            2,
+            "global",
+            (AnmActionCandidate("anm.set_sprite", 0, 99),),
+            100,
+            ("default.decl:Unrelated",),
+        )
+        pool = AnmCandidatePool(
+            "th12",
+            None,
+            {},
+            (frequent_unrelated, same_routine),
+        )
+
+        plan = build_anm_lowering_plan(module, "th12", target_pool=pool)
+        selection = plan.selections[str(nodes[1].node_id)]
+
+        self.assertEqual(selection.match_kind, "routine_setup_candidate")
+        self.assertEqual(selection.evidence, ("default.decl:Main",))
+        self.assertEqual(
+            [(action.operation, action.bank, action.slot, action.script) for action in selection.actions],
+            [("anm.set_sprite", 2, 0, 40)],
+        )
+
+    def test_default_setup_rejects_ambiguous_same_routine_candidates(self) -> None:
+        module, nodes = _anm_module(
+            "th15",
+            "th15/default.decl",
+            ((302, ["1"]), (303, ["0", "10"])),
+        )
+        pool = AnmCandidatePool(
+            "th12",
+            None,
+            {},
+            tuple(
+                AnmCombinationCandidate(
+                    2,
+                    "global",
+                    (AnmActionCandidate("anm.set_sprite", 0, script),),
+                    1,
+                    ("default.decl:Main",),
+                )
+                for script in (40, 41)
+            ),
+        )
+
+        plan = build_anm_lowering_plan(module, "th12", target_pool=pool)
+
+        self.assertNotIn(str(nodes[0].node_id), plan.selections)
+        self.assertNotIn(str(nodes[1].node_id), plan.selections)
+
+    def test_common_bank_candidate_keeps_owner_unit_role(self) -> None:
+        module = build_semantic_module(parse_decl("th10/stage01.decl"))
+        routine = next(item for item in module.routines if item.name == "Boss1At1")
+        source = next(
+            node
+            for node in routine.body
+            if getattr(node, "operation", None) == "anm.selected_play"
+        )
+
+        selection = build_anm_lowering_plan(module, "th14").selections[
+            str(source.node_id)
+        ]
+
+        self.assertEqual(selection.actions[-1].bank, 1)
+        self.assertTrue(
+            all(evidence.startswith("st01bs.decl:") for evidence in selection.evidence)
+        )
 
 
 if __name__ == "__main__":
